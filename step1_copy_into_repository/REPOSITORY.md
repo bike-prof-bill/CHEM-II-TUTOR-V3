@@ -49,3 +49,4 @@ Edits and removals fail the check. Additions are listed and allowed.
 `README.md` still says `--per-kind 12` gives 72 problems; the shipped generation is `--per-kind 3 --seed 1`
 giving 108 (3 × 6 kinds × 6 openers) and `gen-check` pins that. The readme is the build's text and is left
 for the instructor's or Opus's clean-up pass.
+
