@@ -1,0 +1,2542 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"> 
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; box-sizing: border-box; display: flex; flex-direction: column; height: 100vh; background-color: #f0f2f5;}
+    
+    /* BANNER STYLES WITH MARBLE SOCRATES BUST SVGs */
+    #banner { width: 100%; height: 85px; background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); display: flex; align-items: center; justify-content: space-between; padding: 0 25px; box-sizing: border-box; border-bottom: 3px solid #1a73e8; position: relative; overflow: hidden; color: white; }
+    #banner::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(26,115,232,0.05) 0, rgba(26,115,232,0.05) 40px, transparent 0, transparent 80px); pointer-events: none; }
+    .banner-side { display: flex; align-items: center; gap: 12px; z-index: 2; width: 220px; }
+    .banner-side.right { justify-content: flex-end; }
+    .socrates-bust-svg { width: 36px; height: 46px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
+    .avatar-label { font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; color: #a0aec0; line-height: 1.2; }
+    
+    #banner-center { display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; text-align: center; }
+    #banner h1 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 1.5px; background: linear-gradient(90deg, #64ffda, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+    .banner-equations { font-family: monospace; font-size: 11px; color: #a0aec0; margin-top:  ; letter-spacing: 1px; opacity: 0.85; }
+    
+    .beaker-graphic { position: relative; width: 36px; height: 42px; border: 2px solid rgba(255,255,255,0.7); border-top: none; border-radius: 0 0 6px 6px; display: flex; align-items: flex-end; justify-content: center; box-sizing: border-box; background: rgba(255,255,255,0.05); }
+    .beaker-liquid { width: 100%; height: 60%; background: linear-gradient(180deg, rgba(0,230,118,0.6), rgba(0,176,255,0.8)); border-radius: 0 0 4px 4px; position: relative; animation: bubbleAnim 3s infinite alternate ease-in-out; }
+    .bubble { position: absolute; background: white; border-radius: 50%; opacity: 0.7; animation: rise 2s infinite linear; }
+    .bubble:nth-child(1) { width: 4px; height: 4px; left: 8px; animation-delay: 0s; }
+    .bubble:nth-child(2) { width: 3px; height: 3px; left: 20px; animation-delay: 0.7s; }
+    .bubble:nth-child(3) { width: 5px; height: 5px; left: 14px; animation-delay: 1.2s; }
+    @keyframes rise { 0% { bottom: 2px; opacity: 0.8; transform: scale(1); } 100% { bottom: 32px; opacity: 0; transform: scale(1.5); } }
+    @keyframes bubbleAnim { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(90deg); } }
+
+    /* UNIFORM EXACT WIDTH / HEIGHT FOR ALL TOP NAV TABS & SELECTS */
+    .nav-tab-item {
+      background: rgba(26,115,232,0.9);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 0 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      width: 150px;
+      height: 36px;
+      line-height: 1;
+      white-space: nowrap;
+      text-align: center;
+      font-family: inherit;
+    }
+    .nav-tab-item:hover { background: #1a73e8; }
+    
+    /* SCROLLABLE DROP-DOWN MENU STYLING WITH LARGE READABLE TEXT */
+    .nav-dropdown {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.365%22%20height%3D%22292.365%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 10px auto;
+      padding-right: 25px;
+    }
+    .nav-dropdown option {
+      background: white;
+      color: #0f172a;
+      font-size: 15px;
+      padding: 12px 16px;
+      font-family: monospace;
+    }
+
+    /* MAIN APP CONTAINER */
+    #app-container { display: flex; width: 100%; flex: 1; max-width: 1400px; margin: 0 auto; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden;}
+    #left-panel { flex: 0 0 42%; padding: 25px; border-right: 2px solid #eee; background-color: #fafafa; overflow-y: auto; display: flex; flex-direction: column; gap: 15px;}
+    #left-panel h2 { color: #1a73e8; margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px;}
+    .selector-group { display: flex; flex-direction: column; gap: 5px; }
+    .selector-group label { font-weight: bold; font-size: 13px; color: #5f6368; }
+    select { padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; background: white; }
+    .reference-box { background: white; padding: 15px; border-radius: 8px; border: 1px solid #ddd; font-size: 16px; line-height: 1.6; }
+    .reference-box h3 { margin-top: 0; color: #5f6368; font-size: 18px;}
+    
+    #canvas-container { background: white; padding: 10px; border-radius: 8px; border: 1px solid #ddd; text-align: center; }
+    canvas { width: 100%; max-width: 420px; height: 180px; background: #fff; border: 1px solid #eee; border-radius: 4px; }
+    
+    /* INTERACTIVE SIM PANELS */
+    .sim-panel { background: #0f172a; padding: 15px; border-radius: 8px; border: 1px solid #334155; color: #f8fafc; font-size: 13px; display: none; }
+    .sim-canvas { width: 100%; height: 140px; background: #020617; border: 1px solid #1e293b; border-radius: 6px; margin-top: 8px; }
+
+    #right-panel { flex: 1; display: flex; flex-direction: column; position: relative; }
+    #reset-btn { position: absolute; top: 15px; right: 25px; background: #dc3545; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; z-index: 10; }
+    #reset-btn:hover { background: #c82333; }
+    #chat-log { flex: 1; padding: 25px; padding-top: 50px; overflow-y: auto; background: white; display: flex; flex-direction: column;}
+    .message { margin-bottom: 15px; padding: 12px 18px; border-radius: 12px; max-width: 85%; line-height: 1.5; font-size: 15px;}
+    .user-msg { background-color: #007bff; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+    .ai-msg { background-color: #f1f0f0; color: #333; align-self: flex-start; border-bottom-left-radius: 2px; }
+    .system-msg { background-color: #fff3cd; color: #856404; text-align: center; margin: 15px auto; font-size: 13px; border-radius: 4px; padding: 8px 15px; width: 90%; }
+    .opening-msg { background-color: #e8f0fe; color: #1a3a6b; border-left: 4px solid #1a73e8; text-align: left; margin: 15px auto; font-size: 14px; line-height: 1.6; border-radius: 4px; padding: 12px 16px; width: 90%; }
+    .opening-msg .frame { display: block; font-size: 12.5px; color: #3c4a63; margin-bottom: 8px; }
+    .opening-msg .ask { display: block; font-weight: 600; font-size: 15px; }
+    .message sub, #problem-box sub { font-size: 0.72em; vertical-align: -0.25em; }
+    .message sup, #problem-box sup { font-size: 0.72em; vertical-align: 0.45em; }
+
+    /* CLICK-TO-INSERT REFERENCE */
+    .eq-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 8px; }
+    .eq-item { font-family: "Cambria Math", Georgia, serif; font-size: 16px; background: #f8fafc; border: 1px solid #e2e8f0;
+               border-radius: 6px; padding: 10px 12px; cursor: pointer; transition: background .12s, border-color .12s; }
+    .eq-item:hover { background: #e8f0fe; border-color: #1a73e8; }
+    .eq-item sub { font-size: 0.72em; vertical-align: -0.25em; }
+    .eq-item sup { font-size: 0.72em; vertical-align: 0.45em; }
+    .insert-hint { font-size: 13px; color: #5f6368; background: #f1f5f9; border-left: 4px solid #1a73e8;
+                   padding: 8px 12px; margin-bottom: 14px; border-radius: 4px; }
+    tr.clickable { cursor: pointer; }
+    tr.clickable:hover { background: #e8f0fe; }
+    .inserted-flash { animation: flashIn .5s ease; }
+    @keyframes flashIn { from { background: #d2e3fc; } to { background: transparent; } }
+    #input-container { display: flex; flex-direction: column; border-top: 1px solid #eee; background: white; }
+    .chem-toolbar-container { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 5px; }
+    #chem-toolbar { padding: 8px 25px 0 25px; gap: 6px; }
+    .chem-btn { background: #e9ecef; border: 1px solid #ced4da; padding: 4px 8px; border-radius: 4px; font-size: 14px; font-weight: bold; color: #495057; cursor: pointer; transition: background 0.2s; }
+    .chem-btn:hover { background: #dee2e6; }
+    #input-area { display: flex; padding: 10px 25px 15px 25px; gap: 10px; }
+    #user-input { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 25px; font-size: 15px; }
+    #user-input:focus { outline: none; border-color: #007bff; }
+    #send-btn { padding: 12px 25px; background-color: #007bff; color: white; border: none; border-radius: 25px; cursor: pointer; font-size: 15px; font-weight: bold;}
+    #send-btn:hover { background-color: #0056b3; }
+    #send-btn:disabled { background-color: #ccc; cursor: not-allowed; }
+
+    /* MODAL POPUP STYLES */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
+    .modal-content { background: white; width: 95%; max-width: 1200px; max-height: 90vh; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); display: flex; flex-direction: column; overflow: hidden; animation: modalFade 0.3s ease; }
+    @keyframes modalFade { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    .modal-header { padding: 15px 20px; background: #1a73e8; color: white; display: flex; justify-content: space-between; align-items: center; }
+    .modal-header h3 { margin: 0; font-size: 18px; }
+    .modal-close { background: none; border: none; color: white; font-size: 20px; cursor: pointer; font-weight: bold; }
+    .modal-body { padding: 20px; overflow-y: auto; font-size: 14px; line-height: 1.8; color: #333; }
+
+    /* FULL-SCREEN HERO LOGIN OVERLAY (OPTIMIZED ZERO-OVERLAP LAYOUT) */
+    #login-overlay {
+      display: none; 
+      position: fixed; 
+      inset: 0; 
+      z-index: 2000;
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.25) 0%, rgba(15, 23, 42, 0.45) 55%, rgba(15, 23, 42, 0.90) 100%), 
+                  url('socratic.jpg') center 10% / contain no-repeat;
+      background-color: #0f172a;
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: flex-end;
+      padding-bottom: 2vh; 
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .login-box {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(16px); 
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(203, 213, 225, 0.9);
+      border-radius: 8px; 
+      padding: 12px 20px; 
+      width: min(85vw, 310px);
+      text-align: center; 
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      animation: modalFade 0.35s ease;
+    }
+    .login-box h3 { 
+      color: #0f172a; 
+      margin-top: 0; 
+      font-size: 16px; 
+      margin-bottom: 2px; 
+      letter-spacing: 0.5px; 
+      font-weight: 800;
+    }
+    .login-box p { 
+      color: #475569; 
+      font-size: 11px; 
+      line-height: 1.35; 
+      margin-bottom: 10px; 
+      margin-top: 0; 
+    }
+    .login-input {
+      width: 95%; 
+      padding: 6px 10px; 
+      border: 1.5px solid #cbd5e1; 
+      border-radius: 4px;
+      font-size: 12px; 
+      margin-bottom: 10px; 
+      background: #ffffff;
+      color: #0f172a; 
+      text-align: center; 
+      transition: border-color 0.2s; 
+      box-sizing: border-box;
+    }
+    .login-input:focus { 
+      outline: none; 
+      border-color: #1a73e8; 
+      box-shadow: 0 0 6px rgba(26, 115, 232, 0.25);
+    }
+    .login-input::placeholder { color: #94a3b8; }
+    .login-btn-group { display: flex; gap: 8px; justify-content: center; }
+    .login-btn { 
+      padding: 6px 12px; 
+      border: none; 
+      border-radius: 4px; 
+      font-size: 11px; 
+      font-weight: bold; 
+      cursor: pointer; 
+      transition: all 0.2s; 
+    }
+    .login-btn.primary { background: #1a73e8; color: white; }
+    .login-btn.primary:hover { background: #1557b0; }
+    .login-btn.secondary { background: #e2e8f0; color: #334155; }
+    .login-btn.secondary:hover { background: #cbd5e1; }
+
+    /* APPENDIX TABLE STYLING */
+    .appendix-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+    .appendix-table th, .appendix-table td { border: 1px solid #cbd5e1; padding: 8px 12px; text-align: left; }
+    .appendix-table th { background-color: #f1f5f9; color: #0f172a; font-weight: bold; }
+
+    /* PERIODIC TABLE GRID STYLING */
+    .pt-grid { display: grid; grid-template-columns: repeat(18, minmax(45px, 1fr)); gap: 4px; text-align: center; }
+    .pt-cell { border: 1px solid #94a3b8; border-radius: 4px; padding: 8px 2px; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: all 0.1s; cursor: default; }
+    .pt-cell:hover { transform: scale(1.15); z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.25); border-color: #0f172a; }
+    .pt-cell .atomic-num { font-size: 11px; font-weight: bold; color: #dc2626; line-height: 1; }
+    .pt-cell .symbol { font-size: 15px; font-weight: 800; color: #000000; margin: 3px 0; line-height: 1; }
+    .pt-cell .atomic-mass { font-size: 10px; font-weight: bold; color: #5b21b6; line-height: 1; }
+    .bg-metal { background-color: #fef08a; }
+    .bg-nonmetal { background-color: #bbf7d0; }
+    .bg-metalloid { background-color: #bae6fd; }
+    .pt-empty { border: none; background: transparent; }
+  </style>
+</head>
+<body>
+
+<!-- BANNER -->
+<div id="banner">
+  <div class="banner-side">
+    <svg class="socrates-bust-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M22 42C22 36 25 32 28 30C26 28 25 24 26 20C27 15 32 12 36 12C41 12 45 15 46 20C47 24 46 28 44 30C47 32 50 36 50 42V50H22V42Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+      <path d="M20 50H52V56C52 58 50 60 48 60H24C22 60 20 58 20 56V50Z" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+      <circle cx="36" cy="18" r="6" fill="#cbd5e1"/>
+    </svg>
+    <div class="avatar-label">Socrates<br><span style="font-size:9px; opacity:0.7;">Questioning</span></div>
+  </div>
+  
+  <div id="banner-center">
+    <div style="display: flex; align-items: center; gap: 15px;">
+      <div class="beaker-graphic">
+        <div class="beaker-liquid">
+          <div class="bubble"></div>
+          <div class="bubble"></div>
+          <div class="bubble"></div>
+        </div>
+      </div>
+      <div>
+        <h1>CHEMISTRY 212 SOCRATIC TUTOR</h1>
+        <div class="banner-equations">ΔG = ΔH − TΔS &nbsp;|&nbsp; Ksp = [M⁺ⁿ][X⁻ⁿ] &nbsp;|&nbsp; pH = pKa + log([A⁻]/[HA])</div>
+      </div>
+      <div class="beaker-graphic" style="filter: hue-rotate(180deg);">
+        <div class="beaker-liquid">
+          <div class="bubble"></div>
+          <div class="bubble"></div>
+          <div class="bubble"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="banner-side right" style="justify-content: flex-end; text-align: right;">
+    <div class="avatar-label">Student<br><span style="font-size:9px; opacity:0.7;">Enlightened</span></div>
+    <svg class="socrates-bust-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M22 42C22 36 25 32 28 30C26 28 25 24 26 20C27 15 32 12 36 12C41 12 45 15 46 20C47 24 46 28 44 30C47 32 50 36 50 42V50H22V42Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+      <path d="M20 50H52V56C52 58 50 60 48 60H24C22 60 20 58 20 56V50Z" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+      <circle cx="36" cy="18" r="6" fill="#cbd5e1"/>
+    </svg>
+  </div>
+</div>
+
+<!-- TOP NAV BAR -->
+<div style="background: #e2e8f0; padding: 6px 20px; display: flex; gap: 15px; align-items: center; border-bottom: 1px solid #cbd5e1;">
+  <span style="font-size: 13px; font-weight: bold; color: #475569;">Resources:</span>
+  
+  <!-- GUIDE DROPDOWN -->
+  <select id="guide-select" class="nav-tab-item nav-dropdown" onchange="handleNavSelection(this)">
+    <option value="" disabled selected>Guide</option>
+    <option value="modal:directionsModal">Socratic Tutor Guide</option>
+    <option value="modal:notebookGuideModal">Notebook Study Guide</option>
+  </select>
+
+  <!-- DATA APPENDIX DROPDOWN -->
+  <select id="appendix-select" class="nav-tab-item nav-dropdown" onchange="handleNavSelection(this)">
+    <option value="" disabled selected>Data Appendix</option>
+    <option value="modal:periodicModal">Periodic Table</option>
+    <option value="modal:generalConstantsModal">Constants &amp; Mathematical Relations</option>
+    <optgroup label="Data Tables">
+      <option value="modal:thermoDataModal">Species Thermodynamic Values (ΔHf°, ΔGf°, S°)</option>
+      <option value="modal:solubilityConstantsModal">Solubility Products (Ksp)</option>
+      <option value="modal:acidBaseConstantsModal">Acid and Base Ionization Constants (Ka, Kb)</option>
+      <option value="modal:colligativeConstantsModal">Molal Colligative Constants (Kf, Kb)</option>
+      <option value="modal:standardPotentialsModal">Half-Cell Potentials (E°)</option>
+    </optgroup>
+  </select>
+
+  <!-- EQUATIONS -->
+  <button id="equations-btn" class="nav-tab-item nav-dropdown" style="cursor:pointer;" onclick="openModal('equationsModal')">Equations</button>
+
+  <!-- NOTEBOOK EXTERNAL LINK -->
+  <a class="nav-tab-item" href="https://notebook.google.com/notebook/399ce0f2-45a4-4f2f-90b7-3d460108014e" target="_blank">Notebook</a>
+</div>
+
+<div id="app-container">
+  <div id="left-panel">
+    <h2>SOCRATIC CHEMISTRY II COURSE HUB</h2>
+    <div class="selector-group">
+      <label>Select Chapter &amp; Problem</label>
+      <select id="problem-selector" onchange="switchProblemType()">
+        <optgroup label="Liquids & Solids">
+          <option value="ch10_cc">Ch 10 — Vapor Pressure and Temperature</option>
+        </optgroup>
+        <optgroup label="Solutions & Colloids">
+          <option value="ch11_henry">Ch 11 — Gas Solubility and Pressure</option>
+          <option value="ch11_raoult">Ch 11 — Vapor Pressure of Solutions</option>
+          <option value="ch11_colligative">Ch 11 — Freezing and Boiling Point Changes</option>
+          <option value="ch11_osmotic">Ch 11 — Osmotic Pressure and Molar Mass</option>
+        </optgroup>
+        <optgroup label="Kinetics">
+          <option value="ch12_relative">Ch 12 — Relative Rates of Reaction</option>
+          <option value="ch12_rates">Ch 12 — Rate Laws from Experimental Data</option>
+          <option value="ch12_integrated">Ch 12 — Integrated Rate Laws and Half-Life</option>
+          <option value="ch12_arrhenius">Ch 12 — Temperature and Activation Energy</option>
+        </optgroup>
+        <optgroup label="Fundamental Equilibrium">
+          <option value="ch13_ice">Ch 13 — Equilibrium Concentrations (ICE)</option>
+          <option value="ch13_q_vs_k">Ch 13 — Reaction Quotient and Direction</option>
+        </optgroup>
+        <optgroup label="Acid-Base Equilibria">
+          <option value="ch14_ph_poh">Ch 14 — pH of Strong Acids and Bases</option>
+          <option value="ch14_weak_acid">Ch 14 — Weak Acid Equilibria</option>
+          <option value="ch14_buffer">Ch 14 — Buffers</option>
+          <option value="ch14_titration">Ch 14 — Titration and Equivalence</option>
+        </optgroup>
+        <optgroup label="Equilibria of Other Reaction Classes">
+          <option value="ch15_ksp">Ch 15 — Solubility Equilibria</option>
+          <option value="ch15_common_ion">Ch 15 — The Common Ion Effect</option>
+          <option value="ch15_q_ksp">Ch 15 — Will a Precipitate Form</option>
+          <option value="ch15_complex">Ch 15 — Complex Ion Formation</option>
+        </optgroup>
+        <optgroup label="Thermodynamics">
+          <option value="ch16_entropy">Ch 16 — Entropy Change</option>
+          <option value="ch16_gibbs">Ch 16 — Free Energy and Spontaneity</option>
+          <option value="ch16_nonstandard">Ch 16 — Free Energy Away from Standard</option>
+          <option value="ch16_keq">Ch 16 — Free Energy and the Equilibrium Constant</option>
+        </optgroup>
+        <optgroup label="Electrochemistry">
+          <option value="ch17_standard">Ch 17 — Standard Cell Potential</option>
+          <option value="ch17_nernst">Ch 17 — Cell Potential and Concentration</option>
+          <option value="ch17_electrolysis">Ch 17 — Electrolysis and Charge</option>
+        </optgroup>
+        <optgroup label="Transition Metals & Coordination">
+          <option value="ch19_crystal">Ch 19 — Crystal Field Splitting</option>
+        </optgroup>
+        <optgroup label="Nuclear Chemistry">
+          <option value="ch21_nuclear">Ch 21 — Radioactive Decay and Half-Life</option>
+          <option value="ch21_binding">Ch 21 — Nuclear Binding Energy</option>
+        </optgroup>
+        <optgroup label="Custom Tools">
+          <option value="custom">Custom Problem Creator</option>
+        </optgroup>
+      </select>
+    </div>
+    
+    <div id="custom-form-container" class="reference-box" style="display: none;">
+      <h3>Custom Problem Setup</h3>
+      <div style="display: flex; flex-direction: column; gap: 8px; font-size: 15px;">
+        <label>Title:</label>
+        <input type="text" id="custom-title" placeholder="e.g., Acid Dissociation" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 15px;">
+        <label>Problem Text:</label>
+        <div id="custom-chem-toolbar" class="chem-toolbar-container"></div>
+        <textarea id="custom-text" rows="4" placeholder="Enter problem text here. Use the buttons above for math and chemical notation..." style="padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; font-size: 15px;"></textarea>
+        <button onclick="launchCustomProblem()" style="background: #28a745; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 5px; font-size: 15px;">Start Socratic Session</button>
+      </div>
+    </div>
+    
+    <div class="reference-box" id="problem-box">Loading problem parameters...</div>
+    <div class="reference-box" id="sim-locked" style="display:none; color:#5f6368;">A simulation to check your result will appear here once you have worked the problem through step 4. It is there to test your conclusion, not to give you the answer.</div>
+    <div class="reference-box" id="problem-veil">The problem is not on screen yet. First we set up the physics — answer the question in the chat, and the problem will appear here.</div>
+    
+    <!-- STANDARD CANVAS VISUALIZER -->
+    <div id="canvas-container">
+      <h3 style="margin:0 0 5px 0; font-size:15px; color:#5f6368;" id="canvas-title">Interactive Visualizer</h3>
+      <canvas id="phaseCanvas" width="400" height="180"></canvas>
+    </div>
+
+    <!-- 0. CLAUSIUS-CLAPEYRON SLIDER PANEL -->
+    <div id="clausius-panel" class="sim-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <span style="font-weight: bold; color: #38bdf8; font-size: 14px;" id="ccPanelTitle">Clausius-Clapeyron: Vapor Pressure vs Temp</span>
+        <span id="ccPressureDisplay" style="font-size: 12px; font-family: monospace; color: #7dd3fc;">P₂ = 0.50 atm</span>
+      </div>
+      <canvas id="clausiusCanvas" class="sim-canvas" width="370" height="130"></canvas>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
+        <div>
+          <label style="color: #94a3b8; font-size: 12px; display: block;">Heat of Vap (ΔH_vap): <span id="dhVapVal">38.6</span> kJ</label>
+          <input type="range" id="dhVapSlider" min="20" max="50" step="0.5" value="38.6" style="width: 100%; accent-color: #38bdf8; cursor: pointer;">
+        </div>
+        <div>
+          <label style="color: #94a3b8; font-size: 12px; display: block;">New Temp (T₂): <span id="t2Val">350</span> K</label>
+          <input type="range" id="t2Slider" min="250" max="450" value="350" style="width: 100%; accent-color: #38bdf8; cursor: pointer;">
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. THERMODYNAMICS SLIDER PANEL -->
+    <div id="thermo-panel" class="sim-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <span style="font-weight: bold; color: #34d399; font-size: 14px;" id="thermoPanelTitle">Free Energy vs Temperature</span>
+        <span id="spontaneousStatus" style="font-size: 12px; padding: 2px 8px; border-radius: 10px; border: 1px solid;"></span>
+      </div>
+      <canvas id="thermoCanvas" class="sim-canvas" width="370" height="130"></canvas>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
+        <div>
+          <label style="color: #94a3b8; font-size: 12px; display: block;" id="labelDeltaH">Enthalpy (ΔH°): <span id="dhNumVal">-50</span> kJ</label>
+          <input type="range" id="dhSlider" min="-250" max="250" step="5" value="-50" style="width: 100%; accent-color: #34d399; cursor: pointer;">
+        </div>
+        <div>
+          <label style="color: #94a3b8; font-size: 12px; display: block;" id="labelDeltaS">Entropy (ΔS°): <span id="dsNumVal">-100</span> J/K</label>
+          <input type="range" id="dsSlider" min="-400" max="400" step="10" value="-100" style="width: 100%; accent-color: #34d399; cursor: pointer;">
+        </div>
+      </div>
+      <div style="margin-top: 6px;">
+        <label style="color: #94a3b8; font-size: 12px; display: block;">Temperature (T): <span id="tSliderVal" style="font-family: monospace;">298</span> K</label>
+        <input type="range" id="tSlider" min="0" max="1000" value="298" style="width: 100%; accent-color: #34d399; cursor: pointer;">
+      </div>
+    </div>
+
+    <!-- 2. ARRHENIUS KINETICS SLIDER PANEL -->
+    <div id="arrhenius-panel" class="sim-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <span style="font-weight: bold; color: #60a5fa; font-size: 14px;">Arrhenius: Rate Constant vs Temperature</span>
+        <span id="kValueDisplay" style="font-size: 12px; font-family: monospace; color: #93c5fd;">k = 1.25</span>
+      </div>
+      <canvas id="arrheniusCanvas" class="sim-canvas" width="370" height="130"></canvas>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
+        <div>
+          <label style="color: #94a3b8; font-size: 12px; display: block;">Activation Energy (Eₐ): <span id="eaVal">50</span> kJ/mol</label>
+          <input type="range" id="eaSlider" min="20" max="100" value="50" style="width: 100%; accent-color: #60a5fa; cursor: pointer;">
+        </div>
+        <div>
+          <label style="color: #94a3b8; font-size: 12px; display: block;">Temperature (T): <span id="arrTVal">298</span> K</label>
+          <input type="range" id="arrTSlider" min="250" max="450" value="298" style="width: 100%; accent-color: #60a5fa; cursor: pointer;">
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. LE CHÂTELIER'S PRINCIPLE SLIDER PANEL -->
+    <div id="lechatelier-panel" class="sim-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <span style="font-weight: bold; color: #facc15; font-size: 14px;" id="lcPanelTitle">Le Châtelier's Principle</span>
+        <span id="shiftStatus" style="font-size: 12px; color: #fde047;">Equilibrium Balanced</span>
+      </div>
+      <canvas id="lechatelierCanvas" class="sim-canvas" width="370" height="130"></canvas>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
+        <div>
+          <label style="color: #94a3b8; font-size: 12px; display: block;">Thermal Stress (Heat added/removed):</label>
+          <select id="lcTemp" style="width: 100%; background: #1e293b; color: white; border: 1px solid #475569; border-radius: 4px; padding: 4px; font-size: 13px;">
+            <option value="0">Normal (Ambient)</option>
+            <option value="1" id="lcOptHeatAdd">Add Heat</option>
+            <option value="-1" id="lcOptHeatRem">Remove Heat</option>
+          </select>
+        </div>
+        <div>
+          <label style="color: #94a3b8; font-size: 12px; display: block;">Container Volume: <span id="volVal">1.0</span> L</label>
+          <input type="range" id="volSlider" min="0.5" max="3.0" step="0.1" value="1.0" style="width: 100%; accent-color: #facc15; cursor: pointer;">
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. NERNST EQUATION SLIDER PANEL -->
+    <div id="nernst-panel" class="sim-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <span style="font-weight: bold; color: #ec4899; font-size: 14px;" id="nernstPanelTitle">Nernst: E = E° − (RT/nF)ln(Q)</span>
+        <span id="ecellDisplay" style="font-size: 12px; font-family: monospace; color: #f472b6;">E = +1.10 V</span>
+      </div>
+      <canvas id="nernstCanvas" class="sim-canvas" width="370" height="130"></canvas>
+      <div style="margin-top: 6px;">
+        <label style="color: #94a3b8; font-size: 12px; display: block;">Reaction Quotient log(Q): <span id="qLogVal">0.0</span></label>
+        <input type="range" id="qSlider" min="-3" max="3" step="0.1" value="0" style="width: 100%; accent-color: #ec4899; cursor: pointer;">
+      </div>
+    </div>
+
+    <!-- 5. ACID-BASE TITRATION CURVE SLIDER PANEL -->
+    <div id="titration-panel" class="sim-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <span style="font-weight: bold; color: #c084fc; font-size: 14px;" id="titrationPanelTitle">Titration Curve vs Base</span>
+        <span id="phDisplay" style="font-size: 12px; font-family: monospace; color: #e879f9;">pH = 7.00</span>
+      </div>
+      <canvas id="titrationCanvas" class="sim-canvas" width="370" height="130"></canvas>
+      <div style="margin-top: 6px;">
+        <label style="color: #94a3b8; font-size: 12px; display: block;">Titrant Volume Added: <span id="titrantVolVal">25.0</span> mL</label>
+        <input type="range" id="titrantSlider" min="0" max="50" step="0.5" value="25" style="width: 100%; accent-color: #c084fc; cursor: pointer;">
+      </div>
+    </div>
+
+    <!-- 6. ICE TABLE EQUILIBRIUM SLIDER PANEL -->
+    <div id="ice-panel" class="sim-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <span style="font-weight: bold; color: #38bdf8; font-size: 14px;" id="icePanelTitle">ICE Table Reaction Progress</span>
+        <span id="xExtentDisplay" style="font-size: 12px; font-family: monospace; color: #7dd3fc;">x = 0.50 M</span>
+      </div>
+      <canvas id="iceCanvas" class="sim-canvas" width="370" height="130"></canvas>
+      <div style="margin-top: 6px;">
+        <label style="color: #94a3b8; font-size: 12px; display: block;">Reaction Extent (x):</label>
+        <input type="range" id="xSlider" min="0" max="0.95" step="0.05" value="0.5" style="width: 100%; accent-color: #38bdf8; cursor: pointer;">
+      </div>
+    </div>
+
+    <!-- 7. KSP & COMMON ION SOLUBILITY SLIDER PANEL -->
+    <div id="ksp-panel" class="sim-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <span style="font-weight: bold; color: #fbbf24; font-size: 14px;" id="kspHeaderTitle">Molar Solubility & Ksp</span>
+        <span id="solubilityDisplay" style="font-size: 12px; font-family: monospace; color: #fde047;">s = 1.34 × 10⁻⁵ M</span>
+      </div>
+      <canvas id="kspCanvas" class="sim-canvas" width="370" height="130"></canvas>
+      <div style="margin-top: 6px;">
+        <label style="color: #94a3b8; font-size: 12px; display: block;" id="commonIonLabel">Common Ion Added [X⁻]: <span id="commonIonVal">0.00</span> M</label>
+        <input type="range" id="commonIonSlider" min="0" max="0.1" step="0.002" value="0" style="width: 100%; accent-color: #fbbf24; cursor: pointer;">
+      </div>
+    </div>
+
+    <!-- 8. HENDERSON-HASSELBALCH BUFFER SLIDER PANEL -->
+    <div id="buffer-panel" class="sim-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <span style="font-weight: bold; color: #22d3ee; font-size: 14px;">Buffer: pH = pKₐ + log([A⁻]/[HA])</span>
+        <span id="bufferPhDisplay" style="font-size: 12px; font-family: monospace; color: #67e8f9;">pH = 4.74</span>
+      </div>
+      <canvas id="bufferCanvas" class="sim-canvas" width="370" height="130"></canvas>
+      <div style="margin-top: 6px;">
+        <label style="color: #94a3b8; font-size: 12px; display: block;">Base-to-Acid Ratio ([A⁻]/[HA]): <span id="ratioVal">1.0</span></label>
+        <input type="range" id="ratioSlider" min="0.1" max="10.0" step="0.1" value="1.0" style="width: 100%; accent-color: #22d3ee; cursor: pointer;">
+      </div>
+    </div>
+
+    <!-- 9. ELECTROLYSIS & FARADAY'S LAW SLIDER PANEL -->
+    <div id="electrolysis-panel" class="sim-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <span style="font-weight: bold; color: #f97316; font-size: 14px;" id="elecPanelTitle">Faraday's Law: Metal Plating</span>
+        <span id="platedMassDisplay" style="font-size: 12px; font-family: monospace; color: #fdba74;">Mass = 1.48 g</span>
+      </div>
+      <canvas id="electrolysisCanvas" class="sim-canvas" width="370" height="130"></canvas>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
+        <div>
+          <label style="color: #94a3b8; font-size: 12px; display: block;">Current (I): <span id="currentVal">2.5</span> A</label>
+          <input type="range" id="currentSlider" min="0.5" max="10.0" step="0.5" value="2.5" style="width: 100%; accent-color: #f97316; cursor: pointer;">
+        </div>
+        <div>
+          <label style="color: #94a3b8; font-size: 12px; display: block;">Time (t): <span id="timeVal">45</span> min</label>
+          <input type="range" id="timeSlider" min="5" max="180" step="5" value="45" style="width: 100%; accent-color: #f97316; cursor: pointer;">
+        </div>
+      </div>
+    </div>
+
+  </div>
+  
+  <div id="right-panel">
+    <button id="reset-btn" onclick="resetSession()">New Scenario</button>
+    <div id="chat-log"></div>
+    <div id="input-container">
+      <div id="chem-toolbar" class="chem-toolbar-container"></div>
+      <div id="input-area">
+        <input type="text" id="user-input" placeholder="Type your answer here..." autocomplete="off">
+        <button id="send-btn" onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FULL-SCREEN HERO LOGIN OVERLAY (OPTIMIZED ZERO-OVERLAP LAYOUT) -->
+<div id="login-overlay">
+  <div class="login-box">
+    <h3>Socratic Tutor</h3>
+    <p>Enter your assigned student identifier to record progress for <strong>extra credit</strong>. If you are practicing independently, you may bypass this step.</p>
+    <input type="text" id="student-id-input" class="login-input" placeholder="e.g., MU9012345" autocomplete="off">
+    <div class="login-btn-group">
+      <button class="login-btn primary" onclick="submitStudentId()">Log In for Extra Credit</button>
+      <button class="login-btn secondary" onclick="bypassLogin()">Guest Mode</button>
+    </div>
+  </div>
+</div>
+
+<!-- 1. Socratic Tutor Guide Modal -->
+<div id="directionsModal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 850px;">
+    <div class="modal-header">
+      <h3>Extended Socratic Tutor Guide</h3>
+      <button class="modal-close" onclick="closeModal('directionsModal')">&times;</button>
+    </div>
+    <div class="modal-body" style="font-size: 15px; line-height: 1.7;">
+      <h4 style="margin-top:0; color:#1a73e8; font-size: 17px;">The Socratic Learning Environment</h4>
+      <p>This application guides your reasoning through rigorous questioning, conceptual milestones, and dynamic chemical visualizers. You are never given direct answers; instead, your reasoning is scaffolded across 5 core milestones:[cite: 1]</p>
+      <p style="background:#f1f5f9; border-left:4px solid #1a73e8; padding:10px 14px; margin:0 0 14px 0;"><strong>What every problem is doing.</strong> Chemistry infers a submicroscopic reality &mdash; enormous populations of particles, statistical in character &mdash; from a handful of macroscopic observations, bridged by the symbolic logic of chemical and mathematical equations. You never see the particles. You read an instrument, cross into the particle account through the symbols, do the chemistry there, and come back out to something else you could measure. Mass to moles to populations to moles to mass is that round trip, and the mole is the border crossing. The tutor names these crossings as you make them.</p>
+      <ol style="padding-left: 20px; margin-bottom: 20px;">
+        <li><strong>Laws and/or Principles:</strong> Describing what is physically happening before any equation appears. Once you have the picture, the tutor asks you to find the matching equation in the Equations list at the top of the page — that list carries no names or chapters, so recognizing it is part of the work.</li>
+        <li><strong>Particulate or Stoichiometric Analysis:</strong> Tracking moles, coefficients, and physical states.[cite: 1]</li>
+        <li><strong>Algebraic or Equilibrium Expression Substitution:</strong> Setting up mathematical expressions like equilibrium constants or integrated rate laws.[cite: 1]</li>
+        <li><strong>Quantitative Execution & Unit Verification:</strong> Performing calculations and verifying dimensional consistency.[cite: 1]</li>
+        <li><strong>Metacognitive Audit & Sanity Check:</strong> Evaluating whether the final result aligns with physical reality.[cite: 1]</li>
+      </ol>
+      <p><em>Quick Tip:</em> Use the chemical toolbar above your input box to easily insert Unicode subscripts, superscripts (⁺, ⁻, ², ³), and reaction arrows (⇌) without breaking formatting rules.[cite: 1]</p>
+    </div>
+  </div>
+</div>
+
+<!-- 2. Notebook Study Guide Modal -->
+<div id="notebookGuideModal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 850px;">
+    <div class="modal-header">
+      <h3>Extended Notebook Study Guide & Prompt Library</h3>
+      <button class="modal-close" onclick="closeModal('notebookGuideModal')">&times;</button>
+    </div>
+    <div class="modal-body" style="font-size: 15px; line-height: 1.7;">
+      <h4 style="margin-top:0; color:#1a73e8; font-size: 17px;">Using Your Linked Course Notebook</h4>
+      <p>Your linked course notebook serves as your deep-reference research vault and AI-powered study partner.[cite: 1] Beyond looking up textbook chapters or solution keys, you can prompt the notebook to generate custom study artifacts.[cite: 1]</p>
+      
+      <h4 style="color:#1a73e8; font-size: 16px; margin-top: 15px;">Suggested Prompt Library for Study Artifacts:</h4>
+      <ul style="padding-left: 20px;">
+        <li><strong>Custom Practice Sets:</strong> <br><em>"Based on the Chapter 13 equilibrium and ICE table sources in this notebook, generate 3 rigorous quantitative practice problems involving weak bases with varying initial concentrations. Provide only intermediate checkpoints, not final answers."</em>[cite: 1]</li>
+        <li style="margin-top: 10px;"><strong>Targeted Flashcards / Concept Review:</strong> <br><em>"Review the electrochemistry and Nernst equation sources in this notebook. Generate a list of 10 high-yield conceptual review questions focusing on concentration cells and non-standard cell potentials."</em>[cite: 1]</li>
+        <li style="margin-top: 10px;"><strong>Comparative Summary Tables:</strong> <br><em>"Create a comparative Markdown table contrasting Zero-Order, First-Order, and Second-Order reactions across four columns: Integrated Rate Law, Linear Plot Axes (x and y), Slope Meaning, and Half-Life Equation."</em>[cite: 1]</li>
+        <li style="margin-top: 10px;"><strong>Error-Analysis Checklists:</strong> <br><em>"Explain the most common algebraic and stoichiometric mistakes students make when solving common-ion solubility and Ksp precipitation problems, and provide a 3-step checklist to avoid them."</em>[cite: 1]</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 3. Periodic Table Modal -->
+<div id="periodicModal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 1150px;">
+    <div class="modal-header">
+      <h3>Periodic Table Reference</h3>
+      <button class="modal-close" onclick="closeModal('periodicModal')">&times;</button>
+    </div>
+    <div class="modal-body" style="background: #f8fafc;">
+      <div style="display: flex; gap: 15px; justify-content: center; align-items: center; margin-bottom: 12px; font-size: 11px; font-weight: bold;">
+        <span style="background: #fef08a; padding: 3px 8px; border: 1px solid #cbd5e1; border-radius: 3px;">Metals</span>
+        <span style="background: #bae6fd; padding: 3px 8px; border: 1px solid #cbd5e1; border-radius: 3px;">Metalloids</span>
+        <span style="background: #bbf7d0; padding: 3px 8px; border: 1px solid #cbd5e1; border-radius: 3px;">Nonmetals</span>
+      </div>
+      <div class="pt-grid" id="periodic-table-container"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. Species Thermodynamic Values Modal (ΔHf°, ΔGf°, S°) -->
+<div id="thermoDataModal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 900px;">
+    <div class="modal-header">
+      <h3>Species Thermodynamic Values (Standard State at 298.15 K)</h3>
+      <button class="modal-close" onclick="closeModal('thermoDataModal')">&times;</button>
+    </div>
+    <div class="modal-body" style="font-size: 15px; line-height: 1.7;">
+      <p style="margin-top:0; color:#5f6368; font-size:13px;">Standard enthalpy of formation (ΔHf°), standard free energy of formation (ΔGf°), and standard molar entropy (S°) for common chemical species encountered in General Chemistry II.[cite: 1]</p>
+      <table class="appendix-table">
+        <thead>
+          <tr>
+            <th>Substance & State</th>
+            <th>ΔHf° (kJ/mol)</th>
+            <th>ΔGf° (kJ/mol)</th>
+            <th>S° (J/mol·K)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>H₂O (l)</td><td>-285.83</td><td>-237.13</td><td>69.91</td></tr>
+          <tr><td>H₂O (g)</td><td>-241.82</td><td>-228.57</td><td>188.83</td></tr>
+          <tr><td>CO₂ (g)</td><td>-393.51</td><td>-394.36</td><td>213.74</td></tr>
+          <tr><td>CO (g)</td><td>-110.53</td><td>-137.17</td><td>197.67</td></tr>
+          <tr><td>NH₃ (g)</td><td>-45.90</td><td>-16.45</td><td>192.45</td></tr>
+          <tr><td>N₂O₄ (g)</td><td>9.16</td><td>97.89</td><td>304.29</td></tr>
+          <tr><td>NO₂ (g)</td><td>33.18</td><td>51.31</td><td>240.06</td></tr>
+          <tr><td>SO₂ (g)</td><td>-296.83</td><td>-300.19</td><td>248.22</td></tr>
+          <tr><td>SO₃ (g)</td><td>-395.72</td><td>-371.06</td><td>256.77</td></tr>
+          <tr><td>CH₄ (g)</td><td>-74.87</td><td>-50.72</td><td>186.26</td></tr>
+          <tr><td>H⁺ (aq)</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+          <tr><td>OH⁻ (aq)</td><td>-229.99</td><td>-157.24</td><td>-10.75</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 4b. Equations Modal (click to insert) -->
+<div id="equationsModal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 1000px;">
+    <div class="modal-header">
+      <h3>Equations</h3>
+      <button class="modal-close" onclick="closeModal('equationsModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="insert-hint">Click any equation to drop it into your answer box. No names, no chapters &mdash; recognising the right one is part of the work.</div>
+      <div id="equations-grid" class="eq-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. General Constants & Mathematical Relations Modal -->
+<div id="generalConstantsModal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 850px;">
+    <div class="modal-header">
+      <h3>General Constants & Mathematical Relations</h3>
+      <button class="modal-close" onclick="closeModal('generalConstantsModal')">&times;</button>
+    </div>
+    <div class="modal-body" style="font-size: 15px; line-height: 1.7;">
+      <h4 style="margin-top:0; color:#1a73e8;">Universal Physical Constants</h4>
+      <ul style="padding-left: 20px; margin-bottom: 15px; font-family: monospace;">
+        <li>Gas Constant (R) = 8.314 J / (mol · K) = 0.08206 L · atm / (mol · K)</li>
+        <li>Faraday Constant (F) = 96,485 C / mol e⁻</li>
+        <li>Avogadro’s Number (Na) = 6.022 × 10²³ mol⁻¹</li>
+        <li>Boltzmann’s Constant (k) = 1.381 × 10⁻²³ J / K</li>
+        <li>Planck’s Constant (h) = 6.626 × 10⁻³⁴ J · s</li>
+        <li>Speed of Light in Vacuum (c) = 2.998 × 10⁸ m / s</li>
+        <li>Specific Heat Capacity of Liquid Water (C°) = 4.184 J / (g · °C)</li>
+        <li>Ion Product of Water (Kw) = 1.0 × 10⁻¹⁴ at 25 °C</li>
+        <li>Standard Temperature (T°) = 298.15 K (25 °C)</li>
+        <li>Standard Pressure (P°) = 1 bar (or 1 atm)</li>
+      </ul>
+      <h4 style="color:#1a73e8;">Logarithmic & Exponential Relations</h4>
+      <ul style="padding-left: 20px; font-family: monospace;">
+        <li>Natural Logarithm Base (e) = 2.71828</li>
+        <li>pH = -log[H₃O⁺] &nbsp;|&nbsp; [H₃O⁺] = 10⁻ᵖᴴ</li>
+        <li>pOH = -log[OH⁻] &nbsp;|&nbsp; [OH⁻] = 10⁻ᵖᴼᴴ</li>
+        <li>pH + pOH = 14 (at 25 °C)</li>
+        <li>ln(x) = 2.303 * log(x)</li>
+        <li>eˡⁿ ˣ = x &nbsp;|&nbsp; ln(eˣ) = x</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 6. Solubility Products (Ksp) Modal -->
+<div id="colligativeConstantsModal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 800px;">
+    <div class="modal-header">
+      <h3>Boiling Point Elevation and Freezing Point Depression Constants</h3>
+      <button class="modal-close" onclick="closeModal('colligativeConstantsModal')">&times;</button>
+    </div>
+    <div class="modal-body" style="font-size: 15px; line-height: 1.7;">
+      <p style="margin-top:0;"><strong>Note.</strong> The Kb in this table is the molal boiling point elevation
+      constant, in °C/m. It is a different quantity from the base ionization constant Kb in the
+      Acid and Base Ionization Constants table.</p>
+      <table class="appendix-table">
+        <thead>
+          <tr>
+            <th>Solvent</th>
+            <th>Boiling Point (°C at 1 atm)</th>
+            <th>Kb (°C m⁻¹)</th>
+            <th>Freezing Point (°C at 1 atm)</th>
+            <th>Kf (°C m⁻¹)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>water</td><td>100.0</td><td>0.512</td><td>0.0</td><td>1.86</td></tr>
+          <tr><td>hydrogen acetate (glacial acetic acid)</td><td>118.1</td><td>3.07</td><td>16.6</td><td>3.9</td></tr>
+          <tr><td>benzene</td><td>80.1</td><td>2.53</td><td>5.5</td><td>5.12</td></tr>
+          <tr><td>chloroform</td><td>61.26</td><td>3.63</td><td>&minus;63.5</td><td>4.68</td></tr>
+          <tr><td>nitrobenzene</td><td>210.9</td><td>5.24</td><td>5.67</td><td>8.1</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="solubilityConstantsModal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 800px;">
+    <div class="modal-header">
+      <h3>Solubility Product Constants (Ksp at 25 °C)</h3>
+      <button class="modal-close" onclick="closeModal('solubilityConstantsModal')">&times;</button>
+    </div>
+    <div class="modal-body" style="font-size: 15px; line-height: 1.7;">
+      <table class="appendix-table">
+        <thead>
+          <tr>
+            <th>Compound</th>
+            <th>Formula</th>
+            <th>Ksp Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Silver Chloride</td><td>AgCl</td><td>1.8 × 10⁻¹⁰</td></tr>
+          <tr><td>Silver Bromide</td><td>AgBr</td><td>5.4 × 10⁻¹³</td></tr>
+          <tr><td>Calcium Fluoride</td><td>CaF₂</td><td>3.9 × 10⁻¹¹</td></tr>
+          <tr><td>Lead(II) Iodide</td><td>PbI₂</td><td>7.1 × 10⁻⁹</td></tr>
+          <tr><td>Barium Sulfate</td><td>BaSO₄</td><td>1.1 × 10⁻¹⁰</td></tr>
+          <tr><td>Magnesium Hydroxide</td><td>Mg(OH)₂</td><td>5.6 × 10⁻¹²</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 7. Ionization Constants (Ka & Kb) Modal -->
+<div id="acidBaseConstantsModal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 800px;">
+    <div class="modal-header">
+      <h3>Acid &amp; Base Ionization Constants (at 25 °C)</h3>
+      <button class="modal-close" onclick="closeModal('acidBaseConstantsModal')">&times;</button>
+    </div>
+    <div class="modal-body" style="font-size: 15px; line-height: 1.7;">
+      <table class="appendix-table">
+        <thead>
+          <tr>
+            <th>Substance</th>
+            <th>Formula / Ionization Type</th>
+            <th>Constant (Ka / Kb)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Acetic Acid</td><td>CH₃COOH (Ka)</td><td>1.8 × 10⁻⁵</td></tr>
+          <tr><td>Hydrofluoric Acid</td><td>HF (Ka)</td><td>3.5 × 10⁻⁴</td></tr>
+          <tr><td>Hypochlorous Acid</td><td>HClO (Ka)</td><td>3.0 × 10⁻⁸</td></tr>
+          <tr><td>Hydrocyanic Acid</td><td>HCN (Ka)</td><td>4.9 × 10⁻¹⁰</td></tr>
+          <tr><td>Ammonia</td><td>NH₃ (Kb)</td><td>1.8 × 10⁻⁵</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 8. Half-Cell Potentials (E°) Modal -->
+<div id="standardPotentialsModal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 800px;">
+    <div class="modal-header">
+      <h3>Standard Reduction Half-Cell Potentials (E° in Volts)</h3>
+      <button class="modal-close" onclick="closeModal('standardPotentialsModal')">&times;</button>
+    </div>
+    <div class="modal-body" style="font-size: 15px; line-height: 1.7;">
+      <table class="appendix-table">
+        <thead>
+          <tr>
+            <th>Half-Reaction</th>
+            <th>E° (Volts)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Au³⁺ (aq) + 3e⁻ ⟶ Au (s)</td><td>+1.50 V</td></tr>
+          <tr><td>Ag⁺ (aq) + e⁻ ⟶ Ag (s)</td><td>+0.80 V</td></tr>
+          <tr><td>Cu²⁺ (aq) + 2e⁻ ⟶ Cu (s)</td><td>+0.34 V</td></tr>
+          <tr><td>2 H⁺ (aq) + 2e⁻ ⟶ H₂ (g)</td><td>0.00 V (Reference)</td></tr>
+          <tr><td>Pb²⁺ (aq) + 2e⁻ ⟶ Pb (s)</td><td>-0.13 V</td></tr>
+          <tr><td>Ni²⁺ (aq) + 2e⁻ ⟶ Ni (s)</td><td>-0.28 V</td></tr>
+          <tr><td>Fe²⁺ (aq) + 2e⁻ ⟶ Fe (s)</td><td>-0.44 V</td></tr>
+          <tr><td>Zn²⁺ (aq) + 2e⁻ ⟶ Zn (s)</td><td>-0.76 V</td></tr>
+          <tr><td>Al³⁺ (aq) + 3e⁻ ⟶ Al (s)</td><td>-1.66 V</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbwnmAV2CExaoKQRvNO631bYUQZEsyt8v3dq8PT8SPr8TxTEPKkG7Tp57jJ84eyMGCOU/exec";
+  const APP_TOKEN = "chm212-k9x4mNq2vB7wLp3z";
+
+  let loggedStudentId = sessionStorage.getItem('chemTutorStudentId') || null;
+
+  function submitStudentId() {
+    let inputVal = document.getElementById('student-id-input').value.trim();
+    if (!inputVal) {
+      alert("Please enter a valid student identifier or choose Guest Mode.");
+      return;
+    }
+    loggedStudentId = inputVal;
+    sessionStorage.setItem('chemTutorStudentId', loggedStudentId);
+    document.getElementById('login-overlay').style.display = 'none';
+    addSystemMessage(`Logged in successfully as [${loggedStudentId}]. Extra credit tracking active.`);
+  }
+
+  function bypassLogin() {
+    loggedStudentId = "Guest";
+    sessionStorage.setItem('chemTutorStudentId', "Guest");
+    document.getElementById('login-overlay').style.display = 'none';
+    addSystemMessage("Running in Guest Mode. Progress will not be tied to extra credit.");
+  }
+
+  // Unlabeled equation sheet. No names, no chapters, fixed scrambled order —
+  // students must recognise the equation, the same as on an exam.
+  // To shuffle on every page load instead, set SHUFFLE_EQUATIONS to true.
+  // Each entry is display markup; the text inserted into the answer box is
+  // derived from it, so there is one source of truth.
+  const SHUFFLE_EQUATIONS = false;
+
+  const pureEquations = [
+    "&Delta;G&deg; = -nF E<sub>cell</sub>&deg;",
+    "&chi;<sub>A</sub> = n<sub>A</sub> / n<sub>total</sub>",
+    "pH = -log[H<sub>3</sub>O<sup>+</sup>]",
+    "t<sub>1/2</sub> = [A]<sub>0</sub> / 2k",
+    "E<sub>cell</sub> = E<sub>cell</sub>&deg; - (0.0592 / n) log Q",
+    "&Delta;T = i K m",
+    "1/[A]<sub>t</sub> = kt + 1/[A]<sub>0</sub>",
+    "K<sub>a</sub> K<sub>b</sub> = K<sub>w</sub>",
+    "K<sub>p</sub> = K<sub>c</sub> (RT)<sup>&Delta;n</sup>",
+    "P<sub>solution</sub> = &chi;<sub>solvent</sub> P&deg;<sub>solvent</sub>",
+    "&Delta;G = &Delta;H - T&Delta;S",
+    "q = n F",
+    "ln([A]<sub>t</sub> / [A]<sub>0</sub>) = -kt",
+    "E&deg;<sub>cell</sub> = E&deg;<sub>cathode</sub> - E&deg;<sub>anode</sub>",
+    "&Delta;S<sub>surr</sub> = -&Delta;H<sub>sys</sub> / T",
+    "PV = nRT",
+    "&pi; = i M R T",
+    "t<sub>1/2</sub> = 0.693 / k",
+    "Q = [C]<sup>x</sup>[D]<sup>y</sup> / [A]<sup>m</sup>[B]<sup>n</sup>",
+    "&Delta;G&deg; = -RT ln K",
+    "C = k P",
+    "[A]<sub>t</sub> = -kt + [A]<sub>0</sub>",
+    "&Delta;S = q / T",
+    "pH + pOH = 14",
+    "S = k ln W",
+    "ln(k<sub>2</sub> / k<sub>1</sub>) = -(E<sub>a</sub> / R)(1/T<sub>2</sub> - 1/T<sub>1</sub>)",
+    "K<sub>sp</sub> = [M<sup>n+</sup>]<sup>x</sup>[X<sup>m-</sup>]<sup>y</sup>",
+    "E = &Delta;m c<sup>2</sup>",
+    "rate = -(1/a)(&Delta;[A]/&Delta;t)",
+    "E&deg;<sub>cell</sub> = (RT / nF) ln K",
+    "I = q / t",
+    "&Delta;G = &Delta;G&deg; + RT ln Q",
+    "m = (MM I t) / (n F)",
+    "t<sub>1/2</sub> = 1 / k[A]<sub>0</sub>",
+    "pOH = -log[OH<sup>-</sup>]",
+    "ln(P<sub>2</sub> / P<sub>1</sub>) = -(&Delta;H<sub>vap</sub> / R)(1/T<sub>2</sub> - 1/T<sub>1</sub>)",
+    "&Delta;S<sub>univ</sub> = &Delta;S<sub>sys</sub> + &Delta;S<sub>surr</sub> &gt; 0",
+    "k = A e<sup>(-E<sub>a</sub> / RT)</sup>",
+    "E<sub>cell</sub> = E<sub>cell</sub>&deg; - (RT / nF) ln Q",
+    "Q<sub>sp</sub> = [M<sup>n+</sup>]<sup>x</sup>[X<sup>m-</sup>]<sup>y</sup>",
+    "P<sub>total</sub> = P<sub>A</sub> + P<sub>B</sub> + ...",
+    "pH = pK<sub>a</sub> + log([A<sup>-</sup>] / [HA])",
+    "m = mol solute / kg solvent",
+    "n = m / MM",
+    "M = mol solute / L solution",
+    "N = n N<sub>A</sub>",
+    "rate = k[A]<sup>m</sup>[B]<sup>n</sup>",
+    "K<sub>c</sub> = [C]<sup>x</sup>[D]<sup>y</sup> / [A]<sup>m</sup>[B]<sup>n</sup>"
+  ];
+
+  // Turn display markup into the plain text that goes in the answer box.
+  // Superscripts become unicode where a character exists; subscripts are
+  // written as ordinary characters, which is how the tutor writes them too.
+  const SUPER_MAP = { "0":"\u2070","1":"\u00b9","2":"\u00b2","3":"\u00b3","4":"\u2074","5":"\u2075",
+    "6":"\u2076","7":"\u2077","8":"\u2078","9":"\u2079","+":"\u207a","-":"\u207b",
+    "x":"\u02e3","y":"\u02b8","m":"\u1d50","n":"\u207f","a":"\u1d43","(":"\u207d",")":"\u207e" };
+
+  function equationToText(html) {
+    let t = html;
+    t = t.replace(/<sup>([\s\S]*?)<\/sup>/g, function (m, inner) {
+      let plain = inner.replace(/<[^>]+>/g, "").replace(/&Delta;/g, "\u0394");
+      let out = "";
+      for (let i = 0; i < plain.length; i++) {
+        let c = plain[i];
+        if (SUPER_MAP[c]) { out += SUPER_MAP[c]; }
+        else { return "^" + (/^\(.*\)$/.test(plain) ? plain : "(" + plain + ")"); }  // no unicode form
+      }
+      return out;
+    });
+    t = t.replace(/<\/?sub>/g, "");
+    t = t.replace(/<[^>]+>/g, "");
+    t = t.replace(/&Delta;/g, "\u0394").replace(/&chi;/g, "\u03c7").replace(/&pi;/g, "\u03c0")
+         .replace(/&deg;/g, "\u00b0").replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/&amp;/g, "&");
+    return t.replace(/\s+/g, " ").trim();
+  }
+
+  // Drop text into the answer box at the cursor and put focus back there.
+  function insertIntoAnswer(text) {
+    const box = document.getElementById("user-input");
+    if (!box) return;
+    const start = box.selectionStart === null ? box.value.length : box.selectionStart;
+    const end = box.selectionEnd === null ? box.value.length : box.selectionEnd;
+    const before = box.value.slice(0, start), after = box.value.slice(end);
+    const pad = (before && !/\s$/.test(before)) ? " " : "";
+    box.value = before + pad + text + after;
+    const pos = (before + pad + text).length;
+    box.focus();
+    try { box.setSelectionRange(pos, pos); } catch (e) {}
+    box.classList.add("inserted-flash");
+    setTimeout(function () { box.classList.remove("inserted-flash"); }, 500);
+  }
+
+  // Every value in the data tables and the constants list is clickable too.
+  function wireReferenceClicks() {
+    ["generalConstantsModal", "thermoDataModal", "solubilityConstantsModal",
+     "acidBaseConstantsModal", "standardPotentialsModal",
+     "colligativeConstantsModal"].forEach(function (id) {
+      const modal = document.getElementById(id);
+      if (!modal) return;
+      modal.querySelectorAll("tbody tr, table tr").forEach(function (tr) {
+        if (tr.querySelector("th")) return;
+        tr.classList.add("clickable");
+        tr.title = "Click to copy into your answer";
+        tr.addEventListener("click", function (ev) {
+          // A row is several columns. Insert the cell that was clicked, joined
+          // to the row's label, so "3.5 x 10^-4" arrives as "HF = 3.5 x 10^-4"
+          // rather than the whole row run together.
+          var cells = [].slice.call(tr.cells || []);
+          var hit = ev.target && ev.target.closest ? ev.target.closest("td") : null;
+          var txt;
+          if (cells.length > 1 && hit && cells.indexOf(hit) > 0) {
+            txt = cells[0].textContent.trim() + " = " + hit.textContent.trim();
+          } else {
+            txt = cells.map(function (c) { return c.textContent.trim(); })
+                       .filter(Boolean).join(" = ");
+          }
+          insertIntoAnswer(txt.replace(/\s+/g, " ").trim());
+          closeModal(id);
+        });
+      });
+      modal.querySelectorAll("li").forEach(function (li) {
+        li.style.cursor = "pointer";
+        li.title = "Click to copy into your answer";
+        li.addEventListener("click", function () {
+          insertIntoAnswer(li.textContent.replace(/\s+/g, " ").trim());
+          closeModal(id);
+        });
+      });
+    });
+  }
+
+  function populateEquationsDropdown() {
+    const grid = document.getElementById('equations-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    let list = pureEquations.slice();
+    if (SHUFFLE_EQUATIONS) {
+      for (let i = list.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        let tmp = list[i]; list[i] = list[j]; list[j] = tmp;
+      }
+    }
+    list.forEach(eq => {
+      let cell = document.createElement('div');
+      cell.className = 'eq-item';
+      cell.innerHTML = eq;
+      cell.title = 'Click to copy into your answer';
+      cell.addEventListener('click', function () {
+        insertIntoAnswer(equationToText(eq));
+        closeModal('equationsModal');
+      });
+      grid.appendChild(cell);
+    });
+  }
+
+  function handleNavSelection(selectObj) {
+    let val = selectObj.value;
+    if (!val) return;
+    if (val.startsWith("modal:")) openModal(val.split(":")[1]);
+    selectObj.selectedIndex = 0;
+  }
+
+
+
+  const problemPools = {
+    "ch10_cc": [
+      { key: "ch10_cc", chapter: "10", name: "Clausius-Clapeyron", text: "Ethanol has a heat of vaporization of 38.6 kJ/mol and a normal boiling point of 78.4 °C at 1.00 atm. What is its boiling point when pressure is reduced to 0.500 atm?", vars: { dh: 38.6, tNorm: 351.5, solve: { type:"cc", dh:38.6, tC:78.4, p1:1.00, p2:0.500 } } },
+      { key: "ch10_cc", chapter: "10", name: "Clausius-Clapeyron", text: "Benzene has a heat of vaporization of 30.7 kJ/mol and a normal boiling point of 80.1 °C at 1.00 atm. What is its boiling point when pressure is reduced to 0.750 atm?", vars: { dh: 30.7, tNorm: 353.3, solve: { type:"cc", dh:30.7, tC:80.1, p1:1.00, p2:0.750 } } },
+      { key: "ch10_cc", chapter: "10", name: "Clausius-Clapeyron", text: "Acetone has a heat of vaporization of 31.3 kJ/mol and a normal boiling point of 56.1 °C at 1.00 atm. What is its boiling point when pressure is reduced to 0.200 atm?", vars: { dh: 31.3, tNorm: 329.2, solve: { type:"cc", dh:31.3, tC:56.1, p1:1.00, p2:0.200 } } },
+	{ key: "ch10_cc", chapter: "10", name: "Clausius-Clapeyron", text: "The heat of vaporization for water is 40.7 kJ/mol, and its normal boiling point is 100.0 C at 1.00 atm. Calculate the boiling point of water in C in Denver, Colorado, where the atmospheric pressure is 0.830 atm.", vars: { solve: { type: "cc", dh: 40.7, tC: 100.0, p1: 1.00, p2: 0.830 } } },
+      { key: "ch10_cc", chapter: "10", name: "Clausius-Clapeyron", text: "Ethanol has a heat of vaporization of 38.6 kJ/mol and a normal boiling point of 78.4 C at 1.00 atm. At what temperature in C will ethanol boil if the pressure inside a closed vessel is increased to 2.50 atm?", vars: { solve: { type: "cc", dh: 38.6, tC: 78.4, p1: 1.00, p2: 2.50 } } },
+      { key: "ch10_cc", chapter: "10", name: "Clausius-Clapeyron", text: "Benzene has a heat of vaporization of 30.8 kJ/mol and boils at 80.1 C under a standard pressure of 1.00 atm. During a vacuum distillation process, the pressure is reduced to 0.150 atm. Calculate the new boiling point of benzene in C.", vars: { solve: { type: "cc", dh: 30.8, tC: 80.1, p1: 1.00, p2: 0.150 } } }
+    ],
+    "ch11_henry": [
+	{ key: "ch11_henry", chapter: "11", name: "Henry's Law", text: "A scuba diver breathes a gas mixture where the partial pressure of N2 is 4.0 atm. What is the molar concentration of N2 dissolved in the diver's blood if the Henry's law constant is 0.00061 M/atm?", vars: { solve: { type: "henry", kh: 0.00061, p: 4.0 } } },
+	{ key: "ch11_henry", chapter: "11", name: "Henry's Law", text: "The partial pressure of O2 in the atmosphere is 0.21 atm. Calculate the concentration of dissolved O2 in a freshwater lake at 25 C, given that the Henry's law constant for O2 is 0.0013 M/atm.", vars: { solve: { type: "henry", kh: 0.0013, p: 0.21 } } },
+	{ key: "ch11_henry", chapter: "11", name: "Henry's Law", text: "Calculate the solubility of CO2 in water at 25 C if the partial pressure of CO2 is 2.5 atm. The Henry's law constant for CO2 at this temperature is 0.034 M/atm.", vars: { solve: { type: "henry", kh: 0.034, p: 2.5 } } },
+      { key: "ch11_henry", chapter: "11", name: "Henry's Law", text: "The Henry's law constant for CO2 in water at 25 °C is 3.4 x 10⁻² M/atm. What is the concentration of dissolved CO2 under a partial pressure of 2.5 atm?", vars: { solve: { type:"henry", kh:3.4e-2, p:2.5 } } },
+      { key: "ch11_henry", chapter: "11", name: "Henry's Law", text: "The Henry's law constant for O2 in water at 25 °C is 1.3 x 10⁻³ M/atm. What is the concentration of dissolved O2 under an oxygen partial pressure of 0.85 atm?", vars: { solve: { type:"henry", kh:1.3e-3, p:0.85 } } },
+      { key: "ch11_henry", chapter: "11", name: "Henry's Law", text: "The Henry's law constant for N2 in water at 25 °C is 6.1 x 10⁻⁴ M/atm. What is the concentration of dissolved N2 under a partial pressure of 0.78 atm?", vars: { solve: { type:"henry", kh:6.1e-4, p:0.78 } } }
+    ],
+    "ch11_raoult": [
+      { key: "ch11_raoult", chapter: "11", name: "Raoult's Law", text: "Calculate the vapor pressure of a solution containing 50.0 g of sucrose in 200.0 g of water at 25 °C. The vapor pressure of pure water is 23.76 mmHg.", vars: { solve: { type:"raoult", mSol:50.0, mmSol:342.30, mSolv:200.0, mmSolv:18.02, pPure:23.76 } } },
+      { key: "ch11_raoult", chapter: "11", name: "Raoult's Law", text: "Calculate the vapor pressure of a solution containing 25.0 g of urea in 150.0 g of water at 25 °C. The vapor pressure of pure water is 23.76 mmHg.", vars: { solve: { type:"raoult", mSol:25.0, mmSol:60.06,  mSolv:150.0, mmSolv:18.02, pPure:23.76 } } },
+      { key: "ch11_raoult", chapter: "11", name: "Raoult's Law", text: "Calculate the vapor pressure of a solution containing 40.0 g of glucose in 250.0 g of water at 25 °C. The vapor pressure of pure water is 23.76 mmHg.", vars: { solve: { type:"raoult", mSol:40.0, mmSol:180.16, mSolv:250.0, mmSolv:18.02, pPure:23.76 } } },
+      { key: "ch11_raoult", chapter: "11", name: "Raoult's Law", text: "Calculate the vapor pressure of a solution made by dissolving 180.0 g of glucose (molar mass = 180.2 g/mol) in 180.0 g of water (molar mass = 18.02 g/mol) at 25 C. The vapor pressure of pure water at 25 C is 23.8 torr.", vars: { solve: { type: "raoult", mSol: 180.0, mmSol: 180.2, mSolv: 180.0, mmSolv: 18.02, pPure: 23.8 } } },
+      { key: "ch11_raoult", chapter: "11", name: "Raoult's Law", text: "Cholesterol (C27H46O, molar mass = 386.6 g/mol) is an extremely nonvolatile solute. If 77.3 g of cholesterol is dissolved in 119.4 g of chloroform (CHCl3, molar mass = 119.4 g/mol) at 20 C, calculate the vapor pressure of the solution in torr. The vapor pressure of pure chloroform at 20 C is 160.0 torr.", vars: { solve: { type: "raoult", mSol: 77.3, mmSol: 386.6, mSolv: 119.4, mmSolv: 119.4, pPure: 160.0 } } },
+      { key: "ch11_raoult", chapter: "11", name: "Raoult's Law", text: "Glycerol is a nonvolatile liquid that is completely miscible with water. Calculate the vapor pressure of a solution prepared by adding 138.0 g of glycerol (molar mass = 92.09 g/mol) to 81.0 g of water (molar mass = 18.02 g/mol) at 50 C. The vapor pressure of pure water at 50 C is 92.5 torr.", vars: { solve: { type: "raoult", mSol: 138.0, mmSol: 92.09, mSolv: 81.0, mmSolv: 18.02, pPure: 92.5 } } }
+    ],
+    "ch11_colligative": [
+      { key: "ch11_colligative", chapter: "11", name: "Freezing/Boiling Point Changes", text: "What is the boiling point of a solution prepared by dissolving 15.0 g of NaCl in 250.0 g of water?", vars: { solve: { type:"colligative", mSol:15.0, mmSol:58.44,  kgSolv:0.250, K:0.512, i:2, base:100.0, dir:1  } } },
+      { key: "ch11_colligative", chapter: "11", name: "Freezing/Boiling Point Changes", text: "Calculate the freezing point of a solution containing 20.0 g of CaCl2 in 300.0 g of water.", vars: { solve: { type:"colligative", mSol:20.0, mmSol:110.98, kgSolv:0.300, K:1.86,  i:3, base:0.0,   dir:-1 } } },
+      { key: "ch11_colligative", chapter: "11", name: "Freezing/Boiling Point Changes", text: "Calculate the freezing point of a solution prepared by dissolving 12.0 g of glucose in 200.0 g of water.", vars: { solve: { type:"colligative", mSol:12.0, mmSol:180.16, kgSolv:0.200, K:1.86, i:1, base:0.0, dir:-1 } } },
+      { key: "ch11_colligative", chapter: "11", name: "Freezing/Boiling Point Changes", text: "What is the boiling point of a solution prepared by dissolving 45.0 g of sucrose (molar mass 342.30 g/mol) in 400.0 g of water?", vars: { solve: { type:"colligative", mSol:45.0, mmSol:342.30, kgSolv:0.400, K:0.512, i:1, base:100.0, dir:1 } } },
+      { key: "ch11_colligative", chapter: "11", name: "Freezing/Boiling Point Changes", text: "Calculate the freezing point of a solution containing 8.50 g of KCl in 175.0 g of water.", vars: { solve: { type:"colligative", mSol:8.50, mmSol:74.55, kgSolv:0.175, K:1.86, i:2, base:0.0, dir:-1 } } },
+      { key: "ch11_colligative", chapter: "11", name: "Freezing/Boiling Point Changes", text: "Naphthalene (molar mass 128.17 g/mol) and benzene are both covalent compounds. What is the boiling point of a solution of 6.40 g of naphthalene in 120.0 g of benzene?", vars: { solve: { type:"colligative", mSol:6.40, mmSol:128.17, kgSolv:0.120, K:2.53, i:1, base:80.1, dir:1 } } }
+    ],
+    "ch11_osmotic": [
+      { key: "ch11_osmotic", chapter: "11", name: "Osmotic Pressure", text: "A 0.100 L aqueous solution containing 0.50 g of an unknown protein exhibits an osmotic pressure of 2.54 mmHg at 25 °C. What is the molar mass of the protein?", vars: { solve: { type:"osmotic", V:0.100, mass:0.50, mmHg:2.54, tC:25, i:1 } } },
+      { key: "ch11_osmotic", chapter: "11", name: "Osmotic Pressure", text: "A 0.250 L aqueous solution containing 1.20 g of an enzyme exhibits an osmotic pressure of 1.15 mmHg at 25 °C. What is the molar mass of the enzyme?", vars: { solve: { type:"osmotic", V:0.250, mass:1.20, mmHg:1.15, tC:25, i:1 } } },
+      { key: "ch11_osmotic", chapter: "11", name: "Osmotic Pressure", text: "A 0.500 L aqueous solution containing 2.50 g of hemoglobin exhibits an osmotic pressure of 1.44 mmHg at 25 °C. What is the molar mass of hemoglobin?", vars: { solve: { type:"osmotic", V:0.500, mass:2.50, mmHg:1.44, tC:25, i:1 } } },
+      { key: "ch11_osmotic", chapter: "11", name: "Osmotic Pressure", text: "A 2.50 g sample of an unknown protein is dissolved in enough water to make 0.100 L of solution. The osmotic pressure of this solution is found to be 7.75 mmHg at 25.0 C. Calculate the molar mass of the protein.", vars: { solve: { type: "osmotic", V: 0.100, mass: 2.50, mmHg: 7.75, tC: 25.0, i: 1 } } },
+      { key: "ch11_osmotic", chapter: "11", name: "Osmotic Pressure", text: "An aqueous solution is prepared by dissolving 3.80 g of a synthetic polymer in water to form 0.250 L of solution. The osmotic pressure of the solution is measured to be 55.6 mmHg at 20.0 C. What is the molar mass of the polymer?", vars: { solve: { type: "osmotic", V: 0.250, mass: 3.80, mmHg: 55.6, tC: 20.0, i: 1 } } },
+      { key: "ch11_osmotic", chapter: "11", name: "Osmotic Pressure", text: "A 1.20 g sample of an unknown strong electrolyte that dissociates completely into two ions per formula unit is dissolved in water to make 0.500 L of solution. At 25.0 C, the osmotic pressure of this solution is 595 mmHg. Calculate the molar mass of the compound.", vars: { solve: { type: "osmotic", V: 0.500, mass: 1.20, mmHg: 595, tC: 25.0, i: 2 } } }
+    ],
+    "ch12_relative": [
+      { key: "ch12_relative", chapter: "12", name: "Relative Reaction Rates", text: "For the reaction N2 + 3H2 -> 2NH3, if H2 is consumed at a rate of 0.45 M/s, what is the rate of production of NH3?", vars: { solve: { type:"relative", rate:0.45,  coefGiven:3, coefWanted:2 } } },
+      { key: "ch12_relative", chapter: "12", name: "Relative Reaction Rates", text: "For the combustion of methane: CH4 + 2O2 -> CO2 + 2H2O. If O2 is consumed at 1.20 M/s, what is the rate of consumption of CH4?", vars: { solve: { type:"relative", rate:1.20,  coefGiven:2, coefWanted:1 } } },
+      { key: "ch12_relative", chapter: "12", name: "Relative Reaction Rates", text: "For the decomposition 2N2O5 -> 4NO2 + O2, if NO2 forms at a rate of 0.050 M/s, what is the rate of decomposition of N2O5?", vars: { solve: { type:"relative", rate:0.050, coefGiven:4, coefWanted:2 } } },
+      { key: "ch12_relative", chapter: "12", name: "Relative Reaction Rates", text: "In the synthesis of ammonia, N2(g) + 3H2(g) -> 2NH3(g), the rate of consumption of H2 is 0.060 M/s. What is the rate of production of NH3 in M/s?", vars: { solve: { type: "relative", rate: 0.060, coefGiven: 3, coefWanted: 2 } } },
+      { key: "ch12_relative", chapter: "12", name: "Relative Reaction Rates", text: "Consider the combustion of ammonia: 4NH3(g) + 5O2(g) -> 4NO(g) + 6H2O(g). If O2 is being consumed at a rate of 1.25 M/s, at what rate is H2O being produced in M/s?", vars: { solve: { type: "relative", rate: 1.25, coefGiven: 5, coefWanted: 6 } } },
+      { key: "ch12_relative", chapter: "12", name: "Relative Reaction Rates", text: "For the decomposition of dinitrogen pentoxide, 2N2O5(g) -> 4NO2(g) + O2(g), the rate of formation of NO2 is 0.084 M/s. Calculate the rate of disappearance of N2O5 in M/s.", vars: { solve: { type: "relative", rate: 0.084, coefGiven: 4, coefWanted: 2 } } }
+    ],
+    "ch12_rates": [
+      { key: "ch12_rates", chapter: "12", name: "Method of Initial Rates", text: "For the reaction A + B → Products, three initial rate trials were conducted. Trial 1: [A] = 0.10 M, [B] = 0.10 M, rate = 2.0 x 10⁻³ M/s. Trial 2: [A] = 0.20 M, [B] = 0.10 M, rate = 8.0 x 10⁻³ M/s. Trial 3: [A] = 0.10 M, [B] = 0.30 M, rate = 6.0 x 10⁻³ M/s. Determine the overall rate law and the value of k.", vars: { solve: { type:"rates", o1:2, o2:1, k:2.0   } } },
+      { key: "ch12_rates", chapter: "12", name: "Method of Initial Rates", text: "For the reaction X + Y → Products: Trial 1: [X] = 0.15 M, [Y] = 0.15 M, rate = 1.0 x 10⁻³ M/s. Trial 2: [X] = 0.30 M, [Y] = 0.15 M, rate = 2.0 x 10⁻³ M/s. Trial 3: [X] = 0.15 M, [Y] = 0.45 M, rate = 9.0 x 10⁻³ M/s. Determine the rate law and the value of k", vars: { solve: { type:"rates", o1:1, o2:2, k:0.296 } } },
+      { key: "ch12_rates", chapter: "12", name: "Method of Initial Rates", text: "For the reaction P + Q → Products: Trial 1: [P] = 0.050 M, [Q] = 0.020 M, rate = 4.0 x 10⁻³ M/s. Trial 2: [P] = 0.100 M, [Q] = 0.020 M, rate = 8.0 x 10⁻³ M/s. Trial 3: [P] = 0.050 M, [Q] = 0.040 M, rate = 4.0 x 10⁻³ M/s. Find the rate expression and the value of k", vars: { solve: { type:"rates", o1:1, o2:0, k:0.080 } } },
+      { key: "ch12_rates", chapter: "12", name: "Method of Initial Rates", text: "Initial rate data were collected for the reaction 2NO(g) + O2(g) -> 2NO2(g). In Trial 1, [NO] = 0.010 M, [O2] = 0.010 M, initial rate = 2.5e-5 M/s. In Trial 2, [NO] = 0.020 M, [O2] = 0.010 M, initial rate = 1.0e-4 M/s. In Trial 3, [NO] = 0.010 M, [O2] = 0.020 M, initial rate = 5.0e-5 M/s. Calculate the rate constant, k, for this reaction.", vars: { solve: { type: "rates", o1: 2, o2: 1, k: 25.0 } } },
+      { key: "ch12_rates", chapter: "12", name: "Method of Initial Rates", text: "Consider the reaction between A and B to form products. In Trial 1, [A] = 0.020 M, [B] = 0.020 M, initial rate = 0.0012 M/s. In Trial 2, [A] = 0.040 M, [B] = 0.020 M, initial rate = 0.0024 M/s. In Trial 3, [A] = 0.020 M, [B] = 0.060 M, initial rate = 0.0108 M/s. Determine the numerical value of the rate constant, k.", vars: { solve: { type: "rates", o1: 1, o2: 2, k: 150.0 } } },
+      { key: "ch12_rates", chapter: "12", name: "Method of Initial Rates", text: "A kinetic study of the reaction CH3Cl(g) + H2O(g) -> CH3OH(g) + HCl(g) produced the following data. Trial 1: [CH3Cl] = 0.100 M, [H2O] = 0.100 M, rate = 0.045 M/s. Trial 2: [CH3Cl] = 0.200 M, [H2O] = 0.100 M, rate = 0.090 M/s. Trial 3: [CH3Cl] = 0.100 M, [H2O] = 0.200 M, rate = 0.045 M/s. What is the value of the rate constant, k?", vars: { solve: { type: "rates", o1: 1, o2: 0, k: 0.45 } } }
+    ],
+    "ch12_integrated": [
+      { key: "ch12_integrated", chapter: "12", name: "Integrated Rate Laws", text: "The decomposition of N2O5 is a first-order reaction with a rate constant of 5.2 x 10⁻³ min⁻¹ at 45 °C. If the initial concentration is 0.250 M, what is the concentration after 2.0 hours?", vars: { solve: { type:"integrated", order:1, k:5.2e-3, a0:0.250, t:120 } } },
+      { key: "ch12_integrated", chapter: "12", name: "Integrated Rate Laws", text: "The gas-phase decomposition of cyclobutane is first-order with k = 8.7 x 10⁻⁴ s⁻¹ at 500 °C. If initial pressure is 760 mmHg, find pressure after 15 minutes.", vars: { solve: { type:"integrated", order:1, k:8.7e-4, a0:760,   t:900 } } },
+      { key: "ch12_integrated", chapter: "12", name: "Integrated Rate Laws", text: "A second-order reaction has a rate constant of 0.55 M⁻¹s⁻¹. If initial concentration is 0.400 M, what is concentration after 45 seconds?", vars: { solve: { type:"integrated", order:2, k:0.55,   a0:0.400, t:45  } } },
+      { key: "ch12_integrated", chapter: "12", name: "Integrated Rate Laws", text: "The decomposition of hydrogen peroxide is a first-order reaction with a rate constant of 0.040 s^-1. If the initial concentration of H2O2 is 0.50 M, what will its concentration be after 30.0 s?", vars: { solve: { type: "integrated", order: 1, k: 0.040, a0: 0.50, t: 30.0 } } },
+      { key: "ch12_integrated", chapter: "12", name: "Integrated Rate Laws", text: "The gas-phase decomposition of nitrogen dioxide follows second-order kinetics with a rate constant of 0.54 M^-1 s^-1. If a vessel initially contains 0.60 M NO2, what is the concentration of NO2 after 15.0 s?", vars: { solve: { type: "integrated", order: 2, k: 0.54, a0: 0.60, t: 15.0 } } },
+      { key: "ch12_integrated", chapter: "12", name: "Integrated Rate Laws", text: "The catalytic decomposition of ammonia on a tungsten surface is a zero-order process with a rate constant of 0.015 M/s. If the initial concentration of NH3 is 1.20 M, calculate its concentration after 45.0 s.", vars: { solve: { type: "integrated", order: 0, k: 0.015, a0: 1.20, t: 45.0 } } }
+    ],
+    "ch12_arrhenius": [
+      { key: "ch12_arrhenius", chapter: "12", name: "Arrhenius Equation", text: "The rate constant of a reaction increases from 0.050 s⁻¹ at 25 °C to 0.175 s⁻¹ at 55 °C. Calculate the activation energy for this reaction.", vars: { ea: 34,  t: 298, solve: { type:"arrhenius", solveFor:"ea", k1:0.050,   t1C:25, k2:0.175,  t2C:55 } } },
+      { key: "ch12_arrhenius", chapter: "12", name: "Arrhenius Equation", text: "A reaction has a rate constant of 1.22 x 10⁻⁴ s⁻¹ at 27 °C and 0.0933 s⁻¹ at 77 °C. Determine the activation energy in kJ/mol.", vars: { ea: 116, t: 300, solve: { type:"arrhenius", solveFor:"ea", k1:1.22e-4, t1C:27, k2:0.0933, t2C:77 } } },
+      { key: "ch12_arrhenius", chapter: "12", name: "Arrhenius Equation", text: "Calculate the rate constant at 50 °C for a reaction with activation energy 65 kJ/mol and rate constant 0.025 s⁻¹ at 25 °C.", vars: { ea: 65,  t: 323, solve: { type:"arrhenius", solveFor:"k2", ea:65, k1:0.025, t1C:25, t2C:50 } } },
+      { key: "ch12_arrhenius", chapter: "12", name: "Arrhenius Equation", text: "The rate constant for the isomerization of cyclopropane to propene is 1.10e-4 s^-1 at 470 C and 1.02e-3 s^-1 at 510 C. Calculate the activation energy for this reaction in kJ/mol.", vars: { solve: { type: "arrhenius", solveFor: "ea", k1: 1.10e-4, t1C: 470, k2: 1.02e-3, t2C: 510 } } },
+      { key: "ch12_arrhenius", chapter: "12", name: "Arrhenius Equation", text: "The activation energy for the decomposition of N2O5 is 103.0 kJ/mol. At 25 C, the rate constant is 3.46e-5 s^-1. Calculate the rate constant at 55 C.", vars: { solve: { type: "arrhenius", solveFor: "k2", ea: 103.0, k1: 3.46e-5, t1C: 25, t2C: 55 } } },
+      { key: "ch12_arrhenius", chapter: "12", name: "Arrhenius Equation", text: "The rate constant for the reaction between NO and Cl2 is 4.90e-3 M^-1 s^-1 at -10.0 C and 1.50e-2 M^-1 s^-1 at 20.0 C. Calculate the activation energy for this reaction in kJ/mol.", vars: { solve: { type: "arrhenius", solveFor: "ea", k1: 4.90e-3, t1C: -10.0, k2: 1.50e-2, t2C: 20.0 } } }
+    ],
+    "ch13_ice": [
+      { key: "ch13_ice", chapter: "13", name: "ICE Tables & Equilibrium", text: "A 1.00 L flask is filled with 1.00 mol of H2 and 1.00 mol of I2. At equilibrium, the concentration of HI is 1.56 M. Calculate Kc for H2 + I2 <=> 2HI.", vars: { initR: 1.0,  rxnText: "H₂ + I₂ ⇌ 2HI",        pCoef: 2, rCoef: 1, solve: { type:"ice", mode:"findK",         a0:1.00,  prod:1.56, pCoef:2, ask:"K" } } },
+      { key: "ch13_ice", chapter: "13", name: "ICE Tables & Equilibrium", text: "For CO + H2O <=> CO2 + H2, Kc = 1.00 at 700 K. If initially 1.50 mol of CO and 1.50 mol of H2O are placed in a 2.00 L vessel, find equilibrium concentrations.", vars: { initR: 0.75, rxnText: "CO + H₂O ⇌ CO₂ + H₂",  pCoef: 1, rCoef: 1, solve: { type:"ice", mode:"perfectSquare", a0:0.750, K:1.00 } } },
+      { key: "ch13_ice", chapter: "13", name: "ICE Tables & Equilibrium", text: "For PCl5 <=> PCl3 + Cl2, Kc = 0.042 at 250 °C. Initially 0.80 mol PCl5 is in a 1.0 L container. Find equilibrium [Cl2].", vars: { initR: 0.8,  rxnText: "PCl₅ ⇌ PCl₃ + Cl₂",    pCoef: 1, rCoef: 1, solve: { type:"ice", mode:"quadratic",     a0:0.80,  K:0.042, ask:"product" } } },
+      { key: "ch13_ice", chapter: "13", name: "ICE Tables & Equilibrium", text: "Initially, 0.500 M of N2O4 is placed in a reaction flask. At equilibrium, the concentration of NO2 is found to be 0.150 M. Calculate the equilibrium constant, Kc, for the reaction N2O4(g) <=> 2NO2(g).", vars: { initR: 0.5, rxnText: "N₂O₄ ⇌ 2NO₂", pCoef: 2, rCoef: 1, solve: { type: "ice", mode: "findK", a0: 0.500, prod: 0.150, pCoef: 2, rCount: 1, ask: "K" } } },
+      { key: "ch13_ice", chapter: "13", name: "ICE Tables & Equilibrium", text: "A mixture of 0.200 M H2 and 0.200 M I2 is allowed to reach equilibrium at a certain temperature. If the equilibrium constant, Kc, is 49.0 for the reaction H2(g) + I2(g) <=> 2HI(g), what is the equilibrium concentration of HI in M?", vars: { initR: 0.2, rxnText: "H₂ + I₂ ⇌ 2HI", pCoef: 2, rCoef: 1, solve: { type: "ice", mode: "perfectSquare", a0: 0.200, K: 49.0, pCoef: 2, ask: "product" } } },
+      { key: "ch13_ice", chapter: "13", name: "ICE Tables & Equilibrium", text: "At a certain temperature, the equilibrium constant Kc for the decomposition of phosphorus pentachloride, PCl5(g) <=> PCl3(g) + Cl2(g), is 0.025. If the initial concentration of PCl5 is 0.100 M with no products present, what is the equilibrium concentration of PCl3 in M?", vars: { initR: 0.1, rxnText: "PCl₅ ⇌ PCl₃ + Cl₂", pCoef: 1, rCoef: 1, solve: { type: "ice", mode: "quadratic", a0: 0.100, K: 0.025, ask: "product" } } }
+    ],
+    "ch13_q_vs_k": [
+      { key: "ch13_q_vs_k", chapter: "13", name: "Reaction Quotient", text: "For H2 + I2 <=> 2HI, Kc = 54.3 at 430 °C. At a given moment, [H2] = 0.50 M, [I2] = 0.50 M, and [HI] = 3.0 M. In which direction will the reaction shift?", vars: { solve: { type:"qk", K:54.3,  num:[[3.0,2]],   den:[[0.50,1],[0.50,1]] } } },
+      { key: "ch13_q_vs_k", chapter: "13", name: "Reaction Quotient", text: "For N2O4 <=> 2NO2, Kc = 0.211 at 100 °C. Initial analysis shows [N2O4] = 0.12 M and [NO2] = 0.055 M. Predict the shift direction.", vars: { solve: { type:"qk", K:0.211, num:[[0.055,2]], den:[[0.12,1]] } } },
+      { key: "ch13_q_vs_k", chapter: "13", name: "Reaction Quotient", text: "For 2SO2 + O2 <=> 2SO3, Kc = 280. If [SO2] = 0.020 M, [O2] = 0.010 M, and [SO3] = 0.050 M, determine Q and shift direction.", vars: { solve: { type:"qk", K:280,   num:[[0.050,2]], den:[[0.020,2],[0.010,1]] } } },
+      { key: "ch13_q_vs_k", chapter: "13", name: "Reaction Quotient", text: "At a certain temperature, the equilibrium constant Kc for the Haber process, N2(g) + 3H2(g) <=> 2NH3(g), is 10.0. A reaction mixture contains 0.50 M N2, 0.10 M H2, and 0.20 M NH3. Calculate the reaction quotient, Qc, to determine the direction the reaction will shift.", vars: { solve: { type: "qk", K: 10.0, num: [[0.20, 2]], den: [[0.50, 1], [0.10, 3]] } } },
+      { key: "ch13_q_vs_k", chapter: "13", name: "Reaction Quotient", text: "The equilibrium constant Kc for the reaction 2SO2(g) + O2(g) <=> 2SO3(g) is 250 at a given temperature. If a flask is charged with 0.020 M SO2, 0.050 M O2, and 0.10 M SO3, calculate the reaction quotient, Qc.", vars: { solve: { type: "qk", K: 250, num: [[0.10, 2]], den: [[0.020, 2], [0.050, 1]] } } },
+      { key: "ch13_q_vs_k", chapter: "13", name: "Reaction Quotient", text: "The synthesis of methanol, CO(g) + 2H2(g) <=> CH3OH(g), has an equilibrium constant Kc of 50.0 at a specific temperature. Calculate the reaction quotient, Qc, for a mixture containing 0.25 M CO, 0.40 M H2, and 0.80 M CH3OH.", vars: { solve: { type: "qk", K: 50.0, num: [[0.80, 1]], den: [[0.25, 1], [0.40, 2]] } } }
+    ],
+    "ch13_lechatelier": [
+      { key: "ch13_lechatelier", chapter: "13", name: "Le Chatelier's Principle", text: "Consider the exothermic equilibrium N2 + 3H2 <=> 2NH3 + Heat. Predict the shift in equilibrium if the temperature of the system is increased.", vars: { rxnText: "N₂ + 3H₂ ⇌ 2NH₃ + Heat", exo: true } },
+      { key: "ch13_lechatelier", chapter: "13", name: "Le Chatelier's Principle", text: "For the gas-phase equilibrium CaCO3 (s) + Heat <=> CaO (s) + CO2 (g), predict how decreasing the reaction container volume will affect the amount of solid calcium carbonate.", vars: { rxnText: "CaCO₃ + Heat ⇌ CaO + CO₂", exo: false } },
+      { key: "ch13_lechatelier", chapter: "13", name: "Le Chatelier's Principle", text: "For 2CO + O2 <=> 2CO2 + Heat (exothermic), predict the effect of removing CO2 from the reaction vessel.", vars: { rxnText: "2CO + O₂ ⇌ 2CO₂ + Heat", exo: true } },
+      { key: "ch13_lechatelier", chapter: "13", name: "Le Chatelier's Principle", text: "Consider the gas-phase equilibrium: N2(g) + 3H2(g) <=> 2NH3(g). If additional H2 gas is added to the container at constant volume and temperature, in which direction will the equilibrium shift?", vars: { rxnText: "N₂ + 3H₂ ⇌ 2NH₃ + Heat", exo: true } },
+      { key: "ch13_lechatelier", chapter: "13", name: "Le Chatelier's Principle", text: "The following reaction is at equilibrium: PCl5(g) <=> PCl3(g) + Cl2(g). If the volume of the reaction vessel is abruptly decreased at constant temperature, in which direction will the equilibrium shift?", vars: { rxnText: "PCl₅ + Heat ⇌ PCl₃ + Cl₂", exo: false } },
+      { key: "ch13_lechatelier", chapter: "13", name: "Le Chatelier's Principle", text: "The synthesis of sulfur trioxide is an exothermic process: 2SO2(g) + O2(g) <=> 2SO3(g). If the temperature of this equilibrium mixture is increased, in which direction will the reaction shift?", vars: { rxnText: "2SO₂ + O₂ ⇌ 2SO₃ + Heat", exo: true } }
+    ],
+    "ch14_ph_poh": [
+      { key: "ch14_ph_poh", chapter: "14", name: "Autoionization, pH & pOH", text: "Calculate the pH, pOH, and [OH⁻] of a 0.025 M solution of the strong acid HNO3 at 25 °C.", vars: { solve: { type:"phpoh", conc:0.025, mult:1, kind:"acid" } } },
+      { key: "ch14_ph_poh", chapter: "14", name: "Autoionization, pH & pOH", text: "Calculate the pH, pOH, and [H₃O⁺] of a 0.015 M solution of Ba(OH)2 at 25 °C. Assume complete dissociation.", vars: { solve: { type:"phpoh", conc:0.015, mult:2, kind:"base" } } },
+      { key: "ch14_ph_poh", chapter: "14", name: "Autoionization, pH & pOH", text: "Calculate the pH of a 0.120 M solution of the strong base KOH at 25 °C.", vars: { solve: { type:"phpoh", conc:0.120, mult:1, kind:"base" } } },
+      { key: "ch14_ph_poh", chapter: "14", name: "Autoionization, pH & pOH", text: "Calculate the pH of a 0.045 M aqueous solution of nitric acid (HNO3) at 25 C.", vars: { solve: { type: "phpoh", conc: 0.045, mult: 1, kind: "acid", want: "pH" } } },
+      { key: "ch14_ph_poh", chapter: "14", name: "Autoionization, pH & pOH", text: "Calculate the pH of a 0.020 M solution of strontium hydroxide (Sr(OH)2) at 25 C. Assume complete dissociation.", vars: { solve: { type: "phpoh", conc: 0.020, mult: 2, kind: "base", want: "pH" } } },
+      { key: "ch14_ph_poh", chapter: "14", name: "Autoionization, pH & pOH", text: "What is the pOH of a 0.250 M solution of perchloric acid (HClO4) at 25 C?", vars: { solve: { type: "phpoh", conc: 0.250, mult: 1, kind: "acid", want: "pOH" } } }
+    ],
+    "ch14_weak_acid": [
+      { key: "ch14_weak_acid", chapter: "14", name: "Weak Acids & pH", text: "Acetic acid has a Ka of 1.8 x 10⁻⁵ at 25 °C. Calculate the pH of a 0.150 M aqueous solution of acetic acid.", vars: { solve: { type:"weakacid", K:1.8e-5, c:0.150, kind:"acid" } } },
+      { key: "ch14_weak_acid", chapter: "14", name: "Weak Acids & pH", text: "Ammonia has a Kb of 1.8 x 10⁻⁵ at 25 °C. Calculate the pH of a 0.250 M aqueous solution of ammonia.", vars: { solve: { type:"weakacid", K:1.8e-5, c:0.250, kind:"base" } } },
+      { key: "ch14_weak_acid", chapter: "14", name: "Weak Acids & pH", text: "Hypochlorous acid has a Ka of 2.9 x 10⁻⁸. Find the pH of a 0.200 M solution of HClO.", vars: { solve: { type:"weakacid", K:2.9e-8, c:0.200, kind:"acid" } } },
+      { key: "ch14_weak_acid", chapter: "14", name: "Weak Acids & pH", text: "Calculate the pH of a 0.500 M solution of formic acid (HCOOH) at 25 C. The acid dissociation constant (Ka) for formic acid is 1.8e-4.", vars: { solve: { type: "weakacid", K: 1.8e-4, c: 0.500, kind: "acid" } } },
+      { key: "ch14_weak_acid", chapter: "14", name: "Weak Acids & pH", text: "Calculate the pH of a 0.250 M solution of aniline (C6H5NH2), a weak base. The base dissociation constant (Kb) for aniline is 4.3e-10.", vars: { solve: { type: "weakacid", K: 4.3e-10, c: 0.250, kind: "base" } } },
+      { key: "ch14_weak_acid", chapter: "14", name: "Weak Acids & pH", text: "What is the pH of a 0.050 M aqueous solution of hypochlorous acid (HClO)? The Ka for hypochlorous acid is 2.9e-8.", vars: { solve: { type: "weakacid", K: 2.9e-8, c: 0.050, kind: "acid" } } }
+    ],
+    "ch14_buffer": [
+      { key: "ch14_buffer", chapter: "14", name: "Henderson-Hasselbalch Equation", text: "A buffer solution contains 0.250 M ammonia and 0.300 M ammonium chloride. The Kb for ammonia is 1.8 x 10⁻⁵. Calculate the pH of this buffer.", vars: { pka: 9.25, ratio: 0.83, solve: { type:"buffer", K:1.8e-5, kIs:"kb", base:0.250, acid:0.300 } } },
+      { key: "ch14_buffer", chapter: "14", name: "Henderson-Hasselbalch Equation", text: "Calculate the pH of a buffer that is 0.150 M in acetic acid (Ka = 1.8 x 10⁻⁵) and 0.100 M in sodium acetate.", vars: { pka: 4.74, ratio: 0.67, solve: { type:"buffer", K:1.8e-5, kIs:"ka", base:0.100, acid:0.150 } } },
+      { key: "ch14_buffer", chapter: "14", name: "Henderson-Hasselbalch Equation", text: "Calculate the pH of a buffer made by mixing 0.120 M HF (Ka = 3.5 x 10⁻⁴) and 0.080 M NaF.", vars: { pka: 3.46, ratio: 0.67, solve: { type:"buffer", K:3.5e-4, kIs:"ka", base:0.080, acid:0.120 } } },
+      { key: "ch14_buffer", chapter: "14", name: "Henderson-Hasselbalch Equation", text: "Calculate the pH of a buffer solution that is 0.20 M in lactic acid (HC3H5O3) and 0.50 M in sodium lactate (NaC3H5O3). The Ka for lactic acid is 1.4e-4.", vars: { solve: { type: "buffer", K: 1.4e-4, kIs: "ka", base: 0.50, acid: 0.20 } } },
+      { key: "ch14_buffer", chapter: "14", name: "Henderson-Hasselbalch Equation", text: "Calculate the pH of a buffer solution containing 0.30 M ammonia (NH3) and 0.15 M ammonium chloride (NH4Cl). The Kb for ammonia is 1.8e-5.", vars: { solve: { type: "buffer", K: 1.8e-5, kIs: "kb", base: 0.30, acid: 0.15 } } },
+      { key: "ch14_buffer", chapter: "14", name: "Henderson-Hasselbalch Equation", text: "What is the pH of a buffer system prepared with 0.80 M formic acid (HCHO2) and 0.10 M potassium formate (KCHO2)? The Ka for formic acid is 1.8e-4.", vars: { solve: { type: "buffer", K: 1.8e-4, kIs: "ka", base: 0.10, acid: 0.80 } } }
+    ],
+    "ch14_titration": [
+      { key: "ch14_titration", chapter: "14", name: "Acid-Base Titrations", text: "A 25.0 mL sample of 0.100 M HCl is titrated with 0.100 M NaOH. What is the pH after 15.0 mL of NaOH has been added?", vars: { equiv: 25, acid: "HCl (Acid)",      reverse: false, titr: { analyte: "HCl", kind: "acid", Ca: 0.100, Va: 25.0, Ct: 0.100, titrant: "NaOH", at: 15.0 }, solve: { type:"titration", mode:"excess",     cA:0.100, vA:0.0250, cB:0.100, vB:0.0150 } } },
+      { key: "ch14_titration", chapter: "14", name: "Acid-Base Titrations", text: "A 20.0 mL sample of 0.100 M acetic acid (Ka = 1.8 x 10⁻⁵) is titrated with 0.100 M NaOH. What is the pH at the half-equivalence point?", vars: { equiv: 20, acid: "CH₃COOH (Acid)",  reverse: false, titr: { analyte: "CH₃COOH", kind: "acid", Ka: 1.8e-5, Ca: 0.100, Va: 20.0, Ct: 0.100, titrant: "NaOH", at: "half" }, solve: { type:"titration", mode:"halfEquiv",  Ka:1.8e-5 } } },
+      { key: "ch14_titration", chapter: "14", name: "Acid-Base Titrations", text: "A 30.0 mL sample of 0.150 M ammonia (Kb = 1.8 x 10⁻⁵) is titrated with 0.150 M HCl. Find pH at equivalence point.", vars: { equiv: 30, acid: "NH₃ (Base)",      reverse: true,  titr: { analyte: "NH₃", kind: "base", Kb: 1.8e-5, Ca: 0.150, Va: 30.0, Ct: 0.150, titrant: "HCl", at: "equiv" }, solve: { type:"titration", mode:"weakEquiv",  c:0.150, V:0.0300, Kb:1.8e-5 } } },
+      { key: "ch14_titration", chapter: "14", name: "Acid-Base Titrations", text: "A 50.0 mL sample of 0.100 M HNO3 is titrated with 0.100 M KOH. What is the pH after 40.0 mL of KOH has been added?", vars: { equiv: 50, acid: "HNO₃ (Acid)", reverse: false, titr: { analyte: "HNO₃", kind: "acid", Ca: 0.100, Va: 50.0, Ct: 0.100, titrant: "KOH", at: 40.0 }, solve: { type: "titration", mode: "excess", cA: 0.100, vA: 0.0500, cB: 0.100, vB: 0.0400 } } },
+      { key: "ch14_titration", chapter: "14", name: "Acid-Base Titrations", text: "A 25.0 mL sample of 0.200 M formic acid (Ka = 1.8e-4) is titrated with 0.200 M NaOH. What is the pH of the solution at the half-equivalence point?", vars: { equiv: 25, acid: "HCOOH (Acid)", reverse: false, titr: { analyte: "HCOOH", kind: "acid", Ka: 1.8e-4, Ca: 0.200, Va: 25.0, Ct: 0.200, titrant: "NaOH", at: "half" }, solve: { type: "titration", mode: "halfEquiv", Ka: 1.8e-4 } } },
+      { key: "ch14_titration", chapter: "14", name: "Acid-Base Titrations", text: "A 40.0 mL sample of 0.100 M methylamine (Kb = 4.4e-4) is titrated with 0.100 M HCl. Calculate the pH at the equivalence point.", vars: { equiv: 40, acid: "CH₃NH₂ (Base)", reverse: true, titr: { analyte: "CH₃NH₂", kind: "base", Kb: 4.4e-4, Ca: 0.100, Va: 40.0, Ct: 0.100, titrant: "HCl", at: "equiv" }, solve: { type: "titration", mode: "weakEquiv", c: 0.100, V: 0.0400, Kb: 4.4e-4 } } }
+    ],
+    "ch15_ksp": [
+      { key: "ch15_ksp", chapter: "15", name: "Molar Solubility", text: "Calculate the molar solubility of silver chloride in pure water. The Ksp for AgCl is 1.8 x 10⁻¹⁰ at 25 °C.", vars: { ksp: 1.8e-10, type: 2, salt: "AgCl",  solve: { type:"ksp", ksp:1.8e-10, stoich:2 } } },
+      { key: "ch15_ksp", chapter: "15", name: "Molar Solubility", text: "Calculate the molar solubility of calcium fluoride in pure water. The Ksp for CaF2 is 3.9 x 10⁻¹¹ at 25 °C.", vars: { ksp: 3.9e-11, type: 3, salt: "CaF₂",  solve: { type:"ksp", ksp:3.9e-11, stoich:3 } } },
+      { key: "ch15_ksp", chapter: "15", name: "Molar Solubility", text: "Calculate the molar solubility of lead(II) chloride in water. Ksp = 1.7 x 10⁻⁵.", vars: { ksp: 1.7e-5,  type: 3, salt: "PbCl₂", solve: { type:"ksp", ksp:1.7e-5,  stoich:3 } } },
+      { key: "ch15_ksp", chapter: "15", name: "Molar Solubility", text: "Calculate the molar solubility of barium sulfate (BaSO4) in pure water at 25 C. The Ksp for BaSO4 is 1.1e-10.", vars: { ksp: 1.1e-10, type: 2, salt: "BaSO₄", solve: { type: "ksp", ksp: 1.1e-10, stoich: 2 } } },
+      { key: "ch15_ksp", chapter: "15", name: "Molar Solubility", text: "Determine the molar solubility of silver chromate (Ag2CrO4) in pure water. The solubility product constant, Ksp, is 1.1e-12.", vars: { ksp: 1.1e-12, type: 3, salt: "Ag₂CrO₄", solve: { type: "ksp", ksp: 1.1e-12, stoich: 3 } } },
+      { key: "ch15_ksp", chapter: "15", name: "Molar Solubility", text: "What is the molar solubility of magnesium hydroxide (Mg(OH)2) in pure water at 25 C? The Ksp for Mg(OH)2 is 5.6e-12.", vars: { ksp: 5.6e-12, type: 3, salt: "Mg(OH)₂", solve: { type: "ksp", ksp: 5.6e-12, stoich: 3 } } }
+    ],
+    "ch15_common_ion": [
+      { key: "ch15_common_ion", chapter: "15", name: "Common Ion Effect", text: "Calculate the molar solubility of AgCl (Ksp = 1.8 x 10⁻¹⁰) in a solution that already contains 0.10 M NaCl.", vars: { ksp: 1.8e-10, common: 0.10, salt: "AgCl",  ion: "Cl⁻",   type: 2, cPow: 1, solve: { type:"commonion", ksp:1.8e-10, common:0.10,  cPow:1, stoich:2 } } },
+      { key: "ch15_common_ion", chapter: "15", name: "Common Ion Effect", text: "Calculate the molar solubility of CaF2 (Ksp = 3.9 x 10⁻¹¹) in a 0.050 M solution of NaF.", vars: { ksp: 3.9e-11, common: 0.05, salt: "CaF₂",  ion: "F⁻",    type: 3, cPow: 2, solve: { type:"commonion", ksp:3.9e-11, common:0.050, cPow:2, stoich:3 } } },
+      { key: "ch15_common_ion", chapter: "15", name: "Common Ion Effect", text: "Calculate molar solubility of BaSO4 (Ksp = 1.1 x 10⁻¹⁰) in 0.020 M Na2SO4.", vars: { ksp: 1.1e-10, common: 0.02, salt: "BaSO₄", ion: "SO₄²⁻", type: 2, cPow: 1, solve: { type:"commonion", ksp:1.1e-10, common:0.020, cPow:1, stoich:2 } } },
+      { key: "ch15_common_ion", chapter: "15", name: "Common Ion Effect", text: "Calculate the molar solubility of lead(II) chloride (PbCl2) in a 0.150 M solution of NaCl. The Ksp for PbCl2 is 1.7e-5.", vars: { ksp: 1.7e-5, common: 0.150, salt: "PbCl₂", ion: "Cl⁻", type: 3, cPow: 2, solve: { type: "commonion", ksp: 1.7e-5, common: 0.150, cPow: 2, stoich: 3 } } },
+      { key: "ch15_common_ion", chapter: "15", name: "Common Ion Effect", text: "Determine the molar solubility of silver chromate (Ag2CrO4) in a solution containing 0.010 M AgNO3. The Ksp for Ag2CrO4 is 1.1e-12.", vars: { ksp: 1.1e-12, common: 0.010, salt: "Ag₂CrO₄", ion: "Ag⁺", type: 3, cPow: 2, solve: { type: "commonion", ksp: 1.1e-12, common: 0.010, cPow: 2, stoich: 3 } } },
+      { key: "ch15_common_ion", chapter: "15", name: "Common Ion Effect", text: "What is the molar solubility of magnesium carbonate (MgCO3) in a 0.050 M solution of Mg(NO3)2? The solubility product constant, Ksp, for MgCO3 is 3.5e-8.", vars: { ksp: 3.5e-8, common: 0.050, salt: "MgCO₃", ion: "Mg²⁺", type: 2, cPow: 1, solve: { type: "commonion", ksp: 3.5e-8, common: 0.050, cPow: 1, stoich: 2 } } }
+    ],
+    "ch15_q_ksp": [
+      { key: "ch15_q_ksp", chapter: "15", name: "Predicting Precipitation", text: "Will a precipitate form if 50.0 mL of 2.0 x 10⁻⁴ M AgNO3 is mixed with 50.0 mL of 2.0 x 10⁻⁴ M NaCl? (Ksp of AgCl = 1.8 x 10⁻¹⁰)", vars: { solve: { type:"qksp", c1:2.0e-4, v1:50,  c2:2.0e-4, v2:50,  p1:1, p2:1, ksp:1.8e-10 } } },
+      { key: "ch15_q_ksp", chapter: "15", name: "Predicting Precipitation", text: "Will a precipitate form if 25.0 mL of 1.0 x 10⁻³ M Pb(NO3)2 is mixed with 75.0 mL of 2.0 x 10⁻³ M NaI? (Ksp of PbI2 = 7.1 x 10⁻⁹)", vars: { solve: { type:"qksp", c1:1.0e-3, v1:25,  c2:2.0e-3, v2:75,  p1:1, p2:2, ksp:7.1e-9  } } },
+      { key: "ch15_q_ksp", chapter: "15", name: "Predicting Precipitation", text: "Will BaSO4 precipitate when 100.0 mL of 4.0 x 10⁻⁵ M BaCl2 is mixed with 100.0 mL of 2.0 x 10⁻⁵ M Na2SO4? (Ksp of BaSO4 = 1.1 x 10⁻¹⁰)", vars: { solve: { type:"qksp", c1:4.0e-5, v1:100, c2:2.0e-5, v2:100, p1:1, p2:1, ksp:1.1e-10 } } },
+      { key: "ch15_q_ksp", chapter: "15", name: "Predicting Precipitation", text: "Will a precipitate of calcium sulfate form if 150.0 mL of 0.020 M CaCl2 is mixed with 50.0 mL of 0.010 M Na2SO4? (Ksp of CaSO4 = 4.9e-5)", vars: { solve: { type: "qksp", c1: 0.020, v1: 150.0, c2: 0.010, v2: 50.0, p1: 1, p2: 1, ksp: 4.9e-5 } } },
+      { key: "ch15_q_ksp", chapter: "15", name: "Predicting Precipitation", text: "Will a precipitate of magnesium fluoride form if 50.0 mL of 2.0e-3 M Mg(NO3)2 is mixed with 50.0 mL of 2.0e-4 M KF? (Ksp of MgF2 = 5.2e-11)", vars: { solve: { type: "qksp", c1: 2.0e-3, v1: 50.0, c2: 2.0e-4, v2: 50.0, p1: 1, p2: 2, ksp: 5.2e-11 } } },
+      { key: "ch15_q_ksp", chapter: "15", name: "Predicting Precipitation", text: "Will a precipitate of silver chromate form when 50.0 mL of 2.0e-3 M AgNO3 is combined with 50.0 mL of 2.0e-5 M K2CrO4? (Ksp of Ag2CrO4 = 1.1e-12)", vars: { solve: { type: "qksp", c1: 2.0e-3, v1: 50.0, c2: 2.0e-5, v2: 50.0, p1: 2, p2: 1, ksp: 1.1e-12 } } }
+    ],
+    "ch15_complex": [
+      { key: "ch15_complex", chapter: "15", name: "Complex Ion Formation", text: "Calculate the concentration of free Ag⁺ remaining when 0.010 moles of AgNO3 is added to 1.00 L of a 0.50 M NH3 solution. Kf is 1.7 x 10⁷.", vars: { solve: { type:"complex", mol:0.010, L:1.00, nh3:0.50, Kf:1.7e7,  lig:2 } } },
+      { key: "ch15_complex", chapter: "15", name: "Complex Ion Formation", text: "Calculate the concentration of free Cu²⁺ remaining when 0.020 moles of Cu(NO3)2 is dissolved in 1.00 L of 1.0 M NH3. Kf is 1.1 x 10¹³.", vars: { solve: { type:"complex", mol:0.020, L:1.00, nh3:1.0,  Kf:1.1e13, lig:4 } } },
+      { key: "ch15_complex", chapter: "15", name: "Complex Ion Formation", text: "Calculate free Zn²⁺ when 0.015 mol Zn(NO3)2 is added to 1.0 L of 0.80 M NH3. Kf is 4.1 x 10⁹.", vars: { solve: { type:"complex", mol:0.015, L:1.0,  nh3:0.80, Kf:4.1e9,  lig:4 } } },
+      { key: "ch15_complex", chapter: "15", name: "Complex Ion Formation", text: "Calculate the concentration of free Cd2+ remaining when 0.025 moles of Cd(NO3)2 is added to 1.00 L of a 0.75 M NH3 solution. The formation constant, Kf, for [Cd(NH3)4]2+ is 1.3e7.", vars: { solve: { type: "complex", mol: 0.025, L: 1.00, nh3: 0.75, Kf: 1.3e7, lig: 4 } } },
+      { key: "ch15_complex", chapter: "15", name: "Complex Ion Formation", text: "Determine the concentration of free Ni2+ at equilibrium when 0.030 moles of NiCl2 is dissolved in 1.00 L of 0.50 M NH3. The Kf for [Ni(NH3)6]2+ is 2.0e8.", vars: { solve: { type: "complex", mol: 0.030, L: 1.00, nh3: 0.50, Kf: 2.0e8, lig: 6 } } },
+      { key: "ch15_complex", chapter: "15", name: "Complex Ion Formation", text: "Calculate the concentration of free Co2+ in a solution prepared by adding 0.100 moles of Co(NO3)2 to 1.00 L of 2.00 M NH3. The formation constant, Kf, for [Co(NH3)6]2+ is 1.3e5.", vars: { solve: { type: "complex", mol: 0.100, L: 1.00, nh3: 2.00, Kf: 1.3e5, lig: 6 } } }
+    ],
+    "ch16_entropy": [
+      { key: "ch16_entropy", chapter: "16", name: "Reversible Entropy Changes", text: "Calculate the entropy change when 1.00 mole of water melts reversibly at 0 °C (273 K). The heat of fusion for water is 6.01 kJ/mol.", vars: { solve: { type:"entropy", mol:1.00, dh:6.01, T:273.15 } } },
+      { key: "ch16_entropy", chapter: "16", name: "Reversible Entropy Changes", text: "Determine the entropy change of the system when 2.50 moles of liquid ammonia boils at its normal boiling point of -33.3 °C. The heat of vaporization is 23.3 kJ/mol.", vars: { solve: { type:"entropy", mol:2.50, dh:23.3, T:239.85 } } },
+      { key: "ch16_entropy", chapter: "16", name: "Reversible Entropy Changes", text: "Calculate the entropy change for the reversible vaporization of 1.00 mole of water at 100 °C given that heat of vaporization is 40.7 kJ/mol.", vars: { solve: { type:"entropy", mol:1.00, dh:40.7, T:373.15 } } },
+      { key: "ch16_entropy", chapter: "16", name: "Reversible Entropy Changes", text: "Calculate the entropy change in J/K when 1.50 moles of ethanol vaporizes reversibly at its normal boiling point of 78.4 C. The heat of vaporization for ethanol is 38.6 kJ/mol.", vars: { solve: { type: "entropy", mol: 1.50, dh: 38.6, T: 351.55 } } },
+      { key: "ch16_entropy", chapter: "16", name: "Reversible Entropy Changes", text: "Determine the entropy change of the system in J/K when 0.500 moles of solid benzene melts reversibly at its normal melting point of 5.5 C. The heat of fusion for benzene is 9.87 kJ/mol.", vars: { solve: { type: "entropy", mol: 0.500, dh: 9.87, T: 278.65 } } },
+      { key: "ch16_entropy", chapter: "16", name: "Reversible Entropy Changes", text: "Calculate the entropy change in J/K for the reversible vaporization of 3.00 moles of liquid mercury at its normal boiling point of 356.7 C. The standard enthalpy of vaporization for mercury is 59.1 kJ/mol.", vars: { solve: { type: "entropy", mol: 3.00, dh: 59.1, T: 629.85 } } }
+    ],
+    "ch16_gibbs": [
+      { key: "ch16_gibbs", chapter: "16", name: "Standard Gibbs Free Energy", text: "For the Haber process N2 + 3H2 -> 2NH3, ΔH° = -92.2 kJ and ΔS° = -198.7 J/K. Calculate ΔG° at 298 K and determine if it is spontaneous.", vars: { dh: -92.2, ds: -198.7, solve: { type:"gibbs", mode:"dg", dh:-92.2, ds:-198.7, T:298 } } },
+      { key: "ch16_gibbs", chapter: "16", name: "Standard Gibbs Free Energy", text: "For the melting of ice, ΔH° = 6.01 kJ/mol and ΔS° = 22.0 J/(mol K). Calculate ΔG° at 263 K (-10 °C). Is melting spontaneous at this temperature?", vars: { dh: 6.01,  ds: 22.0,   solve: { type:"gibbs", mode:"dg", dh:6.01,  ds:22.0,   T:263 } } },
+      { key: "ch16_gibbs", chapter: "16", name: "Standard Gibbs Free Energy", text: "For a reaction, ΔH° = +125 kJ and ΔS° = +250 J/K. At what temperature does the reaction become spontaneous?", vars: { dh: 125,   ds: 250,    solve: { type:"gibbs", mode:"crossover", dh:125, ds:250 } } },
+      { key: "ch16_gibbs", chapter: "16", name: "Standard Gibbs Free Energy", text: "For the combustion of carbon monoxide, 2CO(g) + O2(g) -> 2CO2(g), ΔH° = -566.0 kJ and ΔS° = -173.2 J/K. Calculate ΔG° at 298 K.", vars: { dh: -566.0, ds: -173.2, solve: { type:"gibbs", mode:"dg", dh:-566.0, ds:-173.2, T:298 } } },
+      { key: "ch16_gibbs", chapter: "16", name: "Standard Gibbs Free Energy", text: "For the thermal decomposition of calcium carbonate, CaCO3(s) -> CaO(s) + CO2(g), ΔH° = +178.1 kJ and ΔS° = +160.5 J/K. Calculate ΔG° at 298 K.", vars: { dh: 178.1, ds: 160.5, solve: { type:"gibbs", mode:"dg", dh:178.1, ds:160.5, T:298 } } },
+      { key: "ch16_gibbs", chapter: "16", name: "Standard Gibbs Free Energy", text: "For a given endothermic phase change, ΔH° = +30.5 kJ/mol and ΔS° = +93.2 J/(mol K). Calculate the temperature at which the process becomes spontaneous.", vars: { dh: 30.5, ds: 93.2, solve: { type:"gibbs", mode:"crossover", dh:30.5, ds:93.2 } } }
+    ],
+    "ch16_nonstandard": [
+      { key: "ch16_nonstandard", chapter: "16", name: "Non-Standard Free Energy", text: "For N2 + 3H2 <=> 2NH3, ΔG° is -33.3 kJ/mol at 298 K. Calculate ΔG when P(N2) = 2.0 atm, P(H2) = 1.5 atm, and P(NH3) = 0.50 atm.", vars: { dh: -92.2,  ds: -198.7, solve: { type:"nonstandard", dg0:-33.3,  num:[[0.50,2]], den:[[2.0,1],[1.5,3]],     T:298 } } },
+      { key: "ch16_nonstandard", chapter: "16", name: "Non-Standard Free Energy", text: "For 2SO2 + O2 <=> 2SO3, ΔG° is -141.6 kJ/mol at 298 K. Calculate ΔG if P(SO2) = 0.10 atm, P(O2) = 0.20 atm, and P(SO3) = 2.0 atm.", vars: { dh: -198.2, ds: -187.9, solve: { type:"nonstandard", dg0:-141.6, num:[[2.0,2]],  den:[[0.10,2],[0.20,1]],   T:298 } } },
+      { key: "ch16_nonstandard", chapter: "16", name: "Non-Standard Free Energy", text: "Calculate ΔG at 298 K for NO + 0.5O2 <=> NO2 (ΔG° = -35.2 kJ/mol) when P(NO) = 0.050 atm, P(O2) = 0.010 atm, and P(NO2) = 0.10 atm.", vars: { dh: -57.2,  ds: -175.8, solve: { type:"nonstandard", dg0:-35.2,  num:[[0.10,1]], den:[[0.050,1],[0.010,0.5]], T:298 } } },
+      { key: "ch16_nonstandard", chapter: "16", name: "Non-Standard Free Energy", text: "For CO + Cl2 <=> COCl2, ΔG° is -29.4 kJ/mol, ΔH° is -108.3 kJ/mol, and ΔS° is -265.0 J/K at 298 K. Calculate ΔG when P(CO) = 0.50 atm, P(Cl2) = 0.30 atm, and P(COCl2) = 1.5 atm.", vars: { dh: -108.3, ds: -265.0, solve: { type:"nonstandard", dg0: -29.4, num: [[1.5, 1]], den: [[0.50, 1], [0.30, 1]], T: 298 } } },
+      { key: "ch16_nonstandard", chapter: "16", name: "Non-Standard Free Energy", text: "For N2O4 <=> 2NO2, ΔG° is 4.7 kJ/mol, ΔH° is 57.2 kJ/mol, and ΔS° is 175.8 J/K at 298 K. Calculate ΔG when P(N2O4) = 0.20 atm and P(NO2) = 0.80 atm.", vars: { dh: 57.2, ds: 175.8, solve: { type:"nonstandard", dg0: 4.7, num: [[0.80, 2]], den: [[0.20, 1]], T: 298 } } },
+      { key: "ch16_nonstandard", chapter: "16", name: "Non-Standard Free Energy", text: "For CO2 + H2 <=> CO + H2O, ΔG° is 28.6 kJ/mol, ΔH° is 41.2 kJ/mol, and ΔS° is 42.3 J/K at 298 K. Calculate ΔG when P(CO2) = 1.2 atm, P(H2) = 0.80 atm, P(CO) = 0.040 atm, and P(H2O) = 0.050 atm.", vars: { dh: 41.2, ds: 42.3, solve: { type:"nonstandard", dg0: 28.6, num: [[0.040, 1], [0.050, 1]], den: [[1.2, 1], [0.80, 1]], T: 298 } } }
+    ],
+    "ch16_keq": [
+      { key: "ch16_keq", chapter: "16", name: "Free Energy & Equilibrium", text: "For a reaction at 298 K, ΔG° is calculated to be -15.5 kJ/mol. Calculate the equilibrium constant for this reaction.", vars: { solve: { type:"keq", mode:"findK", dg0:-15.5, T:298 } } },
+      { key: "ch16_keq", chapter: "16", name: "Free Energy & Equilibrium", text: "The equilibrium constant K for a reaction is 4.5 x 10⁵ at 25 °C. Calculate the standard free energy change in kJ/mol.", vars: { solve: { type:"keq", mode:"findG", K:4.5e5,   T:298 } } },
+      { key: "ch16_keq", chapter: "16", name: "Free Energy & Equilibrium", text: "Find K for a reaction where ΔG° = +28.4 kJ/mol at 298 K.", vars: { solve: { type:"keq", mode:"findK", dg0:28.4,  T:298 } } },
+      { key: "ch16_keq", chapter: "16", name: "Free Energy & Equilibrium", text: "For a reaction at 298 K, ΔG° is -42.5 kJ/mol. Calculate the equilibrium constant for this reaction.", vars: { solve: { type:"keq", mode:"findK", dg0:-42.5, T:298 } } },
+      { key: "ch16_keq", chapter: "16", name: "Free Energy & Equilibrium", text: "The equilibrium constant K for a reaction is 3.2 x 10⁻⁴ at 25 °C. Calculate the standard free energy change in kJ/mol.", vars: { solve: { type:"keq", mode:"findG", K:3.2e-4, T:298 } } },
+      { key: "ch16_keq", chapter: "16", name: "Free Energy & Equilibrium", text: "Calculate the equilibrium constant at 310 K for a reaction with a standard free energy change ΔG° of +15.2 kJ/mol.", vars: { solve: { type:"keq", mode:"findK", dg0:15.2, T:310 } } }
+    ],
+    "ch17_standard": [
+      { key: "ch17_standard", chapter: "17", name: "Standard Cell Potentials", text: "Calculate the standard cell potential for a galvanic cell made of a Zn/Zn²⁺ half-cell (E° = -0.76 V) and a Cu/Cu²⁺ half-cell (E° = +0.34 V).", vars: { solve: { type:"ecell", e1:0.34,  e2:-0.76 } } },
+      { key: "ch17_standard", chapter: "17", name: "Standard Cell Potentials", text: "Determine the standard cell potential for a cell consisting of a Pb/Pb²⁺ half-cell (E° = -0.13 V) and a Ni/Ni²⁺ half-cell (E° = -0.28 V).", vars: { solve: { type:"ecell", e1:-0.13, e2:-0.28 } } },
+      { key: "ch17_standard", chapter: "17", name: "Standard Cell Potentials", text: "Calculate E°cell for an Al/Al³⁺ and Fe/Fe²⁺ galvanic cell (Al³⁺ + 3e⁻ -> Al, E° = -1.66 V; Fe²⁺ + 2e⁻ -> Fe, E° = -0.44 V).", vars: { solve: { type:"ecell", e1:-0.44, e2:-1.66 } } },
+      { key: "ch17_standard", chapter: "17", name: "Standard Cell Potentials", text: "Calculate the standard cell potential for a galvanic cell composed of a Sn/Sn²⁺ half-cell (E° = -0.14 V) and an Ag/Ag⁺ half-cell (E° = +0.80 V).", vars: { solve: { type:"ecell", e1:0.80, e2:-0.14 } } },
+      { key: "ch17_standard", chapter: "17", name: "Standard Cell Potentials", text: "Determine the standard cell potential for a galvanic cell consisting of a Cr/Cr³⁺ half-cell (E° = -0.74 V) and an Fe/Fe²⁺ half-cell (E° = -0.44 V).", vars: { solve: { type:"ecell", e1:-0.44, e2:-0.74 } } },
+      { key: "ch17_standard", chapter: "17", name: "Standard Cell Potentials", text: "Calculate the standard cell potential for a galvanic cell made of a Mg/Mg²⁺ half-cell (E° = -2.37 V) and a Ni/Ni²⁺ half-cell (E° = -0.28 V).", vars: { solve: { type:"ecell", e1:-0.28, e2:-2.37 } } }
+    ],
+    "ch17_nernst": [
+      { key: "ch17_nernst", chapter: "17", name: "The Nernst Equation", text: "A galvanic cell consists of a Zn/Zn²⁺ half-cell and a Cu/Cu²⁺ half-cell. If [Zn²⁺] = 0.10 M and [Cu²⁺] = 1.0 M, calculate Ecell at 25 °C. (E°cell = +1.10 V)", vars: { e0: 1.10, n: 2, solve: { type:"nernst", e0:1.10, n:2, num:[[0.10,1]],          den:[[1.0,1]]   } } },
+      { key: "ch17_nernst", chapter: "17", name: "The Nernst Equation", text: "Calculate the cell potential at 25 °C for an Ag/Ag⁺ and Cu/Cu²⁺ cell where [Ag⁺] = 0.010 M and [Cu²⁺] = 0.50 M. (E°cell = +0.46 V, n = 2)", vars: { e0: 0.46, n: 2, solve: { type:"nernst", e0:0.46, n:2, num:[[0.50,1]],          den:[[0.010,2]] } } },
+      { key: "ch17_nernst", chapter: "17", name: "The Nernst Equation", text: "Calculate Ecell for a Zn/Zn²⁺ (0.050 M) and H⁺ (1.2 M) / H2 (1.0 atm) cell. (E°cell = +0.76 V, n = 2).", vars: { e0: 0.76, n: 2, solve: { type:"nernst", e0:0.76, n:2, num:[[0.050,1],[1.0,1]], den:[[1.2,2]]   } } },
+      { key: "ch17_nernst", chapter: "17", name: "The Nernst Equation", text: "Calculate the cell potential at 25 °C for an Fe/Fe²⁺ and Sn/Sn²⁺ cell where [Fe²⁺] = 0.50 M and [Sn²⁺] = 0.0010 M. (E°cell = +0.30 V, n = 2)", vars: { e0: 0.30, n: 2, solve: { type:"nernst", e0:0.30, n:2, num:[[0.50,1]], den:[[0.0010,1]] } } },
+      { key: "ch17_nernst", chapter: "17", name: "The Nernst Equation", text: "Calculate Ecell at 25 °C for a Zn/Zn²⁺ and Fe/Fe²⁺ cell where [Zn²⁺] = 0.50 M and [Fe²⁺] = 0.0050 M. (E°cell = +0.32 V, n = 2)", vars: { e0: 0.32, n: 2, solve: { type:"nernst", e0:0.32, n:2, num:[[0.50,1]], den:[[0.0050,1]] } } },
+      { key: "ch17_nernst", chapter: "17", name: "The Nernst Equation", text: "Calculate the cell potential at 25 °C for a Pb/Pb²⁺ and Cu/Cu²⁺ galvanic cell where [Pb²⁺] = 0.015 M and [Cu²⁺] = 0.60 M. (E°cell = +0.47 V, n = 2)", vars: { e0: 0.47, n: 2, solve: { type:"nernst", e0:0.47, n:2, num:[[0.015,1]], den:[[0.60,1]] } } }
+    ],
+    "ch17_electrolysis": [
+      { key: "ch17_electrolysis", chapter: "17", name: "Electrolysis & Faraday's Law", text: "How many grams of copper are plated out of a Cu²⁺ solution by a current of 2.50 A flowing for 45.0 minutes? (Molar mass Cu = 63.55 g/mol)", vars: { current: 2.5, time: 45,  mm: 63.55,  n: 2, metal: "Cu", solve: { type:"electrolysis", mode:"mass", current:2.50, seconds:2700, mm:63.55,  n:2 } } },
+      { key: "ch17_electrolysis", chapter: "17", name: "Electrolysis & Faraday's Law", text: "Calculate the mass of silver deposited from an Ag⁺ solution by passing a current of 1.50 A for 2.00 hours. (Molar mass Ag = 107.87 g/mol)", vars: { current: 1.5, time: 120, mm: 107.87, n: 1, metal: "Ag", solve: { type:"electrolysis", mode:"mass", current:1.50, seconds:7200, mm:107.87, n:1 } } },
+      { key: "ch17_electrolysis", chapter: "17", name: "Electrolysis & Faraday's Law", text: "How long (in minutes) must a 5.00 A current be applied to an Au³⁺ solution to plate out 2.50 g of gold? (Molar mass Au = 196.97 g/mol)", vars: { current: 5.0, time: 60,  mm: 196.97, n: 3, metal: "Au", solve: { type:"electrolysis", mode:"time", current:5.00, mass:2.50,    mm:196.97, n:3 } } },
+      { key: "ch17_electrolysis", chapter: "17", name: "Electrolysis & Faraday's Law", text: "Calculate the mass of zinc deposited from a Zn²⁺ solution by a current of 3.00 A flowing for 30.0 minutes. (Molar mass Zn = 65.38 g/mol)", vars: { current: 3.0, time: 30, mm: 65.38, n: 2, metal: "Zn", solve: { type:"electrolysis", mode:"mass", current:3.00, seconds:1800, mm:65.38, n:2 } } },
+      { key: "ch17_electrolysis", chapter: "17", name: "Electrolysis & Faraday's Law", text: "How long (in minutes) must a 4.00 A current be applied to a Ni²⁺ solution to plate out 1.50 g of nickel? (Molar mass Ni = 58.69 g/mol)", vars: { current: 4.0, time: 60, mm: 58.69, n: 2, metal: "Ni", solve: { type:"electrolysis", mode:"time", current:4.00, mass:1.50, mm:58.69, n:2 } } },
+      { key: "ch17_electrolysis", chapter: "17", name: "Electrolysis & Faraday's Law", text: "Calculate the mass of chromium deposited from a Cr³⁺ solution by passing a current of 2.00 A for 50.0 minutes. (Molar mass Cr = 52.00 g/mol)", vars: { current: 2.0, time: 50, mm: 52.00, n: 3, metal: "Cr", solve: { type:"electrolysis", mode:"mass", current:2.00, seconds:3000, mm:52.00, n:3 } } }
+    ],
+    "ch19_crystal": [
+      { key: "ch19_crystal", chapter: "19", name: "Crystal Field Theory", text: "Consider the hexacyanoferrate(III) complex, [Fe(CN)6]³⁻. Determine the oxidation state of iron, its d-electron count, and predict if it is high-spin or low-spin.", vars: { solve: { type:"crystal", ox:3, d:5, unpaired:1 } } },
+      { key: "ch19_crystal", chapter: "19", name: "Crystal Field Theory", text: "Consider the hexaaquacobalt(II) complex, [Co(H2O)6]²⁺. Determine the d-electron count of Co²⁺ and predict if it is a high-spin or low-spin complex.", vars: { solve: { type:"crystal", ox:2, d:7, unpaired:3 } } },
+      { key: "ch19_crystal", chapter: "19", name: "Crystal Field Theory", text: "Consider [Fe(H2O)6]²⁺. Determine iron's oxidation state, d-count, and predict spin state given H2O is a weak-field ligand.", vars: { solve: { type:"crystal", ox:2, d:6, unpaired:4 } } },
+      { key: "ch19_crystal", chapter: "19", name: "Crystal Field Theory", text: "Consider the hexaamminecobalt(III) complex, [Co(NH3)6]3+. Determine the oxidation state of cobalt, its d-electron count, and the number of unpaired electrons.", vars: { solve: { type:"crystal", ox:3, d:6, unpaired:0 } } },
+      { key: "ch19_crystal", chapter: "19", name: "Crystal Field Theory", text: "Consider the hexaaquamanganese(II) complex, [Mn(H2O)6]2+. Determine the oxidation state of manganese, its d-electron count, and the number of unpaired electrons.", vars: { solve: { type:"crystal", ox:2, d:5, unpaired:5 } } },
+      { key: "ch19_crystal", chapter: "19", name: "Crystal Field Theory", text: "Consider the hexaaquanickel(II) complex, [Ni(H2O)6]2+. Determine the oxidation state of nickel, its d-electron count, and the number of unpaired electrons.", vars: { solve: { type:"crystal", ox:2, d:8, unpaired:2 } } }
+    ],
+    "ch21_nuclear": [
+      { key: "ch21_nuclear", chapter: "21", name: "Nuclear Decay Half-Life", text: "Carbon-14 decays with a half-life of 5730 years. If an ancient wooden artifact contains 25% of the original C-14, how old is the artifact?", vars: { solve: { type:"decay", half:5730,  frac:0.25 } } },
+      { key: "ch21_nuclear", chapter: "21", name: "Nuclear Decay Half-Life", text: "Iodine-131 has a half-life of 8.02 days. How many days will it take for a 50.0 g sample to decay to exactly 6.25 g?", vars: { solve: { type:"decay", half:8.02,  m0:50.0, m:6.25 } } },
+      { key: "ch21_nuclear", chapter: "21", name: "Nuclear Decay Half-Life", text: "Tritium has a half-life of 12.33 years. What fraction of a tritium sample remains after 37.0 years?", vars: { solve: { type:"decay", half:12.33, t:37.0 } } },
+      { key: "ch21_nuclear", chapter: "21", name: "Nuclear Decay Half-Life", text: "Phosphorus-32 has a half-life of 14.26 days. How many days will it take for a 40.0 g sample to decay to exactly 2.50 g?", vars: { solve: { type:"decay", half:14.26, m0:40.0, m:2.50 } } },
+      { key: "ch21_nuclear", chapter: "21", name: "Nuclear Decay Half-Life", text: "Cobalt-60 has a half-life of 5.27 years. What fraction of a Cobalt-60 sample remains after 10.0 years?", vars: { solve: { type:"decay", half:5.27, t:10.0 } } },
+      { key: "ch21_nuclear", chapter: "21", name: "Nuclear Decay Half-Life", text: "Potassium-40 has a half-life of 1.25 x 10⁹ years. If a geological sample contains 12.5% of the original Potassium-40, how old is the sample in years?", vars: { solve: { type:"decay", half:1.25e9, frac:0.125 } } }
+    ],
+    "ch21_binding": [
+      { key: "ch21_binding", chapter: "21", name: "Binding Energy", text: "Calculate the binding energy per nucleon for a lithium-7 atom. (Atomic mass of Li-7 = 7.0160 amu; proton = 1.0073 amu, neutron = 1.0087 amu, electron = 0.00055 amu, 1 amu = 931.5 MeV)", vars: { solve: { type:"binding", Z:3, N:4, actual:7.0160 } } },
+      { key: "ch21_binding", chapter: "21", name: "Binding Energy", text: "Calculate the binding energy per nucleon for a helium-4 atom. (Atomic mass of He-4 = 4.0026 amu; proton = 1.0073 amu, neutron = 1.0087 amu, electron = 0.00055 amu, 1 amu = 931.5 MeV)", vars: { solve: { type:"binding", Z:2, N:2, actual:4.0026 } } },
+      { key: "ch21_binding", chapter: "21", name: "Binding Energy", text: "Calculate the binding energy per nucleon for a nitrogen-14 atom. (Atomic mass of N-14 = 14.0031 amu; proton = 1.0073 amu, neutron = 1.0087 amu, electron = 0.00055 amu, 1 amu = 931.5 MeV)", vars: { solve: { type:"binding", Z:7, N:7, actual:14.0031 } } },
+      { key: "ch21_binding", chapter: "21", name: "Binding Energy", text: "Calculate the binding energy per nucleon for a carbon-12 atom. (Atomic mass of C-12 = 12.0000 amu exactly; proton = 1.0073 amu, neutron = 1.0087 amu, electron = 0.00055 amu, 1 amu = 931.5 MeV)", vars: { solve: { type:"binding", Z:6, N:6, actual:12.0000 } } },
+      { key: "ch21_binding", chapter: "21", name: "Binding Energy", text: "Calculate the binding energy per nucleon for an oxygen-16 atom. (Atomic mass of O-16 = 15.9949 amu; proton = 1.0073 amu, neutron = 1.0087 amu, electron = 0.00055 amu, 1 amu = 931.5 MeV)", vars: { solve: { type:"binding", Z:8, N:8, actual:15.9949 } } },
+      { key: "ch21_binding", chapter: "21", name: "Binding Energy", text: "Calculate the binding energy per nucleon for a fluorine-19 atom. (Atomic mass of F-19 = 18.9984 amu; proton = 1.0073 amu, neutron = 1.0087 amu, electron = 0.00055 amu, 1 amu = 931.5 MeV)", vars: { solve: { type:"binding", Z:9, N:10, actual:18.9984 } } }
+    ],
+    "custom": []
+  };
+
+  // NOTE: this block must stay ABOVE the problem selection below. The function
+  // declaration hoists, but INSTRUCTOR_KEY is a const and does not — so when it
+  // lived further down the file, instructorParams() threw at selection time, the
+  // try/catch swallowed it, and it returned null. The bag ran instead while the
+  // red bar still reported the requested variant, because by then the const
+  // existed. Instructor mode appeared to work and never actually selected.
+  // ---- INSTRUCTOR MODE ----
+  // Testing a specific problem became impossible once the problem was hidden
+  // until milestone 1: the opener is the same for all six variants, so there is
+  // no way to tell which one you have until you are already past the gate you
+  // wanted to test.
+  //
+  //   ?instructor=KEY&variant=6   pick the sixth problem, veil still on
+  //   ?instructor=KEY&variant=6&reveal=1   and show it immediately
+  //   ?instructor=KEY&variant=3&sim=1      open the simulation at once, for review
+  //
+  // variant alone is the one to use for real testing: it keeps milestone 1
+  // behaving exactly as a student sees it. reveal is for reading the text.
+  // This is obscurity, not security — anyone reading the page source can find
+  // it. That is the same trust boundary the answer key already sits on.
+  const INSTRUCTOR_KEY = "wmp-2026";
+  // Bumped by hand on every index.html change. Shown in the instructor bar so
+  // "is the new file actually live?" is a thing you can read rather than infer.
+  const BUILD = "LIVE-2026-09-18-c";
+  function instructorParams() {
+    try {
+      const q = new URLSearchParams(window.location.search);
+      if (q.get("instructor") !== INSTRUCTOR_KEY) return null;
+      const n = parseInt(q.get("variant"), 10);
+      return { variant: (isFinite(n) && n > 0) ? n - 1 : null, reveal: q.get("reveal") === "1", sim: q.get("sim") === "1" };
+    } catch (e) { return null; }
+  }
+
+  let currentType = localStorage.getItem('activeProblemType') || "ch13_ice";
+  let selectorEl = document.getElementById('problem-selector');
+  // A topic remembered from an earlier visit may since have been taken off the
+  // menu (Shifting an Equilibrium, 16 Sept). Only reopen a topic still listed.
+  if (selectorEl && !selectorEl.querySelector('option[value="' + currentType + '"]')) {
+    currentType = "ch13_ice";
+    try { localStorage.setItem('activeProblemType', currentType); } catch (e) {}
+  }
+  if (selectorEl) selectorEl.value = currentType;
+
+  let sessionKey = 'chemTutorState_' + currentType;
+  let sessionData;
+  try { sessionData = JSON.parse(sessionStorage.getItem(sessionKey)); } catch (e) { sessionData = null; }
+
+  // Instructor mode must win over a restored session. Adding ?variant=N to the
+  // address does not clear sessionStorage, so without this the page came back
+  // with whatever problem was already in progress and quietly ignored the
+  // parameter — the variant appeared not to work at all.
+  (function () {
+    var instr = instructorParams();
+    if (!instr || instr.variant === null) return;
+    var pool = problemPools[currentType] || problemPools["ch13_ice"];
+    var want = pool[instr.variant];
+    if (!want) return;
+    if (sessionData && sessionData.problem && sessionData.problem.text === want.text) return;
+    sessionData = null;                       // force a fresh pick below
+    try { sessionStorage.removeItem(sessionKey); } catch (e) {}
+  })();
+
+  if (!sessionData || !sessionData.problem) {
+    let pool = problemPools[currentType] || problemPools["ch13_ice"];
+    // A shuffle bag, not a coin toss. Plain random re-rolling meant a student
+    // could see the same variant three times and another never — twenty draws
+    // in a row missed one variant during testing. The bag deals every problem in
+    // an archetype once, in a fresh random order, before any of them repeats.
+    const instr = instructorParams();
+    let randomProb = (instr && instr.variant !== null && pool[instr.variant])
+      ? pool[instr.variant]
+      : drawFromBag(currentType, pool);
+
+    sessionData = {
+      sessionId: "SESSION_" + Math.random().toString(36).substr(2, 9),
+      history: [], milestone: 0,
+      problem: currentType === "custom" ? { key: "custom", chapter: "Custom", name: "Custom Problem Setup", text: "", vars: {}, isSetup: true } : randomProb
+    };
+  }
+
+  const chatLog = document.getElementById('chat-log'), userInput = document.getElementById('user-input');
+  const sendBtn = document.getElementById('send-btn'), problemBox = document.getElementById('problem-box');
+
+  window.onload = () => {
+    if (!loggedStudentId) {
+      document.getElementById('login-overlay').style.display = 'flex';
+    }
+    populateEquationsDropdown();
+    wireReferenceClicks();
+
+    if (currentType === "custom" && sessionData.problem.isSetup) {
+      document.getElementById('custom-form-container').style.display = "block";
+      problemBox.style.display = "none";
+      userInput.disabled = true; sendBtn.disabled = true;
+    } else {
+      document.getElementById('custom-form-container').style.display = "none";
+      problemBox.style.display = "block";
+      userInput.disabled = false; sendBtn.disabled = false;
+    }
+
+    renderToolbar('chem-toolbar', 'user-input'); 
+    renderToolbar('custom-chem-toolbar', 'custom-text'); 
+    buildPeriodicTable();
+
+    if (!sessionData.problem.isSetup) {
+      renderProblemText(); 
+      toggleSimPanels(sessionData.problem.key);
+    }
+    drawCanvas(sessionData.milestone);
+    applyProblemVeil(sessionData.milestone);
+    
+    if (sessionData.problem.isSetup) {
+      addSystemMessage("Please enter your custom problem above and click Start Socratic Session.");
+    } else if (sessionData.history.length > 0) {
+      sessionData.history.forEach(msg => appendMessage(msg.text, msg.role));
+      addSystemMessage(`Session restored. Milestone ${sessionData.milestone + 1}/5 active.`);
+    } else {
+      addOpeningMessage();
+    }
+  };
+
+  function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+  function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+  var SIM_REVEAL_AT = 4;
+  var SIM_KEYS = ["ch10_cc", "ch16_gibbs", "ch16_nonstandard", "ch12_arrhenius", "ch13_lechatelier", "ch17_nernst",
+                  "ch14_titration", "ch13_ice", "ch15_ksp", "ch15_common_ion", "ch14_buffer", "ch17_electrolysis"];
+
+  function toggleSimPanels(key) {
+    let standardCanvasContainer = document.getElementById('canvas-container');
+    let clausiusPanel = document.getElementById('clausius-panel');
+    let thermoPanel = document.getElementById('thermo-panel');
+    let arrheniusPanel = document.getElementById('arrhenius-panel');
+    let lcPanel = document.getElementById('lechatelier-panel');
+    let nernstPanel = document.getElementById('nernst-panel');
+    let titrationPanel = document.getElementById('titration-panel');
+    let icePanel = document.getElementById('ice-panel');
+    let kspPanel = document.getElementById('ksp-panel');
+    let bufferPanel = document.getElementById('buffer-panel');
+    let electrolysisPanel = document.getElementById('electrolysis-panel');
+
+    standardCanvasContainer.style.display = "none";
+    if (clausiusPanel) clausiusPanel.style.display = "none";
+    let simLocked = document.getElementById('sim-locked');
+    if (simLocked) simLocked.style.display = "none";
+    thermoPanel.style.display = "none";
+    arrheniusPanel.style.display = "none";
+    lcPanel.style.display = "none";
+    nernstPanel.style.display = "none";
+    titrationPanel.style.display = "none";
+    icePanel.style.display = "none";
+    kspPanel.style.display = "none";
+    bufferPanel.style.display = "none";
+    electrolysisPanel.style.display = "none";
+
+    let vars = sessionData.problem.vars || {};
+
+    // Instructor, 17 Sept: simulations appear "at the correct milestone to verify
+    // the student's conclusions, not to inform the answer." A topic with a
+    // simulation shows nothing of it until step 4 has cleared.
+    // ?instructor=KEY&sim=1 opens it straight away, for reviewing the simulations
+    // without working a problem through step 4. Students never have the key.
+    var instrSim = instructorParams();
+    if (SIM_KEYS.indexOf(key) > -1 && (sessionData.milestone || 0) < SIM_REVEAL_AT && !(instrSim && instrSim.sim)) {
+      if (simLocked) simLocked.style.display = "block";
+      return;
+    }
+
+    var sv = vars.solve || {};
+    if (key === "ch10_cc") {
+      if (clausiusPanel) {
+        clausiusPanel.style.display = "block";
+        let T1 = sv.tC + 273.15, T2p = simCCT2(sv), lo = Math.min(T1, T2p) - 30, hi = Math.max(T1, T2p) + 30;
+        simSlider('dhVapSlider', (sv.dh * 0.5).toFixed(1), (sv.dh * 1.5).toFixed(1), 0.1, sv.dh);
+        simSlider('t2Slider', Math.round(lo), Math.round(hi), 0.5, T2p.toFixed(1));
+        updateClausius();
+      }
+    } else if (key === "ch16_gibbs" || key === "ch16_nonstandard") {
+      thermoPanel.style.display = "block";
+      let grid = dhSlider.parentElement.parentElement, tLabel = tSlider.previousElementSibling;
+      if (key === "ch16_nonstandard") {
+        grid.style.display = "none";
+        tLabel.firstChild.nodeValue = "Reaction quotient, log Q: ";
+        let lqp = simNonstandardLogQ(sv), lqK = -sv.dg0 * 1000 / (8.314 * (sv.T || 298) * Math.log(10));
+        let span = Math.max(4, Math.abs(lqp) + 1, Math.abs(lqK) + 1);
+        simSlider('tSlider', (-span).toFixed(1), span.toFixed(1), 0.05, lqp.toFixed(2));
+      } else {
+        grid.style.display = "grid";
+        tLabel.firstChild.nodeValue = "Temperature (T): ";
+        let hmax = Math.max(250, Math.ceil(Math.abs(sv.dh) * 1.5)), smax = Math.max(400, Math.ceil(Math.abs(sv.ds) * 1.5));
+        simSlider('dhSlider', -hmax, hmax, 0.1, sv.dh);
+        simSlider('dsSlider', -smax, smax, 0.1, sv.ds);
+        simSlider('tSlider', 0, 1000, 1, Math.round(simGibbsT(sv)));
+      }
+      updateThermo(key);
+    } else if (key === "ch12_arrhenius") {
+      arrheniusPanel.style.display = "block";
+      let Ea = simArrheniusEa(sv) / 1000, T1 = sv.t1C + 273.15, T2 = sv.t2C + 273.15;
+      simSlider('eaSlider', Math.max(1, Ea * 0.5).toFixed(1), (Ea * 1.5).toFixed(1), 0.1, Ea.toFixed(1));
+      simSlider('arrTSlider', Math.round(Math.min(T1, T2) - 15), Math.round(Math.max(T1, T2) + 15), 0.5, T2.toFixed(1));
+      updateArrhenius();
+    } else if (key === "ch13_lechatelier") {
+      lcPanel.style.display = "block";
+      updateLeChatelier();
+    } else if (key === "ch17_nernst") {
+      nernstPanel.style.display = "block";
+      let lqp = simNernstLogQ(sv), span = Math.max(3, Math.ceil(Math.abs(lqp)) + 1);
+      simSlider('qSlider', -span, span, 0.01, lqp.toFixed(2));
+      updateNernst();
+    } else if (key === "ch14_titration") {
+      titrationPanel.style.display = "block";
+      if (vars.titr) {
+        let t = vars.titr, veq = titrationEquivVolume(t);
+        simSlider('titrantSlider', 0, (veq * 2).toFixed(1), (veq / 100).toFixed(2), titrationPoint(t).toFixed(2));
+      }
+      updateTitration();
+    } else if (key === "ch13_ice") {
+      icePanel.style.display = "block";
+      simSlider('xSlider', 0, sv.a0, (sv.a0 / 400).toPrecision(3), simIceX(sv).toPrecision(4));
+      updateICE();
+    } else if (key === "ch15_ksp" || key === "ch15_common_ion") {
+      kspPanel.style.display = "block";
+      let cMax = Math.max(0.1, (sv.common || 0) * 2);
+      simSlider('commonIonSlider', 0, cMax, (cMax / 400).toPrecision(3), sv.common || 0);
+      updateKsp(key);
+    } else if (key === "ch14_buffer") {
+      bufferPanel.style.display = "block";
+      simSlider('ratioSlider', 0.1, 10, 0.01, (sv.base / sv.acid).toFixed(3));
+      updateBuffer();
+    } else if (key === "ch17_electrolysis") {
+      electrolysisPanel.style.display = "block";
+      let tp = simElectroSeconds(sv) / 60;
+      simSlider('currentSlider', 0.5, Math.max(10, sv.current * 2), 0.05, sv.current);
+      simSlider('timeSlider', 1, Math.ceil(Math.max(tp * 2, 10)), 0.1, tp.toFixed(1));
+      updateElectrolysis();
+    } else {
+      standardCanvasContainer.style.display = "block";
+    }
+  }
+
+  function connectorLabel(ctx, txt, x, y, rot) {
+    ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.fillText(txt, 0, 0); ctx.restore();
+  }
+
+  // SIM-MODEL-START models
+  // True-chemistry models for the verification simulations. Every one is built
+  // from the problem's own `solve` block, so what the simulation shows at the
+  // problem's point is the answer the grader holds. Checked offline against the
+  // answer key for every variant (verify_all.js).
+  // (constants written as literals: these functions can run before this line executes)
+  function simBisect(f, lo, hi, n) {           // f rises from lo to hi
+    for (var i = 0; i < (n || 100); i++) { var m = (lo + hi) / 2; if (f(m) > 0) hi = m; else lo = m; }
+    return (lo + hi) / 2;
+  }
+  function simProd(list) { var p = 1; (list || []).forEach(function (e) { p *= Math.pow(e[0], e[1]); }); return p; }
+
+  // Arrhenius: the line through (T1, k1) with slope -Ea/R in ln k against 1/T.
+  function simArrheniusEa(s) {                  // J/mol
+    var T1 = s.t1C + 273.15, T2 = s.t2C + 273.15;
+    return s.solveFor === "ea" ? 8.314 * Math.log(s.k2 / s.k1) / (1 / T1 - 1 / T2) : s.ea * 1000;
+  }
+  function simArrheniusK(s, TK, EaJ) {
+    var T1 = s.t1C + 273.15, Ea = (EaJ === undefined) ? simArrheniusEa(s) : EaJ;
+    return s.k1 * Math.exp(-(Ea / 8.314) * (1 / TK - 1 / T1));
+  }
+
+  // Clausius-Clapeyron through (T1, P1).
+  function simCCPressure(s, TK, dhKJ) {
+    var T1 = s.tC + 273.15, dh = (dhKJ === undefined ? s.dh : dhKJ) * 1000;
+    return s.p1 * Math.exp(-(dh / 8.314) * (1 / TK - 1 / T1));
+  }
+  function simCCT2(s) { return 1 / (1 / (s.tC + 273.15) - (8.314 / (s.dh * 1000)) * Math.log(s.p2 / s.p1)); }
+
+  // ICE: the reaction quotient as the reaction advances by x, and the x where Q = K.
+  // Reactants: rCount species, each starting at a0 and falling by x. Products: one
+  // species rising by 2x when pCoef is 2, otherwise two species each rising by x.
+  function simIceShape(s) {
+    var rCount = s.rCount !== undefined ? s.rCount : (s.mode === "quadratic" ? 1 : 2);
+    var pCoef = s.pCoef || 1;
+    return {
+      rCount: rCount, pCoef: pCoef, a0: s.a0,
+      Q: function (x) {
+        var top = pCoef === 2 ? Math.pow(2 * x, 2) : x * x;
+        return top / Math.pow(s.a0 - x, rCount);
+      }
+    };
+  }
+  function simIceK(s) {
+    if (s.mode === "findK") { var sh = simIceShape(s); return sh.Q(s.prod / sh.pCoef); }
+    return s.K;
+  }
+  function simIceX(s) {
+    var sh = simIceShape(s), K = simIceK(s);
+    return simBisect(function (x) { return Math.log(sh.Q(x)) - Math.log(K); }, 1e-12 * s.a0, s.a0 * (1 - 1e-12));
+  }
+
+  // Solubility, exactly: Ksp = [cation]^a [anion]^b with the common ion added to its term.
+  // stoich 2 = AB; 3 = a salt giving two of one ion. cPow tells which ion is common:
+  // 2 = the doubled ion, 1 = the single ion.
+  function simSolubility(s, common) {
+    var c = common || 0, K = s.ksp;
+    function ionProduct(x) {
+      if (s.stoich !== 3) return x * (x + c);
+      return (s.cPow === 2) ? x * Math.pow(2 * x + c, 2) : (x + c) * Math.pow(2 * x, 2);
+    }
+    return Math.exp(simBisect(function (lx) { return Math.log(ionProduct(Math.exp(lx))) - Math.log(K); }, -60, 5));
+  }
+
+  function simNernstLogQ(s) { return Math.log10(simProd(s.num) / simProd(s.den)); }
+  function simNernstE(s, logQ) { return s.e0 - (0.0592 / s.n) * logQ; }
+
+  function simNonstandardLogQ(s) { return Math.log10(simProd(s.num) / simProd(s.den)); }
+  function simNonstandardDG(s, logQ) { return s.dg0 + 8.314 * (s.T || 298) * Math.log(10) * logQ / 1000; }   // kJ/mol
+
+  function simGibbsDG(dhKJ, dsJK, TK) { return dhKJ - TK * dsJK / 1000; }                                    // kJ
+  function simGibbsT(s) { return s.mode === "crossover" ? s.dh * 1000 / s.ds : s.T; }
+
+  function simBufferPKa(s) { var pK = -Math.log10(s.K); return s.kIs === "kb" ? 14 - pK : pK; }
+  function simBufferPH(s, ratio) { return simBufferPKa(s) + Math.log10(ratio); }
+
+  function simElectroMass(s, amps, seconds) { return amps * seconds * s.mm / (s.n * 96485); }
+  function simElectroSeconds(s) { return s.mode === "time" ? s.mass * s.n * 96485 / (s.current * s.mm) : s.seconds; }
+  // SIM-MODEL-END models
+
+  // A plot in the 370 x 130 panel canvas: area x 40-350, y 15-115.
+  function simPlot(ctx, canvas, o) {
+    var X = function (x) { return 40 + (x - o.x0) / (o.x1 - o.x0) * 310; };
+    var Y = function (y) { return 115 - (y - o.y0) / (o.y1 - o.y0) * 100; };
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = '#475569'; ctx.lineWidth = 1; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(40, 115); ctx.lineTo(350, 115); ctx.moveTo(40, 115); ctx.lineTo(40, 15); ctx.stroke();
+    ctx.fillStyle = '#94a3b8'; ctx.font = '9px sans-serif';
+    ctx.fillText(o.xMinLabel, 40, 128); ctx.fillText(o.xLabel, 150, 128); ctx.fillText(o.xMaxLabel, 318, 128);
+    connectorLabel(ctx, o.yLabel, 12, 100, -Math.PI / 2);
+    ctx.fillText(o.yMaxLabel, 43, 23);
+    ctx.save(); ctx.beginPath(); ctx.rect(40, 15, 310, 100); ctx.clip();
+    ctx.setLineDash([3, 3]); ctx.strokeStyle = '#64748b';
+    (o.hlines || []).forEach(function (h) { ctx.beginPath(); ctx.moveTo(40, Y(h.y)); ctx.lineTo(350, Y(h.y)); ctx.stroke(); ctx.fillText(h.label, 300, Y(h.y) - 3); });
+    (o.vlines || []).forEach(function (v) { ctx.beginPath(); ctx.moveTo(X(v.x), 15); ctx.lineTo(X(v.x), 115); ctx.stroke(); ctx.fillText(v.label, Math.min(X(v.x) + 3, 285), 24 + (v.row || 0) * 10); });
+    ctx.setLineDash([]);
+    (o.curves || []).forEach(function (c) {
+      ctx.strokeStyle = c.color; ctx.lineWidth = 2.5; ctx.beginPath();
+      for (var i = 0; i <= 310; i++) {
+        var x = o.x0 + (i / 310) * (o.x1 - o.x0), y = c.f(x);
+        if (i === 0) ctx.moveTo(40 + i, Y(y)); else ctx.lineTo(40 + i, Y(y));
+      }
+      ctx.stroke();
+    });
+    (o.marks || []).forEach(function (m) { ctx.fillStyle = m.color || '#e2e8f0'; ctx.beginPath(); ctx.arc(X(m.x), Y(m.y), 4, 0, Math.PI * 2); ctx.fill(); });
+    ctx.restore();
+    if (o.dot) { ctx.fillStyle = '#f43f5e'; ctx.beginPath(); ctx.arc(Math.max(40, Math.min(350, X(o.dot.x))), Math.max(15, Math.min(115, Y(o.dot.y))), 5, 0, Math.PI * 2); ctx.fill(); }
+  }
+  function simSlider(id, min, max, step, value) {
+    var el = document.getElementById(id); if (!el) return;
+    el.min = String(min); el.max = String(max); el.step = String(step); el.value = String(value);
+  }
+  function simFmt(v) { var a = Math.abs(v); return (a !== 0 && (a < 0.01 || a >= 1e4)) ? v.toExponential(2) : v.toPrecision(3); }
+  function simSolve() { return (sessionData.problem && sessionData.problem.vars && sessionData.problem.vars.solve) || null; }
+
+  // --- SIMULATION 0: CLAUSIUS-CLAPEYRON ---
+  const ccCanvas = document.getElementById('clausiusCanvas');
+  const ccCtx = ccCanvas ? ccCanvas.getContext('2d') : null;
+  const dhVapSlider = document.getElementById('dhVapSlider');
+  const dhVapVal = document.getElementById('dhVapVal');
+  const t2Slider = document.getElementById('t2Slider');
+  const t2Val = document.getElementById('t2Val');
+  const ccPressureDisplay = document.getElementById('ccPressureDisplay');
+
+  function updateClausius() {
+    if (!ccCtx) return;
+    var s = simSolve(); if (!s || s.type !== "cc") return;
+    var dH = parseFloat(dhVapSlider.value); dhVapVal.textContent = dH.toFixed(1);
+    var T2 = parseFloat(t2Slider.value); t2Val.textContent = T2.toFixed(0);
+    var T1 = s.tC + 273.15, T2p = simCCT2(s), P = simCCPressure(s, T2, dH);
+    ccPressureDisplay.textContent = `P = ${simFmt(P)} at ${T2.toFixed(0)} K`;
+    var lo = Math.min(T1, T2p) - 30, hi = Math.max(T1, T2p) + 30;
+    var pmax = Math.max(s.p1, s.p2) * 1.6;
+    simPlot(ccCtx, ccCanvas, { x0: lo, x1: hi, y0: 0, y1: pmax, xMinLabel: lo.toFixed(0) + ' K', xMaxLabel: hi.toFixed(0) + ' K',
+      xLabel: 'Temperature (K)', yLabel: 'Vapor pressure', yMaxLabel: simFmt(pmax),
+      curves: [{ color: '#38bdf8', f: function (T) { return simCCPressure(s, T, dH); } }],
+      hlines: [{ y: s.p2, label: 'P₂ given' }], vlines: [{ x: T2p, label: 'problem T₂' }],
+      marks: [{ x: T1, y: s.p1 }], dot: { x: T2, y: P } });
+  }
+
+  if (dhVapSlider && t2Slider) {
+    dhVapSlider.addEventListener('input', updateClausius);
+    t2Slider.addEventListener('input', updateClausius);
+  }
+
+  // --- SIMULATION 1: THERMODYNAMICS (GIBBS) ---
+  const tCanvas = document.getElementById('thermoCanvas');
+  const tCtx = tCanvas ? tCanvas.getContext('2d') : null;
+  const dhSlider = document.getElementById('dhSlider');
+  const dhNumVal = document.getElementById('dhNumVal');
+  const dsSlider = document.getElementById('dsSlider');
+  const dsNumVal = document.getElementById('dsNumVal');
+  const tSlider = document.getElementById('tSlider');
+  const tSliderVal = document.getElementById('tSliderVal');
+  const spontaneousStatus = document.getElementById('spontaneousStatus');
+  const thermoPanelTitle = document.getElementById('thermoPanelTitle');
+
+  function updateThermo(panelKey) {
+    if (!tCtx) return;
+    var s = simSolve(); if (!s) return;
+    if (s.type === "nonstandard") {
+      var lq = parseFloat(tSlider.value); tSliderVal.textContent = lq.toFixed(1);
+      var lqp = simNonstandardLogQ(s), dg = simNonstandardDG(s, lq), dgp = simNonstandardDG(s, lqp);
+      var lqK = -s.dg0 * 1000 / (8.314 * (s.T || 298) * Math.log(10));   // where ΔG = 0: Q = K
+      var span = Math.max(4, Math.abs(lqp) + 1, Math.abs(lqK) + 1);
+      var ymax = Math.max(Math.abs(simNonstandardDG(s, -span)), Math.abs(simNonstandardDG(s, span)));
+      thermoPanelTitle.textContent = "ΔG = ΔG° + RT ln Q";
+      simPlot(tCtx, tCanvas, { x0: -span, x1: span, y0: -ymax, y1: ymax, xMinLabel: 'log Q ' + (-span).toFixed(0), xMaxLabel: span.toFixed(0),
+        xLabel: 'log Q', yLabel: 'ΔG (kJ/mol)', yMaxLabel: '+' + ymax.toFixed(0),
+        curves: [{ color: '#34d399', f: function (x) { return simNonstandardDG(s, x); } }],
+        hlines: [{ y: 0, label: 'ΔG = 0' }], vlines: [{ x: lqp, label: 'problem Q' }, { x: lqK, label: 'Q = K', row: 1 }],
+        marks: [{ x: lqp, y: dgp }], dot: { x: lq, y: dg } });
+      spontaneousStatus.textContent = `ΔG = ${dg.toFixed(1)} kJ/mol`;
+      spontaneousStatus.style.background = dg < 0 ? "rgba(6, 78, 59, 0.8)" : "rgba(136, 19, 55, 0.8)";
+      spontaneousStatus.style.color = dg < 0 ? "#6ee7b7" : "#fca5a5"; spontaneousStatus.style.borderColor = dg < 0 ? "#047857" : "#be123c";
+      return;
+    }
+    var H_val = parseFloat(dhSlider.value); dhNumVal.textContent = H_val;
+    var S_val = parseFloat(dsSlider.value); dsNumVal.textContent = S_val;
+    var T = parseFloat(tSlider.value); tSliderVal.textContent = T.toFixed(0);
+    thermoPanelTitle.textContent = "ΔG° = ΔH° − TΔS°";
+    var g = simGibbsDG(H_val, S_val, T);
+    var ys = [simGibbsDG(H_val, S_val, 0), simGibbsDG(H_val, S_val, 1000)];
+    var ymax = Math.max(Math.abs(ys[0]), Math.abs(ys[1]), 10);
+    var vl = [{ x: simGibbsT(s), label: s.mode === "crossover" ? 'problem: ΔG° = 0' : 'problem T' }];
+    simPlot(tCtx, tCanvas, { x0: 0, x1: 1000, y0: -ymax, y1: ymax, xMinLabel: '0 K', xMaxLabel: '1000 K',
+      xLabel: 'Temperature (K)', yLabel: 'ΔG° (kJ)', yMaxLabel: '+' + ymax.toFixed(0),
+      curves: [{ color: '#34d399', f: function (t) { return simGibbsDG(H_val, S_val, t); } }],
+      hlines: [{ y: 0, label: 'ΔG° = 0' }], vlines: vl, dot: { x: T, y: g } });
+    spontaneousStatus.textContent = g < 0 ? `ΔG° = ${g.toFixed(1)} kJ: spontaneous` : `ΔG° = +${g.toFixed(1)} kJ: non-spontaneous`;
+    spontaneousStatus.style.background = g < 0 ? "rgba(6, 78, 59, 0.8)" : "rgba(136, 19, 55, 0.8)";
+    spontaneousStatus.style.color = g < 0 ? "#6ee7b7" : "#fca5a5"; spontaneousStatus.style.borderColor = g < 0 ? "#047857" : "#be123c";
+  }
+
+  if (dhSlider && dsSlider && tSlider) {
+    dhSlider.addEventListener('input', () => updateThermo(sessionData.problem.key));
+    dsSlider.addEventListener('input', () => updateThermo(sessionData.problem.key));
+    tSlider.addEventListener('input', () => updateThermo(sessionData.problem.key));
+  }
+
+  // --- SIMULATION 2: ARRHENIUS KINETICS ---
+  const arrCanvas = document.getElementById('arrheniusCanvas');
+  const arrCtx = arrCanvas ? arrCanvas.getContext('2d') : null;
+  const eaSlider = document.getElementById('eaSlider');
+  const eaVal = document.getElementById('eaVal');
+  const arrTSlider = document.getElementById('arrTSlider');
+  const arrTVal = document.getElementById('arrTVal');
+  const kValueDisplay = document.getElementById('kValueDisplay');
+
+  function updateArrhenius() {
+    if (!arrCtx) return;
+    var s = simSolve(); if (!s || s.type !== "arrhenius") return;
+    var Ea = parseFloat(eaSlider.value); eaVal.textContent = Ea.toFixed(0);
+    var T = parseFloat(arrTSlider.value); arrTVal.textContent = T.toFixed(0);
+    var T1 = s.t1C + 273.15, T2 = s.t2C + 273.15, k2 = simArrheniusK(s, T2);
+    var k = simArrheniusK(s, T, Ea * 1000);
+    kValueDisplay.textContent = `k = ${simFmt(k)} at ${T.toFixed(0)} K`;
+    var lo = Math.min(T1, T2) - 15, hi = Math.max(T1, T2) + 15;
+    var kmax = Math.max(simArrheniusK(s, hi), simArrheniusK(s, hi, Ea * 1000), k2) * 1.1;
+    simPlot(arrCtx, arrCanvas, { x0: lo, x1: hi, y0: 0, y1: kmax, xMinLabel: lo.toFixed(0) + ' K', xMaxLabel: hi.toFixed(0) + ' K',
+      xLabel: 'Temperature (K)', yLabel: 'Rate constant k', yMaxLabel: simFmt(kmax),
+      curves: [{ color: '#60a5fa', f: function (t) { return simArrheniusK(s, t, Ea * 1000); } }],
+      vlines: [{ x: T1, label: 'T₁' }, { x: T2, label: 'T₂', row: 1 }],
+      marks: [{ x: T1, y: s.k1 }, { x: T2, y: k2 }], dot: { x: T, y: k } });
+  }
+
+  if (eaSlider && arrTSlider) {
+    eaSlider.addEventListener('input', updateArrhenius);
+    arrTSlider.addEventListener('input', updateArrhenius);
+  }
+
+  // --- SIMULATION 3: LE CHÂTELIER'S PRINCIPLE ---
+  const lcCanvas = document.getElementById('lechatelierCanvas');
+  const lcCtx = lcCanvas ? lcCanvas.getContext('2d') : null;
+  const lcTemp = document.getElementById('lcTemp');
+  const volSlider = document.getElementById('volSlider');
+  const volVal = document.getElementById('volVal');
+  const shiftStatus = document.getElementById('shiftStatus');
+  const lcPanelTitle = document.getElementById('lcPanelTitle');
+  const lcOptHeatAdd = document.getElementById('lcOptHeatAdd');
+  const lcOptHeatRem = document.getElementById('lcOptHeatRem');
+
+  function updateLeChatelier() {
+    if (!lcCtx) return;
+    let tempShift = parseInt(lcTemp.value);
+    let V = parseFloat(volSlider.value); volVal.textContent = V.toFixed(1);
+
+    let rxnText = sessionData.problem.vars?.rxnText || "N₂ + 3H₂ ⇌ 2NH₃ + Heat";
+    let isExo = sessionData.problem.vars?.exo !== false;
+    lcPanelTitle.textContent = `Le Châtelier: ${rxnText}`;
+    lcOptHeatAdd.textContent = isExo ? "Add Heat (Shifts Left)" : "Add Heat (Shifts Right)";
+    lcOptHeatRem.textContent = isExo ? "Remove Heat (Shifts Right)" : "Remove Heat (Shifts Left)";
+
+    lcCtx.clearRect(0, 0, lcCanvas.width, lcCanvas.height);
+    let boxWidth = V * 80;
+    lcCtx.strokeStyle = '#facc15'; lcCtx.lineWidth = 2; lcCtx.strokeRect(40, 15, boxWidth, 90);
+
+    lcCtx.fillStyle = '#94a3b8'; lcCtx.font = '9px sans-serif';
+    lcCtx.fillText(`Vessel Chamber Volume: ${V} L (Pressure indicator)`, 40, 125);
+
+    let pCount = tempShift > 0 ? (isExo ? 6 : 16) : (tempShift < 0 ? (isExo ? 16 : 6) : 10);
+    for(let i=0; i<pCount; i++) {
+      lcCtx.fillStyle = i < pCount/2 ? '#38bdf8' : '#fb7185';
+      lcCtx.beginPath(); lcCtx.arc(50 + ((i * 24) % (boxWidth - 20)), 30 + ((i * 17) % 65), 5, 0, Math.PI*2); lcCtx.fill();
+    }
+
+    if (tempShift > 0) shiftStatus.textContent = isExo ? "Shift Left (Reactants Favored)" : "Shift Right (Products Favored)";
+    else if (tempShift < 0) shiftStatus.textContent = isExo ? "Shift Right (Products Favored)" : "Shift Left (Reactants Favored)";
+    else shiftStatus.textContent = V < 1.0 ? "Shift Right (Decreased Volume / Higher P)" : (V > 2.0 ? "Shift Left (Increased Volume / Lower P)" : "Equilibrium Balanced");
+  }
+
+  if (lcTemp && volSlider) {
+    lcTemp.addEventListener('change', updateLeChatelier);
+    volSlider.addEventListener('input', updateLeChatelier);
+  }
+
+  // --- SIMULATION 4: NERNST EQUATION ---
+  const nernstCanvas = document.getElementById('nernstCanvas');
+  const nernstCtx = nernstCanvas ? nernstCanvas.getContext('2d') : null;
+  const qSlider = document.getElementById('qSlider');
+  const qLogVal = document.getElementById('qLogVal');
+  const ecellDisplay = document.getElementById('ecellDisplay');
+  const nernstPanelTitle = document.getElementById('nernstPanelTitle');
+
+  function updateNernst() {
+    if (!nernstCtx) return;
+    var s = simSolve(); if (!s || s.type !== "nernst") return;
+    var logQ = parseFloat(qSlider.value); qLogVal.textContent = logQ.toFixed(2);
+    var lqp = simNernstLogQ(s), E = simNernstE(s, logQ);
+    nernstPanelTitle.textContent = `Nernst: E = E° − (0.0592/n) log Q   [E° = ${s.e0} V, n = ${s.n}]`;
+    ecellDisplay.textContent = `E = ${E >= 0 ? '+' : ''}${E.toFixed(3)} V`;
+    var span = Math.max(3, Math.ceil(Math.abs(lqp)) + 1);
+    var e1 = simNernstE(s, -span), e2 = simNernstE(s, span), pad = 0.02;
+    simPlot(nernstCtx, nernstCanvas, { x0: -span, x1: span, y0: Math.min(e1, e2, 0) - pad, y1: Math.max(e1, e2) + pad,
+      xMinLabel: 'log Q ' + (-span), xMaxLabel: String(span), xLabel: 'log Q', yLabel: 'E cell (V)', yMaxLabel: Math.max(e1, e2).toFixed(2) + ' V',
+      curves: [{ color: '#ec4899', f: function (x) { return simNernstE(s, x); } }],
+      hlines: [{ y: s.e0, label: 'E°' }], vlines: [{ x: lqp, label: 'problem Q' }],
+      marks: [{ x: lqp, y: simNernstE(s, lqp) }], dot: { x: logQ, y: E } });
+  }
+
+  if (qSlider) qSlider.addEventListener('input', updateNernst);
+
+  // --- SIMULATION 5: ACID-BASE TITRATION CURVE ---
+  const titrationCanvas = document.getElementById('titrationCanvas');
+  const titrationCtx = titrationCanvas ? titrationCanvas.getContext('2d') : null;
+  const titrationSlider = document.getElementById('titrantSlider');
+  const titrantVolVal = document.getElementById('titrantVolVal');
+  const phDisplay = document.getElementById('phDisplay');
+  const titrationPanelTitle = document.getElementById('titrationPanelTitle');
+
+  // SIM-MODEL-START titration
+  // The pH of a titration mixture from the charge balance, solved exactly (no
+  // approximations), so weak acids and bases buffer, and a weak base titrated
+  // with a strong acid is acidic at equivalence. t: { kind: "acid"|"base",
+  // Ka or Kb (absent = strong), Ca (M), Va (mL), Ct (M) }.
+  function titrationEquivVolume(t) { return t.Ca * t.Va / t.Ct; }
+  function titrationPoint(t) {
+    if (t.at === "half") return titrationEquivVolume(t) / 2;
+    if (t.at === "equiv") return titrationEquivVolume(t);
+    return t.at;
+  }
+  function titrationPH(t, vmL) {
+    var Kw = 1e-14, Va = t.Va / 1000, Vt = vmL / 1000, Vtot = Va + Vt;
+    var C = t.Ca * Va / Vtot, T = t.Ct * Vt / Vtot;
+    function balance(h) {
+      var oh = Kw / h;
+      if (t.kind === "acid") {
+        var Ka = t.Ka || 1e10;
+        return h + T - oh - C * Ka / (Ka + h);
+      }
+      var Kconj = t.Kb ? Kw / t.Kb : 1e-10;
+      return h + C * h / (h + Kconj) - oh - T;
+    }
+    var lo = -15, hi = 1;              // log10 [H3O+]; the balance rises with [H3O+]
+    for (var i = 0; i < 80; i++) {
+      var mid = (lo + hi) / 2;
+      if (balance(Math.pow(10, mid)) > 0) hi = mid; else lo = mid;
+    }
+    return -(lo + hi) / 2;
+  }
+  // SIM-MODEL-END titration
+
+  function updateTitration() {
+    if (!titrationCtx) return;
+    let t = sessionData.problem.vars?.titr;
+    if (!t) return;
+    let veq = titrationEquivVolume(t), vmax = veq * 2, vp = titrationPoint(t);
+    let V = parseFloat(titrationSlider.value); titrantVolVal.textContent = V.toFixed(1);
+    let pH = titrationPH(t, V);
+    titrationPanelTitle.textContent = `Titration: ${t.analyte} with ${t.Ct} M ${t.titrant}`;
+    phDisplay.textContent = `pH = ${pH.toFixed(2)}`;
+
+    titrationCtx.clearRect(0, 0, titrationCanvas.width, titrationCanvas.height);
+    titrationCtx.strokeStyle = '#475569'; titrationCtx.lineWidth = 1; titrationCtx.beginPath(); titrationCtx.moveTo(40, 115); titrationCtx.lineTo(350, 115); titrationCtx.moveTo(40, 115); titrationCtx.lineTo(40, 15); titrationCtx.stroke();
+    titrationCtx.fillStyle = '#94a3b8'; titrationCtx.font = '9px sans-serif';
+    titrationCtx.fillText('0 mL', 40, 128); titrationCtx.fillText(`Equiv (${veq.toFixed(1)} mL)`, 170, 128); titrationCtx.fillText(`${vmax.toFixed(0)} mL`, 320, 128);
+    connectorLabel(titrationCtx, 'pH (0 - 14)', 12, 85, -Math.PI/2);
+
+    // pH 7 guide, and the point the problem asks about
+    let y7 = 115 - (7 / 14) * 95;
+    titrationCtx.strokeStyle = '#334155'; titrationCtx.setLineDash([3, 3]); titrationCtx.beginPath(); titrationCtx.moveTo(40, y7); titrationCtx.lineTo(350, y7); titrationCtx.stroke();
+    let xp = 40 + (vp / vmax) * 310;
+    titrationCtx.strokeStyle = '#64748b'; titrationCtx.beginPath(); titrationCtx.moveTo(xp, 15); titrationCtx.lineTo(xp, 115); titrationCtx.stroke();
+    titrationCtx.setLineDash([]);
+    titrationCtx.fillStyle = '#94a3b8'; titrationCtx.fillText('pH 7', 322, y7 - 3); titrationCtx.fillText('your problem', Math.min(xp + 3, 290), 24);
+
+    titrationCtx.save();
+    titrationCtx.beginPath(); titrationCtx.rect(40, 15, 310, 100); titrationCtx.clip();
+    titrationCtx.strokeStyle = '#c084fc'; titrationCtx.lineWidth = 2.5; titrationCtx.beginPath();
+    for (let x = 0; x <= 310; x++) {
+      let pVal = titrationPH(t, (x / 310) * vmax);
+      let cy = 115 - (pVal / 14) * 95;
+      if (x === 0) titrationCtx.moveTo(40 + x, cy); else titrationCtx.lineTo(40 + x, cy);
+    }
+    titrationCtx.stroke();
+    titrationCtx.restore();
+
+    let dotX = 40 + (V / vmax) * 310;
+    let dotY = 115 - (pH / 14) * 95;
+    titrationCtx.fillStyle = '#f43f5e'; titrationCtx.beginPath(); titrationCtx.arc(dotX, dotY, 5, 0, Math.PI*2); titrationCtx.fill();
+  }
+
+  if (titrationSlider) titrationSlider.addEventListener('input', updateTitration);
+
+  // --- SIMULATION 6: ICE TABLE EQUILIBRIUM ---
+  const iceCanvas = document.getElementById('iceCanvas');
+  const iceCtx = iceCanvas ? iceCanvas.getContext('2d') : null;
+  const xSlider = document.getElementById('xSlider');
+  const xExtentDisplay = document.getElementById('xExtentDisplay');
+  const icePanelTitle = document.getElementById('icePanelTitle');
+
+  function updateICE() {
+    if (!iceCtx) return;
+    var s = simSolve(); if (!s || s.type !== "ice") return;
+    var sh = simIceShape(s), K = simIceK(s), xe = simIceX(s);
+    var x = parseFloat(xSlider.value), Q = sh.Q(x);
+    var rxnText = sessionData.problem.vars?.rxnText || "";
+    icePanelTitle.textContent = `ICE: ${rxnText}`;
+    var dir = Math.abs(Q - K) / K < 0.02 ? "Q = K: at equilibrium" : (Q < K ? "Q < K: goes forward" : "Q > K: goes back");
+    xExtentDisplay.textContent = `x = ${simFmt(x)} M, ${dir}`;
+    var ymax = Math.max(s.a0, sh.pCoef * s.a0) * 1.05;
+    simPlot(iceCtx, iceCanvas, { x0: 0, x1: s.a0, y0: 0, y1: ymax, xMinLabel: 'x = 0', xMaxLabel: 'x = ' + simFmt(s.a0),
+      xLabel: 'Extent of reaction x (M)', yLabel: 'Concentration (M)', yMaxLabel: simFmt(ymax),
+      curves: [{ color: '#f87171', f: function (t) { return s.a0 - t; } },
+               { color: '#38bdf8', f: function (t) { return (sh.pCoef === 2 ? 2 : 1) * t; } }],
+      vlines: [{ x: xe, label: 'Q = K' }], dot: { x: x, y: s.a0 - x } });
+  }
+
+  if (xSlider) xSlider.addEventListener('input', updateICE);
+
+  // --- SIMULATION 7: KSP & COMMON ION SOLUBILITY ---
+  const kspCanvas = document.getElementById('kspCanvas');
+  const kspCtx = kspCanvas ? kspCanvas.getContext('2d') : null;
+  const commonIonSlider = document.getElementById('commonIonSlider');
+  const commonIonVal = document.getElementById('commonIonVal');
+  const solubilityDisplay = document.getElementById('solubilityDisplay');
+  const kspHeaderTitle = document.getElementById('kspHeaderTitle');
+  const commonIonLabel = document.getElementById('commonIonLabel');
+
+  function updateKsp(key) {
+    if (!kspCtx) return;
+    var s = simSolve(); if (!s || (s.type !== "ksp" && s.type !== "commonion")) return;
+    var cMax = Math.max(0.1, (s.common || 0) * 2);
+    var c = parseFloat(commonIonSlider.value);
+    var salt = sessionData.problem.vars?.salt || "the salt", ion = sessionData.problem.vars?.ion || "common ion";
+    kspHeaderTitle.textContent = key === "ch15_common_ion" ? `Common ion effect: ${salt}` : `Molar solubility: ${salt}`;
+    commonIonLabel.innerHTML = `Added ${ion}: <span id="commonIonVal">${c.toFixed(3)}</span> M`;
+    var sol = simSolubility(s, c), pure = simSolubility(s, 0);
+    solubilityDisplay.textContent = `s = ${simFmt(sol)} M`;
+    // log scale on s so the drop with a common ion is visible
+    var l0 = Math.log10(simSolubility(s, cMax)) - 0.3, l1 = Math.log10(pure) + 0.3;
+    var vl = s.common ? [{ x: s.common, label: 'problem [' + ion + ']' }] : [];
+    simPlot(kspCtx, kspCanvas, { x0: 0, x1: cMax, y0: l0, y1: l1, xMinLabel: '0 M', xMaxLabel: cMax.toFixed(2) + ' M',
+      xLabel: 'Common ion added (M)', yLabel: 'log s', yMaxLabel: 's ' + simFmt(Math.pow(10, l1)),
+      curves: [{ color: '#fbbf24', f: function (t) { return Math.log10(simSolubility(s, t)); } }],
+      hlines: [{ y: Math.log10(pure), label: 'pure water' }], vlines: vl, dot: { x: c, y: Math.log10(sol) } });
+  }
+
+  if (commonIonSlider) {
+    commonIonSlider.addEventListener('input', () => updateKsp(sessionData.problem.key));
+  }
+
+  // --- SIMULATION 8: HENDERSON-HASSELBALCH BUFFER ---
+  const bufferCanvas = document.getElementById('bufferCanvas');
+  const bufferCtx = bufferCanvas ? bufferCanvas.getContext('2d') : null;
+  const ratioSlider = document.getElementById('ratioSlider');
+  const ratioVal = document.getElementById('ratioVal');
+  const bufferPhDisplay = document.getElementById('bufferPhDisplay');
+
+  function updateBuffer() {
+    if (!bufferCtx) return;
+    var s = simSolve(); if (!s || s.type !== "buffer") return;
+    var ratio = parseFloat(ratioSlider.value); ratioVal.textContent = ratio.toFixed(2);
+    var pKa = simBufferPKa(s), pH = simBufferPH(s, ratio), rp = s.base / s.acid;
+    bufferPhDisplay.textContent = `pH = ${pH.toFixed(2)}   (pKa ${pKa.toFixed(2)})`;
+    simPlot(bufferCtx, bufferCanvas, { x0: -1, x1: 1, y0: pKa - 1.1, y1: pKa + 1.1, xMinLabel: 'ratio 0.1', xMaxLabel: '10',
+      xLabel: 'log([A⁻]/[HA])', yLabel: 'pH', yMaxLabel: (pKa + 1.1).toFixed(1),
+      curves: [{ color: '#22d3ee', f: function (x) { return pKa + x; } }],
+      hlines: [{ y: pKa, label: 'pH = pKa' }], vlines: [{ x: Math.log10(rp), label: 'problem ratio' }],
+      marks: [{ x: Math.log10(rp), y: simBufferPH(s, rp) }], dot: { x: Math.log10(ratio), y: pH } });
+  }
+
+  if (ratioSlider) ratioSlider.addEventListener('input', updateBuffer);
+
+  // --- SIMULATION 9: ELECTROLYSIS & FARADAY'S LAW ---
+  const electrolysisCanvas = document.getElementById('electrolysisCanvas');
+  const electrolysisCtx = electrolysisCanvas ? electrolysisCanvas.getContext('2d') : null;
+  const currentSlider = document.getElementById('currentSlider');
+  const currentVal = document.getElementById('currentVal');
+  const timeSlider = document.getElementById('timeSlider');
+  const timeVal = document.getElementById('timeVal');
+  const platedMassDisplay = document.getElementById('platedMassDisplay');
+  const elecPanelTitle = document.getElementById('elecPanelTitle');
+
+  function updateElectrolysis() {
+    if (!electrolysisCtx) return;
+    var s = simSolve(); if (!s || s.type !== "electrolysis") return;
+    var I = parseFloat(currentSlider.value); currentVal.textContent = I.toFixed(2);
+    var tMin = parseFloat(timeSlider.value); timeVal.textContent = tMin.toFixed(0);
+    var metal = sessionData.problem.vars?.metal || "metal";
+    elecPanelTitle.textContent = `Faraday's law: plating ${metal} (n = ${s.n})`;
+    var mass = simElectroMass(s, I, tMin * 60);
+    platedMassDisplay.textContent = `Mass = ${simFmt(mass)} g ${metal}`;
+    var tp = simElectroSeconds(s) / 60, tmax = Math.max(tp * 2, 10);
+    var mp = simElectroMass(s, s.current, tp * 60), mmax = simElectroMass(s, Math.max(I, s.current), tmax * 60) * 1.05;
+    simPlot(electrolysisCtx, electrolysisCanvas, { x0: 0, x1: tmax, y0: 0, y1: mmax, xMinLabel: '0 min', xMaxLabel: tmax.toFixed(0) + ' min',
+      xLabel: 'Time (min)', yLabel: 'Mass plated (g)', yMaxLabel: simFmt(mmax) + ' g',
+      curves: [{ color: '#f97316', f: function (t) { return simElectroMass(s, I, t * 60); } }],
+      vlines: [{ x: tp, label: 'problem time' }], marks: [{ x: tp, y: mp }], dot: { x: tMin, y: mass } });
+  }
+
+  if (currentSlider && timeSlider) {
+    currentSlider.addEventListener('input', updateElectrolysis);
+    timeSlider.addEventListener('input', updateElectrolysis);
+  }
+
+  function buildPeriodicTable() {
+    let ptContainer = document.getElementById('periodic-table-container');
+    if (!ptContainer) return;
+    ptContainer.innerHTML = '';
+
+    const elements = [
+      [1, "H", "1.008", 1, 1, "nonmetal"], [2, "He", "4.003", 1, 18, "nonmetal"],
+      [3, "Li", "6.94", 2, 1, "metal"], [4, "Be", "9.012", 2, 2, "metal"], [5, "B", "10.81", 2, 13, "metalloid"], [6, "C", "12.01", 2, 14, "nonmetal"], [7, "N", "14.01", 2, 15, "nonmetal"], [8, "O", "16.00", 2, 16, "nonmetal"], [9, "F", "19.00", 2, 17, "nonmetal"], [10, "Ne", "20.18", 2, 18, "nonmetal"],
+      [11, "Na", "22.99", 3, 1, "metal"], [12, "Mg", "24.31", 3, 2, "metal"], [13, "Al", "26.98", 3, 13, "metal"], [14, "Si", "28.09", 3, 14, "metalloid"], [15, "P", "30.97", 3, 15, "nonmetal"], [16, "S", "32.06", 3, 16, "nonmetal"], [17, "Cl", "35.45", 3, 17, "nonmetal"], [18, "Ar", "39.95", 3, 18, "nonmetal"],
+      [19, "K", "39.10", 4, 1, "metal"], [20, "Ca", "40.08", 4, 2, "metal"], [21, "Sc", "44.96", 4, 3, "metal"], [22, "Ti", "47.87", 4, 4, "metal"], [23, "V", "50.94", 4, 5, "metal"], [24, "Cr", "52.00", 4, 6, "metal"], [25, "Mn", "54.94", 4, 7, "metal"], [26, "Fe", "55.85", 4, 8, "metal"], [27, "Co", "58.93", 4, 9, "metal"], [28, "Ni", "58.69", 4, 10, "metal"], [29, "Cu", "63.55", 4, 11, "metal"], [30, "Zn", "65.38", 4, 12, "metal"], [31, "Ga", "69.72", 4, 13, "metal"], [32, "Ge", "72.63", 4, 14, "metalloid"], [33, "As", "74.92", 4, 15, "metalloid"], [34, "Se", "78.97", 4, 16, "nonmetal"], [35, "Br", "79.90", 4, 17, "nonmetal"], [36, "Kr", "83.80", 4, 18, "nonmetal"],
+      [37, "Rb", "85.47", 5, 1, "metal"], [38, "Sr", "87.62", 5, 2, "metal"], [39, "Y", "88.91", 5, 3, "metal"], [40, "Zr", "91.22", 5, 4, "metal"], [41, "Nb", "92.91", 5, 5, "metal"], [42, "Mo", "95.95", 5, 6, "metal"], [43, "Tc", "[98]", 5, 7, "metal"], [44, "Ru", "101.1", 5, 8, "metal"], [45, "Rh", "102.9", 5, 9, "metal"], [46, "Pd", "106.4", 5, 10, "metal"], [47, "Ag", "107.9", 5, 11, "metal"], [48, "Cd", "112.4", 5, 12, "metal"], [49, "In", "114.8", 5, 13, "metal"], [50, "Sn", "118.7", 5, 14, "metal"], [51, "Sb", "121.8", 5, 15, "metalloid"], [52, "Te", "127.6", 5, 16, "metalloid"], [53, "I", "126.9", 5, 17, "nonmetal"], [54, "Xe", "131.3", 5, 18, "nonmetal"],
+      [55, "Cs", "132.9", 6, 1, "metal"], [56, "Ba", "137.3", 6, 2, "metal"], [72, "Hf", "178.5", 6, 4, "metal"], [73, "Ta", "180.9", 6, 5, "metal"], [74, "W", "183.8", 6, 6, "metal"], [75, "Re", "186.2", 6, 7, "metal"], [76, "Os", "190.2", 6, 8, "metal"], [77, "Ir", "192.2", 6, 9, "metal"], [78, "Pt", "195.1", 6, 10, "metal"], [79, "Au", "197.0", 6, 11, "metal"], [80, "Hg", "200.6", 6, 12, "metal"], [81, "Tl", "204.4", 6, 13, "metal"], [82, "Pb", "207.2", 6, 14, "metal"], [83, "Bi", "208.9", 6, 15, "metal"], [84, "Po", "[209]", 6, 16, "metalloid"], [85, "At", "[210]", 6, 17, "metalloid"], [86, "Rn", "[222]", 6, 18, "nonmetal"],
+      [87, "Fr", "[223]", 7, 1, "metal"], [88, "Ra", "[226]", 7, 2, "metal"], [104, "Rf", "[267]", 7, 4, "metal"], [105, "Db", "[268]", 7, 5, "metal"], [106, "Sg", "[269]", 7, 6, "metal"], [107, "Bh", "[270]", 7, 7, "metal"], [108, "Hs", "[277]", 7, 8, "metal"], [109, "Mt", "[278]", 7, 9, "metal"], [110, "Ds", "[281]", 7, 10, "metal"], [111, "Rg", "[282]", 7, 11, "metal"], [112, "Cn", "[285]", 7, 12, "metal"], [113, "Nh", "[286]", 7, 13, "metal"], [114, "Fl", "[289]", 7, 14, "metal"], [115, "Mc", "[290]", 7, 15, "metal"], [116, "Lv", "[293]", 7, 16, "metal"], [117, "Ts", "[294]", 7, 17, "metal"], [118, "Og", "[294]", 7, 18, "nonmetal"],
+      [57, "La", "138.9", 9, 3, "metal"], [58, "Ce", "140.1", 9, 4, "metal"], [59, "Pr", "140.9", 9, 5, "metal"], [60, "Nd", "144.2", 9, 6, "metal"], [61, "Pm", "[145]", 9, 7, "metal"], [62, "Sm", "150.4", 9, 8, "metal"], [63, "Eu", "152.0", 9, 9, "metal"], [64, "Gd", "157.3", 9, 10, "metal"], [65, "Tb", "158.9", 9, 11, "metal"], [66, "Dy", "162.5", 9, 12, "metal"], [67, "Ho", "164.9", 9, 13, "metal"], [68, "Er", "167.3", 9, 14, "metal"], [69, "Tm", "168.9", 9, 15, "metal"], [70, "Yb", "173.1", 9, 16, "metal"], [71, "Lu", "175.0", 9, 17, "metal"],
+      [89, "Ac", "[227]", 10, 3, "metal"], [90, "Th", "232.0", 10, 4, "metal"], [91, "Pa", "231.0", 10, 5, "metal"], [92, "U", "238.0", 10, 6, "metal"], [93, "Np", "[237]", 10, 7, "metal"], [94, "Pu", "[244]", 10, 8, "metal"], [95, "Am", "[243]", 10, 9, "metal"], [96, "Cm", "[247]", 10, 10, "metal"], [97, "Bk", "[247]", 10, 11, "metal"], [98, "Cf", "[251]", 10, 12, "metal"], [99, "Es", "[252]", 10, 13, "metal"], [100, "Fm", "[257]", 10, 14, "metal"], [101, "Md", "[258]", 10, 15, "metal"], [102, "No", "[259]", 10, 16, "metal"], [103, "Lr", "[266]", 10, 17, "metal"]
+    ];
+
+    let grid = Array(11).fill(0).map(() => Array(18).fill(null));
+    elements.forEach(el => {
+      let period = el[3] - 1;
+      let group = el[4] - 1;
+      if(period >= 0 && period < 11 && group >= 0 && group < 18) {
+        grid[period][group] = el;
+      }
+    });
+
+    for(let r=0; r<11; r++) {
+      if(r === 7 || r === 9) {
+        let spacer = document.createElement('div');
+        spacer.style.gridColumn = "span 18";
+        spacer.style.height = "12px";
+        ptContainer.appendChild(spacer);
+      }
+      for(let c=0; c<18; c++) {
+        let cellDiv = document.createElement('div');
+        let elData = grid[r][c];
+        if (elData) {
+          let categoryClass = "bg-metal";
+          if(elData[5] === "nonmetal") categoryClass = "bg-nonmetal";
+          else if(elData[5] === "metalloid") categoryClass = "bg-metalloid";
+
+          cellDiv.className = `pt-cell ${categoryClass}`;
+          cellDiv.innerHTML = `<span class="atomic-num">${elData[0]}</span><span class="symbol">${elData[1]}</span><span class="atomic-mass">${elData[2]}</span>`;
+          cellDiv.title = `Atomic Number: ${elData[0]}\nSymbol: ${elData[1]}\nAtomic Weight: ${elData[2]}`;
+        } else {
+          cellDiv.className = 'pt-empty';
+        }
+        ptContainer.appendChild(cellDiv);
+      }
+    }
+  }
+
+  function renderToolbar(containerId, inputId) {
+    let toolbar = document.getElementById(containerId);
+    if (!toolbar) return;
+    toolbar.innerHTML = '';
+    
+    let groups = [
+      { class: 'sub-group', items: ['₀','₁','₂','₃','₄','₅','₆','₇','₈','₉'] },
+      { class: 'sup-group', items: ['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹','⁺','⁻'] },
+      { class: 'sym-group', items: ['·','⇌','Δ','°','× 10'] }
+    ];
+
+    groups.forEach(g => {
+      let span = document.createElement('span');
+      span.style.display = 'inline-flex';
+      span.style.gap = '2px';
+      span.style.marginRight = '8px';
+      span.style.borderRight = '1px solid #ccc';
+      span.style.paddingRight = '8px';
+      
+      g.items.forEach(symbol => {
+        let btn = document.createElement('button');
+        btn.className = 'chem-btn'; 
+        btn.innerText = symbol;
+        btn.type = 'button';
+        btn.onclick = () => insertSymbol(symbol, inputId);
+        span.appendChild(btn);
+      });
+      toolbar.appendChild(span);
+    });
+    
+    if (toolbar.lastChild) toolbar.lastChild.style.borderRight = 'none';
+  }
+
+  function insertSymbol(symbol, inputId) {
+    let targetInput = document.getElementById(inputId);
+    let start = targetInput.selectionStart, end = targetInput.selectionEnd, val = targetInput.value;
+    targetInput.value = val.substring(0, start) + symbol + val.substring(end);
+    targetInput.focus(); targetInput.selectionStart = targetInput.selectionEnd = start + symbol.length;
+  }
+
+var CHEM_ELEMENTS = ("H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co " +
+  "Ni Cu Zn Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce " +
+  "Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra " +
+  "Ac Th Pa U Np Pu").split(" ");
+var CHEM_SET = {};
+for (var ci = 0; ci < CHEM_ELEMENTS.length; ci++) CHEM_SET[CHEM_ELEMENTS[ci]] = 1;
+
+var CHEM_SUB = {"0":"₀","1":"₁","2":"₂","3":"₃","4":"₄","5":"₅","6":"₆","7":"₇","8":"₈","9":"₉"};
+var CHEM_SUP = {"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹",
+                "+":"⁺","-":"⁻"};
+
+// A token counts as a formula only if every piece is a real element symbol and
+// every digit run is 1-2 long. That is what keeps a student ID like B794 intact
+// while still subscripting Cl2.
+function chemIsFormula(tok) {
+  var i = 0, syms = 0;
+  while (i < tok.length) {
+    var two = tok.substr(i, 2), one = tok.substr(i, 1);
+    if (two.length === 2 && /^[A-Z][a-z]$/.test(two) && CHEM_SET[two]) { i += 2; syms++; }
+    else if (CHEM_SET[one]) { i += 1; syms++; }
+    else return false;
+    var d = /^\d+/.exec(tok.slice(i));
+    if (d) { if (d[0].length > 2) return false; i += d[0].length; }
+  }
+  return syms > 0;
+}
+
+function chemToSub(str) {
+  return str.replace(/\d/g, function (c) { return CHEM_SUB[c]; });
+}
+
+// The leading group captures the character before the token instead of using a
+// lookbehind, which older Safari and older iPads do not support.
+function chemSubscriptTokens(s) {
+  return s.replace(/(^|[^A-Za-z])([A-Z][A-Za-z0-9]*)/g, function (m, pre, tok) {
+    if (!chemIsFormula(tok)) return m;
+    return pre + tok.replace(/([A-Za-z])(\d+)/g, function (mm, L, D) {
+      return L + chemToSub(D);
+    });
+  });
+}
+
+function chemEscapeHtml(t) {
+  return String(t).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+
+// Returns HTML, not plain text. Real <sub>/<sup> tags rather than unicode
+// characters, because unicode has no subscript b, c, d, f or w — which is why
+// Kc, Kb and Kw could never render and the output always looked inconsistent.
+// The input is escaped first, so nothing the model writes can inject markup.
+function sanitizeTypography(text) {
+  if (!text) return "";
+  var s = chemEscapeHtml(text);
+
+  // 0. Polyatomic ions whose trailing digit is a subscript, not a charge.
+  //    "NO3-" is nitrate, not nitrogen monoxide with a 3- charge, and no rule
+  //    can tell those apart — so the common ones are split by hand.
+  var POLY = [["H3O","+"], ["NH4","+"], ["HSO4","-"], ["H2PO4","-"], ["HPO4","2-"],
+              ["HCO3","-"], ["NO3","-"], ["NO2","-"], ["SO4","2-"], ["SO3","2-"],
+              ["CO3","2-"], ["PO4","3-"], ["ClO4","-"], ["ClO3","-"], ["ClO2","-"],
+              ["MnO4","-"], ["CrO4","2-"], ["Cr2O7","2-"], ["S2O3","2-"],
+              ["CH3COO","-"], ["C2H3O2","-"], ["CN","-"], ["SCN","-"]];
+  POLY.forEach(function (ion) {
+    // Both + and - are regex metacharacters, so escape the charge before use.
+    var charge = ion[1].replace(/[+\-]/g, "\\$&");
+    var re = new RegExp("(^|[^A-Za-z0-9])" + ion[0] + charge + "(?![A-Za-z0-9])", "g");
+    s = s.replace(re, "$1" + chemSubscriptTokens(ion[0]).replace(/\$/g, "$$$$") +
+                       "<sup>" + ion[1] + "</sup>");
+  });
+
+  // 1. ionic charges on real formulas: Cu2+ -> Cu<sub>..</sub><sup>2+</sup>
+  s = s.replace(/(^|[^A-Za-z])([A-Z][A-Za-z]*\d*?)(\d)([+-])/g,
+    function (m, pre, head, d, sign) {
+      if (!chemIsFormula(head + d)) return m;
+      return pre + chemSubscriptTokens(head) + "<sup>" + d + sign + "</sup>";
+    });
+
+  // 2. digit after a closing parenthesis: Ba(OH)2 -> Ba(OH)<sub>2</sub>
+  s = s.replace(/([A-Za-z]\d*\))(\d{1,2})(\D|$)/g, function (m, p, d, tail) {
+    return p + "<sub>" + d + "</sub>" + tail;
+  });
+
+  // 3. ordinary formula subscripts: H2O -> H<sub>2</sub>O
+  s = chemSubscriptTokens(s);
+
+  // 4. named subscripts on constants and quantities. These are not chemical
+  //    formulas, which is why the old formula-only pass never touched them.
+  s = s.replace(/\b(p?K)(sp|eq|a|b|c|p|w|f|d)\b/g, "$1<sub>$2</sub>");
+  s = s.replace(/\bQ(sp|c|p)\b/g, "Q<sub>$1</sub>");
+  //    A leading character class is used instead of \b because Greek letters
+  //    such as \u03c7 are not word characters, so \b never fires before them.
+  s = s.replace(/(^|[^A-Za-z])([EP]\u00b0?)(solution|solvent|cathode|anode|total|pure|cell)\b/g,
+    "$1$2<sub>$3</sub>");
+  //    chi takes ANY name after it: \u03c7water, \u03c7sucrose, \u03c7benzene all subscript.
+  s = s.replace(/(\u03c7)([A-Za-z][A-Za-z0-9]*)/g, "$1<sub>$2</sub>");
+  s = s.replace(/(^|[^A-Za-z])(E\u00b0?)(a)\b/g, "$1$2<sub>$3</sub>");
+  s = s.replace(/(\u0394[HSG])(vap|fus|sub|rxn|soln|comb|sys|surr|univ|f)\b/g, "$1<sub>$2</sub>");
+  s = s.replace(/(^|[^A-Za-z])(n)(total)\b/g, "$1$2<sub>$3</sub>");
+  s = s.replace(/\bN(A)\b/g, "N<sub>$1</sub>");
+
+  // 5. numbered variables: T1, T2, k1, k2, V1, V2, n1, n2.
+  //    Anything already wrapped above is skipped, since a tag follows the letter.
+  s = s.replace(/(^|[^A-Za-z0-9>])([TPVknMC])([0-9]{1,2})(?![A-Za-z0-9])/g,
+    "$1$2<sub>$3</sub>");
+
+  // 6. concentrations and half-life: [A]0, [A]t, t1/2
+  s = s.replace(/(\[[A-Za-z][A-Za-z0-9]*\])\s?([0t])\b/g, "$1<sub>$2</sub>");
+  s = s.replace(/\bt1\/2\b/g, "t<sub>1/2</sub>");
+
+  // 7. a bare charge sign closing a species: OH-, [A-], 2e-, NH4+ -> superscript.
+  //    The lookahead keeps hyphenated words and 3.4e-2 out of it.
+  s = s.replace(/([A-Za-z\)\]])([+-])(?![A-Za-z0-9])/g, "$1<sup>$2</sup>");
+  //    ...including one that follows a formula subscript, but never one that
+  //    follows a charge we have already wrapped.
+  s = s.replace(/(<\/sub>)([+-])(?![A-Za-z0-9])/g, "$1<sup>$2</sup>");
+
+  // 8. caret superscripts: 10^-5 -> 10<sup>-5</sup>
+  s = s.replace(/\^\(?(-?[0-9]+)\)?/g, "<sup>$1</sup>");
+
+  return s;
+}
+
+  function switchProblemType() {
+    let selected = document.getElementById('problem-selector').value;
+    localStorage.setItem('activeProblemType', selected);
+    sessionStorage.removeItem('chemTutorState_' + selected);
+    location.reload();
+  }
+
+  function launchCustomProblem() {
+    let text = document.getElementById('custom-text').value.trim();
+    if (!text) return alert("Please enter problem text.");
+    localStorage.setItem('activeProblemType', 'custom');
+    
+    sessionStorage.setItem('chemTutorState_custom', JSON.stringify({
+      sessionId: "SESSION_" + Math.random().toString(36).substr(2, 9), history: [], milestone: 0,
+      problem: { key: "custom", chapter: "Custom", name: document.getElementById('custom-title').value || "Custom Problem", text: text, vars: {}, isSetup: false }
+    }));
+    location.reload();
+  }
+
+  // The on-screen heading must not name the law — students recognize the
+  // chemistry from the problem text, as on an exam. The label is read from the
+  // problem selector so the menu and the heading always agree.
+  function problemLabel(prob) {
+    if (!prob) return "Problem";
+    if (prob.key === "custom") return prob.name || "Custom Problem";
+    var opt = document.querySelector('#problem-selector option[value="' + prob.key + '"]');
+    return opt ? opt.textContent.trim() : ("Chapter " + (prob.chapter || "?"));
+  }
+
+  function renderProblemText() { 
+    if (!sessionData.problem.isSetup) {
+      problemBox.innerHTML = `<h3>${problemLabel(sessionData.problem)}</h3>${sanitizeTypography(sessionData.problem.text)}`; 
+    }
+  }
+
+    function resetSession() {
+    try { sessionStorage.setItem('lastProblemText', sessionData.problem.text || ""); } catch (e) {}
+    fetch(GAS_URL, {
+      method: 'POST',
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      redirect: "follow",
+      body: JSON.stringify({
+        authToken: APP_TOKEN,
+        action: "reset",
+        sessionId: sessionData.sessionId,
+        studentId: loggedStudentId,
+        problemConfig: sessionData.problem
+      })
+    }).finally(() => {
+      sessionStorage.removeItem(sessionKey);
+      location.reload();
+    });
+  }
+
+  // Two attempts, then give up. The Apps Script redirect hop fails intermittently
+  // and the failure is transient, so a second try nearly always lands. The turnId
+  // makes the retry safe: if the first attempt actually reached the server, the
+  // server replays its stored reply instead of grading the turn twice.
+  async function postTurn(body, turnId) {
+    let lastErr = null;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      if (attempt) await new Promise(r => setTimeout(r, 900));
+      try {
+        const response = await fetch(GAS_URL, {
+          method: 'POST',
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          redirect: "follow",
+          body: JSON.stringify(Object.assign({ turnId: turnId }, body))
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return await response.json();
+      } catch (err) { lastErr = err; }
+    }
+    throw lastErr;
+  }
+
+  async function sendMessage() {
+    let text = userInput.value.trim(); if (!text) return;
+    appendMessage(text, 'user');
+    userInput.value = ''; userInput.disabled = true; sendBtn.disabled = true; sendBtn.innerText = "Thinking...";
+    const turnId = "T_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
+    try {
+      let json = await postTurn({
+        authToken: APP_TOKEN,
+        message: text,
+        sessionId: sessionData.sessionId,
+        studentId: loggedStudentId,
+        chapter: sessionData.problem.chapter,
+        problemConfig: sessionData.problem,
+        history: sessionData.history
+      }, turnId);
+
+      // The message joins the history only once the turn has actually landed.
+      // It used to be pushed before the fetch, so a failure followed by the
+      // student retyping the same thing put it in the grader's window twice.
+      sessionData.history.push({ role: 'user', text: text });
+      saveSession();
+      if (json.error) addSystemMessage("AI Error: " + json.error);
+      else {
+
+        appendMessage(json.socratic_response, 'model');
+        sessionData.history.push({ role: 'model', text: json.socratic_response });
+
+        // Server is the source of truth for milestone number
+        let prevMilestone = sessionData.milestone;
+        sessionData.milestone = json.milestone;
+
+        if (json.milestone > prevMilestone) {
+          drawCanvas(sessionData.milestone);
+    applyProblemVeil(sessionData.milestone);
+          toggleSimPanels(sessionData.problem.key);
+          if (sessionData.milestone >= 5) {
+            addSystemMessage("All milestones completed!");
+            userInput.placeholder = "Finished.";
+          } else {
+            addSystemMessage(`Milestone ${sessionData.milestone}/5 Cleared!`);
+          }
+        }
+        saveSession();
+      }
+    } catch (err) {
+      // Put their text back so nothing is lost and one click resends it.
+      userInput.value = text;
+      addSystemMessage(`Could not reach the tutor (${err.message}). Your message is back in the box \u2014 press Send to try again.`);
+    }
+    finally { userInput.disabled = false; sendBtn.disabled = false; sendBtn.innerText = "Send"; userInput.focus(); }
+  }
+
+  function appendMessage(text, role) {
+    let div = document.createElement('div'); div.className = 'message ' + (role === 'user' ? 'user-msg' : 'ai-msg');
+    // innerHTML is safe here: sanitizeTypography escapes its input before it
+    // adds any <sub>/<sup> tags of its own.
+    div.innerHTML = sanitizeTypography(text); chatLog.appendChild(div); chatLog.scrollTop = chatLog.scrollHeight;
+  }
+  function addSystemMessage(text) {
+        let div = document.createElement('div'); div.className = 'message system-msg'; div.innerText = text;
+    chatLog.appendChild(div); chatLog.scrollTop = chatLog.scrollHeight;
+  }
+
+  // The opening move of every problem. It states the frame the whole course
+  // runs on, then puts the milestone 1 question — once, here, so the tutor
+  // does not repeat it back at a student who has already read it.
+  function addOpeningMessage() {
+    let div = document.createElement('div');
+    div.className = 'message opening-msg';
+    let frame = document.createElement('span');
+    frame.className = 'frame';
+    frame.innerText = "Take a long slow breath. Every problem here runs the same way. You have a few numbers somebody measured. What you actually want to know is happening among particles nobody can see. The equations are the bridge between the two \u2014 and crossing it, not the arithmetic, is the work.";
+    let ask = document.createElement('span');
+    ask.className = 'ask';
+    ask.innerText = "First, let us identify the Laws and/or Principles associated with this experiment.";
+    // Archetype opener, served as static text from Code.gs so the wording can be
+    // changed with a free redeploy instead of a Netlify build.
+    fetch(GAS_URL, {
+      method: 'POST',
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      redirect: "follow",
+      body: JSON.stringify({ authToken: APP_TOKEN, action: "opener", problemConfig: sessionData.problem })
+    }).then(function (r) { return r.json(); })
+      .then(function (d) { if (d && d.opener) ask.innerHTML = sanitizeTypography(d.opener); })
+      .catch(function () { setTimeout(retryOpener, 1200); });
+
+    // One retry. A failed fetch used to leave the generic boiler-plate question on
+    // screen with nothing to say it had failed, so the archetype opener silently
+    // did not happen. (Live: Ch 12 activation energy, alongside two Load failed.)
+    function retryOpener() {
+      fetch(GAS_URL, {
+        method: 'POST',
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        redirect: "follow",
+        body: JSON.stringify({ authToken: APP_TOKEN, action: "opener", problemConfig: sessionData.problem })
+      }).then(function (r) { return r.json(); })
+        .then(function (d) { if (d && d.opener) ask.innerHTML = sanitizeTypography(d.opener); })
+        .catch(function () {});
+    }
+    div.appendChild(frame); div.appendChild(ask);
+    chatLog.appendChild(div); chatLog.scrollTop = chatLog.scrollHeight;
+  }
+
+  // The problem stays hidden until milestone 1 clears. A student who can see the
+  // numbers solves the problem; a student who cannot has to think about the
+  // chemistry first, which is the whole point of milestone 1.
+  function applyProblemVeil(milestone) {
+    var box = document.getElementById('problem-box');
+    var veil = document.getElementById('problem-veil');
+    if (!box || !veil) return;
+    var instr = instructorParams();
+    var hide = (milestone || 0) < 1 && sessionData.problem && sessionData.problem.key !== "custom";
+    if (instr && instr.reveal) hide = false;
+    if (instr) {
+      veil.insertAdjacentHTML("beforebegin", "");
+      box.setAttribute("data-instructor", "1");
+      var mark = document.getElementById("instructor-mark");
+      if (!mark) {
+        mark = document.createElement("div");
+        mark.id = "instructor-mark";
+        mark.style.cssText = "background:#7a2020;color:#fff;padding:4px 8px;font-size:12px;border-radius:4px;margin-bottom:6px;";
+        mark.textContent = "Instructor mode — build " + BUILD + " — variant " +
+          ((instr.variant === null) ? "(bag)" : (instr.variant + 1)) +
+          (instr.reveal ? ", problem revealed" : ", veil normal") +
+          (instr.sim ? ", simulation open" : "") +
+          " — showing: " + String((sessionData.problem && sessionData.problem.text) || "?").slice(0, 46);
+        box.parentNode.insertBefore(mark, box);
+      }
+    }
+    box.style.display = hide ? 'none' : '';
+    veil.style.display = hide ? '' : 'none';
+  }
+
+
+  // One bag per archetype, kept in localStorage so it survives a reload and a
+  // browser quit. It holds the indexes not yet dealt this cycle.
+  function drawFromBag(type, pool) {
+    const key = 'bag_' + type;
+    let bag = [];
+    try { bag = JSON.parse(localStorage.getItem(key) || "[]"); } catch (e) { bag = []; }
+    bag = bag.filter(i => Number.isInteger(i) && i >= 0 && i < pool.length);
+    if (!bag.length) {
+      bag = pool.map((p, i) => i);
+      for (let i = bag.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const t = bag[i]; bag[i] = bag[j]; bag[j] = t;
+      }
+    }
+    const idx = bag.shift();
+    try { localStorage.setItem(key, JSON.stringify(bag)); } catch (e) {}
+    return pool[idx];
+  }
+
+
+  function saveSession() { sessionStorage.setItem(sessionKey, JSON.stringify(sessionData)); }
+
+  function drawCanvas(milestone) {
+    const canvas = document.getElementById('phaseCanvas'), ctx = canvas.getContext('2d');
+    if (!canvas) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let titleEl = document.getElementById('canvas-title');
+    let pk = sessionData.problem.key;
+    let progress = milestone / 5;
+    ctx.font = '10px sans-serif';
+
+    if (pk === "ch10_cc") {
+      titleEl.innerText = "Clausius-Clapeyron: Direct & Linear Plots";
+      ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(200, 10); ctx.lineTo(200, 170); ctx.stroke();
+      ctx.strokeStyle = '#333'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(35, 140); ctx.lineTo(185, 140); ctx.moveTo(35, 140); ctx.lineTo(35, 25); ctx.stroke();
+      ctx.fillStyle = '#333'; ctx.fillText('Temp (T)', 90, 155);
+      ctx.save(); ctx.translate(15, 90); ctx.rotate(-Math.PI/2); ctx.fillText('Pressure (P)', 0, 0); ctx.restore();
+
+      ctx.save(); ctx.beginPath(); ctx.rect(35, 25, 150, 115); ctx.clip();
+      ctx.strokeStyle = '#2563eb'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(35, 130); ctx.quadraticCurveTo(100, 125, 175, 30); ctx.stroke();
+      ctx.restore();
+      
+      ctx.fillStyle = '#1a73e8'; ctx.beginPath(); ctx.arc(45, 128, 4, 0, Math.PI*2); ctx.fill(); ctx.fillText('State 1', 52, 135);
+      if (milestone >= 2) {
+        ctx.fillStyle = '#dc3545'; ctx.beginPath(); ctx.arc(160, 40, 4, 0, Math.PI*2); ctx.fill(); ctx.fillText('State 2', 115, 45);
+      }
+
+      ctx.strokeStyle = '#333'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(225, 140); ctx.lineTo(385, 140); ctx.moveTo(225, 140); ctx.lineTo(225, 25); ctx.stroke();
+      ctx.fillStyle = '#333'; ctx.fillText('1 / Temp (K⁻¹)', 270, 155);
+      ctx.save(); ctx.translate(205, 95); ctx.rotate(-Math.PI/2); ctx.fillText('ln(Pressure)', 0, 0); ctx.restore();
+
+      ctx.save(); ctx.beginPath(); ctx.rect(225, 25, 160, 115); ctx.clip();
+      ctx.strokeStyle = '#16a34a'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(235, 35); ctx.lineTo(370, 130); ctx.stroke();
+      ctx.restore();
+
+      ctx.fillStyle = '#1a73e8'; ctx.beginPath(); ctx.arc(235, 35, 5, 0, Math.PI*2); ctx.fill(); ctx.fillText('State 1', 242, 33);
+      if (milestone >= 2) {
+        ctx.fillStyle = '#dc3545'; ctx.beginPath(); ctx.arc(370, 130, 5, 0, Math.PI*2); ctx.fill(); ctx.fillText('State 2', 325, 143);
+      }
+      let ptX = 235 + (progress * 135); let ptY = 35 + (progress * 95);
+      ctx.fillStyle = '#0d9488'; ctx.beginPath(); ctx.arc(ptX, ptY, 4, 0, Math.PI*2); ctx.fill();
+    } else {
+      titleEl.innerText = "Conceptual Milestone Progress Tracker";
+      ctx.strokeStyle = '#333'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(45, 140); ctx.lineTo(380, 140); ctx.moveTo(45, 140); ctx.lineTo(45, 25); ctx.stroke();
+      ctx.fillStyle = '#333'; ctx.fillText('Socratic Milestone Steps (1 to 5)', 140, 165);
+      ctx.save(); ctx.translate(15, 95); ctx.rotate(-Math.PI/2); ctx.fillText('Milestone Level', 0, 0); ctx.restore();
+      ctx.fillStyle = '#1a73e8'; ctx.beginPath(); ctx.arc(80, 80, 5, 0, Math.PI*2); ctx.fill(); ctx.fillText('Start', 70, 65);
+      if (milestone >= 2) {
+        ctx.fillStyle = '#dc3545'; ctx.beginPath(); ctx.arc(350, 80, 5, 0, Math.PI*2); ctx.fill(); ctx.fillText('End', 340, 65);
+      }
+      ctx.fillStyle = '#28a745'; ctx.beginPath(); ctx.arc(80 + (milestone * 55), 80, 4, 0, Math.PI*2); ctx.fill();
+    }
+  }
+
+  userInput.addEventListener("keypress", (e) => { if (e.key === "Enter") sendMessage(); });
+</script>
+</body>
+</html>

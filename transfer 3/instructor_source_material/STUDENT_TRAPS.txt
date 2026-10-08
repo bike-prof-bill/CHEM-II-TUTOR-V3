@@ -1,0 +1,137 @@
+Based on the deterministic grading algorithms, Socratic rulesets, and milestone criteria built into the tutor's source code (`Code_V2-6.txt` and `index.html`), here is the comprehensive breakdown of the specific student traps monitored for OpenStax Chemistry 2e Chapters 10–17, 19, and 21.
+
+### Chapter 10: Liquids and Solids
+
+**Clausius-Clapeyron**
+
+* **The Celsius Trap (`EQ_CELSIUS`):** Leaving the two temperatures in Celsius rather than converting to Kelvin before inserting them into the $1/T_2 - 1/T_1$ term.
+
+
+* **The $R$ vs. $\Delta H_{vap}$ Mismatch (`UNIT_OR_CONVERSION`):** Failing to align the energy units. Students frequently input $\Delta H_{vap}$ in kilojoules but use the ideal gas constant $R$ ($8.314$) in Joules, throwing the exponential term off by a factor of 1000.
+
+
+* **Flipped State Variables (`EQ_SIGN_FLIPPED`):** Inverting the ratio to $\ln(P_1/P_2)$ without dropping the negative sign on the right side of the equation.
+
+
+
+### Chapter 11: Solutions and Colloids
+
+**Colligative Properties & Osmotic Pressure**
+
+* **The Missing van 't Hoff Factor ($i$):** Treating strong electrolytes (like $CaCl_2$) as non-electrolytes ($i=1$) instead of calculating the true dissolved particle population ($i=3$). The tutor enforces this by making the identification of $i$ its own distinct milestone.
+
+
+* **Molarity vs. Molality Confusion:** Using solution volume ($L$) instead of solvent mass ($kg$) when calculating freezing point depression or boiling point elevation.
+
+
+
+### Chapter 12: Kinetics
+
+*(Includes previously detailed traps)*
+
+* **Method of Initial Rates:** Comparing trials where *both* reactant concentrations changed, making it impossible to isolate the order of a single reactant.
+
+
+* **Integrated Rate Laws (`WRONG_ORDER_LAW`):** Selecting the integrated polynomial for the wrong reaction order (e.g., using $\ln([A]_t/[A]_0) = -kt$ for a second-order reaction).
+
+
+* **Activation Energy (`TEMP_TERM_FLIPPED`):** Inverting the temperature difference in the Arrhenius equation, yielding a physically impossible negative activation energy.
+
+
+
+### Chapter 13: Fundamental Equilibrium
+
+*(Includes previously detailed traps)*
+
+* **Unbracketed Denominator (`ORDER_OF_OPERATIONS`):** Typing `x^2/0.1-x`, which calculators evaluate as $(x^2/0.1) - x$, instead of the intended $x^2 / (0.1 - x)$.
+
+
+* **Exceeding Initial Bounds (`EXCEEDS_INITIAL`):** Calculating a reaction shift ($x$) that is mathematically larger than the starting amount of reactant, violating the conservation of mass.
+
+
+* **Unsquared Coefficients (`COEFFICIENT_NOT_SQUARED`):** Writing $2x^2$ or $x^2$ in the mass action expression instead of $(2x)^2$.
+
+
+
+### Chapter 14: Acid-Base Equilibria
+
+**pH & pOH of Strong/Weak Acids and Bases**
+
+* **The Polyprotic Base Trap:** Forgetting the stoichiometric multiplier for strong bases. For example, failing to recognize that $0.015 \text{ M } Ba(OH)_2$ yields $0.030 \text{ M } OH^-$ before calculating pOH.
+
+
+* **The "Strong Acid" Trap for Weak Acids:** Skipping the ICE table entirely and assuming a weak acid (like $CH_3COOH$) dissociates 100%, directly taking the $-\log$ of the initial concentration.
+
+**Titrations & Buffers**
+
+* **The Neutral Equivalence Assumption:** Assuming the equivalence point of a weak acid/strong base titration is exactly pH 7.00. The tutor forces a limiting reactant analysis to reveal the basic hydrolysis of the remaining conjugate base.
+
+
+* **Intact Salt Trap:** Failing to recognize that buffer salts (like Sodium Acetate) are strong electrolytes that dissociate completely to provide the common ion.
+
+
+
+### Chapter 15: Equilibria of Other Reaction Classes
+
+**Solubility ($K_{sp}$) & Common Ion Effect**
+
+* **The Universal Square Root Assumption:** Assuming that molar solubility ($s$) is always simply $\sqrt{K_{sp}}$. The milestone 5 check explicitly asks the student to explain why $s$ is *not* just the square root for asymmetric salts like $CaF_2$ ($K_{sp} = 4s^3$).
+
+
+* **Ignoring the Common Ion:** Setting up the $K_{sp}$ ICE table with an initial concentration of $0 \text{ M}$ for both ions, despite the problem stating a common ion is already present in the solvent.
+
+
+
+**Precipitation ($Q_{sp}$ vs $K_{sp}$)**
+
+* **The Dilution Trap:** Plugging the given molarities directly into the $Q_{sp}$ expression. The tutor specifically forces students to calculate the *new* initial ion concentrations resulting from the two volumes mixing together before $Q_{sp}$ can be evaluated.
+
+
+
+### Chapter 16: Thermodynamics
+
+**Entropy, Enthalpy, & Gibbs Free Energy**
+
+* **The Energy Unit Mismatch (`UNIT_OR_CONVERSION`):** The most common thermodynamic trap. Standard entropy ($\Delta S^\circ$) is almost always tabulated in $\text{J/K}$, while standard enthalpy ($\Delta H^\circ$) is in $\text{kJ}$. Students subtract them directly without dividing $\Delta S$ by $1000$, resulting in massively skewed $\Delta G$ values.
+
+
+* **Flipped $K_{eq}$ Sign (`EQ_SIGN_FLIPPED`):** Dropping the negative sign on $\Delta G^\circ = -RT\ln K$, leading to calculated equilibrium constants that are upside down ($1/K$).
+
+
+
+### Chapter 17: Electrochemistry
+
+**Standard Cell Potential**
+
+* **The Double-Flip Error:** The equation is $E^\circ_{cell} = E^\circ_{cathode} - E^\circ_{anode}$. Students frequently flip the sign of the anode's reduction potential *and* use the minus sign in the formula, effectively double-negating it. The tutor rules explicitly state: "Ensure correct sign logic (don't flip and subtract)".
+
+
+
+**Nernst Equation & Electrolysis**
+
+* **The Log Base Trap (`EQ_LOG_BASE`):** Using the natural logarithm ($\ln$) instead of the base-10 logarithm ($\log_{10}$) when utilizing the $0.0592/n$ shortcut form of the Nernst equation.
+
+
+* **Missing Electron Stoichiometry ($n$):** In Faraday's Law of Electrolysis problems, failing to identify the oxidation state of the metal ion (e.g., $Au^{3+}$ requires 3 moles of electrons per mole of gold). The tutor forces this extraction at Milestone 1.
+
+
+
+### Chapter 19: Transition Metals & Coordination Chemistry
+
+**Crystal Field Splitting**
+
+* **Covalent vs. Ionic Assumption:** Misidentifying the metal's oxidation state by treating the metal-ligand bonds as purely covalent. The tutor explicitly clarifies that oxidation numbers take a pure ionic bond as the benchmark.
+
+
+* **Ligand Strength Misidentification:** Failing to use the spectrochemical series to identify strong-field vs. weak-field ligands, leading to incorrect high-spin or low-spin orbital populations ($t_{2g}$ vs $e_g$).
+
+
+
+### Chapter 21: Nuclear Chemistry
+
+**Radioactive Decay & Binding Energy**
+
+* **Non-First-Order Math:** Attempting to apply zero- or second-order rate laws to radioactive decay. The tutor strictly enforces that nuclear decay math "is the same as a first-order reaction".
+
+
+* **Mass Defect Assembly Error:** Adding the atomic mass to the subatomic particles, or failing to subtract the mass of the assembled nucleus from the sum of its unbound protons and neutrons to find the defect ($\Delta m$).

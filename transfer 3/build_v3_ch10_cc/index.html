@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gen Chem II Tutor · V3</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root { --paper:#fbfaf6; --card:#ffffff; --ink:#1d2a2c; --soft:#5d6b6d; --line:#dcd9cf; --teal:#0f5c5a; --teal-soft:#e3efee; --amber:#8a5a0a; --amber-soft:#fbf1dc; --red:#8c2f22;
+          --serif: "Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif; --sans: "Avenir Next","Segoe UI",system-ui,sans-serif; --mono: "SF Mono",Menlo,Consolas,monospace; }
+  * { box-sizing:border-box; }
+  html,body { height:100%; margin:0; }
+  body { background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:15px; line-height:1.5; display:flex; flex-direction:column; }
+  header { display:flex; align-items:center; gap:14px; padding:10px 18px; border-bottom:1px solid var(--line); background:var(--card); flex-wrap:wrap; }
+  header h1 { font-family:var(--serif); font-size:20px; font-weight:600; margin:0 auto 0 0; letter-spacing:.01em; }
+  header h1 small { font-family:var(--sans); font-weight:400; font-size:13px; color:var(--soft); margin-left:8px; }
+  input,select,button,textarea { font:inherit; color:inherit; }
+  input[type=text],select { border:1px solid var(--line); border-radius:6px; padding:6px 9px; background:var(--card); }
+  button { border:1px solid var(--teal); background:var(--teal); color:#fff; border-radius:6px; padding:7px 14px; cursor:pointer; }
+  button.quiet { background:var(--card); color:var(--teal); }
+  button:disabled { opacity:.45; cursor:default; }
+  button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible { outline:2px solid var(--teal); outline-offset:2px; }
+  main { flex:1; min-height:0; display:grid; grid-template-columns:minmax(340px,44%) 1fr; }
+  #left { padding:16px 18px; overflow-y:auto; border-right:1px solid var(--line); }
+  #right { display:flex; flex-direction:column; min-height:0; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-bottom:14px; }
+  .card h2 { font-family:var(--serif); font-size:16px; font-weight:600; margin:0 0 6px; }
+  #problemText { font-family:var(--serif); font-size:17px; line-height:1.6; }
+  .veil { color:var(--soft); font-style:italic; }
+  #givens { font-family:var(--mono); font-size:13px; color:var(--soft); margin-top:8px; }
+  #meter { display:flex; gap:4px; align-items:center; font-size:13px; color:var(--soft); }
+  #meter i { width:16px; height:6px; border-radius:3px; background:var(--line); display:inline-block; }
+  #meter i.on { background:var(--teal); }
+  .plots { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .plots > div { min-width:0; }
+  #probe { margin-top:10px; font-size:13px; color:var(--soft); }
+  #probe input { width:100%; accent-color:var(--teal); }
+  #probe output { font-family:var(--mono); color:var(--ink); }
+  #log { flex:1; overflow-y:auto; padding:18px; display:flex; flex-direction:column; gap:10px; }
+  .msg { max-width:78ch; padding:10px 14px; border-radius:10px; white-space:pre-wrap; }
+  .tutor { background:var(--card); border:1px solid var(--line); font-family:var(--serif); font-size:16px; align-self:flex-start; }
+  .me { background:var(--teal-soft); align-self:flex-end; }
+  .note { align-self:center; font-size:13px; color:var(--soft); }
+  .nb { background:var(--amber-soft); border:1px solid #e6cf9a; align-self:stretch; max-width:none; font-family:var(--sans); }
+  .nb pre { white-space:pre-wrap; font-family:var(--serif); font-size:15px; background:#fff; border:1px solid #e6cf9a; border-radius:8px; padding:10px 12px; margin:8px 0; }
+  .nb .row { display:flex; gap:8px; flex-wrap:wrap; }
+  .nb button { border-color:var(--amber); background:var(--amber); } .nb button.quiet { background:#fff; color:var(--amber); }
+  #compose { border-top:1px solid var(--line); background:var(--card); padding:10px 14px; display:flex; gap:8px; align-items:flex-end; }
+  #compose textarea { flex:1; resize:none; border:1px solid var(--line); border-radius:8px; padding:9px 11px; min-height:44px; max-height:140px; }
+  .keys { display:flex; gap:4px; flex-wrap:wrap; } .keys button { padding:4px 8px; background:var(--card); color:var(--soft); border-color:var(--line); font-family:var(--mono); font-size:13px; }
+  dialog { border:1px solid var(--line); border-radius:12px; padding:18px 20px; max-width:560px; width:92%; }
+  dialog::backdrop { background:rgba(29,42,44,.35); }
+  .eq { display:block; width:100%; text-align:left; margin:6px 0; background:var(--card); color:var(--ink); border-color:var(--line); font-family:var(--mono); font-size:14px; }
+  .eq:hover { border-color:var(--teal); }
+  label.f { display:block; font-size:13px; color:var(--soft); margin:10px 0 3px; } dialog input[type=text] { width:100%; }
+  .pin { margin-top:8px; } .pin span { display:block; font-size:12px; color:var(--soft); } .pin code { display:block; white-space:pre; font-family:var(--mono); font-size:15px; background:var(--teal-soft); border-radius:6px; padding:8px 10px; margin-top:2px; overflow-x:auto; }
+  #debug { font-family:var(--mono); font-size:11px; color:var(--soft); white-space:pre-wrap; display:none; }
+  .err { color:var(--red); }
+  @media (max-width:820px) { main { grid-template-columns:1fr; } #left { border-right:0; border-bottom:1px solid var(--line); max-height:46vh; } .plots { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Gen Chem II Tutor<small id="build">V3 · Clausius-Clapeyron</small></h1>
+  <span id="meter" aria-live="polite"></span>
+  <input type="text" id="studentId" placeholder="Student ID" aria-label="Student ID" style="width:130px">
+  <select id="kind" aria-label="Problem kind (testing)">
+    <option value="">any kind</option><option>T2</option><option>P2</option><option>T1</option><option>P1</option><option value="dH">ΔHvap</option><option value="slope">slope from data</option>
+  </select>
+  <button id="newBtn">New problem</button>
+  <a id="nbLink" class="quiet" target="_blank" rel="noopener" style="color:var(--teal);font-size:14px">Notebook</a>
+  <button class="quiet" id="setBtn" aria-label="Connection settings">Settings</button>
+</header>
+
+<main>
+  <section id="left">
+    <div class="card">
+      <h2>The problem</h2>
+      <div id="problemText" class="veil">The problem is not on screen yet. First answer the question in the chat about what the particles are doing. Then it appears here.</div>
+      <div id="givens"></div>
+      <div style="margin-top:12px"><button class="quiet" id="eqBtn" disabled>Equations</button></div>
+    </div>
+    <div class="card" id="pinCard" style="display:none">
+      <h2>Your symbols</h2>
+      <div class="pin" id="pinRel" style="display:none"><span>relation you chose</span><code></code></div>
+      <div class="pin" id="pinRe" style="display:none"><span>rearranged for the unknown</span><code></code></div>
+    </div>
+    <div class="card" id="plotCard" style="display:none">
+      <h2 id="plotTitle">Measured vapor pressures</h2>
+      <div class="plots"><div><canvas id="linChart" height="230"></canvas></div><div><canvas id="expChart" height="230"></canvas></div></div>
+      <div id="probe" style="display:none">
+        <label for="probeT">Move the probe along the curve. It is here to test your conclusion.</label>
+        <input type="range" id="probeT" step="0.5">
+        <div>At <output id="probeTout"></output> the fitted line gives <output id="probePout"></output></div>
+      </div>
+    </div>
+    <div id="debug"></div>
+  </section>
+
+  <section id="right">
+    <div id="log" aria-live="polite"></div>
+    <div id="compose">
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+        <div class="keys" aria-label="Symbols">
+          <button type="button" data-k="ΔHvap">ΔHvap</button><button type="button" data-k="ln(">ln(</button><button type="button" data-k="exp(">exp(</button><button type="button" data-k="₁">x₁</button><button type="button" data-k="₂">x₂</button><button type="button" data-k="⁻¹">x⁻¹</button><button type="button" data-k="×10^">×10ⁿ</button><button type="button" data-k="°C">°C</button><button type="button" data-k="·">·</button><button type="button" data-k="→">→</button><button type="button" data-k="⇌">⇌</button>
+        </div>
+        <div class="keys" aria-label="Greek letters">
+          <button type="button" data-k="Δ">Δ</button><button type="button" data-k="α">α</button><button type="button" data-k="β">β</button><button type="button" data-k="γ">γ</button><button type="button" data-k="θ">θ</button><button type="button" data-k="λ">λ</button><button type="button" data-k="μ">μ</button><button type="button" data-k="ν">ν</button><button type="button" data-k="π">π</button><button type="button" data-k="ρ">ρ</button><button type="button" data-k="σ">σ</button><button type="button" data-k="Σ">Σ</button><button type="button" data-k="χ">χ</button><button type="button" data-k="ξ">ξ</button><button type="button" data-k="Ω">Ω</button>
+        </div>
+        <textarea id="box" placeholder="Press New problem to begin" disabled aria-label="Your message"></textarea>
+      </div>
+      <button id="sendBtn" disabled>Send</button>
+    </div>
+  </section>
+</main>
+
+<dialog id="eqDlg"><h2 style="font-family:var(--serif);margin:0 0 4px;font-size:18px">Equations</h2>
+  <p style="margin:0 0 8px;color:var(--soft);font-size:13px">No names on purpose. Pick the one that expresses what you described.</p>
+  <div id="eqList"></div><div style="text-align:right;margin-top:10px"><button class="quiet" onclick="eqDlg.close()">Close</button></div></dialog>
+
+<dialog id="setDlg"><h2 style="font-family:var(--serif);margin:0;font-size:18px">Connection</h2>
+  <label class="f" for="cfgUrl">Web app URL (ends in /exec)</label><input type="text" id="cfgUrl">
+  <label class="f" for="cfgTok">APP_TOKEN (printed by setupV3)</label><input type="text" id="cfgTok">
+  <p id="cfgMsg" style="font-size:13px;color:var(--soft);min-height:1.5em"></p>
+  <div style="display:flex;gap:8px;justify-content:flex-end"><button class="quiet" id="cfgTest">Test</button><button id="cfgSave">Save</button></div></dialog>
+
+<script>
+const $ = id => document.getElementById(id);
+const store = { get:k=>{try{return localStorage.getItem(k)||""}catch(e){return ""}}, set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}} };
+const DEBUG = /[?&]debug=1/.test(location.search);
+let cfg = { url: store.get("v3_url"), token: store.get("v3_token") };
+let sessionId = "", history = [], busy = false, away = false, simEvents = [], fit = null, charts = {}, probeUse = null;
+
+// ---------- talking to the server ----------
+async function call(payload) {
+  const body = JSON.stringify(Object.assign({ authToken: cfg.token, sessionId, studentId: $("studentId").value.trim(), archetypeId: "ch10_cc",
+    turnId: (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2)) }, payload));
+  for (let attempt = 0; attempt < 2; attempt++) {            // Apps Script's redirect hop sometimes drops a reply; same turnId makes a retry safe
+    try {
+      const r = await fetch(cfg.url, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body, redirect: "follow" });
+      const j = await r.json(); if (DEBUG) { $("debug").style.display = "block"; $("debug").textContent = JSON.stringify(j, null, 1); }
+      return j;
+    } catch (e) { if (attempt === 1) return { error: "Could not reach the server. Check Settings, then try again." }; }
+  }
+}
+
+// ---------- chat ----------
+function add(cls, text) { const d = document.createElement("div"); d.className = "msg " + cls; d.textContent = text; $("log").appendChild(d); $("log").scrollTop = 1e9; return d; }
+function setBusy(b) { busy = b; $("sendBtn").disabled = b || away || !sessionId; $("box").disabled = b || away || !sessionId; $("newBtn").disabled = b; }
+function meter(p) { if (!p) { $("meter").innerHTML = ""; return; } let h = ""; for (let i = 0; i < p.of; i++) h += `<i class="${i < p.done ? "on" : ""}"></i>`; $("meter").innerHTML = h + `<span style="margin-left:6px">${p.done} of ${p.of}</span>`; }
+
+function handle(res, echo) {
+  if (!res || res.error) { add("note err", (res && res.error) || "No reply."); return; }
+  if (echo) history.push({ role: "user", text: echo });
+  if (res.reply) { add("tutor", res.reply); history.push({ role: "model", text: res.reply }); history = history.slice(-12); }
+  if (res.notebook_url) $("nbLink").href = res.notebook_url;
+  meter(res.progress); showPinned(res.pinned);
+  if (res.problem) showProblem(res.problem);
+  if (res.sim) openSim(res.sim);
+  if (res.card) showCard(res.card);
+  if (res.done) { add("note", res.credit ? "Problem complete. Clean run recorded." : "Problem complete. Recorded without credit for this attempt; a new problem is a fresh start."); $("box").placeholder = "Press New problem for another"; }
+}
+
+async function send(extra) {
+  const text = extra ? "" : $("box").value.trim(); if (busy || away || (!text && !extra)) return;
+  if (text) { add("me", text); $("box").value = ""; }
+  flushProbe(); setBusy(true);
+  const res = await call(Object.assign({ action: "turn", message: text, history, simEvents }, extra || {})); simEvents = [];
+  setBusy(false); handle(res, text || (extra && extra.pick ? "[picked an equation]" : "")); $("box").focus();
+}
+
+async function newProblem() {
+  if (!cfg.url || !cfg.token) { openSettings(); return; }
+  sessionId = "S" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); history = []; away = false; fit = null;
+  $("log").innerHTML = ""; $("problemText").className = "veil"; $("givens").textContent = ""; $("eqBtn").disabled = true; showPinned(null); $("plotCard").style.display = "none"; $("probe").style.display = "none";
+  $("problemText").textContent = "The problem is not on screen yet. First answer the question in the chat about what the particles are doing. Then it appears here.";
+  setBusy(true); const res = await call({ action: "start", kind: $("kind").value }); setBusy(false);
+  $("box").placeholder = "Say what the particles are doing…"; handle(res); $("box").focus();
+}
+
+// ---------- the symbolic reminder: stays on screen for the rest of the problem ----------
+function showPinned(p) {
+  p = p || {}; const pretty = t => String(t).replace(/\*/g, "·").replace(/\bdH(vap)?\b/g, "ΔHvap");
+  [["pinRel", p.relation], ["pinRe", (p.rearranged || []).join("\n")]].forEach(([id, t]) => { $(id).style.display = t ? "block" : "none"; if (t) $(id).querySelector("code").textContent = pretty(t); });
+  $("pinCard").style.display = (p.relation || p.rearranged) ? "block" : "none";
+}
+
+// ---------- the problem, the equations ----------
+let equations = [];
+function showProblem(p) {
+  $("problemText").className = ""; $("problemText").textContent = p.text;
+  $("box").placeholder = "Your working, or a question…";   // givens are NOT listed as T1, P1…: sorting them is the student's job
+  equations = p.equations || []; $("eqBtn").disabled = false;
+  $("eqList").innerHTML = ""; equations.forEach(e => { const b = document.createElement("button"); b.className = "eq"; b.textContent = e.text; b.onclick = () => { $("eqDlg").close(); send({ pick: e.id }); }; $("eqList").appendChild(b); });
+  if (p.plots) drawPlots(p.plots, "Measured vapor pressures", false);
+  add("note", "The problem is now on the left.");
+}
+
+// ---------- plots: ln P against 1/T, and P against T. Every number comes from the server. ----------
+function drawPlots(d, title, withProblemPoints) {
+  if (typeof Chart === "undefined") { add("note err", "The plots need an internet connection to load Chart.js."); return; }
+  $("plotCard").style.display = "block"; $("plotTitle").textContent = title;
+  fit = { m: d.fit_slope_K, b: d.fit_intercept };
+  const pts = d.measured_degC_torr, lin = pts.map(([t, p]) => ({ x: 1 / (t + 273.15), y: Math.log(p) })), ex = pts.map(([t, p]) => ({ x: t, y: p }));
+  const xs = lin.map(q => q.x), lo = Math.min(...pts.map(q => q[0])) - 5, hi = Math.max(...pts.map(q => q[0])) + (d.mark_P_torr ? 25 : 5);
+  const curve = []; for (let t = lo; t <= hi; t += (hi - lo) / 60) curve.push({ x: t, y: Math.exp(fit.m / (t + 273.15) + fit.b) });
+  const marks = withProblemPoints && d.problem_points_K_atm ? d.problem_points_K_atm.map(([K, atm], i) => ({ x: K - 273.15, y: atm * 760, asked: d.asked_point === i + 1 })) : [];
+  const base = { responsive: true, animation: false, plugins: { legend: { labels: { boxWidth: 10, font: { size: 11 } } } } };
+  Object.values(charts).forEach(c => c.destroy());
+  charts.lin = new Chart($("linChart"), { type: "scatter", data: { datasets: [
+      { label: "measured", data: lin, backgroundColor: "#0f5c5a", pointRadius: 4 },
+      { label: "straight-line fit", type: "line", data: [{ x: Math.min(...xs), y: fit.m * Math.min(...xs) + fit.b }, { x: Math.max(...xs), y: fit.m * Math.max(...xs) + fit.b }], borderColor: "#8a5a0a", borderDash: [5, 4], pointRadius: 0 },
+      ...(marks.length ? [{ label: "this problem", data: marks.map(q => ({ x: 1 / (q.x + 273.15), y: Math.log(q.y) })), backgroundColor: "#8c2f22", pointStyle: "rectRot", pointRadius: 7 }] : []) ] },
+    options: Object.assign({}, base, { scales: { x: { title: { display: true, text: "1 / T  (K⁻¹)" } }, y: { title: { display: true, text: "ln(P in torr)" } } } }) });
+  charts.exp = new Chart($("expChart"), { type: "scatter", data: { datasets: [
+      { label: "measured", data: ex, backgroundColor: "#0f5c5a", pointRadius: 4 },
+      { label: "curve from the fit", type: "line", data: curve, borderColor: "#0f5c5a", pointRadius: 0, borderWidth: 1.5 },
+      ...(marks.length ? [{ label: "this problem", data: marks, backgroundColor: "#8c2f22", pointStyle: "rectRot", pointRadius: 7 }] : []),
+      { label: "probe", data: [], backgroundColor: "#8a5a0a", pointRadius: 6 } ] },
+    options: Object.assign({}, base, { scales: { x: { title: { display: true, text: "T  (°C)" } }, y: { title: { display: true, text: "P  (torr)" } } } }) });
+  $("probeT").min = lo; $("probeT").max = hi; $("probeT").value = (lo + hi) / 2;
+}
+function openSim(sim) {
+  drawPlots(sim, "Check your conclusion against the measurements", true);
+  $("probe").style.display = "block"; moveProbe(false);
+  add("note", "A simulation built from this problem's own data is open on the left. It is there to test your conclusion, not to supply it.");
+}
+function moveProbe(countIt) {
+  if (!fit) return; const t = parseFloat($("probeT").value), p = Math.exp(fit.m / (t + 273.15) + fit.b);
+  $("probeTout").textContent = t.toFixed(1) + " °C"; $("probePout").textContent = p.toPrecision(4) + " torr";
+  const ds = charts.exp.data.datasets; ds[ds.length - 1].data = [{ x: t, y: p }]; charts.exp.update();
+  if (countIt) { probeUse = probeUse || { control: "T_probe", start: t, min: t, max: t, moves: 0, t0: Date.now() }; probeUse.moves++; probeUse.min = Math.min(probeUse.min, t); probeUse.max = Math.max(probeUse.max, t); probeUse.end = t; }
+}
+function flushProbe() { if (probeUse) { probeUse.seconds = Math.round((Date.now() - probeUse.t0) / 1000); delete probeUse.t0; simEvents.push(probeUse); probeUse = null; } }
+
+// ---------- the notebook card ----------
+function showCard(card) {
+  away = true; setBusy(false);
+  const d = document.createElement("div"); d.className = "msg nb";
+  d.innerHTML = `<strong>A concept refresher, in the course notebook</strong><pre></pre><div class="row"><button data-a="copy">Copy prompt</button><a target="_blank" rel="noopener"><button class="quiet" type="button">Open notebook</button></a><button class="quiet" data-a="back">I'm back</button></div>`;
+  d.querySelector("pre").textContent = card.prompt; d.querySelector("a").href = card.url;
+  d.querySelector('[data-a="copy"]').onclick = async ev => { try { await navigator.clipboard.writeText(card.prompt); ev.target.textContent = "Copied"; } catch (e) { const r = document.createRange(); r.selectNodeContents(d.querySelector("pre")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); ev.target.textContent = "Selected — press Ctrl/⌘-C"; } };
+  d.querySelector('[data-a="back"]').onclick = async ev => { ev.target.disabled = true; away = false; setBusy(true); const res = await call({ action: "back" }); setBusy(false); handle(res); $("box").focus(); };
+  $("log").appendChild(d); $("log").scrollTop = 1e9;
+}
+
+// ---------- settings ----------
+function openSettings() { $("cfgUrl").value = cfg.url; $("cfgTok").value = cfg.token; $("cfgMsg").textContent = ""; $("setDlg").showModal(); }
+$("cfgSave").onclick = () => { cfg = { url: $("cfgUrl").value.trim(), token: $("cfgTok").value.trim() }; store.set("v3_url", cfg.url); store.set("v3_token", cfg.token); $("setDlg").close(); };
+$("cfgTest").onclick = async () => { $("cfgMsg").textContent = "Testing…"; try { const r = await fetch($("cfgUrl").value.trim()); const j = await r.json(); $("cfgMsg").textContent = j.alive ? "Server alive. Build " + j.build + "." : "Unexpected reply."; } catch (e) { $("cfgMsg").textContent = "No answer. Is the URL the /exec one, deployed with access: Anyone?"; } };
+
+// ---------- wiring ----------
+$("newBtn").onclick = newProblem; $("sendBtn").onclick = () => send(); $("setBtn").onclick = openSettings; $("eqBtn").onclick = () => $("eqDlg").showModal();
+$("box").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } });
+$("probeT").addEventListener("input", () => moveProbe(true));
+document.querySelectorAll(".keys button").forEach(b => b.onclick = () => { const t = $("box"); if (t.disabled) return; t.setRangeText(b.dataset.k, t.selectionStart, t.selectionEnd, "end"); t.focus(); });
+$("studentId").value = store.get("v3_student"); $("studentId").onchange = () => store.set("v3_student", $("studentId").value.trim());
+if (!cfg.url || !cfg.token) openSettings();
+</script>
+</body>
+</html>

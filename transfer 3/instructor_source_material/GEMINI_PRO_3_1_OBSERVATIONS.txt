@@ -1,0 +1,47 @@
+I have integrated your specific V2 code findings, the new step-level pedagogical tagging, the "Ungated Surface Area" metric, the 2-turn NotebookLM bailout, and the Google-to-Netlify pipeline.   
+MD
++ 1
+DOCUMENT 1: ARCHITECTURAL & PEDAGOGICAL BLUEPRINT FOR FABLE (CLAUDE)
+To: FABLE (Lead Engineer & Architect)
+From: 2026 System Architect via Instructor
+Project: Gen Chem 2 Socratic Tutor (V3 - 2027)
+CRITICAL DIRECTIVE ON DELIVERABLES:
+For every future output you provide to the instructor, you MUST physically separate your response into two distinct sections:
+"NEEDS YOUR DECISION": A short, bulleted list of pedagogical or architectural choices the instructor must explicitly approve.
+"ENGINEERING IMPLEMENTATION": The code, schemas, and technical execution (which the instructor can safely skip reading).
+1. The North Star Metric: The "Ungated Surface Area"
+The primary vulnerability of V2 was that the model's instructions leaked. The defining metric for V3 is the Ungated Surface Area (USA).   
+MD
+Definition: The fraction of the course (measured in total milestone steps) that is gated only by the LLM's subjective opinion.
+Goal: Drive this number as close to zero as possible. If a computer can check a student's input deterministically, it must. The LLM is a conversational UI and a Socratic router; it is not the judge.   
+MD
+2. Pedagogy: Johnstone's Triad & Step-Level Tagging
+The tutor is no longer tagged by problem archetype. Pedagogy is tagged at the step level. A single 5-milestone problem will span multiple frameworks as it progresses through Johnstone’s Triad (Macroscopic → Submicroscopic → Symbolic).
+You must implement a JSON schema for problem generation where every individual step carries a pedagogy_tag. This tag dictates the deterministic gate applied:
+Mechanistic-Epistemic (Submicroscopic): The student must inventory physical particles or define system boundaries. (e.g., Selecting ions from a checklist).
+Decision-Based Learning (DBL) (Strategic): The student must explicitly classify the system or justify an algorithm before doing math. (e.g., Selecting "Buffer" from a routing tree).
+Thermodynamic State-Space (Symbolic/Macroscopic): The student executes the parameterized algebra (ξ, ICE, Nernst) or predicts a macroscopic shift.
+Logging Requirement: The pedagogy_tag for the active step MUST be written directly into the Log sheet row alongside the BUILD_STAMP. This allows the instructor to query the database to see exactly which pedagogical frameworks are succeeding or failing.   
+TXT
+3. The 2-Turn Bailout & NotebookLM Integration
+V2 allowed students to flounder indefinitely, leading to scaffolding collapse. V3 implements a strict 2-turn bailout integrated with Gemini NotebookLM.
+The Logic: If the server-side scaffold tracker (sc.rung) hits ≥2 (meaning two consecutive failed attempts at the same step), the LLM ceases Socratic questioning.   
+TXT
+The Action: The tutor generates a highly specific, customized query prompt based on the exact pedagogy_tag and error code.
+The Handoff: The student is instructed to copy this prompt and run it inside the Knowledge Ground Notebook (which holds the course textbook, lab manuals, and instructor appendixes).
+The Analytics: Simultaneously, the backend logs this specific failure state to the Student Achievement Analysis Notebook, giving the instructor a real-time heatmap of conceptual bottlenecks.
+4. Manipulatives and Lab Alignment
+Simulations (HTML5 Canvas) are not answer keys. They are the Macroscopic anchor of Johnstone's Triad.   
+MD
+Design Rule: Simulations must remain veiled until Milestone 4 clears.   
+MD
++ 1
+Interaction: They must be manipulable. The UI must plot the student's submitted mathematical model against the true chemical model (the "two checks" pattern).   
+MD
+Lab Alignment: The manipulatives must visually and mathematically mirror the physical experiments the students conduct in the accompanying laboratory course, closing the loop between the digital and physical Macroscopic observations.
+5. Tech Stack Pipeline
+Phase 1 (Current): Build and validate within Google Apps Script (GAS). Utilize CacheService to prevent redundant LLM calls on dropped packets. Ensure output guards (the 2nd independent reading) operate as separate, deterministic verification calls that rewrite the LLM's draft if it leaks an answer or affirms a misconception.   
+TXT
++ 2
+Phase 2 (Target): Migrate middleware to Netlify Edge Functions (Deno). This eliminates the GAS redirect hop/cold start and allows the LLM response to stream via Server-Sent Events (SSE), dropping latency from ∼6 seconds to <800 milliseconds.   
+MD
