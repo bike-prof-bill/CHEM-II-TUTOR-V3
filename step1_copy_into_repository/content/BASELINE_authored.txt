@@ -1,0 +1,212 @@
+csv	content_ch10_cc_moves.csv	P_same_units	ask	The two pressures sit in one ratio. What must be true of their units?
+csv	content_ch10_cc_moves.csv	P_same_units	notebook_prompt	Explain why two pressures in a ratio must share a unit and how atm, torr and kPa relate. Do not solve any problem for me. Then ask me one short question and wait.
+csv	content_ch10_cc_moves.csv	P_same_units	park_text	1 atm = 760 torr = 101.325 kPa. Put both pressures in the same unit.
+csv	content_ch10_cc_moves.csv	P_same_units	return_ask	What must be true of two pressures before you divide one by the other?
+csv	content_ch10_cc_moves.csv	P_same_units	state	P_same_units
+csv	content_ch10_cc_moves.csv	P_same_units	status	DRAFT
+csv	content_ch10_cc_moves.csv	P_same_units	switch_ask	What should the units of P2/P1 be?
+csv	content_ch10_cc_moves.csv	T_in_K	ask	What must be true of a temperature before it can go into this relation?
+csv	content_ch10_cc_moves.csv	T_in_K	notebook_prompt	Explain why gas-law and vapor-pressure equations need absolute temperature, using an example I have not named. Do not solve any problem for me. Then ask me one short question and wait.
+csv	content_ch10_cc_moves.csv	T_in_K	park_text	Add 273.15 to each Celsius temperature to get kelvin.
+csv	content_ch10_cc_moves.csv	T_in_K	return_ask	Why does this relation need an absolute temperature?
+csv	content_ch10_cc_moves.csv	T_in_K	state	T_in_K
+csv	content_ch10_cc_moves.csv	T_in_K	status	DRAFT
+csv	content_ch10_cc_moves.csv	T_in_K	switch_ask	What would it mean for the molecules if a temperature of zero on your scale were put into 1/T?
+csv	content_ch10_cc_moves.csv	account_given	notebook_prompt	I am studying why the vapor pressure of a liquid rises so steeply with temperature. Explain what the molecules at the surface are doing, using a liquid I have not named. Do not solve any problem for me. Then ask me one short question and wait for my answer.
+csv	content_ch10_cc_moves.csv	account_given	return_ask	In your own words what did the notebook show you about the molecules at the surface?
+csv	content_ch10_cc_moves.csv	account_given	state	account_given
+csv	content_ch10_cc_moves.csv	account_given	status	DRAFT
+csv	content_ch10_cc_moves.csv	account_given	switch_ask	What would a pressure gauge above the liquid read as it warms and what must the molecules at the surface be doing to cause that?
+csv	content_ch10_cc_moves.csv	bp_found	ask	What defines the normal boiling point and where is that on your line?
+csv	content_ch10_cc_moves.csv	bp_found	notebook_prompt	Explain what the normal boiling point means in terms of vapor pressure and how to find it from a straight-line fit of ln P against 1/T, using data different from mine. Then ask me one short question and wait.
+csv	content_ch10_cc_moves.csv	bp_found	park_text	Set P to 760 torr in your line and solve for T.
+csv	content_ch10_cc_moves.csv	bp_found	return_ask	What condition defines the normal boiling point?
+csv	content_ch10_cc_moves.csv	bp_found	state	bp_found
+csv	content_ch10_cc_moves.csv	bp_found	status	DRAFT
+csv	content_ch10_cc_moves.csv	bp_found	switch_ask	What would a pressure gauge read above the liquid at the moment it boils in an open beaker at sea level?
+csv	content_ch10_cc_moves.csv	dH_found	ask	What does the slope of your line stand for and what heat of vaporization does it give?
+csv	content_ch10_cc_moves.csv	dH_found	notebook_prompt	Explain how the slope of a plot of ln P against 1/T gives the heat of vaporization, using data different from mine. Do not solve my problem. Then ask me one short question and wait.
+csv	content_ch10_cc_moves.csv	dH_found	park_text	Slope = -ΔHvap/R so ΔHvap = -(slope)(R).
+csv	content_ch10_cc_moves.csv	dH_found	return_ask	How does the slope connect to the heat of vaporization?
+csv	content_ch10_cc_moves.csv	dH_found	state	dH_found
+csv	content_ch10_cc_moves.csv	dH_found	status	DRAFT
+csv	content_ch10_cc_moves.csv	dH_found	switch_ask	If the line were steeper what would that say about how hard it is for a molecule to leave the liquid?
+csv	content_ch10_cc_moves.csv	dH_in_J	ask	Look at the units of R and of the heat of vaporization. What has to happen before they meet in one fraction?
+csv	content_ch10_cc_moves.csv	dH_in_J	notebook_prompt	Explain how to keep energy units consistent between the gas constant R and a heat of vaporization given in kJ/mol. Do not solve any problem for me. Then ask me one short question and wait.
+csv	content_ch10_cc_moves.csv	dH_in_J	park_text	Either multiply ΔHvap in kJ/mol by 1000 to get J/mol or use R = 0.008314 kJ/(mol K).
+csv	content_ch10_cc_moves.csv	dH_in_J	return_ask	What did you find about the units of R and ΔHvap?
+csv	content_ch10_cc_moves.csv	dH_in_J	state	dH_in_J
+csv	content_ch10_cc_moves.csv	dH_in_J	status	DRAFT
+csv	content_ch10_cc_moves.csv	dH_in_J	switch_ask	What units must ΔHvap/R end up with for the equation to balance?
+csv	content_ch10_cc_moves.csv	meaning_given	ask	Look back at your result. What does it let you claim about molecules you never saw and how sure can you be?
+csv	content_ch10_cc_moves.csv	meaning_given	notebook_prompt	Help me think about what a vapor pressure measurement lets a chemist infer about molecules in the liquid and what it cannot. Do not give me a finished answer. Ask me one short question and wait.
+csv	content_ch10_cc_moves.csv	meaning_given	return_ask	What is the difference between what was measured and what was inferred?
+csv	content_ch10_cc_moves.csv	meaning_given	state	meaning_given
+csv	content_ch10_cc_moves.csv	meaning_given	status	DRAFT
+csv	content_ch10_cc_moves.csv	meaning_given	switch_ask	What did the instrument actually measure and what did you infer from it?
+csv	content_ch10_cc_moves.csv	rearranged	ask	Before any numbers go in: rearrange your relation so the quantity you are after stands alone on the left. Type it out.
+csv	content_ch10_cc_moves.csv	rearranged	notebook_prompt	Show me how to rearrange an equation that has a natural log on one side and a difference of reciprocal temperatures on the other so that a chosen variable stands alone. Use symbols different from mine and do not use my numbers. Then give me one short practice rearrangement and wait for my answer.
+csv	content_ch10_cc_moves.csv	rearranged	return_ask	What operation undoes a natural log and what undoes a reciprocal?
+csv	content_ch10_cc_moves.csv	rearranged	state	rearranged
+csv	content_ch10_cc_moves.csv	rearranged	status	DRAFT
+csv	content_ch10_cc_moves.csv	rearranged	switch_ask	Which quantity is the one you are after and what is the last operation standing between it and being alone?
+csv	content_ch10_cc_moves.csv	rearranged_T	ask	Now rearrange your line so that T stands alone on the left. Type it.
+csv	content_ch10_cc_moves.csv	rearranged_T	notebook_prompt	Show me how to rearrange a straight-line equation of the form ln(y) = m(1/x) + b for a chosen variable, and how a slope can stand for a physical quantity. Use symbols different from mine and no numbers of mine. Then give me one short practice rearrangement and wait for my answer.
+csv	content_ch10_cc_moves.csv	rearranged_T	return_ask	What undoes a reciprocal and in what order do you clear the terms around 1/T?
+csv	content_ch10_cc_moves.csv	rearranged_T	state	rearranged_T
+csv	content_ch10_cc_moves.csv	rearranged_T	status	DRAFT
+csv	content_ch10_cc_moves.csv	rearranged_T	switch_ask	What would the gauge read at the normal boiling point and where does that reading go in your line?
+csv	content_ch10_cc_moves.csv	rearranged_dH	ask	Before any numbers: write ΔHvap in terms of the slope of your line. Type the equation with ΔHvap alone on the left.
+csv	content_ch10_cc_moves.csv	rearranged_dH	notebook_prompt	Show me how to rearrange a straight-line equation of the form ln(y) = m(1/x) + b for a chosen variable, and how a slope can stand for a physical quantity. Use symbols different from mine and no numbers of mine. Then give me one short practice rearrangement and wait for my answer.
+csv	content_ch10_cc_moves.csv	rearranged_dH	return_ask	Which part of the relation plays the part of the slope?
+csv	content_ch10_cc_moves.csv	rearranged_dH	state	rearranged_dH
+csv	content_ch10_cc_moves.csv	rearranged_dH	status	DRAFT
+csv	content_ch10_cc_moves.csv	rearranged_dH	switch_ask	Set your straight line beside the relation you picked. Which group of symbols sits where the slope sits?
+csv	content_ch10_cc_moves.csv	relation_chosen	ask	The problem is on your screen. Open the Equations list and pick the relation that expresses what you just described.
+csv	content_ch10_cc_moves.csv	relation_chosen	notebook_prompt	I need to recognise which equation links vapor pressure, temperature and heat of vaporization, in its two-point form and its straight-line form. Explain what each symbol stands for and when each form is the handy one. Do not solve any problem for me. Then ask me one short question and wait.
+csv	content_ch10_cc_moves.csv	relation_chosen	park_text	The relation is ln(P2/P1) = -(ΔHvap/R)(1/T2 - 1/T1); the straight-line form is ln P = -(ΔHvap/R)(1/T) + C.
+csv	content_ch10_cc_moves.csv	relation_chosen	return_ask	What does each symbol in the relation you need stand for?
+csv	content_ch10_cc_moves.csv	relation_chosen	state	relation_chosen
+csv	content_ch10_cc_moves.csv	relation_chosen	status	DRAFT
+csv	content_ch10_cc_moves.csv	relation_chosen	switch_ask	Which quantities in this problem were measured and which one is being inferred?
+csv	content_ch10_cc_moves.csv	substituted	ask	Put your measured values into the relation and show me what you get for each side.
+csv	content_ch10_cc_moves.csv	substituted	notebook_prompt	Show me how to substitute values into the two-point vapor pressure relation and isolate an unknown, using numbers and a liquid different from mine. Then ask me one short question and wait.
+csv	content_ch10_cc_moves.csv	substituted	park_text	Substitute the kelvin temperatures and the matched pressures and keep ΔHvap and R in matching units. Then isolate the unknown.
+csv	content_ch10_cc_moves.csv	substituted	return_ask	What is the first thing you will do with your numbers now?
+csv	content_ch10_cc_moves.csv	substituted	state	substituted
+csv	content_ch10_cc_moves.csv	substituted	status	DRAFT
+csv	content_ch10_cc_moves.csv	substituted	switch_ask	Which of your numbers came from an instrument and which are you about to infer?
+csv	content_ch10_cc_moves.csv	value_found	ask	Carry it through. What value do you get and in what units?
+csv	content_ch10_cc_moves.csv	value_found	notebook_prompt	Explain how to isolate an unknown from an equation with a natural log on one side and reciprocal temperatures on the other, using an example different from mine. Then ask me one short question and wait.
+csv	content_ch10_cc_moves.csv	value_found	park_text	Isolate the unknown: exponentiate both sides for a pressure; solve for 1/T and take the reciprocal for a temperature.
+csv	content_ch10_cc_moves.csv	value_found	return_ask	Which step of the algebra was blocking you?
+csv	content_ch10_cc_moves.csv	value_found	state	value_found
+csv	content_ch10_cc_moves.csv	value_found	status	DRAFT
+csv	content_ch10_cc_moves.csv	value_found	switch_ask	Before you calculate should the answer be larger or smaller than the value you were given and why?
+csv	content_ch10_cc_openers.csv	The Boiling Bell Jar Flash	Answer	Vapor pressure equals the lowered external atmospheric pressure, allowing molecules throughout the liquid to overcome the containment barrier and nucleate vapor bubbles.
+csv	content_ch10_cc_openers.csv	The Boiling Bell Jar Flash	CHAPTER 10	The Boiling Bell Jar Flash
+csv	content_ch10_cc_openers.csv	The Boiling Bell Jar Flash	Deterministic Keyword Check:	vapor pressure, atmospheric pressure, barrier, nucleate, bubbles, vaporize
+csv	content_ch10_cc_openers.csv	The Boiling Bell Jar Flash	Liquids this scenario fits (names as in ch10_cc.py; separate with ;)	water
+csv	content_ch10_cc_openers.csv	The Boiling Bell Jar Flash	Question	Unheated lukewarm water inside a vacuum chamber suddenly bubbles and boils furiously, tracked by a headspace pressure sensor. What are the energetic water particles doing at the liquid boundary that enables them to lift into vapor without any added heat?
+csv	content_ch10_cc_openers.csv	The Boiling Bell Jar Flash	Target concept	Boiling point definition as vapor pressure equaling atmospheric pressure
+csv	content_ch10_cc_openers.csv	The Bulging Sunlit Bottle	Answer	Higher thermal energy shifts the kinetic energy distribution so an exponentially larger fraction of liquid molecules possess sufficient energy to overcome intermolecular attractions and vaporize.
+csv	content_ch10_cc_openers.csv	The Bulging Sunlit Bottle	CHAPTER 10	The Bulging Sunlit Bottle
+csv	content_ch10_cc_openers.csv	The Bulging Sunlit Bottle	Deterministic Keyword Check:	kinetic energy, distribution, fraction, overcome, intermolecular attractions, vaporize
+csv	content_ch10_cc_openers.csv	The Bulging Sunlit Bottle	Liquids this scenario fits (names as in ch10_cc.py; separate with ;)	water
+csv	content_ch10_cc_openers.csv	The Bulging Sunlit Bottle	Question	A half-empty sealed water bottle left in a hot parked car swells taut, while a pressure sensor detects a sharp spike in overhead gas. What are the surface water particles doing in response to rising temperature that forces so many more molecules into the vapor space?
+csv	content_ch10_cc_openers.csv	The Bulging Sunlit Bottle	Target concept	Clausius-Clapeyron exponential increase of vapor pressure with temperature
+csv	content_ch10_cc_openers.csv	The Crushed Cooled Flask	Answer	Cooling reduces molecular kinetic energy, causing vapor molecules colliding with cold walls to lose energy, condense into liquid, and deplete the vapor phase.
+csv	content_ch10_cc_openers.csv	The Crushed Cooled Flask	CHAPTER 10	The Crushed Cooled Flask
+csv	content_ch10_cc_openers.csv	The Crushed Cooled Flask	Deterministic Keyword Check:	kinetic energy, condense, collisions, deplete, liquid, cooling
+csv	content_ch10_cc_openers.csv	The Crushed Cooled Flask	Liquids this scenario fits (names as in ch10_cc.py; separate with ;)	water
+csv	content_ch10_cc_openers.csv	The Crushed Cooled Flask	Question	Sealing steam inside a rigid glass jug and plunging it into cold water causes the walls to implode, recorded by an internal barometer. What are the bouncing vapor particles doing against the cold glass surfaces that collapses overhead pressure so violently?
+csv	content_ch10_cc_openers.csv	The Crushed Cooled Flask	Target concept	Dynamic condensation and vapor pressure collapse upon cooling
+csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Answer	Alcohol molecules have weaker intermolecular attractions than water, so a larger fraction of particles can overcome cohesive forces at room temperature to evaporate.
+csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	CHAPTER 10	The Rubbing Alcohol Chill
+csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Deterministic Keyword Check:	weaker, intermolecular attractions, cohesive forces, fraction, evaporate, volatility
+csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Liquids this scenario fits (names as in ch10_cc.py; separate with ;)	2-propanol
+csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Question	Dabbing rubbing alcohol onto skin produces intense cold and rapid drying compared to water, while a vapor monitor logs a towering rate of escaping gas. What are the liquid alcohol molecules doing compared to water molecules that lets them flee into vapor so eagerly?
+csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Target concept	Intermolecular force strength dictating relative vapor pressure and volatility
+csv	content_ch10_cc_openers.csv	The Sealed Syringe Standoff	Answer	Molecules evaporate faster than vapor condenses until dynamic equilibrium is re-established, restoring the equilibrium vapor pressure characteristic of that specific temperature.
+csv	content_ch10_cc_openers.csv	The Sealed Syringe Standoff	CHAPTER 10	The Sealed Syringe Standoff
+csv	content_ch10_cc_openers.csv	The Sealed Syringe Standoff	Deterministic Keyword Check:	equilibrium, evaporate, condenses, restore, dynamic, temperature
+csv	content_ch10_cc_openers.csv	The Sealed Syringe Standoff	Liquids this scenario fits (names as in ch10_cc.py; separate with ;)	water
+csv	content_ch10_cc_openers.csv	The Sealed Syringe Standoff	Question	Pulling back the plunger of a sealed syringe containing liquid water momentarily drops pressure before an electronic gauge shows it climbing right back to its original value. What are the surface liquid particles doing in the expanded chamber to restore the exact starting pressure?
+csv	content_ch10_cc_openers.csv	The Sealed Syringe Standoff	Target concept	Equilibrium vapor pressure as an intensive, volume-independent property at constant temperature
+csv	content_ch10_cc_openers.csv	The Ten-Degree Vapor Surge	Answer	The Maxwell-Boltzmann distribution causes the proportion of particles with energy exceeding the enthalpy of vaporization to grow exponentially rather than linearly with temperature.
+csv	content_ch10_cc_openers.csv	The Ten-Degree Vapor Surge	CHAPTER 10	The Ten-Degree Vapor Surge
+csv	content_ch10_cc_openers.csv	The Ten-Degree Vapor Surge	Deterministic Keyword Check:	Maxwell-Boltzmann, exponential, enthalpy of vaporization, fraction, distribution, proportion
+csv	content_ch10_cc_openers.csv	The Ten-Degree Vapor Surge	Liquids this scenario fits (names as in ch10_cc.py; separate with ;)	ethanol
+csv	content_ch10_cc_openers.csv	The Ten-Degree Vapor Surge	Question	Warming perfume water ten degrees doubles the overhead vapor reading on a volatile sensor, far surpassing the minor jump in thermal motion. What are the liquid molecules doing internally to yield such a disproportionately massive surge of vapor from a modest temperature bump?
+csv	content_ch10_cc_openers.csv	The Ten-Degree Vapor Surge	Target concept	Non-linear Maxwell-Boltzmann tail growth driving Clausius-Clapeyron behavior
+csv	content_ch10_cc_openers.csv	Vapor Pressure and Temperature	CHAPTER 10	Vapor Pressure and Temperature
+obj	ch10_cc.ASK	P1	"What is its vapor pressure at {T1}?"
+obj	ch10_cc.ASK	P2	"What is its vapor pressure at {T2}?"
+obj	ch10_cc.ASK	T1	"At what temperature is its vapor pressure {P1}?"
+obj	ch10_cc.ASK	T2	"At what temperature will its vapor pressure be {P2}?"
+obj	ch10_cc.ASK	dH	"What is the molar heat of vaporization of the liquid?"
+obj	ch10_cc.EQUATION_PICKS	-	{"fits": ["T1", "T2", "P1", "P2", "dH"], "id": "eq_a", "text": "ln(P2/P1) = -(ΔH/R)(1/T2 - 1/T1)"}
+obj	ch10_cc.EQUATION_PICKS	-	{"fits": ["slope"], "id": "eq_b", "text": "ln P = -(ΔH/R)(1/T) + C"}
+obj	ch10_cc.EQUATION_PICKS	-	{"fits": [], "id": "eq_c", "text": "ln(k2/k1) = -(Ea/R)(1/T2 - 1/T1)"}
+obj	ch10_cc.EQUATION_PICKS	-	{"fits": [], "id": "eq_d", "text": "PV = nRT"}
+obj	ch10_cc.EQUATION_PICKS	-	{"fits": [], "id": "eq_e", "text": "q = m c ΔT"}
+obj	ch10_cc.EQUATION_PICKS	-	{"fits": [], "id": "eq_f", "text": "P = X P°"}
+obj	ch10_cc.EQUATION_PICKS	-	{"fits": [], "id": "eq_g", "text": "ln(K2/K1) = -(ΔH°/R)(1/T2 - 1/T1)"}
+obj	ch10_cc.RELATION_TEXT	-	"ln(P2/P1) = -(dHvap/R) * (1/T2 - 1/T1)"
+obj	ch10_cc.SUBSTANCES	-	["1-butanol", 43.3, 117.7, 25.0]
+obj	ch10_cc.SUBSTANCES	-	["1-propanol", 41.4, 97.2, 0.0]
+obj	ch10_cc.SUBSTANCES	-	["2-propanol", 39.9, 82.3, 0.0]
+obj	ch10_cc.SUBSTANCES	-	["acetone", 31.3, 56.05, -20.0]
+obj	ch10_cc.SUBSTANCES	-	["benzene", 30.7, 80.1, 10.0]
+obj	ch10_cc.SUBSTANCES	-	["carbon tetrachloride", 29.8, 76.7, 0.0]
+obj	ch10_cc.SUBSTANCES	-	["chloroform", 29.2, 61.2, -10.0]
+obj	ch10_cc.SUBSTANCES	-	["cyclohexane", 30.0, 80.7, 10.0]
+obj	ch10_cc.SUBSTANCES	-	["diethyl ether", 26.5, 34.6, -30.0]
+obj	ch10_cc.SUBSTANCES	-	["ethanol", 38.56, 78.37, -10.0]
+obj	ch10_cc.SUBSTANCES	-	["ethyl acetate", 31.9, 77.1, 0.0]
+obj	ch10_cc.SUBSTANCES	-	["heptane", 31.8, 98.4, 10.0]
+obj	ch10_cc.SUBSTANCES	-	["hexane", 28.9, 68.7, -10.0]
+obj	ch10_cc.SUBSTANCES	-	["methanol", 35.2, 64.7, -10.0]
+obj	ch10_cc.SUBSTANCES	-	["pentane", 25.8, 36.1, -30.0]
+obj	ch10_cc.SUBSTANCES	-	["toluene", 33.2, 110.6, 20.0]
+obj	ch10_cc.SUBSTANCES	-	["water", 40.66, 100.0, 5.0]
+obj	ch10_cc.TITLE	-	"Clausius-Clapeyron"
+obj	ch10_cc.TRAPS.id	-	"CELSIUS_NOT_CONVERTED"
+obj	ch10_cc.TRAPS.id	-	"KJ_WITH_R_IN_J"
+obj	ch10_cc.TRAPS.id	-	"LOG10_FOR_LN"
+obj	ch10_cc.TRAPS.id	-	"PRESSURE_UNITS_MIXED"
+obj	ch10_cc.TRAPS.id	-	"SIGN_FLIPPED"
+obj	ch10_cc.TRAP_NOTES	CELSIUS_NOT_CONVERTED	{"ask": "Look at the temperatures you put into 1/T. What scale are they on, and what scale does the relation need?", "note": "Their number is what results when a temperature is left in degC."}
+obj	ch10_cc.TRAP_NOTES	EQ_LOG_BASE	{"ask": "Which logarithm does this relation use, and which one did you write?", "note": "Their equation holds only with log base 10. 'log' is read as base 10; 'ln' as natural."}
+obj	ch10_cc.TRAP_NOTES	EQ_SIGN_FLIPPED	{"ask": "Follow the negative sign through each step of your rearrangement. Where does it end up?", "note": "Their rearranged equation holds only if the negative sign is dropped, or the ratio is inverted without it."}
+obj	ch10_cc.TRAP_NOTES	KJ_WITH_R_IN_J	{"ask": "Write out the units of ΔHvap and of R side by side. Do they cancel?", "note": "Their number is what results when dHvap in kJ meets R in J."}
+obj	ch10_cc.TRAP_NOTES	KPA_IN_TORR_LINE	{"ask": "In what units was P when this line was fitted?", "note": "They set P = 101.325 in a line fitted with P in torr."}
+obj	ch10_cc.TRAP_NOTES	LOG10_FOR_LN	{"ask": "Which logarithm does this relation use, and which key did you press?", "note": "Their number is what results from log base 10 in place of the natural log."}
+obj	ch10_cc.TRAP_NOTES	ONE_ATM_IN_TORR_LINE	{"ask": "In what units was P when this line was fitted, and what is the normal boiling pressure in those units?", "note": "They set P = 1 in a line fitted with P in torr."}
+obj	ch10_cc.TRAP_NOTES	PRESSURE_UNITS_MIXED	{"ask": "What are the units of each pressure in your ratio?", "note": "Their number is what results when two pressures in different units are divided as they stand."}
+obj	ch10_cc.TRAP_NOTES	SIGN_FLIPPED	{"ask": "As the temperature goes up, should the vapor pressure go up or down, and does your number do that?", "note": "Their number is what results when the negative sign is lost or the ratio is inverted without it."}
+obj	ch10_cc.TRAP_NOTES	SLOPE_SIGN_KEPT	{"ask": "Does it take energy or release energy for a molecule to leave the liquid, and what sign does that give ΔHvap?", "note": "They kept the slope's negative sign on dHvap."}
+prose	ch10_cc	-	, with P in torr and T in K. Find the heat of vaporization in kJ/mol and the normal boiling point in
+prose	ch10_cc	-	An unidentified liquid
+prose	ch10_cc	-	As the temperature goes up, should the vapor pressure go up or down, and does your number do that?
+prose	ch10_cc	-	At what temperature is its vapor pressure {P1}?
+prose	ch10_cc	-	At what temperature will its vapor pressure be {P2}?
+prose	ch10_cc	-	Does it take energy or release energy for a molecule to leave the liquid, and what sign does that give ΔHvap?
+prose	ch10_cc	-	Follow the negative sign through each step of your rearrangement. Where does it end up?
+prose	ch10_cc	-	In what units was P when this line was fitted, and what is the normal boiling pressure in those units?
+prose	ch10_cc	-	In what units was P when this line was fitted?
+prose	ch10_cc	-	Its heat of vaporization is
+prose	ch10_cc	-	Look at the temperatures you put into 1/T. What scale are they on, and what scale does the relation need?
+prose	ch10_cc	-	P1 = P2 / exp( -(ΔHvap/R)(1/T2 - 1/T1) )
+prose	ch10_cc	-	P2 = P1 · exp( -(ΔHvap/R)(1/T2 - 1/T1) )
+prose	ch10_cc	-	Report the answer in
+prose	ch10_cc	-	T = slope / ( ln(760) - intercept )
+prose	ch10_cc	-	T1 = 1 / ( 1/T2 + (R/ΔHvap)·ln(P2/P1) )
+prose	ch10_cc	-	T2 = 1 / ( 1/T1 - (R/ΔHvap)·ln(P2/P1) )
+prose	ch10_cc	-	Their equation holds only with log base 10. 'log' is read as base 10; 'ln' as natural.
+prose	ch10_cc	-	Their number is what results from log base 10 in place of the natural log.
+prose	ch10_cc	-	Their number is what results when a temperature is left in degC.
+prose	ch10_cc	-	Their number is what results when dHvap in kJ meets R in J.
+prose	ch10_cc	-	Their number is what results when the negative sign is lost or the ratio is inverted without it.
+prose	ch10_cc	-	Their number is what results when two pressures in different units are divided as they stand.
+prose	ch10_cc	-	Their rearranged equation holds only if the negative sign is dropped, or the ratio is inverted without it.
+prose	ch10_cc	-	They kept the slope's negative sign on dHvap.
+prose	ch10_cc	-	They set P = 1 in a line fitted with P in torr.
+prose	ch10_cc	-	They set P = 101.325 in a line fitted with P in torr.
+prose	ch10_cc	-	Vapor pressure was measured for an unidentified liquid at six temperatures (plots at left). The straight-line fit is ln(P) = (
+prose	ch10_cc	-	What are the units of each pressure in your ratio?
+prose	ch10_cc	-	What is its vapor pressure at {T1}?
+prose	ch10_cc	-	What is its vapor pressure at {T2}?
+prose	ch10_cc	-	What is the molar heat of vaporization of the liquid?
+prose	ch10_cc	-	Which logarithm does this relation use, and which key did you press?
+prose	ch10_cc	-	Which logarithm does this relation use, and which one did you write?
+prose	ch10_cc	-	Write out the units of ΔHvap and of R side by side. Do they cancel?
+prose	ch10_cc	-	carbon tetrachloride
+prose	ch10_cc	-	dHvap from the slope
+prose	ch10_cc	-	ln P = -(ΔH/R)(1/T) + C
+prose	ch10_cc	-	ln(K2/K1) = -(ΔH°/R)(1/T2 - 1/T1)
+prose	ch10_cc	-	ln(P2/P1) = -(dHvap/R) * (1/T2 - 1/T1)
+prose	ch10_cc	-	ln(P2/P1) = -(ΔH/R)(1/T2 - 1/T1)
+prose	ch10_cc	-	ln(k2/k1) = -(Ea/R)(1/T2 - 1/T1)
+prose	ch10_cc	-	normal boiling point
+prose	ch10_cc	-	ΔHvap = -R·ln(P2/P1) / (1/T2 - 1/T1)

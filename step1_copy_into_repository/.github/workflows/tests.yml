@@ -1,0 +1,48 @@
+# Runs on every push and pull request.
+#   generator   python test_ch10_cc.py        must pass   (600/600)
+#   verifier    node gas/test_core.js          must pass   (47/47)
+#   generated   committed Archetype_ch10_cc.gs and bundle.json == run.py output   must pass
+#   content     every authored string in content/BASELINE_authored.txt still present, unchanged   must pass
+#   purity      chemistry words in the tutor shell   advisory until step 3 (then delete continue-on-error)
+name: tests
+on: [push, pull_request]
+
+jobs:
+  generator:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: make test-gen
+
+  verifier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - run: make test-verify
+
+  generated:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: make gen-check
+
+  content:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: make content-check
+
+  purity:
+    runs-on: ubuntu-latest
+    continue-on-error: true   # step 3 removes this line; the spec requires zero hits then
+    steps:
+      - uses: actions/checkout@v4
+      - run: make purity
