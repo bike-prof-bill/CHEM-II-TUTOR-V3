@@ -13,8 +13,8 @@ Plain mode asks only the authored questions. It is the right mode for testing th
 
 ## B. On Google (with Gemini)
 1. script.google.com → **New project** → rename to `V3 Tutor`.
-2. Make three script files (＋ → Script) and paste from the `gas` folder:
-   `Archetype_ch10_cc` · `Core` · `Code`  (delete the empty `myFunction` stub).
+2. Make four script files (＋ → Script) and paste from the `gas` folder:
+   `Units` · `Archetype_ch10_cc` · `Core` · `Code`  (delete the empty `myFunction` stub).
 3. Pick `setupV3` in the function menu → **Run** → approve permissions.
    **Execution log** shows: the new Sheet's address, and `APP_TOKEN`. Copy the token.
 4. ⚙ **Project Settings → Script properties → Add**: `GEMINI_API_KEY` = your key.
@@ -26,10 +26,10 @@ Plain mode asks only the authored questions. It is the right mode for testing th
 **After any code change:** Deploy → **Manage deployments** → pencil → Version: **New version** → Deploy. The URL stays the same. Forgetting this is the usual reason "my change did nothing."
 
 ## Changing content
-1. Edit `content_ch10_cc_moves.csv` (your narrative), `content_ch10_cc_openers.csv`, or `archetypes/ch10_cc.py` (liquids, equations, traps).
-2. `python run.py ch10_cc --per-kind 12`
-3. `python test_ch10_cc.py` and `node gas/test_core.js` — both should pass.
-4. Re-paste `gas/Archetype_ch10_cc.gs` into Apps Script. New version. (For route A, just restart the local server.)
+1. Edit `content_ch10_cc_moves.csv` (your narrative), `content_ch10_cc_openers.csv`, or `archetypes/ch10_cc.py` (liquids, equations, traps). Units live in `units.json`.
+2. `python run.py ch10_cc --per-kind 3 --seed 1`   (or `make generate`)
+3. `make test` — everything should pass.
+4. Re-paste `gas/Archetype_ch10_cc.gs` (and `gas/Units.gs` if units changed) into Apps Script. New version. (For route A, just restart the local server.)
 
 ## Ten-minute hand test
 Use the kind menu to force a problem type. Add `?debug=1` to the page address to see the raw server reply.

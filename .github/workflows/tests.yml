@@ -1,4 +1,5 @@
 # Runs on every push and pull request.
+#   modules-and-regression   per-module tests and the regression tests named for their faults   must pass
 #   generator   python test_ch10_cc.py        must pass   (600/600)
 #   verifier    node gas/test_core.js          must pass   (47/47)
 #   generated   committed Archetype_ch10_cc.gs and bundle.json == run.py output   must pass
@@ -23,6 +24,17 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: "22" }
       - run: make test-verify
+
+  modules-and-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - run: make test-modules
+      - run: make test-regression
 
   generated:
     runs-on: ubuntu-latest

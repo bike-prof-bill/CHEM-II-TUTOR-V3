@@ -1,5 +1,5 @@
-"""python run.py ch10_cc --per-kind 12 --seed 1
-Writes output/<id>.bundle.json  and  gas/Archetype_<id>.gs (paste into Apps Script)."""
+"""python run.py ch10_cc --per-kind 3 --seed 1
+Writes output/<id>.bundle.json, gas/Archetype_<id>.gs and gas/Units.gs (paste both .gs files into Apps Script)."""
 import sys, json, argparse, importlib, collections, os
 sys.path.insert(0, "archetypes"); import engine
 ap = argparse.ArgumentParser(); ap.add_argument("archetype"); ap.add_argument("--per-kind", type=int, default=3)
@@ -15,7 +15,13 @@ open(f"gas/Archetype_{a.archetype}.gs", "w").write(
   "var ARCHETYPES = (typeof ARCHETYPES === 'undefined') ? {} : ARCHETYPES;\n"
   f"ARCHETYPES[{json.dumps(a.archetype)}] = " + json.dumps(out, ensure_ascii=False) + ";\n"
   "if (typeof module !== 'undefined') module.exports = ARCHETYPES;\n")
+open("gas/Units.gs", "w").write(
+  "// GENERATED from units.json by run.py. Do not edit by hand; edit units.json.\n"
+  "var UNITS_DATA = " + json.dumps(engine.UNITS, ensure_ascii=False) + ";\n"
+  "if (typeof module !== 'undefined') module.exports = UNITS_DATA;\n")
 print(f"{len(out['variants'])} variants, {len(openers)} openers, {len(moves)} move rows. content_version {out['content_version']}")
+dropped = sum(1 for v in out["variants"] if v.get("dropped"))
+print(f"declared numbers per variant: {min(len(v['expected']) for v in out['variants'])}-{max(len(v['expected']) for v in out['variants'])} | variants with a restated-given intermediate removed: {dropped}")
 print("kinds:", dict(collections.Counter(v["kind"] for v in out["variants"])), "| thrown away:", engine.REJECTS)
 used = {l for o in openers for l in o["liquids"]}
 print("liquids with no scenario yet (never asked):", ", ".join(x[0] for x in A.SUBSTANCES if x[0] not in used) or "none")

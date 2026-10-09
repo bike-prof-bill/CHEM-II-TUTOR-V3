@@ -9,23 +9,36 @@ For each variant the engine:
   2. picks the kind of problem                  (which variable is unknown, or a special kind)
   3. picks display units and rounds the givens as the student will see them
   4. re-solves the unknown FROM THE ROUNDED GIVENS  -> the key
-  5. lists every number a student can legitimately produce, each tied to a board state -> targets
+  5. declares EVERY number that may legitimately appear, each with a role and a dimension -> expected
+     (intermediate and key values tied to a board state; the givens; the constants)
   6. computes what each wrong method would produce  -> traps
-  7. throws the variant away if a wrong method, or a restated given, lands near the key
-Standard library only. Same seed -> same problems, always.
+  7. validates the declaration and throws the variant away if any two numbers could be confused
+     (rebuild spec, Change 2: the verifier matches against expected and traps ONLY, so the
+     generator must guarantee the declaration is unambiguous)
+Standard library only. Same seed -> same problems, always. Units live in units.json, not here.
 """
-import json, math, random, hashlib, csv
+import json, math, random, hashlib, csv, os, itertools
 
-UNITS = {
-    "temperature": {"to":   {"K": lambda x: x, "degC": lambda x: x + 273.15},
-                    "from": {"K": lambda x: x, "degC": lambda x: x - 273.15}},
-    "pressure":    {"to":   {"atm": lambda x: x, "torr": lambda x: x / 760.0, "kPa": lambda x: x / 101.325},
-                    "from": {"atm": lambda x: x, "torr": lambda x: x * 760.0, "kPa": lambda x: x * 101.325}},
-    "molar_energy":{"to":   {"J/mol": lambda x: x, "kJ/mol": lambda x: x * 1000.0},
-                    "from": {"J/mol": lambda x: x, "kJ/mol": lambda x: x / 1000.0}},
-}
-def to_canon(kind, unit, x):   return UNITS[kind]["to"][unit](x)
-def from_canon(kind, unit, x): return UNITS[kind]["from"][unit](x)
+# ---------- units as data ----------
+UNITS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "units.json")
+UNITS = json.load(open(UNITS_PATH, encoding="utf-8"))
+def _unit(u):
+    if u not in UNITS["units"]: raise KeyError(f"unit {u!r} is not in units.json")
+    return UNITS["units"][u]
+def dim_of(unit):               return dict(UNITS["dimensions"][_unit(unit)["dimension"]]["dim"])
+def dimension_of(unit):         return _unit(unit)["dimension"]
+def canonical_unit(dimension):  return UNITS["dimensions"][dimension]["canonical"]
+def to_canon(dimension, unit, x):
+    u = _unit(unit); assert u["dimension"] == dimension, (dimension, unit)
+    return x * u["factor"] + u["offset"]
+def from_canon(dimension, unit, x):
+    u = _unit(unit); assert u["dimension"] == dimension, (dimension, unit)
+    return (x - u["offset"]) / u["factor"]
+def convert(x, from_unit, to_unit):
+    """x in from_unit -> value in to_unit, or None when the dimensions differ."""
+    a, b = _unit(from_unit), _unit(to_unit)
+    if a["dimension"] != b["dimension"]: return None
+    return from_canon(b["dimension"], to_unit, to_canon(a["dimension"], from_unit, x))
 
 def round_sig(x, n):
     if x == 0 or not math.isfinite(x): return x
@@ -61,7 +74,87 @@ def solve_for(residual, known, unknown, lo, hi, flags=None):
     return None
 
 CLEARANCE = 3          # a wrong-method number must sit this many grading windows from the key
-REJECTS = {"fortuitous": 0}
+REJECTS = {"ambiguous": 0, "trap_near_expected": 0, "given_near_key": 0}
+
+def _forms(e):
+    """Every (value, unit, abs_tol) a declared entry may be typed as."""
+    return [(e["value"], e.get("unit", ""), e["abs_tol"])] + [(f["value"], f.get("unit", ""), f.get("abs_tol", e["abs_tol"])) for f in e.get("also", [])]
+
+def _collide(a, b, tol_of, convert_too=False):
+    """Could one typed input be read as both a and b? Mirrors the verifier's matcher: a typed unit must equal
+    the form's unit; a bare number matches any form by value but cannot tick an entry that requires a unit.
+    So two forms collide on their raw values unless their units differ AND one of the two entries requires its
+    unit, because then the unit the student eventually types settles which was meant. (A quantity and the same
+    quantity restated in a larger unit do not collide: the conversion is the student's step. A key that happens
+    to equal a unitless constant does not collide with it: the key needs its unit.)
+    With convert_too, b is also converted into a's unit: a restated given landing on the key is fortuitous
+    whatever unit it is typed in. tol_of(ta, tb) gives the window, in a's unit."""
+    for va, ua, ta in _forms(a):
+        for vb, ub, tb in _forms(b):
+            # a bare number can be read as both only if a typed unit would not settle it
+            settles = (ua != ub) and ((ua and a.get("require_unit")) or (ub and b.get("require_unit")))
+            if not settles and abs(va - vb) <= tol_of(ta, tb): return True
+            if convert_too and ua and ub and ua != ub:
+                vb2 = convert(vb, ub, ua)
+                if vb2 is not None and abs(va - vb2) <= tol_of(ta, tb * abs(_unit(ub)["factor"] / _unit(ua)["factor"])): return True
+    return False
+
+# Policy switches for validate(). Both default to the reading that keeps problems whose given values happen to
+# equal a conversion factor, without weakening any check the matcher relies on. See BUILD_LOG.md, step 2.
+CONSTANT_COLLISIONS_REJECT = False   # True = spec read literally: an intermediate equal to a constant rejects the variant
+DROP_INTERMEDIATE_EQUAL_TO_GIVEN = True   # an intermediate that equals a number on the page is not evidence; it is removed
+
+def validate(v):
+    """Rebuild spec, Change 2. Returns the list of reasons this variant is ambiguous; empty = ships.
+    May remove an intermediate form that merely restates a given (see DROP_INTERMEDIATE_EQUAL_TO_GIVEN)."""
+    E, reasons = v["expected"], []
+    if DROP_INTERMEDIATE_EQUAL_TO_GIVEN:
+        givens = [e for e in E if e["role"] == "given"]
+        keep = []
+        for e in E:
+            if e["role"] == "intermediate" and any(_collide(e, g, lambda ta, tb: max(ta, tb)) for g in givens):
+                v.setdefault("dropped", []).append(e["id"]); continue
+            keep.append(e)
+        v["expected"] = E = keep
+        for b in v["board"]:                                  # a number state must keep at least one way to be established
+            if b["kind"] == "number" and not any(e.get("state") == b["state"] for e in E):
+                reasons.append(("ambiguous", b["state"], "no_evidence_left"))
+    for a, b in itertools.combinations(E, 2):
+        if a.get("state") == b.get("state"): continue
+        if not CONSTANT_COLLISIONS_REJECT and "constant" in (a["role"], b["role"]) and "key" not in (a["role"], b["role"]): continue
+        if _collide(a, b, lambda ta, tb: max(ta, tb)): reasons.append(("ambiguous", a["id"], b["id"]))
+    for tr in v["traps"]:
+        for e in E:
+            if e.get("state") == tr["state"] and _collide(e, tr, lambda ta, tb: CLEARANCE * ta):
+                reasons.append(("trap_near_expected", tr["id"], e["id"]))
+    keys = [e for e in E if e["role"] == "key"]
+    for g in (e for e in E if e["role"] == "given"):
+        for k in keys:
+            if _collide(k, g, lambda ta, tb: CLEARANCE * ta, convert_too=True): reasons.append(("given_near_key", g["id"], k["id"]))
+    return reasons
+
+def _slug(s): return "".join(c if c.isalnum() else "_" for c in s).strip("_")
+
+def declare(v, A):
+    """Turn the archetype's intermediates, key(s), givens and constants into the `expected` table."""
+    exp, seen = [], set()
+    for t in v.pop("targets"):
+        role = t.pop("role", "key" if t.pop("is_key", False) else "intermediate")
+        eid = ("key_" + t["state"]) if role == "key" else _slug(t["label"])
+        e = {"id": eid, "role": role, "dim": dim_of(t.get("unit", ""))}; e.update(t); exp.append(e)
+    for name, s in v["givens"].items():
+        exp.append({"id": "g_" + name, "state": None, "role": "given", "label": name, "value": s["value"], "unit": s["unit"],
+                    "dim": dim_of(s["unit"]), "abs_tol": round_sig(1e-6 * abs(s["value"]) + 1e-9, 3)})
+    for c in getattr(A, "CONSTANTS", []):
+        exp.append({"id": "c_" + _slug(c["label"]), "state": None, "role": "constant", "label": c["label"], "value": c["value"],
+                    "unit": c.get("unit", ""), "dim": dim_of(c.get("unit", "")), "abs_tol": c.get("abs_tol", round_sig(1e-3 * abs(c["value"]), 3))})
+    for e in exp:
+        if e["id"] in seen: raise RuntimeError(f"duplicate expected id {e['id']} in {A.ID}")
+        seen.add(e["id"])
+    v["expected"] = exp
+    for tr in v["traps"]:
+        if "for_state" in tr: tr["state"] = tr.pop("for_state")
+    return v
 
 def make_variant(A, seed, kind=None, tries=60, liquids=None):
     rng = random.Random(seed)
@@ -73,15 +166,11 @@ def make_variant(A, seed, kind=None, tries=60, liquids=None):
         else:
             v = _standard(A, rng, state, context, k)
         if v is None: continue
-        key_targets = [t for t in v["targets"] if t.get("is_key")]
-        bad = False
-        for kt in key_targets:                                   # step 7
-            for tr in v["traps"]:
-                if tr["for_state"] == kt["state"] and abs(tr["value"] - kt["value"]) <= CLEARANCE * kt["abs_tol"]: bad = True
-            for g in v.get("_givens_in_key_units", {}).get(kt["state"], []):
-                if abs(g - kt["value"]) <= CLEARANCE * kt["abs_tol"]: bad = True
-        v.pop("_givens_in_key_units", None)
-        if bad: REJECTS["fortuitous"] += 1; continue
+        declare(v, A)                                            # steps 5-6 -> one table
+        reasons = validate(v)                                    # step 7
+        if reasons:
+            for r in reasons: REJECTS[r[0]] += 1
+            continue
         v.update({"variant_id": f"{A.ID}:{seed}", "archetype_id": A.ID, "seed": seed, "kind": k})
         return v
     raise RuntimeError(f"no acceptable variant for seed {seed}")
@@ -100,21 +189,18 @@ def _standard(A, rng, state, context, unknown):
     if abs(A.residual(full, {})) > 1e-9 or not A.acceptable(full): return None
     ans_unit = rng.choice(uspec["answer_units"])
     targets = A.targets_for(full, shown, unknown, ans_unit)
-    key = [t for t in targets if t.get("is_key")][0]
+    key = [t for t in targets if t.get("role") == "key"][0]
     traps = []
     for t in A.TRAPS:
         if not t["applies"](shown, unknown): continue
         val = t["value"](A, shown, known, unknown, ans_unit, key["value"])
         if val is None or not math.isfinite(val): continue
-        traps.append({"id": t["id"], "for_state": key["state"], "value": round_sig(val, 5), "unit": ans_unit,
+        traps.append({"id": t["id"], "state": key["state"], "value": round_sig(val, 5), "unit": ans_unit,
                       "abs_tol": round_sig(max(key["abs_tol"], 0.01 * abs(val)), 3)})
-    same_kind = [from_canon(uspec["kind"], ans_unit, to_canon(uspec["kind"], s["unit"], s["value"]))
-                 for n, s in shown.items() if A.VARIABLES[n]["kind"] == uspec["kind"]]
     return {"context": context, "text": A.render_text(shown, unknown, ans_unit, context), "givens": shown,
             "board": A.board_for(shown, unknown), "targets": targets, "traps": traps,
             "reveal_with_problem": None, "sim": A.sim_payload(full, unknown, rng),
-            "eq_checks": A.equation_check(rng, unknown),
-            "_givens_in_key_units": {key["state"]: same_kind}}
+            "eq_checks": A.equation_check(rng, unknown)}
 
 def read_openers(path):
     """Instructor's CSV: title, question, model answer, target concept, keywords."""
@@ -146,7 +232,7 @@ def build(A, n_per_kind, seed0=1, openers=None, moves=None):
     else:
         for k in A.KINDS:
             for _ in range(n_per_kind): variants.append(make_variant(A, seed, k)); seed += 1
-    out = {"archetype_id": A.ID, "title": A.TITLE, "relation": A.RELATION_TEXT, "notebook_url": A.NOTEBOOK_URL,
+    out = {"contract": 2, "archetype_id": A.ID, "title": A.TITLE, "relation": A.RELATION_TEXT, "notebook_url": A.NOTEBOOK_URL,
            "equation_picks": A.EQUATION_PICKS, "trap_notes": A.TRAP_NOTES, "equation_symbols": A.EQUATION_SYMBOLS, "equation_constants": A.EQUATION_CONSTANTS, "openers": openers or [], "moves": moves or {}, "variants": variants}
     out["content_version"] = hashlib.sha1(json.dumps(out, sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:10]
     return out

@@ -3,7 +3,7 @@ const CORE = require("./Core.gs"); const ARCH = require("./Archetype_ch10_cc.gs"
 let pass = 0, fail = 0; const ok = (c, m) => { c ? pass++ : (fail++, console.log("  FAIL:", m)); };
 const find = kind => ARCH.variants.findIndex(v => v.kind === kind && v.board.some(b => b.state === "T_in_K"));
 const say = (S, m, model, extra) => CORE.processTurn(ARCH, S, Object.assign({ message: m, now: Date.now() }, extra || {}), model || null);
-const key = V => V.targets.find(t => t.is_key);
+const key = V => V.expected.find(t => t.role === "key");
 const fmtU = u => u === "degC" ? "°C" : u;
 
 // 1. strong student, offline mode (no model): straight through, any order
@@ -64,7 +64,7 @@ const fmtU = u => u === "degC" ? "°C" : u;
 // 6. slope kind, and number reading
 { const i = ARCH.variants.findIndex(v => v.kind === "slope"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 2, stamp: "t6" });
   let r = say(S, "Alcohol molecules attract each other weakly so a bigger fraction can escape."); ok(r.problem.plots.measured_degC_torr.length === 6, "slope problem arrives with its plots");
-  const [dh, bp] = V.targets; say(S, "", null, { pick: "eq_b" });
+  const [dh, bp] = V.expected.filter(t => t.role === "key"); say(S, "", null, { pick: "eq_b" });
   r = say(S, dh.value.toFixed(1) + " kJ/mol"); ok(S.board.dH_found !== "ticked", "slope: right ΔHvap does not count before its rearrangement");
   r = say(S, "ΔHvap = slope·R"); ok(r.log.trap_ids === "EQ_SIGN_FLIPPED", "slope: kept sign in the algebra is named");
   r = say(S, "ΔHvap = -m R / 1000"); ok(S.board.rearranged_dH === "ticked" && S.board.dH_found === "ticked", "slope: kJ form accepted; earlier number now counts");
@@ -100,7 +100,7 @@ const fmtU = u => u === "degC" ? "°C" : u;
     say(S, "A greater fraction of molecules has the kinetic energy to escape the liquid surface.");
     say(S, "", null, { pick: V.kind === "slope" ? "eq_b" : "eq_a" });
     V.eq_checks.forEach(k => { say(S, k.park_text); if (S.board[k.state] !== "ticked") { bad++; console.log("   canonical form rejected:", k.park_text); } });
-    V.targets.filter(t => t.is_key).forEach(t => say(S, t.value + " " + fmtU(t.unit)));
+    V.expected.filter(t => t.role === "key").forEach(t => say(S, t.value + " " + fmtU(t.unit)));
     const r = say(S, "Only pressure and temperature were measured; what the molecules do is inferred from the fit.");
     if (!(r.done && r.credit)) bad++; }); ok(bad === 0, bad + " variants could not be completed"); }
 console.log(`\n${pass} passed, ${fail} failed`); process.exit(fail ? 1 : 0);

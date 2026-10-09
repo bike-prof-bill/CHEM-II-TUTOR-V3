@@ -112,6 +112,26 @@ def board_for(shown, unknown):
           {"state": "meaning_given", "kind": "text",   "register": "inference", "requires": ["value_found"], "credit_gate": True}]
     return b
 
+# ---- constants a student may restate without it meaning anything. Declared, never guessed (rebuild spec, Change 2).
+#      Any other number that matches nothing is a stray. The 1 is the 1 in 1/T. R in kJ (0.008314) is not here:
+#      it is declared as an alternative form of the dH-in-J step, where restating R in kJ does the same job.
+CONSTANTS = [
+  {"label": "R",              "value": 8.314,    "unit": "J/(mol·K)"},
+  {"label": "R_4sf",          "value": 8.3145,   "unit": "J/(mol·K)"},
+  {"label": "R_in_L_atm",     "value": 0.08206,  "unit": ""},
+  {"label": "zero_C_in_K",    "value": 273.15,   "unit": "K"},
+  {"label": "zero_C_in_K_3sf","value": 273.0,    "unit": "K"},
+  {"label": "torr_per_atm",   "value": 760.0,    "unit": ""},
+  {"label": "kPa_per_atm",    "value": 101.325,  "unit": ""},
+  {"label": "kPa_per_atm_4sf","value": 101.3,    "unit": ""},
+  {"label": "J_per_kJ",       "value": 1000.0,   "unit": ""},
+  {"label": "one",            "value": 1.0,      "unit": "", "abs_tol": 1e-9},
+  # instructor, 8 Oct: small integers a student writes in prose ("step 2", "two points") are not answers here.
+  {"label": "zero",           "value": 0.0,      "unit": "", "abs_tol": 1e-9},
+  {"label": "two",            "value": 2.0,      "unit": "", "abs_tol": 1e-9},
+  {"label": "three",          "value": 3.0,      "unit": "", "abs_tol": 1e-9},
+]
+
 # ---- every number a student can legitimately produce, tied to the board state it establishes.
 def T(state, label, value, unit, tol, **kw):
     d = {"state": state, "label": label, "value": round_sig(value, 6), "unit": unit, "abs_tol": round_sig(tol, 3)}
@@ -143,7 +163,7 @@ def targets_for(full, shown, unknown, ans_unit):
     for u in {"temperature": ["K", "degC"], "pressure": ["atm", "torr", "kPa"], "molar_energy": ["kJ/mol", "J/mol"]}[kind]:
         if u != ans_unit:
             v = from_canon(kind, u, full[unknown]); also.append({"value": round_sig(v, 6), "unit": u, "abs_tol": round_sig(window(kind, v), 3)})
-    out.append(T("value_found", unknown, key, ans_unit, window(kind, key), is_key=True, require_unit=True, also=also))
+    out.append(T("value_found", unknown, key, ans_unit, window(kind, key), role="key", require_unit=True, also=also))
     return out
 
 # ---- traps: the same relation, bent one way.
@@ -263,17 +283,17 @@ def slope_kind(rng, state, ctx):
     Tb_shown = Tb_key - 273.15 if ans_T == "degC" else Tb_key
     Tb_other = Tb_key if ans_T == "degC" else Tb_key - 273.15
     targets = [
-      T("dH_found", "dHvap from the slope", dH_key, "kJ/mol", 0.02 * dH_key, is_key=True, require_unit=True,
+      T("dH_found", "dHvap from the slope", dH_key, "kJ/mol", 0.02 * dH_key, role="key", require_unit=True,
         also=[{"value": round_sig(dH_key * 1000, 6), "unit": "J/mol", "abs_tol": round_sig(20 * dH_key, 3)}]),
-      T("bp_found", "normal boiling point", Tb_shown, ans_T, 1.0, is_key=True, require_unit=True,
+      T("bp_found", "normal boiling point", Tb_shown, ans_T, 1.0, role="key", require_unit=True,
         also=[{"value": round(Tb_other, 2), "unit": "K" if ans_T == "degC" else "degC", "abs_tol": 1.0}]),
     ]
     off = (lambda K: K - 273.15) if ans_T == "degC" else (lambda K: K)
     traps = [
-      {"id": "SLOPE_SIGN_KEPT",        "for_state": "dH_found", "value": round_sig(-dH_key, 5), "unit": "kJ/mol", "abs_tol": round_sig(0.02 * dH_key, 3)},
-      {"id": "KJ_WITH_R_IN_J",         "for_state": "dH_found", "value": round_sig(dH_key * 1000, 5), "unit": "kJ/mol", "abs_tol": round_sig(20 * dH_key, 3)},
-      {"id": "ONE_ATM_IN_TORR_LINE",   "for_state": "bp_found", "value": round_sig(off(-m / b), 5), "unit": ans_T, "abs_tol": 1.0},
-      {"id": "KPA_IN_TORR_LINE",       "for_state": "bp_found", "value": round_sig(off(m / (math.log(101.325) - b)), 5), "unit": ans_T, "abs_tol": 1.0},
+      {"id": "SLOPE_SIGN_KEPT",        "state": "dH_found", "value": round_sig(-dH_key, 5), "unit": "kJ/mol", "abs_tol": round_sig(0.02 * dH_key, 3)},
+      {"id": "KJ_WITH_R_IN_J",         "state": "dH_found", "value": round_sig(dH_key * 1000, 5), "unit": "kJ/mol", "abs_tol": round_sig(20 * dH_key, 3)},
+      {"id": "ONE_ATM_IN_TORR_LINE",   "state": "bp_found", "value": round_sig(off(-m / b), 5), "unit": ans_T, "abs_tol": 1.0},
+      {"id": "KPA_IN_TORR_LINE",       "state": "bp_found", "value": round_sig(off(m / (math.log(101.325) - b)), 5), "unit": ans_T, "abs_tol": 1.0},
     ]
     board = [
       {"state": "account_given",   "kind": "text",   "register": "submicro",  "requires": []},

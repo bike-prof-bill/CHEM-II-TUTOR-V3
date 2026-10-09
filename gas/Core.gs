@@ -7,11 +7,34 @@
 // where a second independent reading can overrule it. Two counted wrong tries on a state produce
 // a notebook card with no model call. Two more after the student returns parks the state.
 
+// Change 2 (rebuild spec): the verifier guesses nothing. Every number it recognises was declared by the
+// generator (`expected`, `traps`); every unit it reads comes from units.json (via Units.gs). No constant
+// list, no "small integers are constants", no stray-number closure. A number matching nothing is stray.
+
+var UNITS_DATA = (typeof UNITS_DATA !== "undefined") ? UNITS_DATA : (typeof require !== "undefined" ? require("./Units.gs") : null);
+
 var CORE = (function () {
 
-  var CONSTANTS = [8.314, 8.3145, 0.008314, 273.15, 273, 760, 101.325, 101.3, 0.08206, 1000, 100];
-  var UNIT_ALIASES = { "k": "K", "kelvin": "K", "°c": "degC", "c": "degC", "degc": "degC", "celsius": "degC",
-    "atm": "atm", "torr": "torr", "mmhg": "torr", "kpa": "kPa", "kj/mol": "kJ/mol", "kj": "kJ/mol", "j/mol": "J/mol", "j": "J/mol" };
+  // ---------- units as data: dimension vectors, conversion, aliases ----------
+  var UNITS = (function (D) {
+    var byAlias = {}, aliases = [];
+    for (var u in D.units) {
+      D.units[u].aliases.forEach(function (a) { byAlias[a.replace(/\s+/g, "").toLowerCase()] = u; aliases.push(a); });
+    }
+    aliases.sort(function (a, b) { return b.length - a.length; });
+    function vecAdd(a, b, sign) { var out = {}, k; for (k in a) out[k] = (out[k] || 0) + a[k]; for (k in b) out[k] = (out[k] || 0) + sign * b[k]; for (k in out) if (Math.abs(out[k]) < 1e-9) delete out[k]; return out; }
+    function vecSame(a, b) { return Object.keys(vecAdd(a || {}, b || {}, -1)).length === 0; }
+    function dim(u) { var x = D.units[u]; return x ? D.dimensions[x.dimension].dim : null; }
+    function convert(x, from, to) {               // value in `from` -> value in `to`, or null when the dimensions differ
+      var a = D.units[from], b = D.units[to]; if (!a || !b || a.dimension !== b.dimension) return null;
+      return ((x * a.factor + a.offset) - b.offset) / b.factor;
+    }
+    function canon(alias) { return alias ? (byAlias[alias.replace(/\s+/g, "").toLowerCase()] || null) : null; }
+    var esc = function (a) { return a.replace(/[.*+?^${}()|[\]\\\/]/g, "\\$&").replace(/\s+/g, "\\s*"); };
+    var unitPattern = aliases.map(esc).join("|");
+    return { dim: dim, convert: convert, canon: canon, vecSame: vecSame, unitPattern: unitPattern, aliases: aliases, data: D };
+  })(UNITS_DATA);
+
   var SUP = { "⁰": "0", "¹": "1", "²": "2", "³": "3", "⁴": "4", "⁵": "5", "⁶": "6", "⁷": "7", "⁸": "8", "⁹": "9", "⁻": "-", "⁺": "+" };
   var MECHANISM = ["molecul", "particl", "atom", "ion", "electron", "collid", "collis", "energ", "attract", "escap",
     "vapor", "vapour", "condens", "surface", "kinetic", "bond", "force", "fraction", "distribut"];
@@ -21,22 +44,29 @@ var CORE = (function () {
     var s = String(msg || "").replace(/[−–]/g, "-").replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]+/g, function (m) {
       return "^" + m.split("").map(function (c) { return SUP[c]; }).join("");
     });
-    var re = /(?<![A-Za-z_\d.^])([-+]?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?|[-+]?\.\d+)(?:\s*(?:[eE]|[x×*]\s*10\s*\^?)\s*([-+]?\d+))?\s*(kJ\/mol|J\/mol|kelvin|celsius|°\s*C|degC|mmHg|torr|kPa|atm|kJ|K|C|J)?(?![A-Za-z])/g;
+    var re = new RegExp("(?<![A-Za-z_\\d.^])([-+]?(?:\\d{1,3}(?:,\\d{3})+|\\d+)(?:\\.\\d+)?|[-+]?\\.\\d+)(?:\\s*(?:[eE]|[x×*]\\s*10\\s*\\^?)\\s*([-+]?\\d+))?\\s*(" + UNITS.unitPattern + ")?(?![A-Za-z])", "g");
     var out = [], m;
     while ((m = re.exec(s)) !== null) {
       var x = parseFloat(m[1].replace(/,/g, ""));
       if (m[2]) x = x * Math.pow(10, parseInt(m[2], 10));
       if (!isFinite(x)) continue;
-      var u = m[3] ? UNIT_ALIASES[m[3].replace(/\s/g, "").toLowerCase()] : null;
-      out.push({ x: x, unit: u || null });
+      out.push({ x: x, unit: m[3] ? UNITS.canon(m[3]) : null });
     }
     return out;
   }
 
   // Ported from V2 unchanged in spirit: three prose words in a row is an account; four if there is an equation.
-  function hasAccount(message) {
-    var stop = {}; ("atm mol mmol kg mg torr mmhg pa kpa bar kj mj kelvin celsius min hr sec mm cm ml " +
-      "kf kb ka kc kp kw ksp dh ds dg dt dhvap ph poh pka delta eq soln aq ln log exp").split(" ").forEach(function (w) { stop[w] = 1; });
+  // Words that are not prose: every unit alias (units.json), every symbol the archetype lets a student type, and math words.
+  var MATH_WORDS = "ln log exp delta eq soln aq min hr sec".split(" ");
+  function stopWords(arch) {
+    var stop = {};
+    UNITS.aliases.forEach(function (a) { stop[a.toLowerCase()] = 1; });
+    MATH_WORDS.forEach(function (w) { stop[w] = 1; });
+    if (arch && arch.equation_symbols) for (var v in arch.equation_symbols) arch.equation_symbols[v].forEach(function (a) { stop[a.toLowerCase()] = 1; });
+    return stop;
+  }
+  function hasAccount(message, arch) {
+    var stop = stopWords(arch);
     var toks = String(message || "").split(/\s+/), run = 0, best = 0;
     for (var i = 0; i < toks.length; i++) {
       var t = toks[i].replace(/[,;:()"'?!]/g, ""), ends = /\.$/.test(t); t = t.replace(/\.$/, "");
@@ -189,39 +219,62 @@ var CORE = (function () {
   }
   function stateSatisfied(S, V, state) {
     var b = entry(V, state), idx = [];
-    V.targets.forEach(function (t, i) { if (t.state === state) idx.push(i); });
+    V.expected.forEach(function (t, i) { if (t.state === state && (t.role === "intermediate" || t.role === "key")) idx.push(i); });
     if (!idx.length) return false;
     var got = idx.filter(function (i) { return S.matched[i]; }).length;
     return (b.rule === "any") ? got >= 1 : got === idx.length;
   }
 
-  // ---------- matching one number against everything the factory said could appear ----------
+  // ---------- matching one number against everything the generator declared ----------
   function near(x, v, tol) { return Math.abs(x - v) <= tol; }
-  function classify(n, S, V) {
-    // One number can be two things at once (P2 in atm IS the ratio P2/P1 when P1 is 1 atm). Collect every match.
-    var hits = [], needs = null;
-    for (var i = 0; i < V.targets.length; i++) {
-      var t = V.targets[i];
+  // match(parsedNumber, expected, traps, ticked) -> { type, ids, id, needs, dimension }
+  //   type: "expected" (an intermediate or key; ids lists every declared entry hit, by index)
+  //         "needs_unit" (right value for an entry that requires its unit; needs = {idx, unit})
+  //         "wrong_dimension" (right value, but the typed unit is of another dimension; id = the entry)
+  //         "trap" (a known wrong turn for a state not yet set; id = trap id)
+  //         "given" | "constant" (a declared number that establishes nothing; a bare constant outranks a trap)
+  //         "stray" (matches nothing)
+  // A typed unit must equal the declared form's unit (no silent conversion: converting IS the student's step).
+  // A bare number matches any form by value, but cannot tick an entry that requires a unit.
+  // Pure: reads only its arguments. `ticked` is the set of states already set, as {state: true}.
+  function match(n, expected, traps, ticked) {
+    var hits = [], needs = null, wrongDim = null, given = null, constant = null;
+    for (var i = 0; i < expected.length; i++) {
+      var t = expected[i];
       var forms = [{ value: t.value, unit: t.unit, abs_tol: t.abs_tol }].concat(t.also || []);
       for (var f = 0; f < forms.length; f++) {
-        var F = forms[f];
+        var F = forms[f], fu = F.unit || "";
         if (!near(n.x, F.value, F.abs_tol)) continue;
-        if (n.unit && F.unit && n.unit !== F.unit) continue;
-        if (!n.unit && t.require_unit && F.unit) { if (!needs) needs = { idx: i, unit: F.unit }; break; }
+        if (n.unit && fu && n.unit !== fu) {                       // same value, other unit: conversion or dimension error
+          if (!UNITS.vecSame(UNITS.dim(n.unit), UNITS.dim(fu)) && !wrongDim) wrongDim = { idx: i, unit: fu };
+          continue;
+        }
+        if (n.unit && !fu) continue;                                 // a unit on a unitless quantity is not that quantity
+        if (t.role === "given") { given = given || i; break; }
+        if (t.role === "constant") { constant = constant || i; break; }
+        if (!n.unit && t.require_unit && fu) { if (!needs) needs = { idx: i, unit: fu }; break; }
         hits.push(i); break;
       }
     }
-    if (hits.length || needs) return { type: needs && !hits.length ? "needs_unit" : "target", idxs: hits, needs: needs };
-    if (!n.unit && Math.abs(n.x) <= 10 && n.x === Math.round(n.x)) return { type: "const" };      // the 1 in 1/T is not an answer
-    for (var k = 0; k < V.traps.length; k++) {
-      var tr = V.traps[k];
-      if (!isSet(S, tr.for_state) && near(n.x, tr.value, tr.abs_tol)) return { type: "trap", trap: tr };
+    if (hits.length) return { type: "expected", ids: hits, needs: needs };
+    if (needs) return { type: "needs_unit", ids: [], needs: needs };
+    // A bare number that is a declared constant is that constant, before any trap: "step 2" is not the 1.9 K
+    // a kJ-for-J slip produces. Typed WITH a unit, the same number cannot be a constant and reaches the traps.
+    if (constant !== null && !n.unit) return { type: "constant", id: expected[constant].id };
+    for (var k = 0; k < traps.length; k++) {
+      var tr = traps[k];
+      if (ticked[tr.state]) continue;
+      if (!near(n.x, tr.value, tr.abs_tol)) continue;
+      if (n.unit && tr.unit && n.unit !== tr.unit) continue;
+      return { type: "trap", id: tr.id, trap: tr };
     }
-    for (var g in V.givens) if (near(n.x, V.givens[g].value, 1e-9 + 1e-6 * Math.abs(V.givens[g].value))) return { type: "given" };
-    for (var c = 0; c < CONSTANTS.length; c++) if (near(n.x, CONSTANTS[c], 1e-3 * CONSTANTS[c])) return { type: "const" };
-    if (!n.unit && Math.abs(n.x) <= 10 && n.x === Math.round(n.x)) return { type: "const" };
+    if (given !== null) return { type: "given", id: expected[given].id };
+    if (constant !== null) return { type: "constant", id: expected[constant].id };
+    if (wrongDim) return { type: "wrong_dimension", id: expected[wrongDim.idx].id, unit: wrongDim.unit, typed: n.unit };
     return { type: "stray" };
   }
+  function tickedSet(S) { var t = {}; for (var st in S.board) if (isSet(S, st)) t[st] = true; return t; }
+  function classify(n, S, V) { return match(n, V.expected, V.traps, tickedSet(S)); }
 
   // ---------- sessions ----------
   function newSession(arch, pick) {
@@ -270,8 +323,8 @@ var CORE = (function () {
   function unearned(reply, S, V) {      // a number from the answer key that the student has not produced
     var bad = [];
     parseNumbers(reply).forEach(function (n) {
-      var c = classify(n, { board: {}, matched: {} }, V);
-      if ((c.type === "target" || c.type === "needs_unit" || c.type === "trap") &&
+      var c = match(n, V.expected, V.traps, {});
+      if ((c.type === "expected" || c.type === "needs_unit" || c.type === "trap") &&
           !S.produced.some(function (p) { return near(p, n.x, 1e-6 * Math.abs(n.x) + 1e-12); })) bad.push(n.x);
     });
     return bad;
@@ -290,7 +343,7 @@ var CORE = (function () {
     // --- coming back from the notebook: say what you learned, then carry on. Never counted as a try.
     if (S.awaitingReturn) {
       ev.after_bailout = true; ev.event_type = "RETURN_ACCOUNT";
-      if (hasAccount(msg)) { S.awaitingReturn = null; notes.push("The student has just returned from the course notebook and said what they learned. Acknowledge it in a clause, then ask the question for the item above."); }
+      if (hasAccount(msg, arch)) { S.awaitingReturn = null; notes.push("The student has just returned from the course notebook and said what they learned. Acknowledge it in a clause, then ask the question for the item above."); }
       else return finish(arch, S, V, ev, (arch.moves[S.awaitingReturn] || {}).return_ask || "In your own words, what did the notebook show you?", null);
     }
 
@@ -320,21 +373,23 @@ var CORE = (function () {
     var numText = String(msg).split(/\n|;/).filter(function (line) { return !(line.indexOf("=") > -1 && Object.keys(eqVarsInText(line, arch)).length >= 2); }).join("\n");
     var nums = parseNumbers(numText), strays = 0, unitOnly = (!nums.length && S.pendingUnit !== null) ? parseNumbers("1 " + msg)[0] : null;
     if (unitOnly && unitOnly.unit) {                       // "K" sent on its own after a bare number
-      var pt = V.targets[S.pendingUnit.idx];
+      var pt = V.expected[S.pendingUnit.idx];
       if (unitOnly.unit === S.pendingUnit.unit) { S.matched[S.pendingUnit.idx] = true; S.pendingUnit = null; notes.push(pt.label + ": units supplied. Confirmed."); }
+      else if (!UNITS.vecSame(UNITS.dim(unitOnly.unit), UNITS.dim(S.pendingUnit.unit))) { ev.guards.push("WRONG_DIMENSION"); notes.push("The unit they supplied is of a different kind of quantity than the one asked for. Do not accept it. Ask what kind of quantity this value is."); }
     }
     nums.forEach(function (n) {
       S.produced.push(n.x);
       var c = classify(n, S, V);
-      if (c.type === "target" || c.type === "needs_unit") {
-        c.idxs.forEach(function (ix) { S.matched[ix] = true; });
-        if (c.needs && !S.matched[c.needs.idx]) { S.pendingUnit = c.needs; notes.push("The value for '" + V.targets[c.needs.idx].label + "' is right but has no units. Ask for the units. Do not advance."); }
+      if (c.type === "expected" || c.type === "needs_unit") {
+        c.ids.forEach(function (ix) { S.matched[ix] = true; });
+        if (c.needs && !S.matched[c.needs.idx]) { S.pendingUnit = c.needs; notes.push("The value for '" + V.expected[c.needs.idx].label + "' is right but has no units. Ask for the units. Do not advance."); }
       } else if (c.type === "trap") { ev.traps.push(c.trap.id); var tn = arch.trap_notes[c.trap.id]; notes.push("KNOWN WRONG TURN (" + c.trap.id + "): " + (tn ? tn.note : "") + " Do not name the fix. Ask one question aimed at it."); }
+      else if (c.type === "wrong_dimension") { ev.guards.push("WRONG_DIMENSION"); strays++; notes.push("The number is right for one step but carries a unit of a different kind of quantity (" + c.typed + "). Do not accept it. Ask what kind of quantity that value measures."); }
       else if (c.type === "stray") strays++;
     });
     V.board.forEach(function (bb) { if (bb.kind === "number" && !isSet(S, bb.state) && stateSatisfied(S, V, bb.state)) tick(S, V, bb.state, ev.newly); });
     ev.newly.forEach(function (s) { if (entry(V, s).kind === "number") notes.push("Established and checked by the server: " + s.replace(/_/g, " ") + "."); });
-    var keyWaiting = V.targets.some(function (t, i) { return t.is_key && S.matched[i] && !isSet(S, t.state); }) &&
+    var keyWaiting = V.expected.some(function (t, i) { return t.role === "key" && S.matched[i] && !isSet(S, t.state); }) &&
                      V.board.some(function (bb) { return bb.kind === "equation" && !isSet(S, bb.state); });
     if (keyWaiting) notes.push("Their final value is right and is recorded, but it does not count until the rearranged relation is on the board. Say so plainly and ask for the rearrangement.");
     if (eqBad && b && b.kind === "equation") ev.counted_fail = true;
@@ -347,7 +402,7 @@ var CORE = (function () {
     active = activeState(S, V); b = active ? entry(V, active) : null; move = active ? (arch.moves[active] || {}) : {};
     var judge = !!(b && b.kind === "text" && ev.active === active && !input.pick), gateOK = true;
     if (judge) {
-      if (!hasAccount(msg)) { gateOK = false; notes.push("The message is not yet an account: no sentence of their own. Do not accept."); }
+      if (!hasAccount(msg, arch)) { gateOK = false; notes.push("The message is not yet an account: no sentence of their own. Do not accept."); }
       else if (active === "account_given") {
         var cov = openerCoverage(msg, arch.openers[S.openerIndex]);
         if (!cov.engaged) { gateOK = false; ev.guards.push("OPENER_NOT_ENGAGED"); notes.push("The account touches nothing in the opening scenario and says nothing about particles. Do not accept. Ask what the particles in THIS scenario are doing."); }
@@ -373,7 +428,7 @@ var CORE = (function () {
         }
       } else if (judge && gateOK) { accepted = true; ev.model_accept = "no_model"; }     // offline: the gates alone decide
       if (accepted) { tick(S, V, active, ev.newly); }
-      if (judge && !accepted && hasAccount(msg) && kind === "answer") ev.counted_fail = true;
+      if (judge && !accepted && hasAccount(msg, arch) && kind === "answer") ev.counted_fail = true;
     }
     if (kind === "question" || kind === "offtopic") ev.counted_fail = false;
 
@@ -455,7 +510,7 @@ var CORE = (function () {
     return res;
   }
 
-  return { parseNumbers: parseNumbers, hasAccount: hasAccount, openerCoverage: openerCoverage, newSession: newSession,
+  return { parseNumbers: parseNumbers, hasAccount: hasAccount, openerCoverage: openerCoverage, newSession: newSession, match: match, units: UNITS,
     processTurn: processTurn, processBack: processBack, checkEquation: checkEquation, activeState: activeState, progress: progress, problemPayload: problemPayload };
 })();
 if (typeof module !== "undefined") module.exports = CORE;
