@@ -130,6 +130,14 @@ const fmtU = u => u === "degC" ? "°C" : u;
   const S3 = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "live3" });
   say(S3, "More molecules have enough energy to escape the liquid surface as it warms."); say(S3, "", null, { pick: "eq_a" }); say(S3, V.eq_checks[0].park_text);
   say(S3, `T1 = ${ts[0].value} K and T2 = ${ts[1].value} K`); ok(S3.board.T_in_K === "ticked", "two assignments joined by 'and', both read");
+  // 6h. arithmetic shown in a value statement (instructor, 9 Oct): the worked result is read, the parts are not strays
+  const S4 = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "live4" });
+  say(S4, "More molecules have enough energy to escape the liquid surface as it warms."); say(S4, "", null, { pick: "eq_a" }); say(S4, V.eq_checks[0].park_text);
+  const g = V.givens, tC = n => g[n].unit === "degC" ? g[n].value : g[n].value - 273.15;
+  let r4 = say(S4, `T1 = (273.15 + ${tC("T1")}) K and T2 = (273.15 + ${tC("T2")}) K`);
+  ok(S4.board.T_in_K === "ticked" && !r4.log.counted_fail, "T = (273.15 + t) K is worked and accepted: " + r4.log.newly);
+  r4 = say(S4, "so 0.5 * 999.9 torr"); ok(r4.log.counted_fail, "a worked value that matches nothing is one stray, not two");
+  ok(CORE.evalArithmetic("R ln(2)", ARCH) === null && CORE.evalArithmetic("357.15 K", ARCH) === null, "symbols are algebra, a plain number is a number; neither is arithmetic");
   const b2 = Object.keys(S2.matched).length; say(S2, "ln P2 - ln P1 = ΔHvap/R (1/T1 - 1/T2)"); ok(Object.keys(S2.matched).length === b2, "algebra containing 'P1 =' is still not read for numbers"); }
 
 // 7. every variant of every kind can be completed by a student who types only the key(s)

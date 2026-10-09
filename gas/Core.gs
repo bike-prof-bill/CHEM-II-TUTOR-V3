@@ -205,6 +205,18 @@ var CORE = (function () {
     return f;
   }
 
+  // A statement whose right side is numbers joined by + - * / ^ and brackets, optionally ending in a unit: its value.
+  // Returns null when there is no operator (a plain number is read by parseNumbers) or when a symbol is present (algebra).
+  function evalArithmetic(text, arch) {
+    var t = eqNormalize(String(text)).replace(/(\d),(?=\d{3}\b)/g, "$1").trim(), unit = null;
+    var um = new RegExp("\\s*(" + UNITS.unitPattern + ")\\s*$").exec(t);
+    if (um) { unit = UNITS.canon(um[1]); t = t.slice(0, um.index); }
+    if (!/[+\-*\/^]/.test(t.replace(/^\s*[-+]/, "")) || !/\d/.test(t)) return null;
+    if (!/^[\d.\s+\-*\/^()eE]+$/.test(t) || /[eE](?![+\-]?\d)/.test(t)) return null;
+    var toks = eqTokens(t, arch); if (!toks || !toks.length || toks.some(function (k) { return k.t === "var"; })) return null;
+    try { var v = eqEval(eqParse(toks), {}); return isFinite(v) ? { x: v, unit: unit, worked: true } : null; } catch (e) { return null; }
+  }
+
   // ---------- the step map (Change 1): live items, branches, stages ----------
   function entry(V, state) { for (var i = 0; i < V.board.length; i++) if (V.board[i].id === state) return V.board[i]; return null; }
   function isSet(S, state) { return S.board[state] === "ticked" || S.board[state] === "parked"; }
@@ -498,7 +510,14 @@ var CORE = (function () {
         return Object.keys(eqVarsInText(rhs, arch)).length ? "" : rhs;   // "ln P2 - ln P1 = ΔHvap/R (1/T1 - 1/T2)" is algebra: read nothing
       }
       return line; }).join("\n");
-    var nums = parseNumbers(numText), strays = 0, unitOnly = (!nums.length && S.pendingUnit !== null) ? parseNumbers("1 " + msg)[0] : null;
+    // arithmetic shown in a value statement, "T2 = (273.15 + 47.5) K" or "760 * 0.323 torr": the worked result is what the student
+    // means, and the numbers inside it are not read on their own (so a 47.5 inside the sum is not a stray)
+    var worked = [], plainLines = [];
+    numText.split(/\n/).forEach(function (line) {
+      var rhs = line.indexOf("=") > -1 ? line.slice(line.lastIndexOf("=") + 1) : line, a = evalArithmetic(rhs, arch);
+      if (a) worked.push(a); else plainLines.push(line);
+    });
+    var nums = parseNumbers(plainLines.join("\n")).concat(worked), strays = 0, unitOnly = (!nums.length && S.pendingUnit !== null) ? parseNumbers("1 " + msg)[0] : null;
     if (unitOnly && unitOnly.unit) {                       // "K" sent on its own after a bare number
       var pt = V.expected[S.pendingUnit.idx];
       if (unitOnly.unit === S.pendingUnit.unit) { S.matched[S.pendingUnit.idx] = true; S.pendingUnit = null; notes.push(pt.label + ": units supplied. Confirmed."); }
@@ -672,6 +691,6 @@ var CORE = (function () {
 
   return { parseNumbers: parseNumbers, hasAccount: hasAccount, openerCoverage: openerCoverage, newSession: newSession, match: match, units: UNITS,
     processTurn: processTurn, processBack: processBack, checkEquation: checkEquation, checkTable: checkTable, parseTableText: parseTableText,
-    activeState: activeState, liveItems: liveItems, progress: progress, problemPayload: problemPayload, openerMedia: openerMedia };
+    activeState: activeState, liveItems: liveItems, progress: progress, problemPayload: problemPayload, openerMedia: openerMedia, evalArithmetic: evalArithmetic };
 })();
 if (typeof module !== "undefined") module.exports = CORE;
