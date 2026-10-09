@@ -1,0 +1,12 @@
+﻿condition,what happens
+Nothing revealed until earned,Problem text appears after the particle account; plot and simulation when the meaning item becomes active; a model reply stating an unearned value is rewritten or replaced
+A question costs nothing,A message ending in ? with no numbers is never a wrong try
+Words at a number item,"Cost nothing; reply is the authored question plus 'type it, with its unit'"
+Order,The active item is the first unmet item in list order whose requirements are met; items 4 and 5 (dH kind) may be done before 2 and 3
+Implied steps,Correct later work ticks the non-explicit symbolic steps before it; explicit items must be typed
+"Ladder, per stage, try 1",Model asks from another account (switch_ask)
+"Ladder, try 2",Notebook card (notebook_prompt); student returns with a sentence (return_ask); never counted
+"Ladder, two more after return","Stage parked: unmet items handed over (park_text, pinned values); problem continues; no credit"
+Completion,No live item left; tutor acknowledges and asks nothing
+Credit,Completion with a clean run (no park) and the meaning item ticked
+Never,Names the liquid; uses kPa; shows the answer; accepts a bare number as the final answer

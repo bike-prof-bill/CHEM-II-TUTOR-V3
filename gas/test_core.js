@@ -149,6 +149,15 @@ const fmtU = u => u === "degC" ? "°C" : u;
   ok(r.done && !/\?/.test(r.reply) && /QUESTION_AFTER_COMPLETION/.test(r.log.guards), "completion: question cut, guard logged: " + JSON.stringify(r.reply));
   const r2 = say(S, "thanks", asking); ok(r2.done && !/\?/.test(r2.reply), "after completion: still no question"); }
 
+// 6j. a student's question has no question mark (instructor, 9 Oct): read the words
+{ const Q = ["what do you mean by infer", "I do not know", "how do i convert this", "which one is the relation", "huh", "not sure what you want here", "explain that", "im lost"];
+  const NOTQ = ["the pressures must share a unit", "weaker forces so they escape", "it is in kelvin", "They are moving"];
+  ok(Q.every(q => CORE.isAskingForHelp(q)), "help requests without a question mark are read as questions");
+  ok(NOTQ.every(q => !CORE.isAskingForHelp(q)), "answers are not mistaken for questions");
+  const i = find("dH"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "q2" });
+  say(S, "More molecules have enough energy to escape the liquid surface as it warms."); say(S, "", null, { pick: "eq_a" }); say(S, V.eq_checks[0].park_text);
+  const r = say(S, "what do you mean by infer"); ok(r.log.turn_kind === "question" && !r.log.counted_fail, "a plea for help costs nothing: " + r.log.turn_kind); }
+
 // 7. every variant of every kind can be completed by a student who types only the key(s)
 { let bad = 0; ARCH.variants.forEach((V, i) => { const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: i % 6, stamp: "v" + i });
     say(S, "A greater fraction of molecules has the kinetic energy to escape the liquid surface.");

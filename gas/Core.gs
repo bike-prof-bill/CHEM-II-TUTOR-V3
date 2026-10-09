@@ -205,6 +205,16 @@ var CORE = (function () {
     return f;
   }
 
+  // Is this message a question or a plea for help, whatever its punctuation? "what do you mean", "i do not know", "how do I",
+  // "which one", "huh", "help", "explain", "not sure", "confused", "lost", "stuck". Used only when the message carries no
+  // number, equation, table or pick; a sentence that answers is never mistaken for a question by this test.
+  function isAskingForHelp(msg) {
+    var m = String(msg || "").trim().toLowerCase(); if (!m) return false;
+    if (/\?\s*$/.test(m)) return true;
+    if (/^(what|why|how|which|where|when|who|do|does|did|is|are|am|can|could|should|would|will|was|were|have|has|isn't|aren't|don't|doesn't|didn't|can't|couldn't|shouldn't|wouldn't)\b/.test(m)) return true;
+    return /\b(what do you mean|i (do not|don't|dont) (know|understand|get it|follow)|not sure|no idea|confused|i'?m lost|stuck|help( me)?|explain|huh|pardon|say (that )?again|meaning of|what is a|what's a)\b/.test(m);
+  }
+
   // A statement whose right side is numbers joined by + - * / ^ and brackets, optionally ending in a unit: its value.
   // Returns null when there is no operator (a plain number is read by parseNumbers) or when a symbol is present (algebra).
   function evalArithmetic(text, arch) {
@@ -564,7 +574,10 @@ var CORE = (function () {
     // --- the model speaks (and, for the text items, judges)
     var lastItem = !!(b && liveItems(S, V).every(function (x) { return x.id === b.id || isSet(S, x.id); }));
     var ctx = { progress: progress(S, V), active: active, register: b ? b.register : "", ask: move.ask, notes: notes, judge: judge && gateOK, lastItem: lastItem };
-    var accepted = false, kind = /\?\s*$/.test(msg) && !nums.length ? "question" : "answer";
+    // a student's question often has no question mark (instructor, 9 Oct): read the words, not the punctuation
+    var asking = !nums.length && !eqSeen && !tableSeen && !pickId && isAskingForHelp(msg);
+    var accepted = false, kind = asking ? "question" : "answer";
+    if (asking) notes.push("The student is asking for help or saying they are stuck, not answering. Answer their question plainly in one sentence, then ask the question for the item above. This turn costs them nothing.");
     var failStage = ev.active ? stageOf(V, ev.active) : null;
     var willBail = ev.counted_fail && b && b.kind !== "text" && ((S.tries[failStage] || 0) + 1) >= 2;   // known before any model call
     if (!willBail) {
@@ -702,6 +715,6 @@ var CORE = (function () {
 
   return { parseNumbers: parseNumbers, hasAccount: hasAccount, openerCoverage: openerCoverage, newSession: newSession, match: match, units: UNITS,
     processTurn: processTurn, processBack: processBack, checkEquation: checkEquation, checkTable: checkTable, parseTableText: parseTableText,
-    activeState: activeState, liveItems: liveItems, progress: progress, problemPayload: problemPayload, openerMedia: openerMedia, evalArithmetic: evalArithmetic };
+    activeState: activeState, liveItems: liveItems, progress: progress, problemPayload: problemPayload, openerMedia: openerMedia, evalArithmetic: evalArithmetic, isAskingForHelp: isAskingForHelp };
 })();
 if (typeof module !== "undefined") module.exports = CORE;
