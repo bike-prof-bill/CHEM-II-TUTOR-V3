@@ -358,7 +358,7 @@ var CORE = (function () {
     var V = arch.variants[pick.variantIndex];
     return { attemptId: "A" + pick.stamp, archetypeId: arch.archetype_id, variantId: V.variant_id, variantIndex: pick.variantIndex,
       openerIndex: (V.opener_index !== undefined ? V.opener_index : pick.openerIndex), board: {}, matched: {}, pendingUnit: null, tries: {}, bailed: {}, away: null,
-      awaitingReturn: null, pinned: {}, pins: [], picks: {}, clean: true, turns: 0, produced: [], done: false, credit: false, simOpen: false, mediaSimOpen: false };
+      awaitingReturn: null, pinned: {}, pins: [], picks: {}, clean: true, turns: 0, produced: [], done: false, credit: false, simOpen: false, mediaSimOpen: false, lastReply: null };
   }
   function problemPayload(arch, V, S) {     // what the browser is allowed to have once the account is given
     var med = (S && arch.openers[S.openerIndex] && arch.openers[S.openerIndex].media) || {};
@@ -489,7 +489,9 @@ var CORE = (function () {
     });
 
     // --- numbers: read only from lines that are neither symbolic algebra nor table rows
-    var numText = String(msg).split(/\n|;/).map(function (line) {
+    // "T1 = 357.15 K, T2 = 320.65 K", "... K T2 = ...", "... K and T2 = ..." are two statements: split before any "name =" that
+    // follows a comma, a semicolon, the word "and", or just a space (instructor, 9 Oct). A comma inside 38,600 is left alone.
+    var numText = String(msg).split(/\n|;|,?\s+(?:and\s+)?(?=[A-Za-zΔ][A-Za-z0-9_]*\s*=)/i).map(function (line) {
       if (tableSeen && /^\s*(I|C|E|initial|change|equilibrium)\b/i.test(line)) return "";
       if (line.indexOf("=") > -1 && Object.keys(eqVarsInText(line, arch)).length >= 2) {
         var rhs = line.slice(line.lastIndexOf("=") + 1);        // "P2/P1 = 0.587" states a value: read the right side only
@@ -615,7 +617,16 @@ var CORE = (function () {
       var trapAsk = ev.traps.length && arch.trap_notes[ev.traps[0]] ? arch.trap_notes[ev.traps[0]].ask : "";
       reply = nowActive ? ack + (trapAsk || (S.pendingUnit !== null ? "What are the units of that value?" : (nowMove.ask || arch.openers[S.openerIndex].question)))
                         : ack + "That completes this problem.";
+      // the same authored question twice in a row, with nothing new: say what this item can actually take
+      var nb = nowActive ? entry(V, nowActive) : null;
+      if (nb && !ev.newly.length && reply === S.lastReply && !trapAsk) {
+        var hint = { number: "This step is checked on the value: type it, with its unit.", equation: "This step is checked on the equation: type it on one line, the unknown alone on the left.",
+                     pick: "This step is a choice: open the Equations list.", direction: "This step is a choice: pick one of the options.", table: "This step is checked on the table: type the three rows I:, C:, E:.",
+                     text: "", reflection: "" }[nb.kind] || "";
+        if (hint) reply = reply + " " + hint;
+      }
     }
+    S.lastReply = reply;
     ev.turn_kind = kind;
     return finish(arch, S, V, ev, reply, card);
   }

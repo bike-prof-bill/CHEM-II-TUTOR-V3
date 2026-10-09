@@ -104,7 +104,7 @@ const fmtU = u => u === "degC" ? "°C" : u;
   ok(r.progress.labels.length === 1 && r.progress.labels[0] === ARCH.moves.account_given.label_when_done, "the ticked item's label appears: " + JSON.stringify(r.progress.labels)); }
 
 // 6f. "T1 = 341.65 K" is a statement of a value, not an equation: the symbol T must not be read inside T1 (found in the first demo, 9 Oct)
-{ const i = find("dH"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "t1" });
+{ const i = ARCH.variants.findIndex(v => v.kind === "dH" && v.expected.filter(e => e.state === "T_in_K").length === 2), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "t1" });
   say(S, "More molecules have enough energy to escape the liquid surface as it warms."); say(S, "", null, { pick: "eq_a" }); say(S, V.eq_checks[0].park_text);
   const ts = V.expected.filter(e => e.state === "T_in_K");
   ts.forEach((e, k) => say(S, `T${k + 1} = ${e.value} K`));
@@ -113,6 +113,24 @@ const fmtU = u => u === "degC" ? "°C" : u;
   ok(S.board.substituted === "ticked", "'P2/P1 = value' states a value for an expression: the right side is read as a number");
   const before = Object.keys(S.matched).length; say(S, "ln P2 - ln P1 = ΔHvap/R (1/T1 - 1/T2)");
   ok(Object.keys(S.matched).length === before, "pure algebra on both sides is still not read for numbers (the 1 in 1/T stays a 1)"); }
+
+// 6g. found by the instructor's first live run, 9 Oct: two assignments on one line; words typed at a number item in plain mode
+{ const i = ARCH.variants.findIndex(v => v.kind === "dH" && v.expected.filter(e => e.state === "T_in_K").length === 2), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "live1" });
+  say(S, "More molecules have enough energy to escape the liquid surface as it warms."); say(S, "", null, { pick: "eq_a" }); say(S, V.eq_checks[0].park_text);
+  let r1 = say(S, "Temperature must be in Kelvin"); let r2 = say(S, "must be in K");
+  ok(!r1.log.counted_fail && !r2.log.counted_fail, "words at a number item cost nothing");
+  ok(r2.reply !== r1.reply && /type it, with its unit/i.test(r2.reply), "the second identical question carries a plain hint about what the step takes: " + r2.reply);
+  const ts = V.expected.filter(e => e.state === "T_in_K");
+  r1 = say(S, `T1 = ${ts[0].value} K,  T2 =${ts[1].value}K`);
+  ok(S.board.T_in_K === "ticked", "two assignments on one line, comma-separated, both read");
+  ok(CORE.parseNumbers("ok then 38,600 J and 1,250 torr").map(n => n.x).join() === "38600,1250", "thousands commas still intact");
+  const S2 = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "live2" });
+  say(S2, "More molecules have enough energy to escape the liquid surface as it warms."); say(S2, "", null, { pick: "eq_a" }); say(S2, V.eq_checks[0].park_text);
+  say(S2, `T1 = ${ts[0].value} K T2 = ${ts[1].value} K`); ok(S2.board.T_in_K === "ticked", "two assignments separated by a space only, both read");
+  const S3 = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "live3" });
+  say(S3, "More molecules have enough energy to escape the liquid surface as it warms."); say(S3, "", null, { pick: "eq_a" }); say(S3, V.eq_checks[0].park_text);
+  say(S3, `T1 = ${ts[0].value} K and T2 = ${ts[1].value} K`); ok(S3.board.T_in_K === "ticked", "two assignments joined by 'and', both read");
+  const b2 = Object.keys(S2.matched).length; say(S2, "ln P2 - ln P1 = ΔHvap/R (1/T1 - 1/T2)"); ok(Object.keys(S2.matched).length === b2, "algebra containing 'P1 =' is still not read for numbers"); }
 
 // 7. every variant of every kind can be completed by a student who types only the key(s)
 { let bad = 0; ARCH.variants.forEach((V, i) => { const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: i % 6, stamp: "v" + i });
