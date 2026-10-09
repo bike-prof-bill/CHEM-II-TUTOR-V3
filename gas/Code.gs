@@ -34,7 +34,7 @@ function checkModels() {
   Logger.log("All usable models:\n" + names.join("\n"));
 }
 
-function doGet() { return json_({ alive: true, build: BUILD_STAMP, archetypes: Object.keys(ARCHETYPES).map(function (k) { return { id: k, title: ARCHETYPES[k].title, kinds: ARCHETYPES[k].kinds }; }) }); }
+function doGet() { return json_({ alive: true, build: BUILD_STAMP, archetypes: Object.keys(ARCHETYPES).map(function (k) { return { id: k, title: ARCHETYPES[k].title, kinds: ARCHETYPES[k].kinds, content_version: ARCHETYPES[k].content_version, openers: ARCHETYPES[k].openers.map(function (o) { return o.title; }) }; }) }); }
 
 function doPost(e) {
   var t0 = Date.now();
@@ -48,7 +48,8 @@ function doPost(e) {
 
     if (req.action === "start" || req.action === "reset") {
       if (S && !S.done && S.turns > 0) mastery_(props, student, arch, S, "abandoned");
-      var pool = []; arch.variants.forEach(function (v, i) { if (!req.kind || v.kind === req.kind) pool.push(i); });
+      var pool = []; arch.variants.forEach(function (v, i) { if ((!req.kind || v.kind === req.kind) && (req.opener === undefined || req.opener === "" || v.opener_index === Number(req.opener))) pool.push(i); });
+      if (!pool.length) return json_({ error: "no problem matches that opener and kind" });
       S = CORE.newSession(arch, { variantIndex: pool[Math.floor(Math.random() * pool.length)],
         openerIndex: Math.floor(Math.random() * arch.openers.length), stamp: Date.now().toString(36) + Math.floor(Math.random() * 1296).toString(36) });
       res = { reply: arch.openers[S.openerIndex].question, progress: CORE.progress(S, arch.variants[S.variantIndex]), notebook_url: arch.notebook_url, title: arch.title, media: CORE.openerMedia(arch, S),

@@ -415,7 +415,8 @@ var CORE = (function () {
     else out += "\n\nPROBLEM on the student's screen: " + V.text;
     out += "\n\nWHERE THE STUDENT IS: " + ctx.progress.done + " of " + ctx.progress.of + " established.";
     if (ctx.active) out += "\nNEXT THING TO ESTABLISH (" + ctx.register + " account): ask toward this, in your own words: " + (ctx.ask || "(no authored question; ask plainly)");
-    else out += "\nEverything is established. Say so in one sentence. Ask nothing.";
+    else out += "\nEverything is established. The problem is over. Respond to what the student just said in one sentence. Ask nothing.";
+    if (ctx.active && ctx.lastItem) out += "\nThis is the LAST item. If you accept it, the problem is complete: acknowledge their account in one or two sentences and ask nothing. A question after acceptance is wrong.";
     if (ctx.notes.length) out += "\n\nSERVER VERDICT THIS TURN:\n- " + ctx.notes.join("\n- ");
     if (ctx.judge) out += "\n\nYOU JUDGE THIS TURN: set accept to 1 only if the student's message establishes the item above. If you correct or redirect, accept is 0.";
     if (ctx.extra) out += "\n\n" + ctx.extra;
@@ -561,7 +562,8 @@ var CORE = (function () {
     }
 
     // --- the model speaks (and, for the text items, judges)
-    var ctx = { progress: progress(S, V), active: active, register: b ? b.register : "", ask: move.ask, notes: notes, judge: judge && gateOK };
+    var lastItem = !!(b && liveItems(S, V).every(function (x) { return x.id === b.id || isSet(S, x.id); }));
+    var ctx = { progress: progress(S, V), active: active, register: b ? b.register : "", ask: move.ask, notes: notes, judge: judge && gateOK, lastItem: lastItem };
     var accepted = false, kind = /\?\s*$/.test(msg) && !nums.length ? "question" : "answer";
     var failStage = ev.active ? stageOf(V, ev.active) : null;
     var willBail = ev.counted_fail && b && b.kind !== "text" && ((S.tries[failStage] || 0) + 1) >= 2;   // known before any model call
@@ -618,8 +620,15 @@ var CORE = (function () {
       }
     }
 
-    // --- nothing unchecked reaches the student: leak guard, one rewrite, then the authored question
+    // --- a completed problem does not end on a question (instructor, 9 Oct): one rewrite, then cut the question off
     var nowActive = activeState(S, V), nowMove = nowActive ? moveFor(arch, V, nowActive) : {};
+    if (reply && !card && nowActive === null && /\?/.test(reply)) {
+      ev.guards.push("QUESTION_AFTER_COMPLETION");
+      ctx.active = null; ctx.judge = false; ctx.progress = progress(S, V); ctx.extra = "The problem is complete. Your draft asked a question. Rewrite: acknowledge what the student established, one or two sentences, no question.";
+      var r3 = model ? safe(model, buildSystem(arch, S, V, ctx), history, msg) : null;
+      reply = (r3 && !/\?/.test(r3.socratic_response)) ? r3.socratic_response
+            : reply.split(/(?<=[.!])\s+/).filter(function (sn) { return !/\?/.test(sn); }).join(" ").trim() || null;
+    }
     if (reply && !card) {
       var leaked = unearned(reply, S, V);
       if (leaked.length) {

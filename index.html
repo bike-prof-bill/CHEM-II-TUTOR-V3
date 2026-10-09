@@ -66,6 +66,7 @@
   <input type="text" id="studentId" placeholder="Student ID" aria-label="Student ID" style="width:130px">
   <select id="arch" aria-label="Archetype (testing)"></select>
   <select id="kind" aria-label="Problem kind (testing)"><option value="">any kind</option></select>
+  <select id="opener" aria-label="Scenario (testing)"><option value="">any scenario</option></select>
   <button id="newBtn">New problem</button>
   <a id="nbLink" class="quiet" target="_blank" rel="noopener" style="color:var(--teal);font-size:14px">Notebook</a>
   <button class="quiet" id="setBtn" aria-label="Connection settings">Settings</button>
@@ -172,7 +173,7 @@ function handle(res, echo) {
   if (res.problem) showProblem(res.problem);
   if (res.sim) openSim(res.sim);
   if (res.card) showCard(res.card);
-  if (res.done) { add("note", res.credit ? "Problem complete. Clean run recorded." : "Problem complete. Recorded without credit for this attempt; a new problem is a fresh start."); $("box").placeholder = "Press New problem for another"; }
+  if (res.done && !doneShown) { doneShown = true; add("note", res.credit ? "Problem complete. Clean run recorded." : "Problem complete. Recorded without credit for this attempt; a new problem is a fresh start."); $("box").placeholder = "Press New problem for another"; }
 }
 
 async function send(extra) {
@@ -183,12 +184,15 @@ async function send(extra) {
   setBusy(false); handle(res, text || (extra && extra.pick ? "[picked: " + extra.pick + "]" : "")); $("box").focus();
 }
 
+let doneShown = false;
 async function newProblem() {
+  doneShown = false;
   if (!cfg.url || !cfg.token) { openSettings(); return; }
   sessionId = "S" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); history = []; away = false; fit = null;
   $("log").innerHTML = ""; $("problemText").className = "veil"; $("givens").textContent = ""; $("eqBtn").disabled = true; showPinned(null); showChoices(null); $("plotCard").style.display = "none"; $("probe").style.display = "none"; $("openerImg").style.display = "none"; $("simCard").style.display = "none"; $("simFrame").src = "about:blank";
   $("problemText").textContent = "The problem is not on screen yet. First answer the question in the chat about what the particles are doing. Then it appears here.";
-  setBusy(true); const res = await call({ action: "start", kind: $("kind").value }); setBusy(false);
+  setBusy(true); const res = await call({ action: "start", kind: $("kind").value, opener: $("opener").value }); setBusy(false);
+  if (res && res.error) { add("note", res.error); return; }
   $("box").placeholder = "Say what the particles are doing…"; handle(res); $("box").focus();
 }
 
@@ -277,7 +281,9 @@ $("studentId").value = store.get("v3_student"); $("studentId").onchange = () => 
 async function fillMenus() {
   try { const r = await fetch(cfg.url); const j = await r.json(); const A = (j.archetypes || []).map(a => typeof a === "string" ? { id: a, title: a, kinds: [] } : a);
     $("arch").innerHTML = ""; A.forEach(a => { const o = document.createElement("option"); o.value = a.id; o.textContent = a.title; $("arch").appendChild(o); });
-    const kinds = () => { const a = A.find(x => x.id === $("arch").value) || { kinds: [] }; $("kind").innerHTML = '<option value="">any kind</option>'; (a.kinds || []).forEach(k => { const o = document.createElement("option"); o.value = k; o.textContent = k; $("kind").appendChild(o); }); };
+    const kinds = () => { const a = A.find(x => x.id === $("arch").value) || { kinds: [], openers: [] }; $("kind").innerHTML = '<option value="">any kind</option>'; (a.kinds || []).forEach(k => { const o = document.createElement("option"); o.value = k; o.textContent = k; $("kind").appendChild(o); });
+      $("opener").innerHTML = '<option value="">any scenario</option>'; (a.openers || []).forEach((t, i) => { const o = document.createElement("option"); o.value = i; o.textContent = t; $("opener").appendChild(o); });
+      if (a.content_version) $("build").title = "content " + a.content_version; };
     $("arch").onchange = kinds; kinds(); } catch (e) { }
 }
 if (!cfg.url || !cfg.token) openSettings(); else fillMenus();

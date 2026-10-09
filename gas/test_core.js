@@ -140,6 +140,15 @@ const fmtU = u => u === "degC" ? "°C" : u;
   ok(CORE.evalArithmetic("R ln(2)", ARCH) === null && CORE.evalArithmetic("357.15 K", ARCH) === null, "symbols are algebra, a plain number is a number; neither is arithmetic");
   const b2 = Object.keys(S2.matched).length; say(S2, "ln P2 - ln P1 = ΔHvap/R (1/T1 - 1/T2)"); ok(Object.keys(S2.matched).length === b2, "algebra containing 'P1 =' is still not read for numbers"); }
 
+// 6i. a completed problem never ends on a question (instructor's Google-mode run, 9 Oct): the model's draft is rewritten or cut
+{ const i = find("dH"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "q1" });
+  const asking = (sys, hist, msg) => ({ socratic_response: "Good. The forces are moderate. And how would you summarize all three accounts together?", accept: 1, turn_kind: "answer" });
+  say(S, "More molecules have enough energy to escape the liquid surface as it warms.", asking); say(S, "", asking, { pick: "eq_a" }); say(S, V.eq_checks[0].park_text, asking);
+  V.expected.filter(e => e.role === "intermediate" || e.role === "key").forEach(e => say(S, e.value + " " + e.unit, asking));
+  const r = say(S, "The value says the attractions are moderate; the measurements support the picture only roughly.", asking);
+  ok(r.done && !/\?/.test(r.reply) && /QUESTION_AFTER_COMPLETION/.test(r.log.guards), "completion: question cut, guard logged: " + JSON.stringify(r.reply));
+  const r2 = say(S, "thanks", asking); ok(r2.done && !/\?/.test(r2.reply), "after completion: still no question"); }
+
 // 7. every variant of every kind can be completed by a student who types only the key(s)
 { let bad = 0; ARCH.variants.forEach((V, i) => { const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: i % 6, stamp: "v" + i });
     say(S, "A greater fraction of molecules has the kinetic energy to escape the liquid surface.");

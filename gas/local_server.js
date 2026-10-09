@@ -7,7 +7,7 @@ const sessions = {}, turns = {};
 http.createServer((req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*"); res.setHeader("Access-Control-Allow-Headers", "*"); res.setHeader("Content-Type", "application/json");
   if (req.method === "OPTIONS") return res.end();
-  if (req.method === "GET") return res.end(JSON.stringify({ alive: true, build: "LOCAL-plain-mode", archetypes: Object.keys(ARCHETYPES).map(k => ({ id: k, title: ARCHETYPES[k].title, kinds: ARCHETYPES[k].kinds })) }));
+  if (req.method === "GET") return res.end(JSON.stringify({ alive: true, build: "LOCAL-plain-mode", archetypes: Object.keys(ARCHETYPES).map(k => ({ id: k, title: ARCHETYPES[k].title, kinds: ARCHETYPES[k].kinds, content_version: ARCHETYPES[k].content_version, openers: ARCHETYPES[k].openers.map(o => o.title) })) }));
   let body = ""; req.on("data", c => body += c); req.on("end", () => {
     let out; try {
       const q = JSON.parse(body), arch = ARCHETYPES[q.archetypeId] || ARCHETYPES[Object.keys(ARCHETYPES)[0]];
@@ -16,7 +16,8 @@ http.createServer((req, res) => {
       else {
         let S = sessions[q.sessionId], r;
         if (q.action === "start" || q.action === "reset") {
-          const pool = arch.variants.map((v, i) => i).filter(i => !q.kind || arch.variants[i].kind === q.kind);
+          const pool = arch.variants.map((v, i) => i).filter(i => (!q.kind || arch.variants[i].kind === q.kind) && (q.opener === undefined || q.opener === "" || arch.variants[i].opener_index === Number(q.opener)));
+          if (!pool.length) return res.end(JSON.stringify({ error: "no problem matches that opener and kind" }));
           S = sessions[q.sessionId] = CORE.newSession(arch, { variantIndex: pool[Math.floor(Math.random() * pool.length)], openerIndex: Math.floor(Math.random() * arch.openers.length), stamp: Date.now().toString(36) });
           r = { reply: arch.openers[S.openerIndex].question, progress: CORE.progress(S, arch.variants[S.variantIndex]), notebook_url: arch.notebook_url, title: arch.title, media: CORE.openerMedia(arch, S), log: { event_type: "PROBLEM_OPEN", variant_id: S.variantId } };
         } else if (!S) r = { error: "no session; press New problem", log: {} };
