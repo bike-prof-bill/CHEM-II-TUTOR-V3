@@ -103,6 +103,17 @@ const fmtU = u => u === "degC" ? "°C" : u;
   r = say(S, "More molecules have enough energy to escape the liquid surface as it warms.");
   ok(r.progress.labels.length === 1 && r.progress.labels[0] === ARCH.moves.account_given.label_when_done, "the ticked item's label appears: " + JSON.stringify(r.progress.labels)); }
 
+// 6f. "T1 = 341.65 K" is a statement of a value, not an equation: the symbol T must not be read inside T1 (found in the first demo, 9 Oct)
+{ const i = find("dH"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "t1" });
+  say(S, "More molecules have enough energy to escape the liquid surface as it warms."); say(S, "", null, { pick: "eq_a" }); say(S, V.eq_checks[0].park_text);
+  const ts = V.expected.filter(e => e.state === "T_in_K");
+  ts.forEach((e, k) => say(S, `T${k + 1} = ${e.value} K`));
+  ok(S.board.T_in_K === "ticked", "typed 'T1 = value K' and 'T2 = value K' establish the kelvin temperatures");
+  const ratio = V.expected.find(e => e.state === "substituted" && /^P[12]_P[12]$/.test(e.id)) || V.expected.find(e => e.state === "substituted"); say(S, `${ratio.label} = ${ratio.value}${ratio.unit ? " " + ratio.unit : ""}`);
+  ok(S.board.substituted === "ticked", "'P2/P1 = value' states a value for an expression: the right side is read as a number");
+  const before = Object.keys(S.matched).length; say(S, "ln P2 - ln P1 = ΔHvap/R (1/T1 - 1/T2)");
+  ok(Object.keys(S.matched).length === before, "pure algebra on both sides is still not read for numbers (the 1 in 1/T stays a 1)"); }
+
 // 7. every variant of every kind can be completed by a student who types only the key(s)
 { let bad = 0; ARCH.variants.forEach((V, i) => { const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: i % 6, stamp: "v" + i });
     say(S, "A greater fraction of molecules has the kinetic energy to escape the liquid surface.");

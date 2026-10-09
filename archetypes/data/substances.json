@@ -4,7 +4,8 @@
   "formula": "text",
   "melting_point_C": "normal melting point, °C",
   "boiling_point_C": "normal boiling point at 1 atm, °C",
-  "dHvap_at_Tb_kJ_mol": "enthalpy of vaporization AT THE NORMAL BOILING POINT, kJ/mol"
+  "dHvap_at_Tb_kJ_mol": "enthalpy of vaporization AT THE NORMAL BOILING POINT, kJ/mol",
+  "class": "functional-group class, used only for wording (e.g. 'an unidentified alcohol')"
  },
  "substances": {
   "water": {
@@ -16,8 +17,10 @@
     "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
-    "formula": "standard"
-   }
+    "formula": "standard",
+    "class": "standard classification"
+   },
+   "class": "water"
   },
   "methanol": {
    "formula": "CH₃OH",
@@ -28,8 +31,10 @@
     "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
-    "formula": "standard"
-   }
+    "formula": "standard",
+    "class": "standard classification"
+   },
+   "class": "alcohol"
   },
   "ethanol": {
    "formula": "C₂H₅OH",
@@ -40,8 +45,10 @@
     "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
-    "formula": "standard"
-   }
+    "formula": "standard",
+    "class": "standard classification"
+   },
+   "class": "alcohol"
   },
   "1-propanol": {
    "formula": "CH₃CH₂CH₂OH",
@@ -52,8 +59,10 @@
     "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
-    "formula": "standard"
-   }
+    "formula": "standard",
+    "class": "standard classification"
+   },
+   "class": "alcohol"
   },
   "2-propanol": {
    "formula": "(CH₃)₂CHOH",
@@ -64,8 +73,10 @@
     "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
-    "formula": "standard"
-   }
+    "formula": "standard",
+    "class": "standard classification"
+   },
+   "class": "alcohol"
   },
   "1-butanol": {
    "formula": "CH₃(CH₂)₃OH",
@@ -76,8 +87,10 @@
     "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
-    "formula": "standard"
-   }
+    "formula": "standard",
+    "class": "standard classification"
+   },
+   "class": "alcohol"
   },
   "acetone": {
    "formula": "(CH₃)₂CO",
@@ -88,8 +101,10 @@
     "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
-    "formula": "standard"
-   }
+    "formula": "standard",
+    "class": "standard classification"
+   },
+   "class": "ketone"
   },
   "diethyl ether": {
    "formula": "(C₂H₅)₂O",
@@ -100,8 +115,10 @@
     "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
-    "formula": "standard"
-   }
+    "formula": "standard",
+    "class": "standard classification"
+   },
+   "class": "ether"
   },
   "pentane": {
    "formula": "C₅H₁₂",
@@ -112,8 +129,10 @@
     "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
-    "formula": "standard"
-   }
+    "formula": "standard",
+    "class": "standard classification"
+   },
+   "class": "alkane"
   },
   "hexane": {
    "formula": "C₆H₁₄",
@@ -124,8 +143,10 @@
     "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
-    "formula": "standard"
-   }
+    "formula": "standard",
+    "class": "standard classification"
+   },
+   "class": "alkane"
   },
   "heptane": {
    "formula": "C₇H₁₆",
@@ -136,8 +157,10 @@
     "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
-    "formula": "standard"
-   }
+    "formula": "standard",
+    "class": "standard classification"
+   },
+   "class": "alkane"
   },
   "cyclohexane": {
    "formula": "C₆H₁₂",
@@ -148,8 +171,10 @@
     "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
-    "formula": "standard"
-   }
+    "formula": "standard",
+    "class": "standard classification"
+   },
+   "class": "cycloalkane"
   },
   "benzene": {
    "formula": "C₆H₆",
@@ -160,8 +185,10 @@
     "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
-    "formula": "standard"
-   }
+    "formula": "standard",
+    "class": "standard classification"
+   },
+   "class": "aromatic hydrocarbon"
   },
   "toluene": {
    "formula": "C₆H₅CH₃",
@@ -172,8 +199,10 @@
     "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
-    "formula": "standard"
-   }
+    "formula": "standard",
+    "class": "standard classification"
+   },
+   "class": "aromatic hydrocarbon"
   },
   "chloroform": {
    "formula": "CHCl₃",
@@ -184,8 +213,10 @@
     "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
-    "formula": "standard"
-   }
+    "formula": "standard",
+    "class": "standard classification"
+   },
+   "class": "haloalkane"
   },
   "carbon tetrachloride": {
    "formula": "CCl₄",
@@ -196,8 +227,10 @@
     "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
-    "formula": "standard"
-   }
+    "formula": "standard",
+    "class": "standard classification"
+   },
+   "class": "haloalkane"
   },
   "ethyl acetate": {
    "formula": "CH₃COOC₂H₅",
@@ -208,8 +241,10 @@
     "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
-    "formula": "standard"
-   }
+    "formula": "standard",
+    "class": "standard classification"
+   },
+   "class": "ester"
   },
   "2-butanol": {
    "formula": "CH₃CH(OH)CH₂CH₃",
@@ -220,8 +255,10 @@
     "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
-    "formula": "standard"
-   }
+    "formula": "standard",
+    "class": "standard classification"
+   },
+   "class": "alcohol"
   },
   "isobutyl alcohol": {
    "formula": "(CH₃)₂CHCH₂OH",
@@ -232,8 +269,10 @@
     "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
-    "formula": "standard"
-   }
+    "formula": "standard",
+    "class": "standard classification"
+   },
+   "class": "alcohol"
   },
   "tert-butyl alcohol": {
    "formula": "(CH₃)₃COH",
@@ -244,8 +283,10 @@
     "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
-    "formula": "standard"
-   }
+    "formula": "standard",
+    "class": "standard classification"
+   },
+   "class": "alcohol"
   }
  }
 }

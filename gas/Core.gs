@@ -201,7 +201,7 @@ var CORE = (function () {
   function eqVarsInText(line, arch) {                        // a symbol counts only when it stands apart from other letters
     var f = {}, s = eqNormalize(line);
     for (var v in arch.equation_symbols) arch.equation_symbols[v].forEach(function (al) {
-      var i = -1; while ((i = s.indexOf(al, i + 1)) > -1) { if (!/[A-Za-zΔ°]/.test(s[i - 1] || " ") && !/[A-Za-z]/.test(s[i + al.length] || " ")) f[v] = 1; } });
+      var i = -1; while ((i = s.indexOf(al, i + 1)) > -1) { if (!/[A-Za-zΔ°]/.test(s[i - 1] || " ") && !/[A-Za-z0-9_]/.test(s[i + al.length] || " ")) f[v] = 1; } });   // "T" inside "T1" is not the symbol T
     return f;
   }
 
@@ -489,10 +489,13 @@ var CORE = (function () {
     });
 
     // --- numbers: read only from lines that are neither symbolic algebra nor table rows
-    var numText = String(msg).split(/\n|;/).filter(function (line) {
-      if (line.indexOf("=") > -1 && Object.keys(eqVarsInText(line, arch)).length >= 2) return false;
-      if (tableSeen && /^\s*(I|C|E|initial|change|equilibrium)\b/i.test(line)) return false;
-      return true; }).join("\n");
+    var numText = String(msg).split(/\n|;/).map(function (line) {
+      if (tableSeen && /^\s*(I|C|E|initial|change|equilibrium)\b/i.test(line)) return "";
+      if (line.indexOf("=") > -1 && Object.keys(eqVarsInText(line, arch)).length >= 2) {
+        var rhs = line.slice(line.lastIndexOf("=") + 1);        // "P2/P1 = 0.587" states a value: read the right side only
+        return Object.keys(eqVarsInText(rhs, arch)).length ? "" : rhs;   // "ln P2 - ln P1 = ΔHvap/R (1/T1 - 1/T2)" is algebra: read nothing
+      }
+      return line; }).join("\n");
     var nums = parseNumbers(numText), strays = 0, unitOnly = (!nums.length && S.pendingUnit !== null) ? parseNumbers("1 " + msg)[0] : null;
     if (unitOnly && unitOnly.unit) {                       // "K" sent on its own after a bare number
       var pt = V.expected[S.pendingUnit.idx];

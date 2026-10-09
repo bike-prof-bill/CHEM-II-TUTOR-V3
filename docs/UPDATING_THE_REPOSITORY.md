@@ -21,7 +21,11 @@ The zip holds the complete repository as it should be after the step; you replac
 5. Finder asks about items with the same name. Choose **Replace**. If offered a box "Apply to all," tick it first. (**Replace** is correct for folders too: the zip's folders are complete, so nothing you need is lost. Do not choose **Merge** or **Keep both**.)
 6. Wait for the copy to finish. Close the unzipped folder window; you can trash the zip and the unzipped folder afterwards.
 
-What this does not touch: the hidden `.git` folder (your history and connection to github.com) and `REPOSITORY.md`, which is left out of my zips because you have edited it.
+What this does not touch: the hidden `.git` folder (your history and connection to github.com), `REPOSITORY.md` (left out because you have edited it), and the `media/` folder (left out because its files are yours and Simulation_Claude's).
+
+## Simulations and pictures: the `media/` folder is yours
+
+Files from Simulation_Claude (and your pictures) go into `media/<archetype>/` by hand, then commit and push. My zips never contain `media/`, so dropping a zip in can never overwrite a newer simulator with an older one. Whenever you save a new or changed file into `media/`, attach the same file to a message to me so my copy matches yours; the wiring (which opener uses which file, and when it opens) is in the openers file and does arrive in my zips.
 
 ## Part 2: commit and push
 

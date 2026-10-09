@@ -29,5 +29,5 @@ liquid's vapour pressure as a Clausius-Clapeyron line hung from its normal boili
 | tert-butyl alcohol | 39.1 | 82.4 | 25.1 | 26.0 |
 
 Problems for the Rubbing Alcohol Chill opener draw methanol, ethanol, 1-propanol, 2-propanol.
-Pressure units the problems use: atm, torr, kPa. Temperature units: K, °C. R = 8.314 J/(mol·K).
+Pressure units the problems use: atm and torr (mmHg accepted when typed); never kPa (instructor, 9 Oct 2026). Temperature units: K, °C. R = 8.314 J/(mol·K).
 A simulation may show a liquid's curve only between its melting point and its boiling point plus a margin; below the melting point there is no liquid.

@@ -15,8 +15,8 @@ R = 8.314   # J/(mol K)
 VARIABLES = {
   "T1": {"kind": "temperature",  "bounds": (150.0, 700.0), "answer_units": ["degC", "K"], "round": {"degC": {"dp": 1}, "K": {"dp": 1}}},
   "T2": {"kind": "temperature",  "bounds": (150.0, 700.0), "answer_units": ["degC", "K"], "round": {"degC": {"dp": 1}, "K": {"dp": 1}}},
-  "P1": {"kind": "pressure",     "bounds": (1e-4, 100.0),  "answer_units": ["atm", "torr", "kPa"], "round": {"atm": {"sig": 3}, "torr": {"sig": 3}, "kPa": {"sig": 4}}},
-  "P2": {"kind": "pressure",     "bounds": (1e-4, 100.0),  "answer_units": ["atm", "torr", "kPa"], "round": {"atm": {"sig": 3}, "torr": {"sig": 3}, "kPa": {"sig": 4}}},
+  "P1": {"kind": "pressure",     "bounds": (1e-4, 100.0),  "answer_units": ["atm", "torr"], "round": {"atm": {"sig": 3}, "torr": {"sig": 3}}},
+  "P2": {"kind": "pressure",     "bounds": (1e-4, 100.0),  "answer_units": ["atm", "torr"], "round": {"atm": {"sig": 3}, "torr": {"sig": 3}}},
   "dH": {"kind": "molar_energy", "bounds": (5e3, 1e5),     "answer_units": ["kJ/mol"], "round": {"kJ/mol": {"sig": 3}, "J/mol": {"sig": 3}}},
 }
 # Six kinds of problem from one relation. "slope" is the six-measured-points lab form.
@@ -81,8 +81,8 @@ def pick_unit(rng, name, shown):
     if kind == "temperature":  return "degC" if rng.random() < T_IN_CELSIUS else "K"
     if kind == "molar_energy": return "kJ/mol" if rng.random() < DH_IN_KJ else "J/mol"
     other = [s["unit"] for n, s in shown.items() if VARIABLES[n]["kind"] == "pressure"]
-    if not other: return rng.choice(["atm", "torr", "kPa"])
-    if rng.random() < P_MIXED_FRACTION: return rng.choice([u for u in ("atm", "torr", "kPa") if u != other[0]])
+    if not other: return rng.choice(["atm", "torr"])                       # instructor, 9 Oct: no kPa anywhere in this tutor
+    if rng.random() < P_MIXED_FRACTION: return rng.choice([u for u in ("atm", "torr") if u != other[0]])
     return other[0]
 
 def acceptable(full):
@@ -119,8 +119,6 @@ CONSTANTS = [
   {"label": "zero_C_in_K",    "value": 273.15,   "unit": "K"},
   {"label": "zero_C_in_K_3sf","value": 273.0,    "unit": "K"},
   {"label": "torr_per_atm",   "value": 760.0,    "unit": ""},
-  {"label": "kPa_per_atm",    "value": 101.325,  "unit": ""},
-  {"label": "kPa_per_atm_4sf","value": 101.3,    "unit": ""},
   {"label": "J_per_kJ",       "value": 1000.0,   "unit": ""},
   {"label": "one",            "value": 1.0,      "unit": "", "abs_tol": 1e-9},
   # instructor, 8 Oct: small integers a student writes in prose ("step 2", "two points") are not answers here.
@@ -157,7 +155,7 @@ def targets_for(full, shown, unknown, ans_unit):
     kind = VARIABLES[unknown]["kind"]
     key = from_canon(kind, ans_unit, full[unknown])
     also = []
-    for u in {"temperature": ["K", "degC"], "pressure": ["atm", "torr", "kPa"], "molar_energy": ["kJ/mol", "J/mol"]}[kind]:
+    for u in {"temperature": ["K", "degC"], "pressure": ["atm", "torr"], "molar_energy": ["kJ/mol", "J/mol"]}[kind]:
         if u != ans_unit:
             v = from_canon(kind, u, full[unknown]); also.append({"value": round_sig(v, 6), "unit": u, "abs_tol": round_sig(window(kind, v), 3)})
     out.append(T("value_found", unknown, key, ans_unit, window(kind, key), role="key", require_unit=True, also=also))
@@ -302,7 +300,7 @@ def slope_kind(rng, state, ctx):
       {"state": "meaning_given",   "kind": "text",   "register": "inference", "requires": ["dH_found", "bp_found"], "credit_gate": True},
     ]
     unit = "°C" if ans_T == "degC" else "K"
-    text = (f"Vapor pressure was measured for an unidentified liquid at six temperatures (plots at left). "           # DRAFT
+    text = (f"Vapor pressure was measured for an unidentified {_hidden(ctx)} at six temperatures (plots at left). "    # DRAFT
             f"The straight-line fit is ln(P) = ({m:g} K)(1/T) + {b:g}, with P in torr and T in K. "
             f"Find the heat of vaporization in kJ/mol and the normal boiling point in {unit}.")
     return {"context": {"substance": "unidentified", "true_substance": ctx["substance"]}, "text": text,
@@ -316,13 +314,16 @@ SPECIAL = {"slope": slope_kind}
 # ---- DRAFT problem sentences. Scenarios are the instructor's.
 ASK = {"T2": "At what temperature will its vapor pressure be {P2}?", "T1": "At what temperature is its vapor pressure {P1}?",
        "P2": "What is its vapor pressure at {T2}?", "P1": "What is its vapor pressure at {T1}?",
-       "dH": "What is the molar heat of vaporization of the liquid?"}
+       "dH": "What is the molar heat of vaporization of the {hidden}?"}    # {hidden}: "alcohol" or "liquid", by class (instructor, 9 Oct)
+def _hidden(ctx):
+    """How a problem names a liquid it must not identify: by class when the class is an alcohol (instructor, 9 Oct), else 'liquid'."""
+    return "alcohol" if _subs.get(ctx["substance"], "class") == "alcohol" else "liquid"
 def _fmt(s): return f"{s['value']:g} {'°C' if s['unit'] == 'degC' else s['unit']}"
 def render_text(shown, unknown, ans_unit, ctx):
     f = {n: _fmt(s) for n, s in shown.items()}
-    liquid = "An unidentified liquid" if unknown == "dH" else ctx["substance"].capitalize()
+    liquid = f"An unidentified {_hidden(ctx)}" if unknown == "dH" else ctx["substance"].capitalize()
     pts = []
     if "T1" in f and "P1" in f: pts.append(f"a vapor pressure of {f['P1']} at {f['T1']}")
     if "T2" in f and "P2" in f: pts.append(f"a vapor pressure of {f['P2']} at {f['T2']}")
     dh = "" if unknown == "dH" else f" Its heat of vaporization is {f['dH']}."
-    return f"{liquid} has " + " and ".join(pts) + f".{dh} {ASK[unknown].format(**f)} Report the answer in {'°C' if ans_unit == 'degC' else ans_unit}."
+    return f"{liquid} has " + " and ".join(pts) + f".{dh} {ASK[unknown].format(hidden=_hidden(ctx), **f)} Report the answer in {'°C' if ans_unit == 'degC' else ans_unit}."

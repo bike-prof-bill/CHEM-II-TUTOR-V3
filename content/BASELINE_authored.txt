@@ -104,7 +104,7 @@ csv	content_ch10_cc_openers.csv	The Crushed Cooled Flask	Target concept	Dynamic 
 csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Answer	Alcohol molecules have weaker intermolecular attractions than water, so a larger fraction of particles can overcome cohesive forces at room temperature to evaporate.
 csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	CHAPTER 10	The Rubbing Alcohol Chill
 csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Deterministic Keyword Check:	weaker, intermolecular attractions, cohesive forces, fraction, evaporate, volatility
-csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Liquids this scenario fits (names as in ch10_cc.py; separate with ;)	methanol;ethanol;1-propanol;2-propanol
+csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Liquids this scenario fits (names as in ch10_cc.py; separate with ;)	methanol;ethanol;1-propanol;2-propanol;1-butanol;2-butanol;isobutyl alcohol
 csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Question	Dabbing rubbing alcohol onto skin produces intense cold and rapid drying compared to water, while a vapor monitor logs a towering rate of escaping gas. What are the liquid alcohol molecules doing compared to water molecules that lets them flee into vapor so eagerly?
 csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Target concept	Intermolecular force strength dictating relative vapor pressure and volatility
 csv	content_ch10_cc_openers.csv	The Sealed Syringe Standoff	Answer	Molecules evaporate faster than vapor condenses until dynamic equilibrium is re-established, restoring the equilibrium vapor pressure characteristic of that specific temperature.
@@ -124,7 +124,7 @@ obj	ch10_cc.ASK	P1	"What is its vapor pressure at {T1}?"
 obj	ch10_cc.ASK	P2	"What is its vapor pressure at {T2}?"
 obj	ch10_cc.ASK	T1	"At what temperature is its vapor pressure {P1}?"
 obj	ch10_cc.ASK	T2	"At what temperature will its vapor pressure be {P2}?"
-obj	ch10_cc.ASK	dH	"What is the molar heat of vaporization of the liquid?"
+obj	ch10_cc.ASK	dH	"What is the molar heat of vaporization of the {hidden}?"
 obj	ch10_cc.EQUATION_PICKS	-	{"fits": ["T1", "T2", "P1", "P2", "dH"], "id": "eq_a", "text": "ln(P2/P1) = -(ΔH/R)(1/T2 - 1/T1)"}
 obj	ch10_cc.EQUATION_PICKS	-	{"fits": ["slope"], "id": "eq_b", "text": "ln P = -(ΔH/R)(1/T) + C"}
 obj	ch10_cc.EQUATION_PICKS	-	{"fits": [], "id": "eq_c", "text": "ln(k2/k1) = -(Ea/R)(1/T2 - 1/T1)"}
@@ -167,7 +167,6 @@ obj	ch10_cc.TRAP_NOTES	PRESSURE_UNITS_MIXED	{"ask": "What are the units of each 
 obj	ch10_cc.TRAP_NOTES	SIGN_FLIPPED	{"ask": "As the temperature goes up, should the vapor pressure go up or down, and does your number do that?", "note": "Their number is what results when the negative sign is lost or the ratio is inverted without it."}
 obj	ch10_cc.TRAP_NOTES	SLOPE_SIGN_KEPT	{"ask": "Does it take energy or release energy for a molecule to leave the liquid, and what sign does that give ΔHvap?", "note": "They kept the slope's negative sign on dHvap."}
 prose	ch10_cc	-	, with P in torr and T in K. Find the heat of vaporization in kJ/mol and the normal boiling point in
-prose	ch10_cc	-	An unidentified liquid
 prose	ch10_cc	-	As the temperature goes up, should the vapor pressure go up or down, and does your number do that?
 prose	ch10_cc	-	At what temperature is its vapor pressure {P1}?
 prose	ch10_cc	-	At what temperature will its vapor pressure be {P2}?
@@ -193,14 +192,15 @@ prose	ch10_cc	-	Their rearranged equation holds only if the negative sign is dro
 prose	ch10_cc	-	They kept the slope's negative sign on dHvap.
 prose	ch10_cc	-	They set P = 1 in a line fitted with P in torr.
 prose	ch10_cc	-	They set P = 101.325 in a line fitted with P in torr.
-prose	ch10_cc	-	Vapor pressure was measured for an unidentified liquid at six temperatures (plots at left). The straight-line fit is ln(P) = (
+prose	ch10_cc	-	Vapor pressure was measured for an unidentified
 prose	ch10_cc	-	What are the units of each pressure in your ratio?
 prose	ch10_cc	-	What is its vapor pressure at {T1}?
 prose	ch10_cc	-	What is its vapor pressure at {T2}?
-prose	ch10_cc	-	What is the molar heat of vaporization of the liquid?
+prose	ch10_cc	-	What is the molar heat of vaporization of the {hidden}?
 prose	ch10_cc	-	Which logarithm does this relation use, and which key did you press?
 prose	ch10_cc	-	Which logarithm does this relation use, and which one did you write?
 prose	ch10_cc	-	Write out the units of ΔHvap and of R side by side. Do they cancel?
+prose	ch10_cc	-	at six temperatures (plots at left). The straight-line fit is ln(P) = (
 prose	ch10_cc	-	carbon tetrachloride
 prose	ch10_cc	-	dHvap from the slope
 prose	ch10_cc	-	ln P = -(ΔH/R)(1/T) + C

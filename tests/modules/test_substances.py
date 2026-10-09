@@ -8,7 +8,7 @@ def check(c, m):
     if not c: fails += 1; print("  FAIL:", m)
 for name, rec in S.SUBSTANCES.items():
     for f, v in rec.items():
-        if f in ("formula", "source"): continue
+        if f in ("formula", "class", "source"): continue   # text fields
         check(isinstance(v, (int, float)), f"{name}.{f} is numeric")
         check(f in rec.get("source", {}), f"{name}.{f} names its source")
     if "melting_point_C" in rec and "boiling_point_C" in rec: check(rec["melting_point_C"] < rec["boiling_point_C"], f"{name}: melts below it boils")
