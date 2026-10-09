@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vapour pressure and temperature (DRAFT)</title>
+<!--
+  DRAFT – not for students until the instructor approves it.
+  Date: 9 Oct 2026. Built by Simulation_Claude.
+  Brief (one line): ch10_cc, opener "The Rubbing Alcohol Chill": show how an alcohol's
+    vapour pressure rises with temperature and how the steepness of ln P against 1/T
+    reflects the heat of vaporization; four alcohols; P–T and ln P–1/T views; one
+    temperature slider; no heat of vaporization or boiling point stated in words.
+  Data source: docs/ch10_cc_DATA_TABLE_for_simulations.md (instructor, NIST Chemistry
+    WebBook, 9 Oct 2026): ΔHvap at the normal boiling point, normal boiling point,
+    normal melting point, R = 8.314 J/(mol·K). Model: the tutor's own, a
+    Clausius–Clapeyron line through (normal boiling point, 1 atm) with constant ΔHvap.
+  URL parameters:
+    substance  methanol | ethanol | 1-propanol | 2-propanol (case-insensitive; common
+               synonyms accepted). Default: 2-propanol. An unrecognised value falls back
+               to 2-propanol with a visible notice.
+    theme      light | dark. Default: the system setting.
+  Numbers not from the table (each marked UNVERIFIED below): 273.15 (°C to K),
+    760 torr = 1 atm, the curve's upper margin, the 25.0 °C starting temperature.
+  Nothing is fetched, stored, or sent. Nothing moves unless the student moves it.
+-->
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #fcfcfa;
+    --fg: #1c1d1f;
+    --muted: #4b4f55;
+    --rule: #8a9099;
+    --grid: #e2e4e7;
+    --grid-minor: #eff0f2;
+    --axis: #50555c;
+    --curve: #17508f;
+    --marker: #9c2a1f;
+    --focus: #17508f;
+    --notice-bg: #fff3d1;
+    --notice-fg: #3d2c00;
+    --notice-rule: #8a6a00;
+    --control-bg: #ffffff;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #17191c;
+    --fg: #e9eaec;
+    --muted: #b6bac0;
+    --rule: #7c838c;
+    --grid: #30343a;
+    --grid-minor: #24272b;
+    --axis: #a3a9b1;
+    --curve: #7db3ff;
+    --marker: #ff9d8f;
+    --focus: #9cc5ff;
+    --notice-bg: #3a3010;
+    --notice-fg: #ffe9a8;
+    --notice-rule: #c9a63a;
+    --control-bg: #202328;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--fg); }
+  body {
+    font: 15px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    padding: 10px 14px 12px;
+    max-width: 640px;
+  }
+  h1 { font-size: 1.05rem; font-weight: 600; margin: 0 0 6px; }
+  .notice {
+    margin: 0 0 8px; padding: 6px 10px;
+    background: var(--notice-bg); color: var(--notice-fg);
+    border-left: 4px solid var(--notice-rule); font-size: 0.9rem;
+  }
+  .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin-bottom: 6px; }
+  .controls label, .controls legend { font-size: 0.9rem; }
+  select {
+    font: inherit; font-size: 0.95rem; color: var(--fg); background: var(--control-bg);
+    border: 1px solid var(--rule); border-radius: 4px; padding: 3px 6px; margin-left: 4px;
+  }
+  fieldset { border: 0; margin: 0; padding: 0; display: flex; align-items: center; gap: 4px 12px; flex-wrap: wrap; }
+  legend { float: left; padding: 0; margin-right: 6px; }
+  fieldset label { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+  input[type="radio"] { margin: 0; accent-color: var(--curve); }
+  .plot { position: relative; width: 100%; height: 268px; border: 1px solid var(--grid); }
+  canvas { display: block; width: 100%; height: 100%; }
+  .slider { margin-top: 8px; }
+  .slider-head { display: flex; justify-content: space-between; align-items: baseline; }
+  .slider-head label { font-size: 0.9rem; }
+  output { font-variant-numeric: tabular-nums; font-weight: 600; }
+  input[type="range"] { width: 100%; margin: 4px 0 0; accent-color: var(--curve); }
+  .keys { margin: 2px 0 0; font-size: 0.8rem; color: var(--muted); }
+  .desc { margin: 8px 0 0; font-size: 0.85rem; color: var(--muted); }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  input[type="radio"]:focus-visible { outline-offset: 1px; }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+</style>
+</head>
+<body>
+  <h1>Vapour pressure and temperature</h1>
+  <p class="notice" id="notice" role="status" hidden></p>
+
+  <div class="controls">
+    <label for="substance">Liquid
+      <select id="substance"></select>
+    </label>
+    <fieldset>
+      <legend>View</legend>
+      <label><input type="radio" name="view" value="pt" checked> P against T</label>
+      <label><input type="radio" name="view" value="ln"> ln P against 1/T</label>
+    </fieldset>
+  </div>
+
+  <div class="plot">
+    <canvas id="graph" role="img" aria-label="Graph of the model vapour-pressure curve; description follows below the graph" aria-describedby="desc"></canvas>
+  </div>
+
+  <div class="slider">
+    <div class="slider-head">
+      <label for="temp">Temperature</label>
+      <output id="tempOut" for="temp" aria-hidden="true"></output>
+    </div>
+    <input type="range" id="temp" aria-describedby="keys">
+    <p class="keys" id="keys">Arrow keys: 1 °C. Shift + arrow: 0.1 °C. Page Up / Page Down: 10 °C.</p>
+  </div>
+
+  <p class="desc" id="desc"></p>
+  <div class="sr-only" id="live" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---------------------------------------------------------------------------
+  // DATA. Source: docs/ch10_cc_DATA_TABLE_for_simulations.md (instructor, NIST
+  // Chemistry WebBook, 9 Oct 2026). Heat of vaporization at the normal boiling
+  // point (kJ/mol); normal boiling and melting points (°C). Do not edit these
+  // without changing the table; the problems use the same numbers.
+  // ---------------------------------------------------------------------------
+  var DATA = {
+    'methanol':   { label: 'methanol',   h: 35.2, tb: 64.6, tm: -97.2 },
+    'ethanol':    { label: 'ethanol',    h: 38.6, tb: 78.4, tm: -114.2 },
+    '1-propanol': { label: '1-propanol', h: 41.4, tb: 97.2, tm: -126.2 },
+    '2-propanol': { label: '2-propanol', h: 40.0, tb: 82.4, tm: -89.5 }
+  };
+  var ORDER = ['methanol', 'ethanol', '1-propanol', '2-propanol'];
+  var DEFAULT_SUBSTANCE = '2-propanol';           // from the instructor's brief
+  var R = 8.314;                                   // J/(mol·K), from the table
+
+  var KELVIN_OFFSET = 273.15;   // UNVERIFIED – instructor to confirm (°C to K; must match the problems)
+  var TORR_PER_ATM = 760;       // UNVERIFIED – instructor to confirm (1 atm = 760 torr exactly)
+  var MARGIN_MIN_C = 5;         // UNVERIFIED – instructor to confirm (curve runs at least 5 °C past the boiling point...)
+  var MARGIN_ROUND_C = 10;      // UNVERIFIED – instructor to confirm (...then up to the next multiple of 10 °C, so the end of the curve does not give the boiling point away)
+  var START_T_C = 25.0;         // UNVERIFIED – instructor to confirm (temperature the slider starts at)
+
+  // Other names the tutor might send. Spelling variants only; no chemistry.
+  var ALIASES = {
+    'methyl alcohol': 'methanol',
+    'ethyl alcohol': 'ethanol',
+    'n-propanol': '1-propanol', 'n-propyl alcohol': '1-propanol',
+    'propyl alcohol': '1-propanol', 'propan-1-ol': '1-propanol', '1 propanol': '1-propanol',
+    'isopropanol': '2-propanol', 'isopropyl alcohol': '2-propanol',
+    'propan-2-ol': '2-propanol', '2 propanol': '2-propanol'
+  };
+
+  // ---------------------------------------------------------------------------
+  // Model: ln(P / torr) = ln(760) − (h·1000 / R)(1/T − 1/Tb), T in kelvin.
+  // ---------------------------------------------------------------------------
+  function toK(c) { return c + KELVIN_OFFSET; }
+  function lnP(s, tc) {
+    var d = DATA[s];
+    return Math.log(TORR_PER_ATM) - (d.h * 1000 / R) * (1 / toK(tc) - 1 / toK(d.tb));
+  }
+  function tMin(s) { return DATA[s].tm; }
+  function tMax(s) {
+    return Math.ceil((DATA[s].tb + MARGIN_MIN_C) / MARGIN_ROUND_C - 1e-9) * MARGIN_ROUND_C;
+  }
+
+  // Axes are the same for all four liquids, so switching liquids shows real differences.
+  function floorTo(v, step) { return Math.floor(v / step + 1e-9) * step; }
+  function ceilTo(v, step) { return Math.ceil(v / step - 1e-9) * step; }
+  var allTmin = Math.min.apply(null, ORDER.map(tMin));
+  var allTmax = Math.max.apply(null, ORDER.map(tMax));
+  var maxP = Math.max.apply(null, ORDER.map(function (s) { return Math.exp(lnP(s, tMax(s))); }));
+  var maxLn = Math.max.apply(null, ORDER.map(function (s) { return lnP(s, tMax(s)); }));
+  var minLn = Math.min.apply(null, ORDER.map(function (s) { return lnP(s, tMin(s)); }));
+
+  var VIEWS = {
+    pt: {
+      x: { min: floorTo(allTmin, 20), max: ceilTo(allTmax, 20), grid: 20, labelEvery: 40,
+           fmt: function (v) { return fmtSigned(v, 0); }, title: 'Temperature, T (°C)' },
+      y: { min: 0, max: ceilTo(maxP * 1.05, 200), grid: 200, labelEvery: 200,
+           fmt: function (v) { return String(Math.round(v)); }, title: 'Vapour pressure, P (torr)' },
+      xOf: function (tc) { return tc; },
+      yOf: function (s, tc) { return Math.exp(lnP(s, tc)); }
+    },
+    ln: {
+      x: { min: floorTo(1 / toK(allTmax), 0.0005), max: ceilTo(1 / toK(allTmin), 0.0005),
+           grid: 0.0005, labelEvery: 0.001,
+           fmt: function (v) { return v.toFixed(4); }, title: '1/T (K⁻¹)' },
+      y: { min: floorTo(minLn, 5), max: ceilTo(maxLn, 5), grid: 5, labelEvery: 5,
+           fmt: function (v) { return fmtSigned(v, 0); }, title: 'ln (P / torr)' },
+      xOf: function (tc) { return 1 / toK(tc); },
+      yOf: function (s, tc) { return lnP(s, tc); }
+    }
+  };
+
+  // ---------------------------------------------------------------------------
+  // Formatting
+  // ---------------------------------------------------------------------------
+  var MINUS = '\u2212';
+  function fmtSigned(v, dp) {
+    var t = Math.abs(v).toFixed(dp);
+    return (v < 0 && Number(t) !== 0 ? MINUS : '') + t;
+  }
+  var SUP = { '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '-': '⁻' };
+  function twoSig(x) {
+    if (x >= 0.001) return String(Number(x.toPrecision(2)));
+    var p = x.toExponential(1).split('e');
+    var e = String(Number(p[1])).replace(/./g, function (c) { return SUP[c] || c; });
+    return p[0] + ' × 10' + e;
+  }
+  function threeSig(x) { return String(Number(x.toPrecision(3))); }
+
+  // ---------------------------------------------------------------------------
+  // Page state and URL parameters
+  // ---------------------------------------------------------------------------
+  var params = new URLSearchParams(window.location.search);
+  var state = { s: DEFAULT_SUBSTANCE, view: 'pt', t: START_T_C };
+
+  function resolveSubstance(raw) {
+    var k = raw.trim().toLowerCase().replace(/\s+/g, ' ');
+    if (DATA[k]) return k;
+    if (ALIASES[k]) return ALIASES[k];
+    return null;
+  }
+
+  var notice = document.getElementById('notice');
+  var rawSubstance = (params.get('substance') || '').trim();
+  if (rawSubstance) {
+    var found = resolveSubstance(rawSubstance);
+    if (found) {
+      state.s = found;
+    } else {
+      var shown = rawSubstance.length > 40 ? rawSubstance.slice(0, 40) + '…' : rawSubstance;
+      notice.textContent = 'No data for “' + shown + '” here; showing ' + DATA[DEFAULT_SUBSTANCE].label + '.';
+      notice.hidden = false;
+    }
+  }
+
+  // Theme: ?theme= wins; otherwise follow the system setting and keep following it.
+  var themeParam = (params.get('theme') || '').trim().toLowerCase();
+  var darkQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  function applyTheme() {
+    var t = (themeParam === 'light' || themeParam === 'dark') ? themeParam
+          : (darkQuery && darkQuery.matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', t);
+  }
+  applyTheme();
+  if (darkQuery && themeParam !== 'light' && themeParam !== 'dark') {
+    var onScheme = function () { applyTheme(); draw(); };
+    if (darkQuery.addEventListener) darkQuery.addEventListener('change', onScheme);
+    else if (darkQuery.addListener) darkQuery.addListener(onScheme);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Controls
+  // ---------------------------------------------------------------------------
+  var sel = document.getElementById('substance');
+  ORDER.forEach(function (s) {
+    var o = document.createElement('option');
+    o.value = s; o.textContent = DATA[s].label;
+    sel.appendChild(o);
+  });
+  sel.value = state.s;
+
+  var slider = document.getElementById('temp');
+  var out = document.getElementById('tempOut');
+  slider.step = '0.1';
+
+  function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
+  function round1(v) { return Math.round(v * 10) / 10; }
+
+  function configureSlider() {
+    slider.min = String(tMin(state.s));
+    slider.max = String(tMax(state.s));
+    state.t = round1(clamp(state.t, tMin(state.s), tMax(state.s)));
+    slider.value = String(state.t);
+  }
+  function showSliderValue() {
+    var txt = fmtSigned(state.t, 1) + ' °C';
+    out.textContent = txt;
+    slider.setAttribute('aria-valuetext', fmtSigned(state.t, 1) + ' degrees Celsius');
+  }
+
+  function setT(v) {
+    state.t = round1(clamp(v, tMin(state.s), tMax(state.s)));
+    slider.value = String(state.t);
+    update(true);
+  }
+
+  slider.addEventListener('input', function () {
+    state.t = round1(Number(slider.value));
+    update(true);
+  });
+  slider.addEventListener('keydown', function (e) {
+    var k = e.key, d = null;
+    if (k === 'ArrowRight' || k === 'ArrowUp') d = e.shiftKey ? 0.1 : 1;
+    else if (k === 'ArrowLeft' || k === 'ArrowDown') d = e.shiftKey ? -0.1 : -1;
+    else if (k === 'PageUp') d = 10;
+    else if (k === 'PageDown') d = -10;
+    else if (k === 'Home') { e.preventDefault(); setT(tMin(state.s)); return; }
+    else if (k === 'End') { e.preventDefault(); setT(tMax(state.s)); return; }
+    if (d !== null) { e.preventDefault(); setT(state.t + d); }
+  });
+
+  sel.addEventListener('change', function () {
+    state.s = sel.value;
+    notice.hidden = true;           // the fallback notice no longer describes what is shown
+    notice.textContent = '';
+    configureSlider();
+    update(true);
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="view"]'), function (r) {
+    r.addEventListener('change', function () {
+      if (r.checked) { state.view = r.value; update(true); }
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Drawing
+  // ---------------------------------------------------------------------------
+  var canvas = document.getElementById('graph');
+  var ctx = canvas.getContext('2d');
+  var PAD = { l: 56, r: 26, t: 12, b: 42 };
+
+  function css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+  function isMultiple(v, step) { var q = v / step; return Math.abs(q - Math.round(q)) < 1e-6; }
+
+  function draw() {
+    var w = canvas.clientWidth, h = canvas.clientHeight;
+    if (!w || !h) return;
+    var dpr = window.devicePixelRatio || 1;
+    if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) {
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    var v = VIEWS[state.view], ax = v.x, ay = v.y;
+    var pw = w - PAD.l - PAD.r, ph = h - PAD.t - PAD.b;
+    function X(x) { return PAD.l + (x - ax.min) / (ax.max - ax.min) * pw; }
+    function Y(y) { return PAD.t + (1 - (y - ay.min) / (ay.max - ay.min)) * ph; }
+
+    ctx.fillStyle = css('--bg');
+    ctx.fillRect(0, 0, w, h);
+
+    var font = '12px system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif';
+    ctx.font = font;
+    ctx.lineWidth = 1;
+
+    // grid
+    var i, n, val;
+    n = Math.round((ax.max - ax.min) / ax.grid);
+    for (i = 0; i <= n; i++) {
+      val = ax.min + i * ax.grid;
+      ctx.strokeStyle = isMultiple(val, ax.labelEvery) ? css('--grid') : css('--grid-minor');
+      ctx.beginPath(); ctx.moveTo(Math.round(X(val)) + 0.5, PAD.t); ctx.lineTo(Math.round(X(val)) + 0.5, PAD.t + ph); ctx.stroke();
+    }
+    n = Math.round((ay.max - ay.min) / ay.grid);
+    for (i = 0; i <= n; i++) {
+      val = ay.min + i * ay.grid;
+      ctx.strokeStyle = isMultiple(val, ay.labelEvery) ? css('--grid') : css('--grid-minor');
+      ctx.beginPath(); ctx.moveTo(PAD.l, Math.round(Y(val)) + 0.5); ctx.lineTo(PAD.l + pw, Math.round(Y(val)) + 0.5); ctx.stroke();
+    }
+
+    // axes frame
+    ctx.strokeStyle = css('--axis');
+    ctx.beginPath();
+    ctx.moveTo(PAD.l + 0.5, PAD.t); ctx.lineTo(PAD.l + 0.5, PAD.t + ph + 0.5); ctx.lineTo(PAD.l + pw, PAD.t + ph + 0.5);
+    ctx.stroke();
+
+    // tick labels
+    ctx.fillStyle = css('--fg');
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    n = Math.round((ax.max - ax.min) / ax.grid);
+    for (i = 0; i <= n; i++) {
+      val = ax.min + i * ax.grid;
+      if (!isMultiple(val, ax.labelEvery)) continue;
+      ctx.beginPath(); ctx.moveTo(X(val), PAD.t + ph); ctx.lineTo(X(val), PAD.t + ph + 4); ctx.stroke();
+      // keep the last label inside the frame
+      var lw = ctx.measureText(ax.fmt(val)).width / 2;
+      ctx.fillText(ax.fmt(val), Math.min(X(val), w - 2 - lw), PAD.t + ph + 6);
+    }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    n = Math.round((ay.max - ay.min) / ay.grid);
+    for (i = 0; i <= n; i++) {
+      val = ay.min + i * ay.grid;
+      if (!isMultiple(val, ay.labelEvery)) continue;
+      ctx.beginPath(); ctx.moveTo(PAD.l - 4, Y(val)); ctx.lineTo(PAD.l, Y(val)); ctx.stroke();
+      ctx.fillText(ay.fmt(val), PAD.l - 6, Y(val));
+    }
+
+    // axis titles
+    ctx.font = '600 ' + font;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText(ax.title, PAD.l + pw / 2, h - 4);
+    ctx.save();
+    ctx.translate(13, PAD.t + ph / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textBaseline = 'middle';
+    ctx.fillText(ay.title, 0, 0);
+    ctx.restore();
+    ctx.font = font;
+
+    // clip to the plot area
+    ctx.save();
+    ctx.beginPath(); ctx.rect(PAD.l, PAD.t, pw, ph); ctx.clip();
+
+    // the curve: melting point to tMax only
+    var s = state.s, a = tMin(s), b = tMax(s), steps = 400;
+    ctx.strokeStyle = css('--curve');
+    ctx.lineWidth = 2.5; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.beginPath();
+    for (i = 0; i <= steps; i++) {
+      var tc = a + (b - a) * i / steps;
+      var px = X(v.xOf(tc)), py = Y(v.yOf(s, tc));
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+
+    // marker with dashed guides to both axes
+    var mx = X(v.xOf(state.t)), my = Y(v.yOf(s, state.t));
+    ctx.strokeStyle = css('--marker');
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([5, 4]);
+    ctx.beginPath();
+    ctx.moveTo(mx, my); ctx.lineTo(mx, PAD.t + ph);
+    ctx.moveTo(mx, my); ctx.lineTo(PAD.l, my);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = css('--marker');
+    ctx.strokeStyle = css('--bg');
+    ctx.lineWidth = 2;
+    // a diamond, so the marker differs from the curve by shape as well as colour
+    ctx.beginPath();
+    ctx.moveTo(mx, my - 7); ctx.lineTo(mx + 7, my); ctx.lineTo(mx, my + 7); ctx.lineTo(mx - 7, my);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.restore();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Text description (visible, and read by screen readers via aria-describedby)
+  // ---------------------------------------------------------------------------
+  var desc = document.getElementById('desc');
+  var live = document.getElementById('live');
+
+  function describe() {
+    var s = state.s, d = DATA[s], v = VIEWS[state.view];
+    var lo = fmtSigned(tMin(s), 1) + ' °C', hi = fmtSigned(tMax(s), 0) + ' °C';
+    var t = fmtSigned(state.t, 1) + ' °C';
+    if (state.view === 'pt') {
+      return 'Model curve of vapour pressure in torr (vertical axis, ' + v.y.fmt(v.y.min) + ' to ' + v.y.fmt(v.y.max) +
+        ') against temperature in °C (horizontal axis, ' + v.x.fmt(v.x.min) + ' to ' + v.x.fmt(v.x.max) + ') for ' + d.label +
+        '. The curve starts at ' + lo + ' (below that the substance is solid) and ends at ' + hi +
+        '. It stays close to zero at low temperatures, then rises more and more steeply as the temperature increases. ' +
+        'The marker is at ' + t + ', where the model gives a vapour pressure of about ' + twoSig(Math.exp(lnP(s, state.t))) + ' torr.';
+    }
+    return 'Model plot of ln (P / torr) (vertical axis, ' + v.y.fmt(v.y.min) + ' to ' + v.y.fmt(v.y.max) +
+      ') against 1/T in K⁻¹ (horizontal axis, ' + v.x.fmt(v.x.min) + ' to ' + v.x.fmt(v.x.max) + ') for ' + d.label +
+      '. The points lie on a straight line that falls from upper left to lower right, running from 1/T = ' +
+      threeSig(1 / toK(tMax(s))) + ' K⁻¹ (' + hi + ') to 1/T = ' + threeSig(1 / toK(tMin(s))) + ' K⁻¹ (' + lo +
+      '; below that the substance is solid). The marker is at ' + t + ', where 1/T is about ' +
+      threeSig(1 / toK(state.t)) + ' K⁻¹ and ln (P / torr) is about ' + fmtSigned(lnP(s, state.t), 1) + '.';
+  }
+
+  function shortAnnouncement() {
+    var s = state.s, t = fmtSigned(state.t, 1) + ' °C';
+    if (state.view === 'pt') return DATA[s].label + ', ' + t + ': vapour pressure about ' + twoSig(Math.exp(lnP(s, state.t))) + ' torr.';
+    return DATA[s].label + ', ' + t + ': 1/T about ' + threeSig(1 / toK(state.t)) + ' K⁻¹, ln (P / torr) about ' + fmtSigned(lnP(s, state.t), 1) + '.';
+  }
+
+  var restTimer = null;
+  function update(announce) {
+    showSliderValue();
+    draw();
+    desc.textContent = describe();
+    if (announce) {
+      // announce once the control has come to rest, not on every step of a drag
+      if (restTimer) clearTimeout(restTimer);
+      restTimer = setTimeout(function () { restTimer = null; live.textContent = shortAnnouncement(); }, 700);
+    }
+  }
+
+  // Redraw when the frame changes size; no other timers run.
+  if (window.ResizeObserver) new ResizeObserver(function () { draw(); }).observe(canvas);
+  else window.addEventListener('resize', draw);
+
+  configureSlider();
+  update(false);
+})();
+</script>
+</body>
+</html>
