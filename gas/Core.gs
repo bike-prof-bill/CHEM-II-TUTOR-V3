@@ -36,8 +36,7 @@ var CORE = (function () {
   })(UNITS_DATA);
 
   var SUP = { "⁰": "0", "¹": "1", "²": "2", "³": "3", "⁴": "4", "⁵": "5", "⁶": "6", "⁷": "7", "⁸": "8", "⁹": "9", "⁻": "-", "⁺": "+" };
-  var MECHANISM = ["molecul", "particl", "atom", "ion", "electron", "collid", "collis", "energ", "attract", "escap",
-    "vapor", "vapour", "condens", "surface", "kinetic", "bond", "force", "fraction", "distribut"];
+  var GENERIC_MECHANISM = ["molecul", "particl", "atom", "ion", "electron", "collid", "collis", "energ"];   // used only if the archetype lists none
 
   // ---------- reading what the student typed ----------
   function parseNumbers(msg) {
@@ -76,7 +75,8 @@ var CORE = (function () {
     return best >= (/=/.test(String(message || "")) ? 4 : 3);
   }
 
-  function openerCoverage(text, opener) {
+  function openerCoverage(text, opener, arch) {
+    var MECHANISM = (arch && arch.mechanism_words && arch.mechanism_words.length) ? arch.mechanism_words : GENERIC_MECHANISM;
     var low = String(text || "").toLowerCase(), hits = 0;
     (opener.keywords || []).forEach(function (k) {
       var ok = k.toLowerCase().split(/\s+/).every(function (w) { return w.length < 4 || low.indexOf(w.slice(0, Math.min(6, w.length - 1))) > -1; });
@@ -176,6 +176,12 @@ var CORE = (function () {
     if (!checks.length || String(msg).indexOf("=") < 0) return [];
     var out = [];
     String(msg).split(/\n|;|(?<=[a-z])\.\s/).forEach(function (line) {
+      checks.forEach(function (ck) {                          // "49 = (2x)^2/(0.2-x)^2" is read as "K = ..." when 49 is K
+        for (var sym in (ck.literal_for || {})) {
+          var val = ck.literal_for[sym], m = /^\s*([-+]?\d*\.?\d+(?:[eE][-+]?\d+)?)\s*=/.exec(line);
+          if (m && Math.abs(parseFloat(m[1]) - val) <= 0.01 * Math.abs(val) + 1e-12) line = line.replace(m[1], " " + sym + " ");
+        }
+      });
       var parts = line.split("="); if (parts.length < 2) return;
       var looksSymbolic = Object.keys(eqVarsInText(line, arch)).length >= 2;
       var L = eqSide(parts[parts.length - 2], arch, true), R = eqSide(parts[parts.length - 1], arch, false);
@@ -199,23 +205,38 @@ var CORE = (function () {
     return f;
   }
 
-  // ---------- the board ----------
-  function entry(V, state) { for (var i = 0; i < V.board.length; i++) if (V.board[i].state === state) return V.board[i]; return null; }
+  // ---------- the step map (Change 1): live items, branches, stages ----------
+  function entry(V, state) { for (var i = 0; i < V.board.length; i++) if (V.board[i].id === state) return V.board[i]; return null; }
   function isSet(S, state) { return S.board[state] === "ticked" || S.board[state] === "parked"; }
+  // An item named under a branch option exists only once that option has been picked. Everything else is live.
+  function liveItems(S, V) {
+    var latent = {}, opened = {};
+    V.board.forEach(function (b) {
+      for (var opt in (b.branch || {})) b.branch[opt].forEach(function (id) { latent[id] = 1; if (S.picks[b.id] === opt) opened[id] = 1; });
+    });
+    return V.board.filter(function (b) { return !latent[b.id] || opened[b.id]; });
+  }
+  function isLive(S, V, state) { return liveItems(S, V).some(function (b) { return b.id === state; }); }
   function activeState(S, V) {
-    for (var i = 0; i < V.board.length; i++) {
-      var b = V.board[i];
-      if (!isSet(S, b.state) && b.requires.every(function (r) { return isSet(S, r); })) return b.state;
+    var live = liveItems(S, V);
+    for (var i = 0; i < live.length; i++) {
+      var b = live[i];
+      if (!isSet(S, b.id) && b.requires.every(function (r) { return isSet(S, r); })) return b.id;
     }
     return null;
   }
-  // Correct later work implies the symbolic steps before it. The two free-text bookends are never implied.
+  // Correct later work implies the symbolic steps before it. Text items and `explicit` items are never implied.
   function tick(S, V, state, newly) {
     if (isSet(S, state)) return;
-    var b = entry(V, state); if (!b) return;
-    b.requires.forEach(function (r) { var rb = entry(V, r); if (rb && rb.kind !== "text" && !rb.explicit) tick(S, V, r, newly); });
+    var b = entry(V, state); if (!b || !isLive(S, V, state)) return;
+    b.requires.forEach(function (r) { var rb = entry(V, r); if (rb && rb.kind !== "text" && rb.kind !== "reflection" && !rb.explicit) tick(S, V, r, newly); });
     if (!b.requires.every(function (r) { return isSet(S, r); })) return;
     S.board[state] = "ticked"; newly.push(state);
+    if (b.pin && b.kind === "number") {                        // the accepted value stays on screen
+      var txt = [];
+      V.expected.forEach(function (e, i) { if (e.state === state && S.matched[i]) txt.push(e.label + " = " + e.value + (e.unit ? " " + e.unit : "")); });
+      if (txt.length) addPin(S, state, b.label_when_done || state, txt.join("; "));
+    }
   }
   function stateSatisfied(S, V, state) {
     var b = entry(V, state), idx = [];
@@ -223,6 +244,56 @@ var CORE = (function () {
     if (!idx.length) return false;
     var got = idx.filter(function (i) { return S.matched[i]; }).length;
     return (b.rule === "any") ? got >= 1 : got === idx.length;
+  }
+  function stageOf(V, state) { var b = entry(V, state); return b ? (b.stage || b.id) : state; }
+  // The instructor's moves file: the item's row, with the stage row (`stage:<name>`) filling any empty column.
+  function moveFor(arch, V, state) {
+    var item = arch.moves[state] || {}, st = arch.moves["stage:" + stageOf(V, state)] || {}, out = {};
+    [item, st].forEach(function (src) { for (var k in src) if (src[k] && !out[k]) out[k] = src[k]; });
+    return out;
+  }
+  function addPin(S, id, label, text) {
+    S.pins = S.pins.filter(function (p) { return p.id !== id; }); S.pins.push({ id: id, label: label, text: text });
+  }
+  // Options of a pick or direction item: the archetype's Equations list, or the item's own list.
+  function optionsOf(arch, V, b) {
+    if (b.options_from === "equation_picks") return arch.equation_picks.map(function (e) { return { id: e.id, text: e.text, right: e.fits.indexOf(V.kind) > -1 }; });
+    return (b.options || []).map(function (o) { return { id: o.id, text: o.text, right: (b.right || []).indexOf(o.id) > -1 }; });
+  }
+  function pickItemFor(arch, S, V, optionId) {              // which live, unmet pick/direction item owns this option
+    var live = liveItems(S, V);
+    for (var i = 0; i < live.length; i++) {
+      var b = live[i]; if ((b.kind !== "pick" && b.kind !== "direction") || isSet(S, b.id)) continue;
+      if (optionsOf(arch, V, b).some(function (o) { return o.id === optionId; })) return b;
+    }
+    return null;
+  }
+
+  // ---------- the table kind: a grid of rows (initial, change, equilibrium) over columns; numbers and expressions in x, checked by substitution ----------
+  function parseTableText(msg) {
+    var rows = {}, re = /^\s*(I|C|E|initial|change|equilibrium)\b[\s:|]*(.+)$/i;
+    String(msg).split(/\n/).forEach(function (line) {
+      var m = re.exec(line); if (!m) return;
+      var key = m[1][0].toUpperCase();
+      rows[key] = m[2].split(/\s*[|,\t]\s*|\s{2,}/).map(function (c) { return c.trim(); }).filter(function (c) { return c.length; });
+    });
+    return (rows.C || rows.E) ? rows : null;
+  }
+  function cellEqual(a, b, arch) {                            // two expressions in x agree on three values of x; numbers compare directly
+    var ta = eqTokens(String(a), arch), tb = eqTokens(String(b), arch); if (!ta || !tb || !ta.length || !tb.length) return false;
+    try {
+      var A = eqParse(ta), B = eqParse(tb);
+      return [0.013, 0.027, 0.041].every(function (x) { var va = eqEval(A, { x: x }), vb = eqEval(B, { x: x }); return isFinite(va) && isFinite(vb) && Math.abs(va - vb) <= 1e-9 * Math.max(1, Math.abs(vb)); });
+    } catch (e) { return false; }
+  }
+  function checkTable(rows, V, arch) {                        // -> { ok, wrong: [row letters], missing: [row letters] }
+    var want = V.table, wrong = [], missing = [];
+    ["C", "E"].forEach(function (r) {
+      if (!rows[r]) { missing.push(r); return; }
+      if (rows[r].length !== want.species.length || !rows[r].every(function (c, i) { return cellEqual(c, want.rows[r][i], arch); })) wrong.push(r);
+    });
+    if (rows.I && (rows.I.length !== want.species.length || !rows.I.every(function (c, i) { return cellEqual(c, want.rows.I[i], arch); }))) wrong.push("I");
+    return { ok: !wrong.length && !missing.length, wrong: wrong, missing: missing };
   }
 
   // ---------- matching one number against everything the generator declared ----------
@@ -261,12 +332,18 @@ var CORE = (function () {
     // A bare number that is a declared constant is that constant, before any trap: "step 2" is not the 1.9 K
     // a kJ-for-J slip produces. Typed WITH a unit, the same number cannot be a constant and reaches the traps.
     if (constant !== null && !n.unit) return { type: "constant", id: expected[constant].id };
-    for (var k = 0; k < traps.length; k++) {
+    for (var k = 0; k < traps.length; k++) {                 // value traps first, then bounds
       var tr = traps[k];
-      if (ticked[tr.state]) continue;
+      if (ticked[tr.state] || tr.value === undefined) continue;
       if (!near(n.x, tr.value, tr.abs_tol)) continue;
       if (n.unit && tr.unit && n.unit !== tr.unit) continue;
       return { type: "trap", id: tr.id, trap: tr };
+    }
+    for (var k2 = 0; k2 < traps.length; k2++) {
+      var tb = traps[k2];
+      if (ticked[tb.state] || tb.above === undefined) continue;
+      if (n.unit && tb.unit && n.unit !== tb.unit) continue;
+      if (n.x > tb.above) return { type: "trap", id: tb.id, trap: tb };
     }
     if (given !== null) return { type: "given", id: expected[given].id };
     if (constant !== null) return { type: "constant", id: expected[constant].id };
@@ -281,15 +358,28 @@ var CORE = (function () {
     var V = arch.variants[pick.variantIndex];
     return { attemptId: "A" + pick.stamp, archetypeId: arch.archetype_id, variantId: V.variant_id, variantIndex: pick.variantIndex,
       openerIndex: (V.opener_index !== undefined ? V.opener_index : pick.openerIndex), board: {}, matched: {}, pendingUnit: null, tries: {}, bailed: {}, away: null,
-      awaitingReturn: null, pinned: {}, clean: true, turns: 0, produced: [], done: false, credit: false, simOpen: false };
+      awaitingReturn: null, pinned: {}, pins: [], picks: {}, clean: true, turns: 0, produced: [], done: false, credit: false, simOpen: false, mediaSimOpen: false };
   }
-  function problemPayload(arch, V) {        // what the browser is allowed to have once the account is given
-    return { text: V.text, givens: V.givens, plots: V.reveal_with_problem || null,
+  function problemPayload(arch, V, S) {     // what the browser is allowed to have once the account is given
+    var med = (S && arch.openers[S.openerIndex] && arch.openers[S.openerIndex].media) || {};
+    return { title: arch.title, text: V.text, givens: V.givens, plots: V.reveal_with_problem || null,
+      media: { image: med.image_after_account || "", alt: med.image_alt || "" },
       equations: arch.equation_picks.map(function (e) { return { id: e.id, text: e.text }; }) };
   }
+  function openerMedia(arch, S) {           // what the browser may show WITH the opening question, before anything is earned
+    var med = (arch.openers[S.openerIndex] && arch.openers[S.openerIndex].media) || {};
+    return { image: med.image_with_question || "", alt: med.image_alt || "" };
+  }
+  // Progress counts live items only. Labels are shown for ticked items only; labels ahead stay hidden.
   function progress(S, V) {
-    var n = 0; V.board.forEach(function (b) { if (isSet(S, b.state)) n++; });
-    return { done: n, of: V.board.length };
+    var live = liveItems(S, V), n = 0, labels = [];
+    live.forEach(function (b) { if (isSet(S, b.id)) { n++; if (b.label_when_done) labels.push(b.label_when_done + (S.board[b.id] === "parked" ? " (set aside)" : "")); } });
+    return { done: n, of: live.length, labels: labels };
+  }
+  function choicesFor(arch, S, V) {         // the buttons the page shows when the active item is a pick or direction with its own options
+    var a = activeState(S, V), b = a ? entry(V, a) : null;
+    if (!b || (b.kind !== "pick" && b.kind !== "direction") || b.options_from === "equation_picks") return null;
+    return { item: b.id, kind: b.kind, options: optionsOf(arch, V, b).map(function (o) { return { id: o.id, text: o.text }; }) };
   }
 
   // ---------- prompts ----------
@@ -338,39 +428,71 @@ var CORE = (function () {
       counted_fail: false, after_bailout: false, model_accept: "", second_reader: "", fallback_used: false, structured: "" };
     var notes = [], reply = null, card = null;
     S.turns++;
-    var active = ev.active, b = active ? entry(V, active) : null, move = active ? (arch.moves[active] || {}) : {};
+    var active = ev.active, b = active ? entry(V, active) : null, move = active ? moveFor(arch, V, active) : {};
 
     // --- coming back from the notebook: say what you learned, then carry on. Never counted as a try.
     if (S.awaitingReturn) {
       ev.after_bailout = true; ev.event_type = "RETURN_ACCOUNT";
       if (hasAccount(msg, arch)) { S.awaitingReturn = null; notes.push("The student has just returned from the course notebook and said what they learned. Acknowledge it in a clause, then ask the question for the item above."); }
-      else return finish(arch, S, V, ev, (arch.moves[S.awaitingReturn] || {}).return_ask || "In your own words, what did the notebook show you?", null);
+      else return finish(arch, S, V, ev, moveFor(arch, V, S.awaitingReturn).return_ask || "In your own words, what did the notebook show you?", null);
     }
 
-    // --- a pick from the Equations list
-    if (input.pick) {
-      ev.structured = input.pick;
-      var eq = arch.equation_picks.filter(function (e) { return e.id === input.pick; })[0];
-      if (eq && eq.fits.indexOf(V.kind) > -1) { tick(S, V, "relation_chosen", ev.newly); S.pinned.relation = eq.text; notes.push("The student picked the right relation from the Equations list. Confirmed."); }
-      else { notes.push("The student picked a relation that does not fit this problem. Do not name the right one."); if (active === "relation_chosen") ev.counted_fail = true; }
+    // --- a pick: from the Equations list, from an approach/method list, or a direction. Typed direction words count too.
+    var pickId = input.pick || null;
+    if (!pickId && b && b.kind === "direction" && msg) {
+      var hitsDir = optionsOf(arch, V, b).filter(function (o) { return new RegExp("\\b" + o.text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "i").test(msg); });
+      if (hitsDir.length === 1) pickId = hitsDir[0].id;
+    }
+    if (pickId) {
+      ev.structured = pickId;
+      var pb = pickItemFor(arch, S, V, pickId), opt = pb ? optionsOf(arch, V, pb).filter(function (o) { return o.id === pickId; })[0] : null;
+      if (!pb) notes.push("The student picked an option that belongs to no open item. Ignore it.");
+      else if (opt.right) {
+        tick(S, V, pb.id, ev.newly); S.picks[pb.id] = pickId;
+        if (pb.id === "relation_chosen") S.pinned.relation = opt.text;
+        if (pb.pin) addPin(S, pb.id, pb.label_when_done || pb.id, opt.text);
+        notes.push(pb.kind === "direction" ? "The student's prediction is right. Confirmed by the server. Do not explain why; ask them to." : "The student picked the right option. Confirmed by the server.");
+      } else {
+        notes.push(pb.kind === "direction" ? "The student's prediction is wrong. Do not give the right one. Ask what must be true of the amounts for their prediction to hold."
+                                           : "The student picked an option that does not fit this problem. Do not name the right one.");
+        if (active === pb.id) ev.counted_fail = true;
+      }
     }
 
-    // --- typed equations: each mandatory rearrangement, checked by substitution
-    var eqs = checkEquation(msg, V, arch, S), eqBad = false, eqSeen = eqs.length > 0;
+    // --- a table: structured from the page, or typed as lines beginning I / C / E
+    var tableRows = input.table || (b && b.kind === "table" ? parseTableText(msg) : null), tableSeen = false, tableBad = false;
+    if (tableRows && V.table) {
+      tableSeen = true; var tr = checkTable(tableRows, V, arch); ev.structured = (ev.structured ? ev.structured + " " : "") + "TABLE:" + (tr.ok ? "OK" : tr.wrong.concat(tr.missing).join(""));
+      var tb = V.board.filter(function (x) { return x.kind === "table"; })[0];
+      if (tr.ok) {
+        if (tb && !isSet(S, tb.id)) { tick(S, V, tb.id, ev.newly); if (tb.pin) addPin(S, tb.id, tb.label_when_done || "table", V.table.species.join(" | ") + "\n" + ["I", "C", "E"].map(function (r) { return r + ": " + V.table.rows[r].join(" | "); }).join("\n")); }
+        notes.push("The student's table is right: initial, change and equilibrium rows all check under substitution. Confirmed by the server.");
+      } else {
+        tableBad = true;
+        if (tr.missing.length) notes.push("The table is missing its " + tr.missing.map(function (r) { return ({ C: "change", E: "equilibrium", I: "initial" })[r]; }).join(" and ") + " row. Ask for it; do not supply it.");
+        if (tr.wrong.length) notes.push("TABLE CHECK: the " + tr.wrong.map(function (r) { return ({ C: "change", E: "equilibrium", I: "initial" })[r]; }).join(" and ") + " row does not hold under substitution. Do not correct it. Ask about one cell of THEIR row: how many of that species one reaction event makes or uses.");
+      }
+    }
+
+    // --- typed equations: each mandatory rearrangement or expression, checked by substitution
+    var eqs = tableSeen ? [] : checkEquation(msg, V, arch, S), eqBad = false, eqSeen = eqs.length > 0;
     eqs.forEach(function (eqr) {
       ev.structured = (ev.structured ? ev.structured + " " : "") + "EQ:" + eqr.verdict;
+      var eb = entry(V, eqr.state);
       if (eqr.verdict === "VALID_ISOLATED") {
-        if (isSet(S, "relation_chosen")) { tick(S, V, eqr.state, ev.newly); (S.pinned.rearranged = S.pinned.rearranged || []).push(eqr.shown); notes.push("The student's rearranged equation holds under substitution and the unknown stands alone. Confirmed by the server."); }
-        else notes.push("Their rearranged equation is valid, but they have not yet picked the relation from the Equations list. Ask them to do that first.");
+        if (!isLive(S, V, eqr.state) || !eb.requires.every(function (r) { return isSet(S, r); })) notes.push("Their equation is valid, but an earlier item is not yet established. Ask them to do that first.");
+        else { tick(S, V, eqr.state, ev.newly); (S.pinned.rearranged = S.pinned.rearranged || []).push(eqr.shown); if (eb.pin) addPin(S, eqr.state, eb.label_when_done || eqr.state, eqr.shown); notes.push("The student's equation holds under substitution and the unknown stands alone. Confirmed by the server."); }
       } else if (eqr.verdict === "HOLDS_NOT_ISOLATED") notes.push("Their equation is algebraically true but the unknown does not yet stand alone on the left. That is progress, not an error. Ask what operation is still in the way. Do not do it for them.");
       else if (eqr.verdict === "TRAP") { eqBad = true; ev.traps.push(eqr.trap); notes.push("EQUATION CHECK (" + eqr.trap + "): " + arch.trap_notes[eqr.trap].note + " Work on THEIR expression, one step at a time. Do not write the correct form."); }
-      else if (eqr.verdict === "WRONG") { eqBad = true; notes.push("EQUATION CHECK: their rearrangement does not hold when the server substitutes values. Read what they wrote, not what they meant (an unbracketed denominator is a real error). Ask about one step of THEIR algebra. Do not write the correct form."); }
+      else if (eqr.verdict === "WRONG") { eqBad = true; notes.push("EQUATION CHECK: their equation does not hold when the server substitutes values. Read what they wrote, not what they meant (an unbracketed denominator is a real error). Ask about one step of THEIR algebra. Do not write the correct form."); }
       else notes.push("The server could not read their equation. Ask them to retype it on one line with brackets around every numerator and denominator.");
     });
 
-    // --- numbers
-    // numbers are read only from lines that are not symbolic algebra
-    var numText = String(msg).split(/\n|;/).filter(function (line) { return !(line.indexOf("=") > -1 && Object.keys(eqVarsInText(line, arch)).length >= 2); }).join("\n");
+    // --- numbers: read only from lines that are neither symbolic algebra nor table rows
+    var numText = String(msg).split(/\n|;/).filter(function (line) {
+      if (line.indexOf("=") > -1 && Object.keys(eqVarsInText(line, arch)).length >= 2) return false;
+      if (tableSeen && /^\s*(I|C|E|initial|change|equilibrium)\b/i.test(line)) return false;
+      return true; }).join("\n");
     var nums = parseNumbers(numText), strays = 0, unitOnly = (!nums.length && S.pendingUnit !== null) ? parseNumbers("1 " + msg)[0] : null;
     if (unitOnly && unitOnly.unit) {                       // "K" sent on its own after a bare number
       var pt = V.expected[S.pendingUnit.idx];
@@ -387,32 +509,38 @@ var CORE = (function () {
       else if (c.type === "wrong_dimension") { ev.guards.push("WRONG_DIMENSION"); strays++; notes.push("The number is right for one step but carries a unit of a different kind of quantity (" + c.typed + "). Do not accept it. Ask what kind of quantity that value measures."); }
       else if (c.type === "stray") strays++;
     });
-    V.board.forEach(function (bb) { if (bb.kind === "number" && !isSet(S, bb.state) && stateSatisfied(S, V, bb.state)) tick(S, V, bb.state, ev.newly); });
-    ev.newly.forEach(function (s) { if (entry(V, s).kind === "number") notes.push("Established and checked by the server: " + s.replace(/_/g, " ") + "."); });
+    liveItems(S, V).forEach(function (bb) { if (bb.kind === "number" && !isSet(S, bb.id) && stateSatisfied(S, V, bb.id)) tick(S, V, bb.id, ev.newly); });
+    ev.newly.forEach(function (st) { var e = entry(V, st); if (e && e.kind === "number") notes.push("Established and checked by the server: " + (e.label_when_done || st.replace(/_/g, " ")) + "."); });
     var keyWaiting = V.expected.some(function (t, i) { return t.role === "key" && S.matched[i] && !isSet(S, t.state); }) &&
-                     V.board.some(function (bb) { return bb.kind === "equation" && !isSet(S, bb.state); });
-    if (keyWaiting) notes.push("Their final value is right and is recorded, but it does not count until the rearranged relation is on the board. Say so plainly and ask for the rearrangement.");
-    if (eqBad && b && b.kind === "equation") ev.counted_fail = true;
-    else if (eqSeen && !eqBad) { /* a readable, true equation is never a wrong try */ }
-    else if (b && b.kind !== "text" && !ev.newly.length && S.pendingUnit === null && (ev.traps.length || strays)) {
+                     liveItems(S, V).some(function (bb) { return (bb.kind === "equation" || bb.kind === "table") && !isSet(S, bb.id); });
+    if (keyWaiting) notes.push("Their final value is right and is recorded, but it does not count until the symbolic step before it is on the board. Say so plainly and ask for that step.");
+    if ((eqBad && b && b.kind === "equation") || (tableBad && b && b.kind === "table")) ev.counted_fail = true;
+    else if ((eqSeen && !eqBad) || (tableSeen && !tableBad)) { /* a readable, true equation or table is never a wrong try */ }
+    else if (b && b.kind !== "text" && b.kind !== "reflection" && !ev.newly.length && S.pendingUnit === null && (ev.traps.length || strays)) {
       ev.counted_fail = true; if (strays && !ev.traps.length) notes.push("The student's number does not match anything the server expects at this point. Do not confirm it.");
     }
 
     // --- recompute where we are after deterministic ticking
-    active = activeState(S, V); b = active ? entry(V, active) : null; move = active ? (arch.moves[active] || {}) : {};
-    var judge = !!(b && b.kind === "text" && ev.active === active && !input.pick), gateOK = true;
+    active = activeState(S, V); b = active ? entry(V, active) : null; move = active ? moveFor(arch, V, active) : {};
+    // the reflection: a sentence of their own closes it; never graded, never a wrong try
+    if (b && b.kind === "reflection" && ev.active === active && !pickId && msg) {
+      if (hasAccount(msg, arch)) { tick(S, V, active, ev.newly); notes.push("The student has written their reflection. Acknowledge it in a clause; do not grade it."); active = activeState(S, V); b = active ? entry(V, active) : null; move = active ? moveFor(arch, V, active) : {}; }
+      else notes.push("The reflection needs a sentence of their own. Ask again, plainly.");
+    }
+    var judge = !!(b && b.kind === "text" && ev.active === active && !pickId && !tableSeen), gateOK = true;
     if (judge) {
       if (!hasAccount(msg, arch)) { gateOK = false; notes.push("The message is not yet an account: no sentence of their own. Do not accept."); }
       else if (active === "account_given") {
-        var cov = openerCoverage(msg, arch.openers[S.openerIndex]);
+        var cov = openerCoverage(msg, arch.openers[S.openerIndex], arch);
         if (!cov.engaged) { gateOK = false; ev.guards.push("OPENER_NOT_ENGAGED"); notes.push("The account touches nothing in the opening scenario and says nothing about particles. Do not accept. Ask what the particles in THIS scenario are doing."); }
       }
     }
 
-    // --- the model speaks (and, for the two text states, judges)
+    // --- the model speaks (and, for the text items, judges)
     var ctx = { progress: progress(S, V), active: active, register: b ? b.register : "", ask: move.ask, notes: notes, judge: judge && gateOK };
     var accepted = false, kind = /\?\s*$/.test(msg) && !nums.length ? "question" : "answer";
-    var willBail = ev.counted_fail && b && b.kind !== "text" && ((S.tries[ev.active] || 0) + 1) >= 2;   // known before any model call
+    var failStage = ev.active ? stageOf(V, ev.active) : null;
+    var willBail = ev.counted_fail && b && b.kind !== "text" && ((S.tries[failStage] || 0) + 1) >= 2;   // known before any model call
     if (!willBail) {
       var out = model ? safe(model, buildSystem(arch, S, V, ctx), history, msg) : null;
       if (out) {
@@ -432,33 +560,42 @@ var CORE = (function () {
     }
     if (kind === "question" || kind === "offtopic") ev.counted_fail = false;
 
-    // --- wrong-try ladder: 1 -> ask from another account, 2 -> notebook card, 2 more after return -> park
+    // --- wrong-try ladder, PER STAGE: 1 -> ask from another account, 2 -> notebook card, 2 more after return -> park the stage
     var failState = ev.active;
     if (ev.counted_fail && failState && !isSet(S, failState)) {
-      S.tries[failState] = (S.tries[failState] || 0) + 1;
-      var fm = arch.moves[failState] || {};
-      if (S.tries[failState] >= 2 && !S.bailed[failState]) {
-        S.bailed[failState] = true; S.tries[failState] = 0; S.away = { state: failState, since: input.now || 0 };
+      var stg = stageOf(V, failState);
+      S.tries[stg] = (S.tries[stg] || 0) + 1;
+      var fm = moveFor(arch, V, failState);
+      if (S.tries[stg] >= 2 && !S.bailed[stg]) {
+        S.bailed[stg] = true; S.tries[stg] = 0; S.away = { state: failState, stage: stg, since: input.now || 0 };
         ev.event_type = "BAILOUT_ISSUED";
         card = { prompt: fm.notebook_prompt || "", url: arch.notebook_url, return_ask: fm.return_ask || "" };
         reply = "Let's pause here. Copy the prompt below into the course notebook, work through what it gives you, then come back and press I'm back.";
-      } else if (S.tries[failState] >= 2) {
-        S.board[failState] = "parked"; S.clean = false; ev.event_type = "PARK"; ev.newly.push(failState + "(parked)");
-        var pk = (V.eq_checks || []).filter(function (k) { return k.state === failState; })[0];
-        if (pk) { fm = { park_text: pk.park_text }; (S.pinned.rearranged = S.pinned.rearranged || []).push(pk.park_text); }
-        if (failState === "relation_chosen") { var right = arch.equation_picks.filter(function (e) { return e.fits.indexOf(V.kind) > -1; })[0]; if (right) S.pinned.relation = right.text; }
-        V.board.forEach(function (bb) { if (bb.kind === "number" && !isSet(S, bb.state) && stateSatisfied(S, V, bb.state)) tick(S, V, bb.state, ev.newly); });
-        var nxt = activeState(S, V), nm = nxt ? (arch.moves[nxt] || {}) : {};
-        reply = (fm.park_text ? "Here is that piece so you can keep going: " + fm.park_text + " " : "We will set that piece aside. ") + (nm.ask || "");
-      } else if (S.tries[failState] === 1 && !ev.traps.length && fm.switch_ask && !model) reply = fm.switch_ask;
-      else if (S.tries[failState] === 1 && fm.switch_ask && model && !ev.traps.length) {
+      } else if (S.tries[stg] >= 2) {
+        ev.event_type = "PARK"; S.clean = false;
+        var handed = [];
+        liveItems(S, V).forEach(function (bb) {
+          if (isSet(S, bb.id) || stageOf(V, bb.id) !== stg) return;
+          S.board[bb.id] = "parked"; ev.newly.push(bb.id + "(parked)");
+          var pk = (V.eq_checks || []).filter(function (k) { return k.state === bb.id; })[0];
+          var pm = moveFor(arch, V, bb.id);
+          if (pk) { (S.pinned.rearranged = S.pinned.rearranged || []).push(pk.park_text); addPin(S, bb.id, bb.label_when_done || bb.id, pk.park_text); handed.push(pk.park_text); }
+          else if (bb.kind === "table" && V.table) { var tt = ["I", "C", "E"].map(function (r) { return r + ": " + V.table.rows[r].join(" | "); }).join("  "); addPin(S, bb.id, bb.label_when_done || "table", tt); handed.push(tt); }
+          else if (bb.kind === "pick" || bb.kind === "direction") { var right = optionsOf(arch, V, bb).filter(function (o) { return o.right; })[0]; if (right) { S.picks[bb.id] = right.id; if (bb.id === "relation_chosen") S.pinned.relation = right.text; if (bb.pin) addPin(S, bb.id, bb.label_when_done || bb.id, right.text); handed.push(right.text); } }
+          else if (pm.park_text) handed.push(pm.park_text);
+        });
+        liveItems(S, V).forEach(function (bb) { if (bb.kind === "number" && !isSet(S, bb.id) && stateSatisfied(S, V, bb.id)) tick(S, V, bb.id, ev.newly); });
+        var nxt = activeState(S, V), nm = nxt ? moveFor(arch, V, nxt) : {};
+        reply = (handed.length ? "Here is that piece so you can keep going: " + handed.join(" ; ") + " " : "We will set that piece aside. ") + (nm.ask || "");
+      } else if (S.tries[stg] === 1 && !ev.traps.length && fm.switch_ask && !model) reply = fm.switch_ask;
+      else if (S.tries[stg] === 1 && fm.switch_ask && model && !ev.traps.length) {
         ctx.extra = "They are stuck inside one account. Move them to a different one. Ask toward this instead: " + fm.switch_ask; ctx.judge = false;
         var sw = safe(model, buildSystem(arch, S, V, ctx), history, msg); if (sw) reply = sw.socratic_response;
       }
     }
 
     // --- nothing unchecked reaches the student: leak guard, one rewrite, then the authored question
-    var nowActive = activeState(S, V), nowMove = nowActive ? (arch.moves[nowActive] || {}) : {};
+    var nowActive = activeState(S, V), nowMove = nowActive ? moveFor(arch, V, nowActive) : {};
     if (reply && !card) {
       var leaked = unearned(reply, S, V);
       if (leaked.length) {
@@ -471,7 +608,7 @@ var CORE = (function () {
     }
     if (!reply) {                                           // offline mode, model failure, or guard failure
       ev.fallback_used = true;
-      var ack = ev.newly.length ? "Checked: " + ev.newly.map(function (s) { return s.replace(/_/g, " "); }).join(", ") + ". " : "";
+      var ack = ev.newly.length ? "Checked: " + ev.newly.map(function (st) { var e = entry(V, st.replace(/\(parked\)$/, "")); return (e && e.label_when_done) || st.replace(/_/g, " "); }).join(", ") + ". " : "";
       var trapAsk = ev.traps.length && arch.trap_notes[ev.traps[0]] ? arch.trap_notes[ev.traps[0]].ask : "";
       reply = nowActive ? ack + (trapAsk || (S.pendingUnit !== null ? "What are the units of that value?" : (nowMove.ask || arch.openers[S.openerIndex].question)))
                         : ack + "That completes this problem.";
@@ -487,23 +624,30 @@ var CORE = (function () {
     var ev = { event_type: "BAILOUT_RETURN", entering: progress(S, V).done, active: S.away ? S.away.state : "", newly: [], traps: [], guards: [],
       counted_fail: false, after_bailout: true, seconds_away: S.away ? Math.round(((now || 0) - S.away.since) / 1000) : "" };
     var st = S.away ? S.away.state : null; S.awaitingReturn = st; S.away = null;
-    return finish(arch, S, V, ev, (st && arch.moves[st] && arch.moves[st].return_ask) || "In your own words, what did the notebook show you?", null);
+    return finish(arch, S, V, ev, (st && moveFor(arch, V, st).return_ask) || "In your own words, what did the notebook show you?", null);
   }
 
+  var GATE_OF_KIND = { text: "G2", pick: "G1", direction: "G1", number: "G0", equation: "G0", table: "G0", reflection: "none" };
   function finish(arch, S, V, ev, reply, card) {
-    var res = { reply: reply, progress: progress(S, V), card: card || null, pinned: S.pinned };
-    if (ev.newly.indexOf("account_given") > -1 || ev.newly.indexOf("account_given(parked)") > -1) res.problem = problemPayload(arch, V);
+    var res = { reply: reply, progress: progress(S, V), card: card || null, pinned: S.pinned, pins: S.pins, choices: choicesFor(arch, S, V) };
+    if (ev.newly.indexOf("account_given") > -1 || ev.newly.indexOf("account_given(parked)") > -1) res.problem = problemPayload(arch, V, S);
     var simState = V.board.filter(function (b) { return b.opens_sim; })[0];
-    if (!S.simOpen && ((simState && isSet(S, simState.state)) || (!simState && activeState(S, V) === "meaning_given"))) { S.simOpen = true; res.sim = V.sim; }
+    var simDue = (simState && isSet(S, simState.id)) || (!simState && activeState(S, V) === "meaning_given");
+    if (V.sim && !S.simOpen && simDue) { S.simOpen = true; res.sim = V.sim; }
+    // the instructor's own simulation page, if the opener names one: opens with the problem, or at the meaning stage
+    var med = (arch.openers[S.openerIndex] && arch.openers[S.openerIndex].media) || {};
+    if (med.simulation && !S.mediaSimOpen && ((med.simulation_opens === "account" && isSet(S, "account_given")) || (med.simulation_opens !== "account" && simDue))) {
+      S.mediaSimOpen = true; res.simulation_url = med.simulation;
+    }
     if (!S.done && activeState(S, V) === null) {
       S.done = true; S.credit = S.clean && S.board["meaning_given"] === "ticked"; ev.completed = true;
     }
     res.done = S.done; res.credit = S.credit;
     var a = ev.active ? entry(V, ev.active) : null;
     res.log = { event_type: ev.event_type, attempt_id: S.attemptId, archetype_id: S.archetypeId, variant_id: S.variantId, problem_kind: V.kind,
-      content_version: arch.content_version, state: ev.active || "", register: a ? a.register : "",
-      face: a ? ({ pick: "choice", number: "check", equation: "check", text: "why" })[a.kind] : "", gate: a ? (a.kind === "text" ? "G2" : (a.kind === "pick" ? "G1" : "G0")) : "",
-      entering_done: ev.entering, leaving_done: res.progress.done, newly: ev.newly.join(","), tries_on_state: ev.active ? (S.tries[ev.active] || 0) : "",
+      content_version: arch.content_version, state: ev.active || "", stage: a ? a.stage : "", register: a ? a.register : "",
+      face: a ? a.face : "", gate: a ? GATE_OF_KIND[a.kind] : "",
+      entering_done: ev.entering, leaving_done: res.progress.done, newly: ev.newly.join(","), tries_on_stage: a ? (S.tries[a.stage] || 0) : "",
       counted_fail: ev.counted_fail, after_bailout: !!ev.after_bailout, seconds_away: ev.seconds_away || "", trap_ids: (ev.traps || []).join(","),
       structured: ev.structured || "", model_accept: ev.model_accept === undefined ? "" : ev.model_accept, second_reader: ev.second_reader || "",
       guards: (ev.guards || []).join(","), fallback_used: !!ev.fallback_used, turn_kind: ev.turn_kind || "", clean: S.clean, done: S.done, credit: S.credit };
@@ -511,6 +655,7 @@ var CORE = (function () {
   }
 
   return { parseNumbers: parseNumbers, hasAccount: hasAccount, openerCoverage: openerCoverage, newSession: newSession, match: match, units: UNITS,
-    processTurn: processTurn, processBack: processBack, checkEquation: checkEquation, activeState: activeState, progress: progress, problemPayload: problemPayload };
+    processTurn: processTurn, processBack: processBack, checkEquation: checkEquation, checkTable: checkTable, parseTableText: parseTableText,
+    activeState: activeState, liveItems: liveItems, progress: progress, problemPayload: problemPayload, openerMedia: openerMedia };
 })();
 if (typeof module !== "undefined") module.exports = CORE;

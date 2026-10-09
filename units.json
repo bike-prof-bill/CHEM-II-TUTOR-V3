@@ -37,6 +37,25 @@
         "mol": -1,
         "K": -1
       }
+    },
+    "concentration": {
+      "canonical": "M",
+      "dim": {
+        "mol": 1,
+        "L": -1
+      }
+    },
+    "amount": {
+      "canonical": "mol",
+      "dim": {
+        "mol": 1
+      }
+    },
+    "volume": {
+      "canonical": "L",
+      "dim": {
+        "L": 1
+      }
     }
   },
   "units": {
@@ -157,6 +176,57 @@
         "kJ/mol K",
         "kJ/mol/K",
         "kJ mol⁻¹ K⁻¹"
+      ]
+    },
+    "M": {
+      "dimension": "concentration",
+      "factor": 1,
+      "offset": 0,
+      "aliases": [
+        "M",
+        "mol/L",
+        "mol L⁻¹",
+        "molar"
+      ]
+    },
+    "mM": {
+      "dimension": "concentration",
+      "factor": 0.001,
+      "offset": 0,
+      "aliases": [
+        "mM"
+      ]
+    },
+    "mol": {
+      "dimension": "amount",
+      "factor": 1,
+      "offset": 0,
+      "aliases": [
+        "mol",
+        "moles",
+        "mole"
+      ]
+    },
+    "L": {
+      "dimension": "volume",
+      "factor": 1,
+      "offset": 0,
+      "aliases": [
+        "L",
+        "liters",
+        "liter",
+        "litres",
+        "litre",
+        "dm³"
+      ]
+    },
+    "mL": {
+      "dimension": "volume",
+      "factor": 0.001,
+      "offset": 0,
+      "aliases": [
+        "mL",
+        "cm³"
       ]
     }
   }

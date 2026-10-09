@@ -15,7 +15,7 @@ const fmtU = u => u === "degC" ? "°C" : u;
   ok(!r.done && /units/i.test(r.reply), "bare key asks for units"); r = say(S, fmtU(k.unit));
   ok(S.board.value_found !== "ticked" && S.board.T_in_K === "ticked", "right number is recorded but does NOT count before the rearrangement");
   r = say(S, "", null, { pick: "eq_a" }); ok(r.pinned.relation && r.pinned.relation.indexOf("ln(P2/P1)") === 0, "picked relation is pinned");
-  r = say(S, "1/T2 = 1/T1 - (R/ΔHvap) ln(P2/P1)"); ok(S.board.rearranged !== "ticked" && !S.tries.rearranged && /EQ:HOLDS_NOT_ISOLATED/.test(r.log.structured), "true but not isolated: progress, not a wrong try");
+  r = say(S, "1/T2 = 1/T1 - (R/ΔHvap) ln(P2/P1)"); ok(S.board.rearranged !== "ticked" && !S.tries.setup && /EQ:HOLDS_NOT_ISOLATED/.test(r.log.structured), "true but not isolated: progress, not a wrong try");
   r = say(S, "so T2 = 1/(1/T1 - R·ln(P2/P1)/ΔHvap)"); ok(S.board.rearranged === "ticked" && r.pinned.rearranged[0].indexOf("T2 =") === 0, "isolated form accepted and pinned");
   ok(S.board.value_found === "ticked", "the number typed earlier now counts, without retyping");
   ok(r.sim && r.sim.measured_degC_torr.length === 6, "sim released on value");
@@ -26,7 +26,7 @@ const fmtU = u => u === "degC" ? "°C" : u;
 { const i = find("P2") > -1 ? find("P2") : find("T2"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 1, stamp: "t2" });
   let calls = 0; const model = () => { calls++; return { accept: 1, turn_kind: "answer", socratic_response: "What happens next?" }; };
   say(S, "The water molecules at the surface gain energy and escape into the vapor bubbles.", model);
-  say(S, "", model, { pick: "eq_c" }); ok(S.tries.relation_chosen === 1, "wrong pick counts once");
+  say(S, "", model, { pick: "eq_c" }); ok(S.tries.setup === 1, "wrong pick counts once (ladder is per stage: setup)");
   say(S, "", model, { pick: "eq_a" }); ok(S.board.relation_chosen === "ticked", "right pick ticks");
   say(S, V.eq_checks[0].park_text, model); ok(S.board.rearranged === "ticked", "canonical rearrangement accepted");
   const trap = V.traps[0]; let before = calls;
@@ -59,7 +59,7 @@ const fmtU = u => u === "degC" ? "°C" : u;
   say(S, "It is at dynamic equilibrium obviously."); ok(S.board.account_given !== "ticked", "label with no particles or scenario does not clear");
   const S2 = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "t5b" });
   say(S2, "Molecules with enough kinetic energy escape the surface of the liquid."); say(S2, "which R do I use?");
-  ok(!S2.tries.relation_chosen, "a question costs nothing"); }
+  ok(!S2.tries.setup, "a question costs nothing"); }
 
 // 6. slope kind, and number reading
 { const i = ARCH.variants.findIndex(v => v.kind === "slope"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 2, stamp: "t6" });
@@ -68,7 +68,7 @@ const fmtU = u => u === "degC" ? "°C" : u;
   r = say(S, dh.value.toFixed(1) + " kJ/mol"); ok(S.board.dH_found !== "ticked", "slope: right ΔHvap does not count before its rearrangement");
   r = say(S, "ΔHvap = slope·R"); ok(r.log.trap_ids === "EQ_SIGN_FLIPPED", "slope: kept sign in the algebra is named");
   r = say(S, "ΔHvap = -m R / 1000"); ok(S.board.rearranged_dH === "ticked" && S.board.dH_found === "ticked", "slope: kJ form accepted; earlier number now counts");
-  r = say(S, "ln P = m/T + b"); ok(S.board.rearranged_T !== "ticked" && !S.tries.rearranged_T, "slope: the line itself is not yet T alone");
+  const triesBefore = S.tries.setup || 0; r = say(S, "ln P = m/T + b"); ok(S.board.rearranged_T !== "ticked" && (S.tries.setup || 0) === triesBefore, "slope: the line itself is not yet T alone, and not a wrong try");
   r = say(S, "Tb = m / (ln(760) - b)\nTb = " + bp.value.toFixed(1) + " " + fmtU(bp.unit)); ok(S.board.rearranged_T === "ticked" && S.board.bp_found === "ticked", "slope: rearrangement and value in one message");
   ok(r.pinned.rearranged.length === 2, "slope: both rearrangements pinned"); }
 { const n = CORE.parseNumbers("T2 = 351.5 K, P1=394 torr, 3.86×10⁴ J/mol, 1.2e-3 atm, H2O, 38,600 J");
@@ -94,6 +94,14 @@ const fmtU = u => u === "degC" ? "°C" : u;
 // 6d. openers and variants align (instructor, 20 Sept)
 { let bad = 0; ARCH.variants.forEach((V, i) => { const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 99, stamp: "o" + i }), op = ARCH.openers[S.openerIndex];
     const liquid = V.context.true_substance || V.context.substance; if (!op || op.liquids.indexOf(liquid) < 0) bad++; }); ok(bad === 0, bad + " problems whose liquid does not fit their scenario"); }
+
+// 6e. the step map is a schema: every item carries id, stage, kind, register, face, requires; labels appear only once ticked
+{ let bad = 0; ARCH.variants.forEach(V => V.board.forEach(b => { if (!(b.id && b.stage && b.kind && b.register && b.face && Array.isArray(b.requires) && "branch" in b && "pin" in b && "label_when_done" in b)) bad++; }));
+  ok(bad === 0, bad + " items missing schema fields");
+  const i = find("T2"), S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "lbl" });
+  let r = say(S, "hi"); ok(r.progress.labels.length === 0 && r.progress.of === ARCH.variants[i].board.length, "no labels before anything is ticked");
+  r = say(S, "More molecules have enough energy to escape the liquid surface as it warms.");
+  ok(r.progress.labels.length === 1 && r.progress.labels[0] === ARCH.moves.account_given.label_when_done, "the ticked item's label appears: " + JSON.stringify(r.progress.labels)); }
 
 // 7. every variant of every kind can be completed by a student who types only the key(s)
 { let bad = 0; ARCH.variants.forEach((V, i) => { const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: i % 6, stamp: "v" + i });

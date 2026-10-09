@@ -31,8 +31,9 @@ ROOT = Path(__file__).resolve().parent.parent
 CSV_GLOBS = ["content_*.csv", "content/*.csv"]
 MODULES = {                      # module -> names of authored objects
     "ch10_cc": ["TITLE", "RELATION_TEXT", "SUBSTANCES", "EQUATION_PICKS", "TRAP_NOTES", "ASK"],
+    "ch13_ice": ["TITLE", "RELATION_TEXT", "EQUATION_PICKS", "TRAP_NOTES"],
 }
-TRAP_ID_MODULES = ["ch10_cc"]    # modules whose TRAPS list carries authored ids
+TRAP_ID_MODULES = ["ch10_cc"]    # modules whose TRAPS list carries authored ids (ch13_ice's trap ids live in its code paths)
 PROSE_FILES = ["archetypes/*.py"]
 PROSE_MIN = 20
 

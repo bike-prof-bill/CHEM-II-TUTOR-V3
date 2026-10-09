@@ -1,10 +1,10 @@
 # Runs on every push and pull request.
 #   modules-and-regression   per-module tests and the regression tests named for their faults   must pass
-#   generator   python test_ch10_cc.py        must pass   (600/600)
-#   verifier    node gas/test_core.js          must pass   (47/47)
+#   generator   python test_ch10_cc.py + test_ch13_ice.py   must pass
+#   verifier    node gas/test_core.js + gas/test_ice.js       must pass
 #   generated   committed Archetype_ch10_cc.gs and bundle.json == run.py output   must pass
 #   content     every authored string in content/BASELINE_authored.txt still present, unchanged   must pass
-#   purity      chemistry words in the tutor shell   advisory until step 3 (then delete continue-on-error)
+#   purity      chemistry words in the tutor shell   must pass (zero hits) since step 3
 name: tests
 on: [push, pull_request]
 
@@ -53,8 +53,7 @@ jobs:
       - run: make content-check
 
   purity:
-    runs-on: ubuntu-latest
-    continue-on-error: true   # step 3 removes this line; the spec requires zero hits then
+    runs-on: ubuntu-latest   # required since step 3: the tutor shell names no chemistry
     steps:
       - uses: actions/checkout@v4
       - run: make purity

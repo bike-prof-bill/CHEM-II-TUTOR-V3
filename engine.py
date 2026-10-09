@@ -124,6 +124,7 @@ def validate(v):
         if not CONSTANT_COLLISIONS_REJECT and "constant" in (a["role"], b["role"]) and "key" not in (a["role"], b["role"]): continue
         if _collide(a, b, lambda ta, tb: max(ta, tb)): reasons.append(("ambiguous", a["id"], b["id"]))
     for tr in v["traps"]:
+        if "value" not in tr: continue                       # a bound ("above": x) is not a value and cannot collide
         for e in E:
             if e.get("state") == tr["state"] and _collide(e, tr, lambda ta, tb: CLEARANCE * ta):
                 reasons.append(("trap_near_expected", tr["id"], e["id"]))
@@ -133,7 +134,10 @@ def validate(v):
             if _collide(k, g, lambda ta, tb: CLEARANCE * ta, convert_too=True): reasons.append(("given_near_key", g["id"], k["id"]))
     return reasons
 
-def _slug(s): return "".join(c if c.isalnum() else "_" for c in s).strip("_")
+def _slug(s):
+    out = "".join(c if c.isalnum() else "_" for c in s)
+    while "__" in out: out = out.replace("__", "_")
+    return out.strip("_")
 
 def declare(v, A):
     """Turn the archetype's intermediates, key(s), givens and constants into the `expected` table."""
@@ -156,20 +160,27 @@ def declare(v, A):
         if "for_state" in tr: tr["state"] = tr.pop("for_state")
     return v
 
-def make_variant(A, seed, kind=None, tries=60, liquids=None):
+def make_variant(A, seed, kind=None, tries=60, liquids=None, moves=None, fixed=None):
     rng = random.Random(seed)
     for _ in range(tries):
-        state, context = A.draw_state(rng, liquids)
-        k = kind or rng.choice(A.KINDS)
-        if k in getattr(A, "SPECIAL", {}):
-            v = A.SPECIAL[k](rng, state, context)
+        if fixed is not None:                                    # a fixed problem (no random state): one shot
+            v = A.make_fixed(rng, fixed)
+            if v is None: break
+            k = v["kind"]
         else:
-            v = _standard(A, rng, state, context, k)
+            state, context = A.draw_state(rng, liquids)
+            k = kind or rng.choice(A.KINDS)
+            if k in getattr(A, "SPECIAL", {}):
+                v = A.SPECIAL[k](rng, state, context)
+            else:
+                v = _standard(A, rng, state, context, k)
         if v is None: continue
         declare(v, A)                                            # steps 5-6 -> one table
+        stamp_board(v, A, moves)                                 # the step map as a schema
         reasons = validate(v)                                    # step 7
         if reasons:
             for r in reasons: REJECTS[r[0]] += 1
+            if fixed is not None: raise RuntimeError(f"{A.ID}: fixed problem {fixed} is ambiguous: {reasons}")
             continue
         v.update({"variant_id": f"{A.ID}:{seed}", "archetype_id": A.ID, "seed": seed, "kind": k})
         return v
@@ -202,6 +213,38 @@ def _standard(A, rng, state, context, unknown):
             "reveal_with_problem": None, "sim": A.sim_payload(full, unknown, rng),
             "eq_checks": A.equation_check(rng, unknown)}
 
+# ---------- the step map as a schema (rebuild spec, Change 1) ----------
+FACE_OF_KIND = {"pick": "choice", "direction": "choice", "number": "check", "equation": "check", "table": "check", "text": "why", "reflection": "why"}
+KINDS_OF_ITEM = set(FACE_OF_KIND)
+
+def stamp_board(v, A, moves):
+    """Every item gets the full schema: id, stage, kind, register, face, requires, branch, label_when_done, pin,
+    explicit, credit_gate. `stage` and `label_when_done` come from the instructor's moves file (by item id);
+    an item with no stage is its own stage, which is the pre-rebuild behaviour."""
+    moves = moves or {}
+    seen = set()
+    for b in v["board"]:
+        b["id"] = b.get("id") or b["state"]; b["state"] = b["id"]
+        if b["id"] in seen: raise RuntimeError(f"{A.ID}: duplicate step-map item {b['id']}")
+        seen.add(b["id"])
+        if b["kind"] not in KINDS_OF_ITEM: raise RuntimeError(f"{A.ID}: item {b['id']} has unknown kind {b['kind']}")
+        row = moves.get(b["id"], {})
+        b["stage"] = (row.get("stage") or "").strip() or b.get("stage") or b["id"]
+        b["face"] = b.get("face") or FACE_OF_KIND[b["kind"]]
+        b.setdefault("requires", []); b.setdefault("branch", None); b.setdefault("pin", False)
+        b.setdefault("explicit", False); b.setdefault("credit_gate", False)
+        b["label_when_done"] = (row.get("label_when_done") or "").strip() or b.get("label_when_done") or ""
+        if b["kind"] in ("pick", "direction") and not b.get("options") and not b.get("options_from"):
+            raise RuntimeError(f"{A.ID}: {b['kind']} item {b['id']} declares no options")
+    ids = seen
+    for b in v["board"]:
+        for r in b["requires"]:
+            if r not in ids: raise RuntimeError(f"{A.ID}: item {b['id']} requires unknown item {r}")
+        for opt, items in (b["branch"] or {}).items():
+            for it in items:
+                if it not in ids: raise RuntimeError(f"{A.ID}: branch {b['id']}:{opt} names unknown item {it}")
+    return v
+
 def read_openers(path):
     """Instructor's CSV: title, question, model answer, target concept, keywords."""
     out = []
@@ -211,28 +254,41 @@ def read_openers(path):
                         "target": r[3].strip(), "keywords": [k.strip() for k in r[4].split(",") if k.strip()],
                         "liquids": [x.strip() for x in (r[5] if len(r) > 5 else "").split(";") if x.strip()],
                         "kinds":   [x.strip() for x in (r[6] if len(r) > 6 else "").split(";") if x.strip()]})
+            out[-1]["fits"] = out[-1]["liquids"]        # what this scenario fits: liquids for one archetype, problem ids for another
+            col = lambda j: (r[j].strip() if len(r) > j else "")
+            out[-1]["media"] = {"image_with_question": col(7), "image_after_account": col(8), "image_alt": col(9),
+                                "simulation": col(10), "simulation_opens": (col(11) or "meaning").lower()}   # instructor's pictures and simulation, optional
     return out
 
 def read_moves(path):
-    """Instructor's CSV: one row per board state. The narrative lives here."""
-    return {r["state"]: r for r in csv.DictReader(open(path, encoding="utf-8-sig"))}
+    """Instructor's CSV: one row per step-map item, keyed by the `state` column (the item id). A row whose
+    `state` is `stage:<name>` gives stage-level defaults for switch_ask, notebook_prompt, return_ask, park_text."""
+    return {r["state"].strip(): r for r in csv.DictReader(open(path, encoding="utf-8-sig")) if r.get("state", "").strip()}
 
 def build(A, n_per_kind, seed0=1, openers=None, moves=None):
     """OPENERS AND VARIANTS ALIGN (instructor, 20 Sept). Problems are made FOR a scenario: each opener names the
     liquids it fits, and every variant is born attached to one opener. No opener, no problem."""
     variants, seed = [], seed0
+    fixed_pool = getattr(A, "FIXED", None)                       # a list of fixed problems instead of a generator
+    known = [f["id"] for f in fixed_pool] if fixed_pool else [s[0] for s in A.SUBSTANCES]
     if openers:
-        known = [s[0] for s in A.SUBSTANCES]
         for oi, op in enumerate(openers):
-            bad = [x for x in op["liquids"] if x not in known]
-            if bad or not op["liquids"]: raise SystemExit(f"Opener '{op['title']}': liquids column is empty or names an unknown liquid {bad}. Known: {known}")
-            for k in (op["kinds"] or A.KINDS):
-                for _ in range(n_per_kind):
-                    v = make_variant(A, seed, k, liquids=op["liquids"]); v["opener_index"] = oi; variants.append(v); seed += 1
+            bad = [x for x in op["fits"] if x not in known]
+            if bad or not op["fits"]: raise SystemExit(f"Opener '{op['title']}': the fits column is empty or names something unknown {bad}. Known: {known}")
+            if fixed_pool:
+                for fid in op["fits"]:
+                    v = make_variant(A, seed, moves=moves, fixed=fid); v["opener_index"] = oi; variants.append(v); seed += 1
+            else:
+                for k in (op["kinds"] or A.KINDS):
+                    for _ in range(n_per_kind):
+                        v = make_variant(A, seed, k, liquids=op["fits"], moves=moves); v["opener_index"] = oi; variants.append(v); seed += 1
+    elif fixed_pool:
+        for f in fixed_pool: variants.append(make_variant(A, seed, moves=moves, fixed=f["id"])); seed += 1
     else:
         for k in A.KINDS:
-            for _ in range(n_per_kind): variants.append(make_variant(A, seed, k)); seed += 1
-    out = {"contract": 2, "archetype_id": A.ID, "title": A.TITLE, "relation": A.RELATION_TEXT, "notebook_url": A.NOTEBOOK_URL,
+            for _ in range(n_per_kind): variants.append(make_variant(A, seed, k, moves=moves)); seed += 1
+    out = {"contract": 3, "archetype_id": A.ID, "title": A.TITLE, "relation": A.RELATION_TEXT, "notebook_url": A.NOTEBOOK_URL,
+           "kinds": list(A.KINDS), "mechanism_words": list(getattr(A, "MECHANISM_WORDS", [])),
            "equation_picks": A.EQUATION_PICKS, "trap_notes": A.TRAP_NOTES, "equation_symbols": A.EQUATION_SYMBOLS, "equation_constants": A.EQUATION_CONSTANTS, "openers": openers or [], "moves": moves or {}, "variants": variants}
     out["content_version"] = hashlib.sha1(json.dumps(out, sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:10]
     return out

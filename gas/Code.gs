@@ -34,7 +34,7 @@ function checkModels() {
   Logger.log("All usable models:\n" + names.join("\n"));
 }
 
-function doGet() { return json_({ alive: true, build: BUILD_STAMP, archetypes: Object.keys(ARCHETYPES) }); }
+function doGet() { return json_({ alive: true, build: BUILD_STAMP, archetypes: Object.keys(ARCHETYPES).map(function (k) { return { id: k, title: ARCHETYPES[k].title, kinds: ARCHETYPES[k].kinds }; }) }); }
 
 function doPost(e) {
   var t0 = Date.now();
@@ -43,7 +43,7 @@ function doPost(e) {
     if (req.authToken !== props.getProperty("APP_TOKEN")) return json_({ error: "unauthorized" });
     if (req.turnId) { var seen = cache.get("v3turn_" + req.turnId); if (seen) return text_(seen); }    // a retry replays, never regrades
     var sid = String(req.sessionId || ""), student = req.studentId || "Guest (No Extra Credit)";
-    var arch = ARCHETYPES[req.archetypeId || "ch10_cc"]; if (!arch) return json_({ error: "unknown archetype" });
+    var arch = ARCHETYPES[req.archetypeId] || ARCHETYPES[Object.keys(ARCHETYPES)[0]]; if (!arch) return json_({ error: "unknown archetype" });
     var S = sid ? JSON.parse(cache.get("v3s_" + sid) || "null") : null, res, meta = { model: "", ms: 0 };
 
     if (req.action === "start" || req.action === "reset") {
@@ -51,7 +51,7 @@ function doPost(e) {
       var pool = []; arch.variants.forEach(function (v, i) { if (!req.kind || v.kind === req.kind) pool.push(i); });
       S = CORE.newSession(arch, { variantIndex: pool[Math.floor(Math.random() * pool.length)],
         openerIndex: Math.floor(Math.random() * arch.openers.length), stamp: Date.now().toString(36) + Math.floor(Math.random() * 1296).toString(36) });
-      res = { reply: arch.openers[S.openerIndex].question, progress: CORE.progress(S, arch.variants[S.variantIndex]), notebook_url: arch.notebook_url,
+      res = { reply: arch.openers[S.openerIndex].question, progress: CORE.progress(S, arch.variants[S.variantIndex]), notebook_url: arch.notebook_url, title: arch.title, media: CORE.openerMedia(arch, S),
         log: { event_type: "PROBLEM_OPEN", attempt_id: S.attemptId, archetype_id: S.archetypeId, variant_id: S.variantId,
                problem_kind: arch.variants[S.variantIndex].kind, content_version: arch.content_version } };
     } else {
@@ -59,7 +59,7 @@ function doPost(e) {
       var rate = parseInt(cache.get("v3rate_" + sid) || "0", 10); if (rate >= 60) return json_({ error: "rate limit reached, please wait" });
       cache.put("v3rate_" + sid, String(rate + 1), 3600);
       if (req.action === "back") res = CORE.processBack(arch, S, Date.now());
-      else res = CORE.processTurn(arch, S, { message: req.message || "", pick: req.pick || null, history: (req.history || []).slice(-10), now: Date.now() },
+      else res = CORE.processTurn(arch, S, { message: req.message || "", pick: req.pick || null, table: req.table || null, history: (req.history || []).slice(-10), now: Date.now() },
                                   props.getProperty("GEMINI_API_KEY") ? function (sys, hist, msg) { return gemini_(props, sys, hist, msg, meta); } : null);
       (req.simEvents || []).slice(0, 20).forEach(function (ev) {
         log_(props, { event_type: "SIM", attempt_id: S.attemptId, archetype_id: S.archetypeId, variant_id: S.variantId, content_version: arch.content_version,

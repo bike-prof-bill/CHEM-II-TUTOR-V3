@@ -49,6 +49,10 @@ DH_IN_KJ         = 0.85   # how often dHvap is shown in kJ/mol
 ONE_ATM_POINT    = 0.35   # how often one point is the normal boiling point
 SPAN_BELOW_BP, SPAN_ABOVE_BP = 60.0, 25.0
 
+# ---- words that mark a particle-level account in this chapter (moved out of the shell, 8 Oct; list unchanged).
+MECHANISM_WORDS = ["molecul", "particl", "atom", "ion", "electron", "collid", "collis", "energ", "attract", "escap",
+                   "vapor", "vapour", "condens", "surface", "kinetic", "bond", "force", "fraction", "distribut"]
+
 # ---- INSTRUCTOR: the unnamed Equations list the student picks from. `fits` says which kinds it is right for.
 EQUATION_PICKS = [
   {"id": "eq_a", "text": "ln(P2/P1) = -(ΔH/R)(1/T2 - 1/T1)", "fits": ["T1", "T2", "P1", "P2", "dH"]},
@@ -102,10 +106,10 @@ def board_for(shown, unknown):
     if "dH" in shown and shown["dH"]["unit"] == "kJ/mol":                        need.append("dH_in_J")
     if "P1" in shown and "P2" in shown and shown["P1"]["unit"] != shown["P2"]["unit"]: need.append("P_same_units")
     b = [{"state": "account_given",   "kind": "text",   "register": "submicro",  "requires": []},
-         {"state": "relation_chosen", "kind": "pick",   "register": "symbolic",  "requires": ["account_given"]},
+         {"state": "relation_chosen", "kind": "pick",   "register": "symbolic",  "requires": ["account_given"], "options_from": "equation_picks", "pin": True},
          # instructor, 20 Sept: the student HAS TO rearrange for the unknown. `explicit` = never implied by a right number.
-         {"state": "rearranged",      "kind": "equation", "register": "symbolic", "requires": ["relation_chosen"], "explicit": True}]
-    b += [{"state": s, "kind": "number", "register": "symbolic", "requires": ["account_given"],
+         {"state": "rearranged",      "kind": "equation", "register": "symbolic", "requires": ["relation_chosen"], "explicit": True, "pin": True}]
+    b += [{"state": s, "kind": "number", "register": "symbolic", "requires": ["account_given"], "pin": True,
            "rule": "any" if s == "P_same_units" else "all"} for s in need]
     b += [{"state": "substituted",   "kind": "number", "register": "symbolic",  "requires": ["rearranged"] + need, "rule": "any"},
           {"state": "value_found",   "kind": "number", "register": "macro",     "requires": ["substituted"], "rule": "all", "opens_sim": True},
@@ -268,7 +272,7 @@ def sim_payload(full, unknown, rng):
     lo, hi = min(full["T1"], full["T2"]) - 8.0, max(full["T1"], full["T2"]) + 8.0
     pts, m, b = measured(rng, full["dH"], full["T1"], full["P1"], lo, hi)
     return {"measured_degC_torr": pts, "fit_slope_K": round(m, 1), "fit_intercept": round(b, 2),
-            "problem_points_K_atm": [[round(full["T1"], 2), float(f"{full['P1']:.4g}")], [round(full["T2"], 2), float(f"{full['P2']:.4g}")]],
+            "problem_points": [[round(full["T1"] - 273.15, 2), float(f"{full['P1'] * 760.0:.4g}")], [round(full["T2"] - 273.15, 2), float(f"{full['P2'] * 760.0:.4g}")]],   # in the plot's own units
             "asked_point": 1 if unknown in ("T1", "P1") else (2 if unknown in ("T2", "P2") else 0)}
 
 # ---- SPECIAL KIND: six measured points -> dHvap from the slope, then the normal boiling point.
@@ -297,10 +301,10 @@ def slope_kind(rng, state, ctx):
     ]
     board = [
       {"state": "account_given",   "kind": "text",   "register": "submicro",  "requires": []},
-      {"state": "relation_chosen", "kind": "pick",   "register": "symbolic",  "requires": ["account_given"]},
-      {"state": "rearranged_dH",   "kind": "equation", "register": "symbolic", "requires": ["relation_chosen"], "explicit": True},
+      {"state": "relation_chosen", "kind": "pick",   "register": "symbolic",  "requires": ["account_given"], "options_from": "equation_picks", "pin": True},
+      {"state": "rearranged_dH",   "kind": "equation", "register": "symbolic", "requires": ["relation_chosen"], "explicit": True, "pin": True},
       {"state": "dH_found",        "kind": "number", "register": "symbolic",  "requires": ["rearranged_dH"], "rule": "all"},
-      {"state": "rearranged_T",    "kind": "equation", "register": "symbolic", "requires": ["relation_chosen"], "explicit": True},
+      {"state": "rearranged_T",    "kind": "equation", "register": "symbolic", "requires": ["relation_chosen"], "explicit": True, "pin": True},
       {"state": "bp_found",        "kind": "number", "register": "macro",     "requires": ["rearranged_T"], "rule": "all"},
       {"state": "meaning_given",   "kind": "text",   "register": "inference", "requires": ["dH_found", "bp_found"], "credit_gate": True},
     ]

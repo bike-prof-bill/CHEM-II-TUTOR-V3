@@ -6,7 +6,7 @@
 # SHELL_FILES lists every file that must know no chemistry. Data and chemistry
 # files are not searched. Until step 3 this reports; CI does not block on it.
 cd "$(dirname "$0")/.."
-SHELL_FILES="engine.py gas/Core.gs gas/local_server.js index.html"
+SHELL_FILES="engine.py run.py gas/Core.gs gas/Code.gs gas/local_server.js index.html"
 # Step 4 module split adds: gas/parse.js gas/match.js gas/stepmap.js gas/ladder.js gas/guards.js gas/prompt.js gas/log.js
 WORDS='\bice\b|clausius|kelvin|atm'
 hits=0

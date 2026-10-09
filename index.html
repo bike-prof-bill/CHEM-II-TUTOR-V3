@@ -61,12 +61,11 @@
 </head>
 <body>
 <header>
-  <h1>Gen Chem II Tutor<small id="build">V3 · Clausius-Clapeyron</small></h1>
+  <h1>Gen Chem II Tutor<small id="build">V3</small></h1>
   <span id="meter" aria-live="polite"></span>
   <input type="text" id="studentId" placeholder="Student ID" aria-label="Student ID" style="width:130px">
-  <select id="kind" aria-label="Problem kind (testing)">
-    <option value="">any kind</option><option>T2</option><option>P2</option><option>T1</option><option>P1</option><option value="dH">ΔHvap</option><option value="slope">slope from data</option>
-  </select>
+  <select id="arch" aria-label="Archetype (testing)"></select>
+  <select id="kind" aria-label="Problem kind (testing)"><option value="">any kind</option></select>
   <button id="newBtn">New problem</button>
   <a id="nbLink" class="quiet" target="_blank" rel="noopener" style="color:var(--teal);font-size:14px">Notebook</a>
   <button class="quiet" id="setBtn" aria-label="Connection settings">Settings</button>
@@ -76,6 +75,7 @@
   <section id="left">
     <div class="card">
       <h2>The problem</h2>
+      <img id="openerImg" alt="" style="display:none;max-width:100%;border-radius:8px;margin:0 0 10px">
       <div id="problemText" class="veil">The problem is not on screen yet. First answer the question in the chat about what the particles are doing. Then it appears here.</div>
       <div id="givens"></div>
       <div style="margin-top:12px"><button class="quiet" id="eqBtn" disabled>Equations</button></div>
@@ -84,7 +84,9 @@
       <h2>Your symbols</h2>
       <div class="pin" id="pinRel" style="display:none"><span>relation you chose</span><code></code></div>
       <div class="pin" id="pinRe" style="display:none"><span>rearranged for the unknown</span><code></code></div>
+      <div id="pinList"></div>
     </div>
+    <div class="card" id="doneCard" style="display:none"><h2>Established</h2><ul id="doneList" style="margin:0;padding-left:18px;font-size:14px"></ul></div>
     <div class="card" id="plotCard" style="display:none">
       <h2 id="plotTitle">Measured vapor pressures</h2>
       <div class="plots"><div><canvas id="linChart" height="230"></canvas></div><div><canvas id="expChart" height="230"></canvas></div></div>
@@ -93,6 +95,10 @@
         <input type="range" id="probeT" step="0.5">
         <div>At <output id="probeTout"></output> the fitted line gives <output id="probePout"></output></div>
       </div>
+    </div>
+    <div class="card" id="simCard" style="display:none">
+      <h2>Simulation</h2>
+      <iframe id="simFrame" title="Simulation" style="width:100%;height:640px;border:0;border-radius:8px;background:#fff"></iframe>
     </div>
     <div id="debug"></div>
   </section>
@@ -133,7 +139,7 @@ let sessionId = "", history = [], busy = false, away = false, simEvents = [], fi
 
 // ---------- talking to the server ----------
 async function call(payload) {
-  const body = JSON.stringify(Object.assign({ authToken: cfg.token, sessionId, studentId: $("studentId").value.trim(), archetypeId: "ch10_cc",
+  const body = JSON.stringify(Object.assign({ authToken: cfg.token, sessionId, studentId: $("studentId").value.trim(), archetypeId: $("arch").value || undefined,
     turnId: (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2)) }, payload));
   for (let attempt = 0; attempt < 2; attempt++) {            // Apps Script's redirect hop sometimes drops a reply; same turnId makes a retry safe
     try {
@@ -147,14 +153,21 @@ async function call(payload) {
 // ---------- chat ----------
 function add(cls, text) { const d = document.createElement("div"); d.className = "msg " + cls; d.textContent = text; $("log").appendChild(d); $("log").scrollTop = 1e9; return d; }
 function setBusy(b) { busy = b; $("sendBtn").disabled = b || away || !sessionId; $("box").disabled = b || away || !sessionId; $("newBtn").disabled = b; }
-function meter(p) { if (!p) { $("meter").innerHTML = ""; return; } let h = ""; for (let i = 0; i < p.of; i++) h += `<i class="${i < p.done ? "on" : ""}"></i>`; $("meter").innerHTML = h + `<span style="margin-left:6px">${p.done} of ${p.of}</span>`; }
+function meter(p) { if (!p) { $("meter").innerHTML = ""; $("doneCard").style.display = "none"; return; } let h = ""; for (let i = 0; i < p.of; i++) h += `<i class="${i < p.done ? "on" : ""}"></i>`; $("meter").innerHTML = h + `<span style="margin-left:6px">${p.done} of ${p.of}</span>`;
+  const L = p.labels || []; $("doneCard").style.display = L.length ? "block" : "none"; $("doneList").innerHTML = ""; L.forEach(t => { const li = document.createElement("li"); li.textContent = t; $("doneList").appendChild(li); }); }
+// choices the server offers for the active item (approach, method, prediction): buttons under the reply
+function showChoices(c) { document.querySelectorAll(".choices").forEach(e => e.remove()); if (!c) return;
+  const d = document.createElement("div"); d.className = "msg choices"; c.options.forEach(o => { const b = document.createElement("button"); b.className = "eq"; b.textContent = o.text; b.onclick = () => send({ pick: o.id }); d.appendChild(b); }); $("log").appendChild(d); $("log").scrollTop = 1e9; }
 
 function handle(res, echo) {
   if (!res || res.error) { add("note err", (res && res.error) || "No reply."); return; }
   if (echo) history.push({ role: "user", text: echo });
   if (res.reply) { add("tutor", res.reply); history.push({ role: "model", text: res.reply }); history = history.slice(-12); }
   if (res.notebook_url) $("nbLink").href = res.notebook_url;
-  meter(res.progress); showPinned(res.pinned);
+  if (res.title) $("build").textContent = "V3 · " + res.title;
+  if (res.media && res.media.image) showImage(res.media);                    // the picture that goes with the opening question
+  if (res.simulation_url) { $("simCard").style.display = "block"; $("simFrame").src = "media/" + res.simulation_url; add("note", "A simulation is open on the left."); }
+  meter(res.progress); showPinned(res.pinned, res.pins); showChoices(res.choices);
   if (res.problem) showProblem(res.problem);
   if (res.sim) openSim(res.sim);
   if (res.card) showCard(res.card);
@@ -166,28 +179,32 @@ async function send(extra) {
   if (text) { add("me", text); $("box").value = ""; }
   flushProbe(); setBusy(true);
   const res = await call(Object.assign({ action: "turn", message: text, history, simEvents }, extra || {})); simEvents = [];
-  setBusy(false); handle(res, text || (extra && extra.pick ? "[picked an equation]" : "")); $("box").focus();
+  setBusy(false); handle(res, text || (extra && extra.pick ? "[picked: " + extra.pick + "]" : "")); $("box").focus();
 }
 
 async function newProblem() {
   if (!cfg.url || !cfg.token) { openSettings(); return; }
   sessionId = "S" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); history = []; away = false; fit = null;
-  $("log").innerHTML = ""; $("problemText").className = "veil"; $("givens").textContent = ""; $("eqBtn").disabled = true; showPinned(null); $("plotCard").style.display = "none"; $("probe").style.display = "none";
+  $("log").innerHTML = ""; $("problemText").className = "veil"; $("givens").textContent = ""; $("eqBtn").disabled = true; showPinned(null); showChoices(null); $("plotCard").style.display = "none"; $("probe").style.display = "none"; $("openerImg").style.display = "none"; $("simCard").style.display = "none"; $("simFrame").src = "about:blank";
   $("problemText").textContent = "The problem is not on screen yet. First answer the question in the chat about what the particles are doing. Then it appears here.";
   setBusy(true); const res = await call({ action: "start", kind: $("kind").value }); setBusy(false);
   $("box").placeholder = "Say what the particles are doing…"; handle(res); $("box").focus();
 }
 
 // ---------- the symbolic reminder: stays on screen for the rest of the problem ----------
-function showPinned(p) {
-  p = p || {}; const pretty = t => String(t).replace(/\*/g, "·").replace(/\bdH(vap)?\b/g, "ΔHvap");
+function showPinned(p, pins) {
+  p = p || {}; pins = pins || []; const pretty = t => String(t).replace(/\*/g, "·").replace(/\bdH(vap)?\b/g, "ΔHvap");
+  const generic = pins.filter(x => x.id !== "relation_chosen" && !/^rearranged/.test(x.id));   // those two keep their own slots
   [["pinRel", p.relation], ["pinRe", (p.rearranged || []).join("\n")]].forEach(([id, t]) => { $(id).style.display = t ? "block" : "none"; if (t) $(id).querySelector("code").textContent = pretty(t); });
-  $("pinCard").style.display = (p.relation || p.rearranged) ? "block" : "none";
+  $("pinList").innerHTML = ""; generic.forEach(x => { const d = document.createElement("div"); d.className = "pin"; d.innerHTML = "<span></span><code></code>"; d.querySelector("span").textContent = x.label; d.querySelector("code").textContent = pretty(x.text); $("pinList").appendChild(d); });
+  $("pinCard").style.display = (p.relation || p.rearranged || generic.length) ? "block" : "none";
 }
 
 // ---------- the problem, the equations ----------
 let equations = [];
+function showImage(m) { const im = $("openerImg"); im.src = "media/" + m.image; im.alt = m.alt || ""; im.style.display = "block"; }
 function showProblem(p) {
+  if (p.media && p.media.image) showImage(p.media);                          // the full picture, now that the account is given
   $("problemText").className = ""; $("problemText").textContent = p.text;
   $("box").placeholder = "Your working, or a question…";   // givens are NOT listed as T1, P1…: sorting them is the student's job
   equations = p.equations || []; $("eqBtn").disabled = false;
@@ -204,7 +221,7 @@ function drawPlots(d, title, withProblemPoints) {
   const pts = d.measured_degC_torr, lin = pts.map(([t, p]) => ({ x: 1 / (t + 273.15), y: Math.log(p) })), ex = pts.map(([t, p]) => ({ x: t, y: p }));
   const xs = lin.map(q => q.x), lo = Math.min(...pts.map(q => q[0])) - 5, hi = Math.max(...pts.map(q => q[0])) + (d.mark_P_torr ? 25 : 5);
   const curve = []; for (let t = lo; t <= hi; t += (hi - lo) / 60) curve.push({ x: t, y: Math.exp(fit.m / (t + 273.15) + fit.b) });
-  const marks = withProblemPoints && d.problem_points_K_atm ? d.problem_points_K_atm.map(([K, atm], i) => ({ x: K - 273.15, y: atm * 760, asked: d.asked_point === i + 1 })) : [];
+  const marks = withProblemPoints && d.problem_points ? d.problem_points.map(([px, py], i) => ({ x: px, y: py, asked: d.asked_point === i + 1 })) : [];
   const base = { responsive: true, animation: false, plugins: { legend: { labels: { boxWidth: 10, font: { size: 11 } } } } };
   Object.values(charts).forEach(c => c.destroy());
   charts.lin = new Chart($("linChart"), { type: "scatter", data: { datasets: [
@@ -246,7 +263,7 @@ function showCard(card) {
 
 // ---------- settings ----------
 function openSettings() { $("cfgUrl").value = cfg.url; $("cfgTok").value = cfg.token; $("cfgMsg").textContent = ""; $("setDlg").showModal(); }
-$("cfgSave").onclick = () => { cfg = { url: $("cfgUrl").value.trim(), token: $("cfgTok").value.trim() }; store.set("v3_url", cfg.url); store.set("v3_token", cfg.token); $("setDlg").close(); };
+$("cfgSave").onclick = () => { cfg = { url: $("cfgUrl").value.trim(), token: $("cfgTok").value.trim() }; store.set("v3_url", cfg.url); store.set("v3_token", cfg.token); $("setDlg").close(); fillMenus(); };
 $("cfgTest").onclick = async () => { $("cfgMsg").textContent = "Testing…"; try { const r = await fetch($("cfgUrl").value.trim()); const j = await r.json(); $("cfgMsg").textContent = j.alive ? "Server alive. Build " + j.build + "." : "Unexpected reply."; } catch (e) { $("cfgMsg").textContent = "No answer. Is the URL the /exec one, deployed with access: Anyone?"; } };
 
 // ---------- wiring ----------
@@ -255,7 +272,14 @@ $("box").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey
 $("probeT").addEventListener("input", () => moveProbe(true));
 document.querySelectorAll(".keys button").forEach(b => b.onclick = () => { const t = $("box"); if (t.disabled) return; t.setRangeText(b.dataset.k, t.selectionStart, t.selectionEnd, "end"); t.focus(); });
 $("studentId").value = store.get("v3_student"); $("studentId").onchange = () => store.set("v3_student", $("studentId").value.trim());
-if (!cfg.url || !cfg.token) openSettings();
+// the archetype and kind menus come from the server's alive reply; nothing about any chapter is written into this page
+async function fillMenus() {
+  try { const r = await fetch(cfg.url); const j = await r.json(); const A = (j.archetypes || []).map(a => typeof a === "string" ? { id: a, title: a, kinds: [] } : a);
+    $("arch").innerHTML = ""; A.forEach(a => { const o = document.createElement("option"); o.value = a.id; o.textContent = a.title; $("arch").appendChild(o); });
+    const kinds = () => { const a = A.find(x => x.id === $("arch").value) || { kinds: [] }; $("kind").innerHTML = '<option value="">any kind</option>'; (a.kinds || []).forEach(k => { const o = document.createElement("option"); o.value = k; o.textContent = k; $("kind").appendChild(o); }); };
+    $("arch").onchange = kinds; kinds(); } catch (e) { }
+}
+if (!cfg.url || !cfg.token) openSettings(); else fillMenus();
 </script>
 </body>
 </html>

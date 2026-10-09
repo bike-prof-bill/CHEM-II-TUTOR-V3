@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Isopropyl Alcohol Vapor Pressure & Clausius-Clapeyron Simulator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #090d16;
+      color: #e2e8f0;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    .font-mono-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-feature-settings: "tnum" 1, "zero" 1;
+    }
+    input[type=range] {
+      -webkit-appearance: none;
+      background: #1e293b;
+      height: 6px;
+      border-radius: 9999px;
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #38bdf8;
+      cursor: pointer;
+      border: 2px solid #0f172a;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+      transition: transform 0.1s ease;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+    input[type=range]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #38bdf8;
+      cursor: pointer;
+      border: 2px solid #0f172a;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#080d1a] text-slate-200">
+
+  <header class="border-b border-slate-800 bg-[#0c1222] px-6 py-4 shadow-md">
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-3">
+          <span class="px-2.5 py-0.5 rounded text-xs font-mono font-semibold bg-sky-500/10 text-sky-400 border border-sky-500/20">THERMODYNAMICS</span>
+          <span class="text-xs font-mono text-slate-400">CAS: 67-63-0 | M = 60.11 g/mol</span>
+        </div>
+        <h1 class="text-xl md:text-2xl font-bold tracking-tight text-white mt-1">
+          Vapor Pressure &amp; Clausius-Clapeyron Dynamics: Isopropyl Alcohol
+        </h1>
+        <p class="text-xs md:text-sm text-slate-400 mt-0.5">
+          2-Propanol (CH&#8323;CH(OH)CH&#8323;) Liquid-Vapor Equilibrium &amp; Enthalpy of Vaporization
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-1 flex items-center gap-1 text-xs font-mono">
+          <span class="px-2 text-slate-400">Unit:</span>
+          <button id="unit-mmhg" class="px-2.5 py-1 rounded bg-sky-600 text-white font-medium transition-colors">mmHg</button>
+          <button id="unit-kpa" class="px-2.5 py-1 rounded text-slate-400 hover:text-white transition-colors">kPa</button>
+          <button id="unit-atm" class="px-2.5 py-1 rounded text-slate-400 hover:text-white transition-colors">atm</button>
+          <button id="unit-bar" class="px-2.5 py-1 rounded text-slate-400 hover:text-white transition-colors">bar</button>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-1 flex items-center gap-1 text-xs">
+          <button id="toggle-antoine" class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5 transition-all">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Antoine
+          </button>
+          <button id="toggle-cc" class="px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1.5 transition-all">
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span> Clausius-Clapeyron
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="bg-[#0e1629] border-b border-slate-800/80 px-6 py-3">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="flex items-center gap-4 flex-1">
+        <label for="temp-slider" class="text-xs uppercase font-mono tracking-wider text-slate-400 whitespace-nowrap">
+          Temperature (T):
+        </label>
+        <div class="flex-1 flex items-center gap-3">
+          <input type="range" id="temp-slider" min="0" max="100" step="0.1" value="25.0" class="w-full">
+          <div class="flex items-center gap-1 bg-slate-900 border border-slate-700/80 rounded px-2.5 py-1">
+            <input type="number" id="temp-input" min="0" max="100" step="0.1" value="25.0" class="w-16 bg-transparent text-sm font-mono-num font-semibold text-sky-400 outline-none text-right">
+            <span class="text-xs font-mono text-slate-400">&deg;C</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
+        <span class="text-xs font-mono text-slate-500 mr-1">Presets:</span>
+        <button class="preset-btn px-2.5 py-1 rounded text-xs font-mono bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 transition-colors" data-temp="0.0">
+          Ice Point [0.0&deg;C]
+        </button>
+        <button class="preset-btn px-2.5 py-1 rounded text-xs font-mono bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 transition-colors" data-temp="25.0">
+          Room Temp [25.0&deg;C]
+        </button>
+        <button class="preset-btn px-2.5 py-1 rounded text-xs font-mono bg-sky-950/80 hover:bg-sky-900 border border-sky-600/50 text-sky-200 transition-colors" data-temp="82.3">
+          Normal Boiling [82.3&deg;C]
+        </button>
+        <button class="preset-btn px-2.5 py-1 rounded text-xs font-mono bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 transition-colors" data-temp="100.0">
+          Maximum [100.0&deg;C]
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- Left Column: Microscopic Chamber & Manometer Simulation (4 cols) -->
+    <div class="lg:col-span-4 flex flex-col gap-5">
+      <div class="bg-[#0d1424] border border-slate-800 rounded-xl p-4 flex flex-col flex-1 shadow-lg">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+          <div>
+            <h2 class="text-sm font-semibold tracking-wide text-white flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+              Equilibrium Isoteniscope Chamber
+            </h2>
+            <p class="text-xs text-slate-400">Microscopic dynamic phase equilibrium</p>
+          </div>
+          <div class="text-right font-mono text-xs">
+            <span class="text-slate-500">Flux:</span>
+            <span id="flux-status" class="text-emerald-400 ml-1 font-medium">Equilibrated</span>
+          </div>
+        </div>
+
+        <div class="relative w-full h-[320px] bg-[#070b14] rounded-lg mt-3 overflow-hidden border border-slate-900">
+          <canvas id="chamber-canvas" class="w-full h-full block"></canvas>
+          <div class="absolute top-2 left-2 pointer-events-none bg-slate-950/80 backdrop-blur-sm border border-slate-800/80 rounded px-2 py-1 text-[11px] font-mono text-slate-300 flex flex-col gap-0.5">
+            <div>Vapor Molecules: <span id="vapor-count-badge" class="text-sky-400 font-bold">0</span></div>
+            <div>Phase Temp: <span id="phase-temp-badge" class="text-amber-300">25.0 &deg;C</span></div>
+          </div>
+          <div class="absolute bottom-2 right-2 pointer-events-none bg-slate-950/80 backdrop-blur-sm border border-slate-800/80 rounded px-2 py-1 text-[10px] font-mono text-slate-400 text-right">
+            Liquid Meniscus: 2-Propanol (l)
+          </div>
+        </div>
+
+        <div class="mt-4 space-y-3 font-mono text-xs">
+          <div>
+            <div class="flex justify-between text-slate-400 mb-1">
+              <span>Evaporation Rate (&Gamma;<sub>evap</sub>):</span>
+              <span id="evap-rate-val" class="text-sky-300">1.24 &times; 10&sup2; s&#8315;&sup1;</span>
+            </div>
+            <div class="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden">
+              <div id="evap-bar" class="h-full bg-sky-400 transition-all duration-150" style="width: 25%;"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-slate-400 mb-1">
+              <span>Condensation Rate (&Gamma;<sub>cond</sub>):</span>
+              <span id="cond-rate-val" class="text-emerald-300">1.24 &times; 10&sup2; s&#8315;&sup1;</span>
+            </div>
+            <div class="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden">
+              <div id="cond-bar" class="h-full bg-emerald-400 transition-all duration-150" style="width: 25%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80 grid grid-cols-2 gap-2 text-xs font-mono">
+          <div class="bg-slate-900/60 p-2.5 rounded border border-slate-800/50">
+            <span class="text-slate-500 block text-[10px] uppercase">Mean Mol. Speed</span>
+            <span id="v-rms-val" class="text-slate-200 font-semibold text-sm">324.5 m/s</span>
+          </div>
+          <div class="bg-slate-900/60 p-2.5 rounded border border-slate-800/50">
+            <span class="text-slate-500 block text-[10px] uppercase">Manometer &Delta;h (Hg)</span>
+            <span id="manometer-dh-val" class="text-slate-200 font-semibold text-sm">-716.4 mm</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-[#0d1424] border border-slate-800 rounded-xl p-4 shadow-lg">
+        <h3 class="text-xs uppercase font-mono tracking-wider text-slate-400 mb-3 flex items-center justify-between">
+          <span>Comparative Analytics</span>
+          <span class="text-[10px] text-slate-500">T = <span id="current-t-readout">298.15</span> K</span>
+        </h3>
+        
+        <div class="space-y-2.5 text-xs font-mono">
+          <div class="flex items-center justify-between p-2 rounded bg-slate-900/80 border border-emerald-500/20">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span class="text-slate-300">Antoine (Empirical)</span>
+            </div>
+            <span id="val-p-antoine" class="font-bold text-emerald-400 text-sm">43.65 mmHg</span>
+          </div>
+
+          <div class="flex items-center justify-between p-2 rounded bg-slate-900/80 border border-amber-500/20">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              <span class="text-slate-300">Clausius-Clapeyron</span>
+            </div>
+            <span id="val-p-cc" class="font-bold text-amber-400 text-sm">49.25 mmHg</span>
+          </div>
+
+          <div class="flex items-center justify-between p-2 rounded bg-slate-900/40 border border-slate-800 text-slate-400">
+            <span>Model Discrepancy (&Delta;P):</span>
+            <span id="val-discrepancy" class="font-semibold text-slate-200">+12.83%</span>
+          </div>
+
+          <div class="flex items-center justify-between p-2 rounded bg-slate-900/40 border border-slate-800 text-slate-400">
+            <span>Enthalpy &Delta;H<sub>vap</sub> (local):</span>
+            <span id="val-dh-local" class="font-semibold text-sky-400">45.41 kJ/mol</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Dual Coordinated Thermodynamic Plots (8 cols) -->
+    <div class="lg:col-span-8 flex flex-col gap-6">
+
+      <!-- Plot 1: Vapor Pressure vs Temperature (P vs T) -->
+      <div class="bg-[#0d1424] border border-slate-800 rounded-xl p-4 shadow-lg flex flex-col">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-800/80 gap-2">
+          <div>
+            <h2 class="text-sm font-semibold tracking-wide text-white flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+              Vapor Pressure Curve: P vs Temperature (T)
+            </h2>
+            <p class="text-xs text-slate-400">Liquid-vapor saturation envelope &amp; normal boiling transition</p>
+          </div>
+          <div class="flex items-center gap-3 text-xs font-mono">
+            <div class="flex items-center gap-1.5 text-slate-400">
+              <span class="w-3 h-0.5 bg-rose-500 inline-block"></span>
+              <span>P<sub>atm</sub> (1 atm = 760 mmHg)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative w-full h-[270px] bg-[#070b14] rounded-lg mt-3 overflow-hidden border border-slate-900">
+          <canvas id="p-vs-t-canvas" class="w-full h-full block cursor-crosshair"></canvas>
+          <div id="p-vs-t-tooltip" class="absolute pointer-events-none hidden bg-slate-950/90 border border-slate-700 rounded px-2.5 py-1.5 text-[11px] font-mono text-slate-200 shadow-xl z-10"></div>
+        </div>
+      </div>
+
+      <!-- Plot 2: Linearized Clausius-Clapeyron Plot (ln(P) vs 1/T) -->
+      <div class="bg-[#0d1424] border border-slate-800 rounded-xl p-4 shadow-lg flex flex-col">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-800/80 gap-2">
+          <div>
+            <h2 class="text-sm font-semibold tracking-wide text-white flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+              Linearized Clausius-Clapeyron Plot: ln(P) vs 1/T
+            </h2>
+            <p class="text-xs text-slate-400">Slope determination: m = -&Delta;H<sub>vap</sub> / R</p>
+          </div>
+          <div class="text-xs font-mono text-slate-400 bg-slate-900/80 px-2.5 py-1 rounded border border-slate-800">
+            Mean Slope: <span class="text-amber-400 font-semibold">-5063.5 K</span> (&Delta;H<sub>vap</sub> = 42.10 kJ/mol)
+          </div>
+        </div>
+
+        <div class="relative w-full h-[270px] bg-[#070b14] rounded-lg mt-3 overflow-hidden border border-slate-900">
+          <canvas id="lnp-vs-invt-canvas" class="w-full h-full block cursor-crosshair"></canvas>
+          <div id="lnp-tooltip" class="absolute pointer-events-none hidden bg-slate-950/90 border border-slate-700 rounded px-2.5 py-1.5 text-[11px] font-mono text-slate-200 shadow-xl z-10"></div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div class="bg-[#0d1424] border border-slate-800 rounded-xl p-4">
+          <h4 class="font-mono text-sky-400 font-semibold mb-2 flex items-center gap-1.5">
+            <span>[1] Clausius-Clapeyron Relation</span>
+          </h4>
+          <p class="text-slate-400 leading-relaxed">
+            Derived under assumptions of ideal vapor behavior and negligible condensed molar volume (<span class="text-slate-200 font-mono">&Delta;V &approx; V<sub>g</sub></span>):
+          </p>
+          <div class="bg-slate-900/90 p-2.5 rounded my-2 font-mono text-center text-slate-200 border border-slate-800">
+            ln(P&#8322; / P&#8321;) = -(&Delta;H<sub>vap</sub> / R) &middot; (1/T&#8322; - 1/T&#8321;)
+          </div>
+          <p class="text-slate-400 text-[11px] leading-relaxed">
+            Assuming a constant mean <span class="font-mono text-slate-300">&Delta;H<sub>vap</sub> = 42.10 kJ/mol</span>, the slope yields <span class="font-mono text-amber-400">-5063.5 K</span> relative to normal boiling at <span class="font-mono text-slate-300">82.3 &deg;C</span>.
+          </p>
+        </div>
+
+        <div class="bg-[#0d1424] border border-slate-800 rounded-xl p-4">
+          <h4 class="font-mono text-emerald-400 font-semibold mb-2 flex items-center gap-1.5">
+            <span>[2] Antoine Equation (NIST Empirical)</span>
+          </h4>
+          <p class="text-slate-400 leading-relaxed">
+            Three-parameter empirical formulation accounting for temperature-dependent <span class="font-mono text-slate-200">&Delta;H<sub>vap</sub>(T)</span>:
+          </p>
+          <div class="bg-slate-900/90 p-2.5 rounded my-2 font-mono text-center text-slate-200 border border-slate-800">
+            log&#8321;&#8320;(P / mmHg) = 8.00308 - [1505.52 / (T(&deg;C) + 211.60)]
+          </div>
+          <p class="text-slate-400 text-[11px] leading-relaxed">
+            Parameters calibrated for 2-propanol across 0&deg;C to 100&deg;C. Non-idealities and hydrogen-bonding variations emerge at lower temperatures.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    const R_GAS = 8.314462618; // J / (mol * K)
+    const MOLAR_MASS = 60.11;  // g/mol for 2-Propanol
+    const TB_C = 82.26;        // Normal boiling point in Celsius
+    const TB_K = TB_C + 273.15;// Normal boiling point in Kelvin (355.41 K)
+    const P_ATM_MMHG = 760.0;  // 1 atm in mmHg
+    const DH_VAP_MEAN = 42100.0; // Mean Delta H_vap (J/mol) for Clausius-Clapeyron fit
+
+    // Antoine Coefficients for 2-propanol (log10(P [mmHg]) = A - B / (T[C] + C))
+    const ANTOINE_A = 8.00308;
+    const ANTOINE_B = 1505.52;
+    const ANTOINE_C = 211.60;
+
+    // Application state
+    const state = {
+      tempC: 25.0,
+      unit: 'mmHg', // 'mmHg', 'kPa', 'atm', 'bar'
+      showAntoine: true,
+      showCC: true,
+      hoverGraph1: null,
+      hoverGraph2: null
+    };
+
+    function calcAntoinePressure_mmHg(tC) {
+      const exponent = ANTOINE_A - (ANTOINE_B / (tC + ANTOINE_C));
+      return Math.pow(10, exponent);
+    }
+
+    function calcClausiusClapeyron_mmHg(tC) {
+      const tK = tC + 273.15;
+      const lnP = Math.log(P_ATM_MMHG) - (DH_VAP_MEAN / R_GAS) * ((1 / tK) - (1 / TB_K));
+      return Math.exp(lnP);
+    }
+
+    // Local differential Delta H_vap from Antoine derivative d(ln P)/dT = Delta H / (R T^2)
+    function calcLocalDeltaHvap_kJ(tC) {
+      const tK = tC + 273.15;
+      const ln10 = Math.log(10);
+      const denom = (tC + ANTOINE_C);
+      const dLogP_dT = ANTOINE_B / (denom * denom);
+      const dLnP_dT = ln10 * dLogP_dT;
+      const dH_J = dLnP_dT * R_GAS * (tK * tK);
+      return dH_J / 1000.0;
+    }
+
+    function convertPressureFromMmHg(pMmHg, unit) {
+      switch (unit) {
+        case 'kPa': return pMmHg * 0.133322368;
+        case 'atm': return pMmHg / 760.0;
+        case 'bar': return pMmHg * 0.00133322368;
+        default: return pMmHg;
+      }
+    }
+
+    function formatPressure(pMmHg, unit) {
+      const val = convertPressureFromMmHg(pMmHg, unit);
+      if (unit === 'atm' || unit === 'bar') {
+        return val.toFixed(4) + ' ' + unit;
+      } else if (unit === 'kPa') {
+        return val.toFixed(2) + ' ' + unit;
+      } else {
+        return val.toFixed(2) + ' mmHg';
+      }
+    }
+
+    const tempSlider = document.getElementById('temp-slider');
+    const tempInput = document.getElementById('temp-input');
+    const presetBtns = document.querySelectorAll('.preset-btn');
+    const unitBtns = {
+      mmHg: document.getElementById('unit-mmhg'),
+      kPa: document.getElementById('unit-kpa'),
+      atm: document.getElementById('unit-atm'),
+      bar: document.getElementById('unit-bar')
+    };
+    const toggleAntoineBtn = document.getElementById('toggle-antoine');
+    const toggleCCBtn = document.getElementById('toggle-cc');
+
+    const chamberCanvas = document.getElementById('chamber-canvas');
+    const pVsTCanvas = document.getElementById('p-vs-t-canvas');
+    const lnpCanvas = document.getElementById('lnp-vs-invt-canvas');
+
+    const pVsTTooltip = document.getElementById('p-vs-t-tooltip');
+    const lnpTooltip = document.getElementById('lnp-tooltip');
+
+    function setTemperature(newT) {
+      const clamped = Math.max(0, Math.min(100, parseFloat(newT) || 0));
+      state.tempC = clamped;
+      tempSlider.value = clamped;
+      tempInput.value = clamped.toFixed(1);
+      updateDisplayMetrics();
+    }
+
+    tempSlider.addEventListener('input', (e) => setTemperature(e.target.value));
+    tempInput.addEventListener('change', (e) => setTemperature(e.target.value));
+
+    presetBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const t = parseFloat(btn.dataset.temp);
+        setTemperature(t);
+      });
+    });
+
+    Object.keys(unitBtns).forEach(u => {
+      unitBtns[u].addEventListener('click', () => {
+        state.unit = u;
+        Object.keys(unitBtns).forEach(key => {
+          if (key === u) {
+            unitBtns[key].className = 'px-2.5 py-1 rounded bg-sky-600 text-white font-medium transition-colors';
+          } else {
+            unitBtns[key].className = 'px-2.5 py-1 rounded text-slate-400 hover:text-white transition-colors';
+          }
+        });
+        updateDisplayMetrics();
+      });
+    });
+
+    toggleAntoineBtn.addEventListener('click', () => {
+      state.showAntoine = !state.showAntoine;
+      if (!state.showAntoine && !state.showCC) state.showCC = true;
+      updateToggleStyles();
+    });
+
+    toggleCCBtn.addEventListener('click', () => {
+      state.showCC = !state.showCC;
+      if (!state.showAntoine && !state.showCC) state.showAntoine = true;
+      updateToggleStyles();
+    });
+
+    function updateToggleStyles() {
+      if (state.showAntoine) {
+        toggleAntoineBtn.className = 'px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5 transition-all';
+      } else {
+        toggleAntoineBtn.className = 'px-2.5 py-1 rounded bg-slate-900 text-slate-500 border border-slate-800 flex items-center gap-1.5 transition-all';
+      }
+
+      if (state.showCC) {
+        toggleCCBtn.className = 'px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1.5 transition-all';
+      } else {
+        toggleCCBtn.className = 'px-2.5 py-1 rounded bg-slate-900 text-slate-500 border border-slate-800 flex items-center gap-1.5 transition-all';
+      }
+    }
+
+    function updateDisplayMetrics() {
+      const tC = state.tempC;
+      const tK = tC + 273.15;
+      const pAntoine = calcAntoinePressure_mmHg(tC);
+      const pCC = calcClausiusClapeyron_mmHg(tC);
+      const localDH = calcLocalDeltaHvap_kJ(tC);
+      const discrepancyPct = ((pCC - pAntoine) / pAntoine) * 100;
+
+      // Update values
+      document.getElementById('current-t-readout').textContent = tK.toFixed(2);
+      document.getElementById('val-p-antoine').textContent = formatPressure(pAntoine, state.unit);
+      document.getElementById('val-p-cc').textContent = formatPressure(pCC, state.unit);
+      
+      const discEl = document.getElementById('val-discrepancy');
+      discEl.textContent = (discrepancyPct >= 0 ? '+' : '') + discrepancyPct.toFixed(2) + '%';
+      if (Math.abs(discrepancyPct) > 10) {
+        discEl.className = 'font-semibold text-amber-400';
+      } else {
+        discEl.className = 'font-semibold text-emerald-400';
+      }
+
+      document.getElementById('val-dh-local').textContent = localDH.toFixed(2) + ' kJ/mol';
+      document.getElementById('phase-temp-badge').textContent = tC.toFixed(1) + ' °C (' + tK.toFixed(1) + ' K)';
+
+      // RMS thermal velocity of isopropanol molecule: v_rms = sqrt(3 R T / M)
+      const vRms = Math.sqrt((3 * R_GAS * tK) / (MOLAR_MASS / 1000.0));
+      document.getElementById('v-rms-val').textContent = vRms.toFixed(1) + ' m/s';
+
+      // Manometer delta h (Hg) relative to 760 mmHg: P_vapor - 760
+      const dhHg = pAntoine - P_ATM_MMHG;
+      const dhEl = document.getElementById('manometer-dh-val');
+      dhEl.textContent = (dhHg >= 0 ? '+' : '') + dhHg.toFixed(1) + ' mm';
+      if (Math.abs(dhHg) < 2) {
+        dhEl.className = 'text-emerald-400 font-semibold text-sm';
+      } else {
+        dhEl.className = 'text-slate-200 font-semibold text-sm';
+      }
+
+      // Evaporation / Condensation rate calculations for UI bars
+      const normRate = Math.min(100, Math.max(2, (pAntoine / 1500) * 100));
+      document.getElementById('evap-bar').style.width = normRate + '%';
+      document.getElementById('cond-bar').style.width = normRate + '%';
+
+      const rateExp = (pAntoine * 2.8).toFixed(1);
+      document.getElementById('evap-rate-val').innerHTML = rateExp + ' &times; 10&sup1; mol&middot;m&#8315;&sup2;s&#8315;&sup1;';
+      document.getElementById('cond-rate-val').innerHTML = rateExp + ' &times; 10&sup1; mol&middot;m&#8315;&sup2;s&#8315;&sup1;';
+
+      const fluxStatus = document.getElementById('flux-status');
+      if (Math.abs(tC - TB_C) < 0.5) {
+        fluxStatus.textContent = 'Normal Boiling Active';
+        fluxStatus.className = 'text-sky-400 ml-1 font-semibold';
+      } else {
+        fluxStatus.textContent = 'Equilibrated Dynamic Flux';
+        fluxStatus.className = 'text-emerald-400 ml-1 font-medium';
+      }
+    }
+
+    const MAX_PARTICLES = 160;
+    const vaporParticles = [];
+    const liquidParticles = [];
+
+    class Particle {
+      constructor(isLiquid, x, y, bounds) {
+        this.isLiquid = isLiquid;
+        this.bounds = bounds;
+        this.x = x;
+        this.y = y;
+        this.radius = isLiquid ? 2.8 : 3.0;
+        this.vx = 0;
+        this.vy = 0;
+        this.baseX = x;
+        this.baseY = y;
+        this.phase = Math.random() * Math.PI * 2;
+        this.resetVelocity();
+      }
+
+      resetVelocity() {
+        const tK = state.tempC + 273.15;
+        const speed = (Math.sqrt(tK) * 0.12) * (0.8 + Math.random() * 0.4);
+        const angle = Math.random() * Math.PI * 2;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+      }
+
+      update(liquidTop, width, height) {
+        const tK = state.tempC + 273.15;
+        const speedScale = Math.sqrt(tK / 298.15);
+
+        if (this.isLiquid) {
+          // Liquid molecules oscillate with cohesive thermal jitter
+          this.phase += 0.08 * speedScale;
+          const jitter = 1.2 * speedScale;
+          this.x = this.baseX + Math.sin(this.phase) * jitter;
+          this.y = this.baseY + Math.cos(this.phase * 1.3) * (jitter * 0.7);
+
+          // Liquid boundary containment
+          if (this.y < liquidTop + 4) this.y = liquidTop + 4;
+        } else {
+          // Free vapor particle ballistic movement
+          this.x += this.vx * speedScale;
+          this.y += this.vy * speedScale;
+
+          // Wall collisions (cylinder left/right)
+          const leftBound = width * 0.12;
+          const rightBound = width * 0.62;
+          const topBound = height * 0.15;
+
+          if (this.x < leftBound + this.radius) {
+            this.x = leftBound + this.radius;
+            this.vx *= -1;
+          } else if (this.x > rightBound - this.radius) {
+            this.x = rightBound - this.radius;
+            this.vx *= -1;
+          }
+
+          if (this.y < topBound + this.radius) {
+            this.y = topBound + this.radius;
+            this.vy *= -1;
+          } else if (this.y > liquidTop - this.radius) {
+            // Re-condense at surface: reflect or exchange with liquid
+            this.y = liquidTop - this.radius;
+            this.vy = -Math.abs(this.vy);
+          }
+        }
+      }
+    }
+
+    function initParticles(width, height) {
+      vaporParticles.length = 0;
+      liquidParticles.length = 0;
+
+      const liquidTop = height * 0.62;
+      const leftBound = width * 0.13;
+      const rightBound = width * 0.61;
+      const bottomBound = height * 0.88;
+
+      // Seed dense condensed phase
+      const cols = 22;
+      const rows = 7;
+      const dx = (rightBound - leftBound) / cols;
+      const dy = (bottomBound - liquidTop) / rows;
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const px = leftBound + (c + 0.5) * dx + (Math.random() - 0.5) * 3;
+          const py = liquidTop + (r + 0.5) * dy + (Math.random() - 0.5) * 2;
+          liquidParticles.push(new Particle(true, px, py));
+        }
+      }
+
+      // Seed vapor phase
+      for (let i = 0; i < MAX_PARTICLES; i++) {
+        const px = leftBound + Math.random() * (rightBound - leftBound);
+        const py = height * 0.16 + Math.random() * (liquidTop - height * 0.20);
+        vaporParticles.push(new Particle(false, px, py));
+      }
+    }
+
+    function renderChamber() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = chamberCanvas.getBoundingClientRect();
+      if (chamberCanvas.width !== rect.width * dpr || chamberCanvas.height !== rect.height * dpr) {
+        chamberCanvas.width = rect.width * dpr;
+        chamberCanvas.height = rect.height * dpr;
+        initParticles(rect.width, rect.height);
+      }
+
+      const ctx = chamberCanvas.getContext('2d');
+      ctx.save();
+      ctx.scale(dpr, dpr);
+      const w = rect.width;
+      const h = rect.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      const chamberLeft = w * 0.10;
+      const chamberWidth = w * 0.54;
+      const chamberRight = chamberLeft + chamberWidth;
+      const chamberTop = h * 0.12;
+      const chamberBottom = h * 0.90;
+      const liquidTop = h * 0.62;
+
+      // Draw Glass Chamber Outline
+      ctx.fillStyle = '#0a101f';
+      ctx.fillRect(chamberLeft, chamberTop, chamberWidth, chamberBottom - chamberTop);
+
+      // Glass wall reflections and borders
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.roundRect(chamberLeft, chamberTop, chamberWidth, chamberBottom - chamberTop, [12, 12, 16, 16]);
+      ctx.stroke();
+
+      // Top Neck / Connection Arm to Manometer
+      const neckX = chamberRight - w * 0.14;
+      const neckY = chamberTop;
+      const manoConnectY = h * 0.28;
+
+      ctx.beginPath();
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 6;
+      ctx.lineCap = 'round';
+      ctx.moveTo(neckX, neckY);
+      ctx.lineTo(neckX, manoConnectY);
+      ctx.lineTo(w * 0.76, manoConnectY);
+      ctx.stroke();
+
+      // Manometer U-Tube Assembly
+      const tubeLeft = w * 0.76;
+      const tubeRight = w * 0.88;
+      const tubeBottom = h * 0.85;
+      const tubeTop = h * 0.22;
+
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 10;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(tubeLeft, manoConnectY);
+      ctx.lineTo(tubeLeft, tubeBottom);
+      ctx.arcTo(tubeLeft, tubeBottom + 12, tubeRight, tubeBottom + 12, 14);
+      ctx.arcTo(tubeRight, tubeBottom + 12, tubeRight, tubeBottom, 14);
+      ctx.lineTo(tubeRight, tubeTop);
+      ctx.stroke();
+
+      // Mercury column dynamics
+      const pAntoine = calcAntoinePressure_mmHg(state.tempC);
+      // Normalized displacement from 760 mmHg: delta mm Hg mapped to canvas pixels
+      const deltaP_mm = pAntoine - P_ATM_MMHG; // negative at room temp, zero at 82.3 C
+      const maxDeltaPix = h * 0.24;
+      const pixOffset = Math.max(-maxDeltaPix, Math.min(maxDeltaPix, (deltaP_mm / 760.0) * maxDeltaPix));
+
+      const hgBaseY = h * 0.56;
+      const hgLeftY = hgBaseY + pixOffset; // Pressed down when P > 760, raised when P < 760
+      const hgRightY = hgBaseY - pixOffset;
+
+      ctx.strokeStyle = '#94a3b8'; // Liquid Mercury silvery color
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.moveTo(tubeLeft, hgLeftY);
+      ctx.lineTo(tubeLeft, tubeBottom);
+      ctx.arcTo(tubeLeft, tubeBottom + 12, tubeRight, tubeBottom + 12, 14);
+      ctx.arcTo(tubeRight, tubeBottom + 12, tubeRight, tubeBottom, 14);
+      ctx.lineTo(tubeRight, hgRightY);
+      ctx.stroke();
+
+      // Atmospheric opening label
+      ctx.fillStyle = '#64748b';
+      ctx.font = '9px JetBrains Mono';
+      ctx.fillText('P_atm', tubeRight - 12, tubeTop - 6);
+
+      // Liquid Phase Fill
+      const gradLiquid = ctx.createLinearGradient(0, liquidTop, 0, chamberBottom);
+      gradLiquid.addColorStop(0, 'rgba(14, 116, 144, 0.55)');
+      gradLiquid.addColorStop(1, 'rgba(6, 78, 59, 0.75)');
+      ctx.fillStyle = gradLiquid;
+      ctx.beginPath();
+      ctx.roundRect(chamberLeft + 1.5, liquidTop, chamberWidth - 3, chamberBottom - liquidTop - 1.5, [0, 0, 14, 14]);
+      ctx.fill();
+
+      // Liquid Meniscus line
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(chamberLeft + 2, liquidTop);
+      ctx.lineTo(chamberRight - 2, liquidTop);
+      ctx.stroke();
+
+      // Calculate active vapor particles based on pressure
+      // Map P = 0..1500 mmHg -> 4..MAX_PARTICLES
+      const activeCount = Math.min(
+        MAX_PARTICLES,
+        Math.max(5, Math.round((pAntoine / 1500) * MAX_PARTICLES))
+      );
+      document.getElementById('vapor-count-badge').textContent = activeCount;
+
+      // Update & Draw Liquid Particles
+      for (let i = 0; i < liquidParticles.length; i++) {
+        const p = liquidParticles[i];
+        p.update(liquidTop, w, h);
+        ctx.fillStyle = '#67e8f9';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Update & Draw Vapor Particles
+      for (let i = 0; i < activeCount; i++) {
+        const p = vaporParticles[i];
+        p.update(liquidTop, w, h);
+
+        // Particle color based on temperature: subtle amber shift as T rises
+        const tRatio = Math.min(1, Math.max(0, state.tempC / 100));
+        ctx.fillStyle = tRatio > 0.6 ? '#fcd34d' : '#38bdf8';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+
+    function renderPlot1() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = pVsTCanvas.getBoundingClientRect();
+      if (pVsTCanvas.width !== rect.width * dpr || pVsTCanvas.height !== rect.height * dpr) {
+        pVsTCanvas.width = rect.width * dpr;
+        pVsTCanvas.height = rect.height * dpr;
+      }
+
+      const ctx = pVsTCanvas.getContext('2d');
+      ctx.save();
+      ctx.scale(dpr, dpr);
+      const w = rect.width;
+      const h = rect.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Plot Margins
+      const pad = { top: 22, right: 28, bottom: 38, left: 60 };
+      const pw = w - pad.left - pad.right;
+      const ph = h - pad.top - pad.bottom;
+
+      // Coordinate Transforms
+      const tMin = 0;
+      const tMax = 100;
+      const pMinMm = 0;
+      const pMaxMm = 1600; // mmHg max domain covers boiling past 100 C
+
+      function toX(t) { return pad.left + ((t - tMin) / (tMax - tMin)) * pw; }
+      function toY(pMm) { return pad.top + ph - ((pMm - pMinMm) / (pMaxMm - pMinMm)) * ph; }
+      function fromX(px) { return tMin + ((px - pad.left) / pw) * (tMax - tMin); }
+
+      // Gridlines & Axis labels
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      ctx.fillStyle = '#64748b';
+      ctx.font = '10px JetBrains Mono';
+
+      // X-Ticks (Temperature in deg C)
+      for (let t = 0; t <= 100; t += 20) {
+        const x = toX(t);
+        ctx.beginPath();
+        ctx.moveTo(x, pad.top);
+        ctx.lineTo(x, pad.top + ph);
+        ctx.stroke();
+        ctx.fillText(t + '°C', x - 10, h - pad.bottom + 16);
+      }
+
+      // Y-Ticks (Pressure in current unit)
+      const pStepMm = 400;
+      for (let pMm = 0; pMm <= pMaxMm; pMm += pStepMm) {
+        const y = toY(pMm);
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(pad.left + pw, y);
+        ctx.stroke();
+
+        const pDisplay = convertPressureFromMmHg(pMm, state.unit);
+        let label = pDisplay.toFixed(0);
+        if (state.unit === 'atm' || state.unit === 'bar') label = pDisplay.toFixed(2);
+        ctx.fillText(label, pad.left - 48, y + 3.5);
+      }
+
+      // Y-Axis Unit Header
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText('P (' + state.unit + ')', pad.left - 50, pad.top - 8);
+
+      // Atmospheric Reference Line (1 atm = 760 mmHg)
+      const yAtm = toY(P_ATM_MMHG);
+      ctx.strokeStyle = '#f43f5e';
+      ctx.setLineDash([4, 4]);
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(pad.left, yAtm);
+      ctx.lineTo(pad.left + pw, yAtm);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#f43f5e';
+      ctx.fillText('1.0 atm (760 mmHg)', pad.left + pw - 120, yAtm - 5);
+
+      // Curve: Antoine Equation (Empirical)
+      if (state.showAntoine) {
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        for (let t = tMin; t <= tMax; t += 0.5) {
+          const p = calcAntoinePressure_mmHg(t);
+          const x = toX(t);
+          const y = toY(p);
+          if (t === tMin) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+
+      // Curve: Clausius-Clapeyron Integration (Theoretical)
+      if (state.showCC) {
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 3]);
+        ctx.beginPath();
+        for (let t = tMin; t <= tMax; t += 0.5) {
+          const p = calcClausiusClapeyron_mmHg(t);
+          const x = toX(t);
+          const y = toY(p);
+          if (t === tMin) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      // Intersection at Normal Boiling Point Marker (82.26 C, 760 mmHg)
+      const xTb = toX(TB_C);
+      ctx.fillStyle = '#f43f5e';
+      ctx.beginPath();
+      ctx.arc(xTb, yAtm, 3.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Current State Indicator on Curve
+      const curX = toX(state.tempC);
+      const curP_Antoine = calcAntoinePressure_mmHg(state.tempC);
+      const curP_CC = calcClausiusClapeyron_mmHg(state.tempC);
+      const curY_Antoine = toY(curP_Antoine);
+      const curY_CC = toY(curP_CC);
+
+      // Vertical guideline for current T
+      ctx.strokeStyle = '#38bdf8';
+      ctx.setLineDash([2, 3]);
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(curX, pad.top);
+      ctx.lineTo(curX, pad.top + ph);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Point markers
+      if (state.showAntoine) {
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.arc(curX, curY_Antoine, 5.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#022c22';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+
+      if (state.showCC) {
+        ctx.fillStyle = '#f59e0b';
+        ctx.beginPath();
+        ctx.arc(curX, curY_CC, 5.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#451a03';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+
+      // Hover Crosshair Handling
+      if (state.hoverGraph1) {
+        const hT = Math.max(tMin, Math.min(tMax, fromX(state.hoverGraph1.x)));
+        const hX = toX(hT);
+        ctx.strokeStyle = '#64748b';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([2, 2]);
+        ctx.beginPath();
+        ctx.moveTo(hX, pad.top);
+        ctx.lineTo(hX, pad.top + ph);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        const hpAntoine = calcAntoinePressure_mmHg(hT);
+        const hpCC = calcClausiusClapeyron_mmHg(hT);
+        pVsTTooltip.style.display = 'block';
+        pVsTTooltip.style.left = (state.hoverGraph1.x + 12) + 'px';
+        pVsTTooltip.style.top = (state.hoverGraph1.y - 30) + 'px';
+        pVsTTooltip.innerHTML = `
+          <div class="text-sky-300 font-bold">T: ${hT.toFixed(1)} °C</div>
+          <div class="text-emerald-400">Antoine: ${formatPressure(hpAntoine, state.unit)}</div>
+          <div class="text-amber-400">CC: ${formatPressure(hpCC, state.unit)}</div>
+        `;
+      } else {
+        pVsTTooltip.style.display = 'none';
+      }
+
+      ctx.restore();
+    }
+
+    function renderPlot2() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = lnpCanvas.getBoundingClientRect();
+      if (lnpCanvas.width !== rect.width * dpr || lnpCanvas.height !== rect.height * dpr) {
+        lnpCanvas.width = rect.width * dpr;
+        lnpCanvas.height = rect.height * dpr;
+      }
+
+      const ctx = lnpCanvas.getContext('2d');
+      ctx.save();
+      ctx.scale(dpr, dpr);
+      const w = rect.width;
+      const h = rect.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      const pad = { top: 22, right: 28, bottom: 38, left: 60 };
+      const pw = w - pad.left - pad.right;
+      const ph = h - pad.top - pad.bottom;
+
+      // Domain: 1/T from T = 100 C (1/373.15 = 2.680e-3) to T = 0 C (1/273.15 = 3.661e-3)
+      // Plotted with 1/T increasing along X (so temperature decreases towards right)
+      const invTMin = 2.65; // 10^-3 K^-1
+      const invTMax = 3.70; // 10^-3 K^-1
+
+      // Range: ln(P [mmHg]) from ~ 1.5 to 7.6
+      const lnPMin = 1.5;
+      const lnPMax = 7.6;
+
+      function toX(invT_x1000) { return pad.left + ((invT_x1000 - invTMin) / (invTMax - invTMin)) * pw; }
+      function toY(lnP) { return pad.top + ph - ((lnP - lnPMin) / (lnPMax - lnPMin)) * ph; }
+      function fromX(px) { return invTMin + ((px - pad.left) / pw) * (invTMax - invTMin); }
+
+      // Gridlines & Labels
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      ctx.fillStyle = '#64748b';
+      ctx.font = '10px JetBrains Mono';
+
+      // X-Ticks: 1/T * 10^3 (K^-1)
+      for (let inv = 2.8; inv <= 3.6; inv += 0.2) {
+        const x = toX(inv);
+        ctx.beginPath();
+        ctx.moveTo(x, pad.top);
+        ctx.lineTo(x, pad.top + ph);
+        ctx.stroke();
+        ctx.fillText(inv.toFixed(1), x - 8, h - pad.bottom + 16);
+      }
+      ctx.fillText('1/T (×10⁻³ K⁻¹)', pad.left + pw * 0.45, h - pad.bottom + 30);
+
+      // Y-Ticks: ln(P / mmHg)
+      for (let lp = 2.0; lp <= 7.0; lp += 1.0) {
+        const y = toY(lp);
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(pad.left + pw, y);
+        ctx.stroke();
+        ctx.fillText(lp.toFixed(1), pad.left - 28, y + 3.5);
+      }
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText('ln(P / mmHg)', pad.left - 50, pad.top - 8);
+
+      // Clausius-Clapeyron Linear Fit: ln P = ln(760) - (DH_VAP / R) * (1/T - 1/TB)
+      if (state.showCC) {
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        for (let inv = invTMin; inv <= invTMax; inv += 0.05) {
+          const invT_real = inv * 1e-3;
+          const lnP = Math.log(P_ATM_MMHG) - (DH_VAP_MEAN / R_GAS) * (invT_real - (1 / TB_K));
+          const x = toX(inv);
+          const y = toY(lnP);
+          if (inv === invTMin) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+
+      // Experimental Antoine points along 1/T showing physical curvature
+      if (state.showAntoine) {
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 1.8;
+        ctx.beginPath();
+        for (let t = 0; t <= 100; t += 1.0) {
+          const tK = t + 273.15;
+          const inv = (1 / tK) * 1000.0;
+          const pAntoine = calcAntoinePressure_mmHg(t);
+          const lnP = Math.log(pAntoine);
+          const x = toX(inv);
+          const y = toY(lnP);
+          if (t === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+
+      // Delta Slope Triangle Visualization
+      const triInv1 = 2.85; // ~ 77.5 C
+      const triInv2 = 3.45; // ~ 16.7 C
+      const triLnP1 = Math.log(P_ATM_MMHG) - (DH_VAP_MEAN / R_GAS) * (triInv1 * 1e-3 - (1 / TB_K));
+      const triLnP2 = Math.log(P_ATM_MMHG) - (DH_VAP_MEAN / R_GAS) * (triInv2 * 1e-3 - (1 / TB_K));
+
+      const x1 = toX(triInv1);
+      const y1 = toY(triLnP1);
+      const x2 = toX(triInv2);
+      const y2 = toY(triLnP2);
+
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.4)';
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = 'rgba(245, 158, 11, 0.85)';
+      ctx.font = '9px JetBrains Mono';
+      ctx.fillText('Δ(ln P)', x2 + 6, (y1 + y2) / 2);
+      ctx.fillText('Δ(1/T)', (x1 + x2) / 2 - 14, y1 - 6);
+
+      // Current State Indicator on ln(P) plot
+      const curTk = state.tempC + 273.15;
+      const curInvT = (1 / curTk) * 1000.0;
+      const curX = toX(curInvT);
+
+      const curLnP_CC = Math.log(calcClausiusClapeyron_mmHg(state.tempC));
+      const curLnP_Antoine = Math.log(calcAntoinePressure_mmHg(state.tempC));
+
+      ctx.strokeStyle = '#38bdf8';
+      ctx.setLineDash([2, 3]);
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(curX, pad.top);
+      ctx.lineTo(curX, pad.top + ph);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      if (state.showCC) {
+        ctx.fillStyle = '#f59e0b';
+        ctx.beginPath();
+        ctx.arc(curX, toY(curLnP_CC), 5.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#451a03';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+
+      if (state.showAntoine) {
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.arc(curX, toY(curLnP_Antoine), 5.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#022c22';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+
+      // Hover Tooltip on ln(P) graph
+      if (state.hoverGraph2) {
+        const hInv = Math.max(invTMin, Math.min(invTMax, fromX(state.hoverGraph2.x)));
+        const hTK = 1.0 / (hInv * 1e-3);
+        const hTC = hTK - 273.15;
+        const hLnP_CC = Math.log(P_ATM_MMHG) - (DH_VAP_MEAN / R_GAS) * (hInv * 1e-3 - (1 / TB_K));
+        const hLnP_Ant = Math.log(calcAntoinePressure_mmHg(hTC));
+
+        lnpTooltip.style.display = 'block';
+        lnpTooltip.style.left = (state.hoverGraph2.x + 12) + 'px';
+        lnpTooltip.style.top = (state.hoverGraph2.y - 30) + 'px';
+        lnpTooltip.innerHTML = `
+          <div class="text-sky-300 font-bold">1/T: ${hInv.toFixed(3)} × 10⁻³ K⁻¹ (${hTC.toFixed(1)} °C)</div>
+          <div class="text-emerald-400">ln(P_Ant): ${hLnP_Ant.toFixed(3)}</div>
+          <div class="text-amber-400">ln(P_CC): ${hLnP_CC.toFixed(3)}</div>
+        `;
+      } else {
+        lnpTooltip.style.display = 'none';
+      }
+
+      ctx.restore();
+    }
+
+    pVsTCanvas.addEventListener('mousemove', (e) => {
+      const rect = pVsTCanvas.getBoundingClientRect();
+      state.hoverGraph1 = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+    });
+    pVsTCanvas.addEventListener('mouseleave', () => { state.hoverGraph1 = null; });
+    pVsTCanvas.addEventListener('click', (e) => {
+      const rect = pVsTCanvas.getBoundingClientRect();
+      const padLeft = 60;
+      const pw = rect.width - padLeft - 28;
+      const clickX = e.clientX - rect.left;
+      const t = Math.max(0, Math.min(100, ((clickX - padLeft) / pw) * 100));
+      setTemperature(t);
+    });
+
+    lnpCanvas.addEventListener('mousemove', (e) => {
+      const rect = lnpCanvas.getBoundingClientRect();
+      state.hoverGraph2 = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+    });
+    lnpCanvas.addEventListener('mouseleave', () => { state.hoverGraph2 = null; });
+    lnpCanvas.addEventListener('click', (e) => {
+      const rect = lnpCanvas.getBoundingClientRect();
+      const padLeft = 60;
+      const pw = rect.width - padLeft - 28;
+      const clickX = e.clientX - rect.left;
+      const invT = 2.65 + ((clickX - padLeft) / pw) * (3.70 - 2.65);
+      const tK = 1.0 / (invT * 1e-3);
+      const tC = tK - 273.15;
+      setTemperature(tC);
+    });
+
+    function animate() {
+      renderChamber();
+      renderPlot1();
+      renderPlot2();
+      requestAnimationFrame(animate);
+    }
+
+    // Initialize display and start loop
+    updateDisplayMetrics();
+    requestAnimationFrame(animate);
+
+    window.addEventListener('resize', () => {
+      updateDisplayMetrics();
+    });
+  </script>
+</body>
+</html>
