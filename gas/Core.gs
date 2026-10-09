@@ -637,7 +637,9 @@ var CORE = (function () {
     // the instructor's own simulation page, if the opener names one: opens with the problem, or at the meaning stage
     var med = (arch.openers[S.openerIndex] && arch.openers[S.openerIndex].media) || {};
     if (med.simulation && !S.mediaSimOpen && ((med.simulation_opens === "account" && isSet(S, "account_given")) || (med.simulation_opens !== "account" && simDue))) {
-      S.mediaSimOpen = true; res.simulation_url = med.simulation;
+      S.mediaSimOpen = true;                                 // {substance} in the path becomes this problem's substance, so one page can serve many
+      var subst = (V.context && (V.context.true_substance || V.context.substance)) || "";
+      res.simulation_url = med.simulation.replace(/\{substance\}/g, encodeURIComponent(subst));
     }
     if (!S.done && activeState(S, V) === null) {
       S.done = true; S.credit = S.clean && S.board["meaning_given"] === "ticked"; ev.completed = true;

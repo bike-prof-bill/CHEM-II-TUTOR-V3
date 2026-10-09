@@ -1,0 +1,251 @@
+{
+ "_about": "Universal substance table, read by the chemistry archetype files ONLY (never by the tutor shell). One record per substance. Every numeric field carries its source and date under `source`. Fields are optional: an archetype asks for what it needs and fails loudly if it is missing. Convention for dHvap: at the normal boiling point. Future fields (instructor to supply): molar_mass_g_mol, density_g_mL (with temperature), Kf_K_kg_mol, Kb_K_kg_mol, dHfus_kJ_mol. Each archetype keeps its own range choices (e.g. the coldest temperature a problem uses) in its own file; those are teaching parameters, not data.",
+ "fields": {
+  "formula": "text",
+  "melting_point_C": "normal melting point, °C",
+  "boiling_point_C": "normal boiling point at 1 atm, °C",
+  "dHvap_at_Tb_kJ_mol": "enthalpy of vaporization AT THE NORMAL BOILING POINT, kJ/mol"
+ },
+ "substances": {
+  "water": {
+   "formula": "H₂O",
+   "melting_point_C": 0.0,
+   "boiling_point_C": 100.0,
+   "dHvap_at_Tb_kJ_mol": 40.66,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "formula": "standard"
+   }
+  },
+  "methanol": {
+   "formula": "CH₃OH",
+   "melting_point_C": -97.2,
+   "boiling_point_C": 64.6,
+   "dHvap_at_Tb_kJ_mol": 35.2,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "formula": "standard"
+   }
+  },
+  "ethanol": {
+   "formula": "C₂H₅OH",
+   "melting_point_C": -114.2,
+   "boiling_point_C": 78.4,
+   "dHvap_at_Tb_kJ_mol": 38.6,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "formula": "standard"
+   }
+  },
+  "1-propanol": {
+   "formula": "CH₃CH₂CH₂OH",
+   "melting_point_C": -126.2,
+   "boiling_point_C": 97.2,
+   "dHvap_at_Tb_kJ_mol": 41.4,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "formula": "standard"
+   }
+  },
+  "2-propanol": {
+   "formula": "(CH₃)₂CHOH",
+   "melting_point_C": -89.5,
+   "boiling_point_C": 82.4,
+   "dHvap_at_Tb_kJ_mol": 40.0,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "formula": "standard"
+   }
+  },
+  "1-butanol": {
+   "formula": "CH₃(CH₂)₃OH",
+   "melting_point_C": -89.6,
+   "boiling_point_C": 117.5,
+   "dHvap_at_Tb_kJ_mol": 43.3,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "formula": "standard"
+   }
+  },
+  "acetone": {
+   "formula": "(CH₃)₂CO",
+   "melting_point_C": -95.4,
+   "boiling_point_C": 56.2,
+   "dHvap_at_Tb_kJ_mol": 29.1,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "formula": "standard"
+   }
+  },
+  "diethyl ether": {
+   "formula": "(C₂H₅)₂O",
+   "melting_point_C": -116.3,
+   "boiling_point_C": 34.6,
+   "dHvap_at_Tb_kJ_mol": 26.5,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "formula": "standard"
+   }
+  },
+  "pentane": {
+   "formula": "C₅H₁₂",
+   "melting_point_C": -129.8,
+   "boiling_point_C": 36.1,
+   "dHvap_at_Tb_kJ_mol": 25.8,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "formula": "standard"
+   }
+  },
+  "hexane": {
+   "formula": "C₆H₁₄",
+   "melting_point_C": -95.4,
+   "boiling_point_C": 68.8,
+   "dHvap_at_Tb_kJ_mol": 28.9,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "formula": "standard"
+   }
+  },
+  "heptane": {
+   "formula": "C₇H₁₆",
+   "melting_point_C": -90.6,
+   "boiling_point_C": 98.4,
+   "dHvap_at_Tb_kJ_mol": 32.0,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "formula": "standard"
+   }
+  },
+  "cyclohexane": {
+   "formula": "C₆H₁₂",
+   "melting_point_C": 6.6,
+   "boiling_point_C": 80.8,
+   "dHvap_at_Tb_kJ_mol": 29.6,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "formula": "standard"
+   }
+  },
+  "benzene": {
+   "formula": "C₆H₆",
+   "melting_point_C": 5.5,
+   "boiling_point_C": 80.1,
+   "dHvap_at_Tb_kJ_mol": 30.8,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "formula": "standard"
+   }
+  },
+  "toluene": {
+   "formula": "C₆H₅CH₃",
+   "melting_point_C": -95.0,
+   "boiling_point_C": 110.7,
+   "dHvap_at_Tb_kJ_mol": 33.2,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "formula": "standard"
+   }
+  },
+  "chloroform": {
+   "formula": "CHCl₃",
+   "melting_point_C": -63.6,
+   "boiling_point_C": 61.2,
+   "dHvap_at_Tb_kJ_mol": 29.2,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "formula": "standard"
+   }
+  },
+  "carbon tetrachloride": {
+   "formula": "CCl₄",
+   "melting_point_C": -22.9,
+   "boiling_point_C": 76.7,
+   "dHvap_at_Tb_kJ_mol": 30.0,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "formula": "standard"
+   }
+  },
+  "ethyl acetate": {
+   "formula": "CH₃COOC₂H₅",
+   "melting_point_C": -83.6,
+   "boiling_point_C": 77.1,
+   "dHvap_at_Tb_kJ_mol": 31.0,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "formula": "standard"
+   }
+  },
+  "2-butanol": {
+   "formula": "CH₃CH(OH)CH₂CH₃",
+   "melting_point_C": -114.7,
+   "boiling_point_C": 98.9,
+   "dHvap_at_Tb_kJ_mol": 40.8,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "formula": "standard"
+   }
+  },
+  "isobutyl alcohol": {
+   "formula": "(CH₃)₂CHCH₂OH",
+   "melting_point_C": -108.0,
+   "boiling_point_C": 107.7,
+   "dHvap_at_Tb_kJ_mol": 41.8,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "formula": "standard"
+   }
+  },
+  "tert-butyl alcohol": {
+   "formula": "(CH₃)₃COH",
+   "melting_point_C": 25.1,
+   "boiling_point_C": 82.4,
+   "dHvap_at_Tb_kJ_mol": 39.1,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
+    "formula": "standard"
+   }
+  }
+ }
+}

@@ -1,6 +1,8 @@
 """Independent checks on the factory. Closed forms are written separately from the engine's solver."""
 import sys, math, time; sys.path.insert(0, "archetypes"); import engine, ch10_cc as A
 R = 8.314; t0 = time.time(); out = engine.build(A, 100, 5000); dt = time.time() - t0; fails = 0
+for name, dH, bp, cold, mp in A.SUBSTANCES:
+    if not (cold > mp): fails += 1; print(f'  FAIL: {name}: coldest problem temperature {cold} °C is not above its melting point {mp} °C')
 for v in out["variants"]:
     ok = "{" not in v["text"] and "true_substance" not in v["text"]
     for kt in [t for t in v["expected"] if t["role"] == "key"]:

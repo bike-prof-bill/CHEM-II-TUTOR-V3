@@ -22660,26 +22660,26 @@
    "context": {
     "substance": "methanol",
     "one_atm_point": false,
-    "bp_K": 337.84999999999997,
-    "lo_K": 277.84999999999997,
-    "hi_K": 362.84999999999997
+    "bp_K": 337.75,
+    "lo_K": 277.75,
+    "hi_K": 362.75
    },
-   "text": "An unidentified liquid has a vapor pressure of 89.08 kPa at 61.3 °C and a vapor pressure of 59.8 torr at 280.9 K. What is the molar heat of vaporization of the liquid? Report the answer in kJ/mol.",
+   "text": "An unidentified liquid has a vapor pressure of 89.07 kPa at 61.2 °C and a vapor pressure of 59.7 torr at 280.8 K. What is the molar heat of vaporization of the liquid? Report the answer in kJ/mol.",
    "givens": {
     "T1": {
-     "value": 61.3,
+     "value": 61.2,
      "unit": "degC"
     },
     "T2": {
-     "value": 280.9,
+     "value": 280.8,
      "unit": "K"
     },
     "P1": {
-     "value": 89.08,
+     "value": 89.07,
      "unit": "kPa"
     },
     "P2": {
-     "value": 59.8,
+     "value": 59.7,
      "unit": "torr"
     }
    },
@@ -22830,14 +22830,14 @@
     {
      "id": "LOG10_FOR_LN",
      "state": "value_found",
-     "value": 15.289,
+     "value": 15.288,
      "unit": "kJ/mol",
      "abs_tol": 0.704
     },
     {
      "id": "PRESSURE_UNITS_MIXED",
      "state": "value_found",
-     "value": 5.8129,
+     "value": 5.8319,
      "unit": "kJ/mol",
      "abs_tol": 0.704
     }
@@ -22846,40 +22846,40 @@
    "sim": {
     "measured_degC_torr": [
      [
-      -0.2,
-      38.81
+      -0.3,
+      38.73
      ],
      [
-      13.7,
-      81.46
+      13.6,
+      81.34
      ],
      [
-      27.6,
-      160.4
+      27.5,
+      160.2
      ],
      [
-      41.5,
-      302.8
+      41.4,
+      302.6
      ],
      [
-      55.4,
-      536.4
+      55.3,
+      536.2
      ],
      [
-      69.3,
-      890.0
+      69.2,
+      890.1
      ]
     ],
-    "fit_slope_K": -4228.1,
-    "fit_intercept": 19.14,
+    "fit_slope_K": -4228.2,
+    "fit_intercept": 19.15,
     "problem_points": [
      [
-      61.3,
-      668.2
+      61.2,
+      668.1
      ],
      [
-      7.75,
-      59.8
+      7.65,
+      59.7
      ]
     ],
     "asked_point": 0
@@ -22972,7 +22972,7 @@
      },
      "state": "T_in_K",
      "label": "T1 in K",
-     "value": 334.45,
+     "value": 334.35,
      "unit": "K",
      "abs_tol": 0.2
     },
@@ -22984,7 +22984,7 @@
      },
      "state": "P_same_units",
      "label": "P1 in torr",
-     "value": 668.155,
+     "value": 668.08,
      "unit": "torr",
      "abs_tol": 6.68
     },
@@ -22996,9 +22996,9 @@
      },
      "state": "P_same_units",
      "label": "P2 in kPa",
-     "value": 7.97268,
+     "value": 7.95935,
      "unit": "kPa",
-     "abs_tol": 0.0797
+     "abs_tol": 0.0796
     },
     {
      "id": "P2_P1",
@@ -23006,7 +23006,7 @@
      "dim": {},
      "state": "substituted",
      "label": "P2/P1",
-     "value": 0.0895002,
+     "value": 0.0893606,
      "unit": "",
      "abs_tol": 0.00134
     },
@@ -23016,7 +23016,7 @@
      "dim": {},
      "state": "substituted",
      "label": "P1/P2",
-     "value": 11.1732,
+     "value": 11.1906,
      "unit": "",
      "abs_tol": 0.168
     },
@@ -23026,7 +23026,7 @@
      "dim": {},
      "state": "substituted",
      "label": "ln(P2/P1)",
-     "value": -2.41351,
+     "value": -2.41508,
      "unit": "",
      "abs_tol": 0.0362
     },
@@ -23038,9 +23038,9 @@
      },
      "state": "substituted",
      "label": "1/T2 - 1/T1",
-     "value": 0.000570002,
+     "value": 0.000570376,
      "unit": "1/K",
-     "abs_tol": 8.55e-06
+     "abs_tol": 8.56e-06
     },
     {
      "id": "dHvap_R",
@@ -23050,7 +23050,7 @@
      },
      "state": "substituted",
      "label": "dHvap/R",
-     "value": 4234.22,
+     "value": 4234.18,
      "unit": "K",
      "abs_tol": 63.5
     },
@@ -23063,13 +23063,13 @@
      },
      "state": "value_found",
      "label": "dH",
-     "value": 35.2033,
+     "value": 35.203,
      "unit": "kJ/mol",
      "abs_tol": 0.704,
      "require_unit": true,
      "also": [
       {
-       "value": 35203.3,
+       "value": 35203.0,
        "unit": "J/mol",
        "abs_tol": 704.0
       }
@@ -23080,19 +23080,19 @@
      "state": null,
      "role": "given",
      "label": "T1",
-     "value": 61.3,
+     "value": 61.2,
      "unit": "degC",
      "dim": {
       "K": 1
      },
-     "abs_tol": 6.13e-05
+     "abs_tol": 6.12e-05
     },
     {
      "id": "g_T2",
      "state": null,
      "role": "given",
      "label": "T2",
-     "value": 280.9,
+     "value": 280.8,
      "unit": "K",
      "dim": {
       "K": 1
@@ -23104,7 +23104,7 @@
      "state": null,
      "role": "given",
      "label": "P1",
-     "value": 89.08,
+     "value": 89.07,
      "unit": "kPa",
      "dim": {
       "atm": 1
@@ -23116,12 +23116,12 @@
      "state": null,
      "role": "given",
      "label": "P2",
-     "value": 59.8,
+     "value": 59.7,
      "unit": "torr",
      "dim": {
       "atm": 1
      },
-     "abs_tol": 5.98e-05
+     "abs_tol": 5.97e-05
     },
     {
      "id": "c_R",
@@ -23276,18 +23276,18 @@
    "context": {
     "substance": "2-propanol",
     "one_atm_point": false,
-    "bp_K": 355.45,
-    "lo_K": 295.45,
-    "hi_K": 380.45
+    "bp_K": 355.54999999999995,
+    "lo_K": 295.54999999999995,
+    "hi_K": 380.54999999999995
    },
-   "text": "An unidentified liquid has a vapor pressure of 1.06 atm at 83.9 °C and a vapor pressure of 8.848 kPa at 27.9 °C. What is the molar heat of vaporization of the liquid? Report the answer in kJ/mol.",
+   "text": "An unidentified liquid has a vapor pressure of 1.06 atm at 84 °C and a vapor pressure of 8.807 kPa at 28 °C. What is the molar heat of vaporization of the liquid? Report the answer in kJ/mol.",
    "givens": {
     "T1": {
-     "value": 83.9,
+     "value": 84.0,
      "unit": "degC"
     },
     "T2": {
-     "value": 27.9,
+     "value": 28.0,
      "unit": "degC"
     },
     "P1": {
@@ -23295,7 +23295,7 @@
      "unit": "atm"
     },
     "P2": {
-     "value": 8.848,
+     "value": 8.807,
      "unit": "kPa"
     }
    },
@@ -23439,63 +23439,63 @@
     {
      "id": "CELSIUS_NOT_CONVERTED",
      "state": "value_found",
-     "value": 0.86757,
+     "value": 0.87334,
      "unit": "kJ/mol",
-     "abs_tol": 0.797
+     "abs_tol": 0.799
     },
     {
      "id": "KJ_WITH_R_IN_J",
      "state": "value_found",
-     "value": 39839.0,
+     "value": 39937.0,
      "unit": "kJ/mol",
-     "abs_tol": 398.0
+     "abs_tol": 399.0
     },
     {
      "id": "LOG10_FOR_LN",
      "state": "value_found",
-     "value": 17.302,
+     "value": 17.345,
      "unit": "kJ/mol",
-     "abs_tol": 0.797
+     "abs_tol": 0.799
     }
    ],
    "reveal_with_problem": null,
    "sim": {
     "measured_degC_torr": [
      [
-      19.9,
-      43.16
+      20.0,
+      42.92
      ],
      [
-      34.3,
-      92.66
+      34.4,
+      92.29
      ],
      [
-      48.7,
-      184.9
+      48.8,
+      184.4
      ],
      [
-      63.1,
-      354.7
+      63.2,
+      354.1
      ],
      [
-      77.5,
-      633.9
+      77.6,
+      633.6
      ],
      [
-      91.9,
-      1079.0
+      92.0,
+      1080.0
      ]
     ],
-    "fit_slope_K": -4790.2,
-    "fit_intercept": 20.11,
+    "fit_slope_K": -4802.5,
+    "fit_intercept": 20.14,
     "problem_points": [
      [
-      83.9,
+      84.0,
       805.6
      ],
      [
-      27.9,
-      66.37
+      28.0,
+      66.06
      ]
     ],
     "asked_point": 0
@@ -23588,7 +23588,7 @@
      },
      "state": "T_in_K",
      "label": "T1 in K",
-     "value": 357.05,
+     "value": 357.15,
      "unit": "K",
      "abs_tol": 0.2
     },
@@ -23600,7 +23600,7 @@
      },
      "state": "T_in_K",
      "label": "T2 in K",
-     "value": 301.05,
+     "value": 301.15,
      "unit": "K",
      "abs_tol": 0.2
     },
@@ -23624,9 +23624,9 @@
      },
      "state": "P_same_units",
      "label": "P2 in atm",
-     "value": 0.087323,
+     "value": 0.0869183,
      "unit": "atm",
-     "abs_tol": 0.000873
+     "abs_tol": 0.000869
     },
     {
      "id": "P2_P1",
@@ -23634,9 +23634,9 @@
      "dim": {},
      "state": "substituted",
      "label": "P2/P1",
-     "value": 0.0823802,
+     "value": 0.0819984,
      "unit": "",
-     "abs_tol": 0.00124
+     "abs_tol": 0.00123
     },
     {
      "id": "P1_P2",
@@ -23644,9 +23644,9 @@
      "dim": {},
      "state": "substituted",
      "label": "P1/P2",
-     "value": 12.1388,
+     "value": 12.1954,
      "unit": "",
-     "abs_tol": 0.182
+     "abs_tol": 0.183
     },
     {
      "id": "ln_P2_P1",
@@ -23654,9 +23654,9 @@
      "dim": {},
      "state": "substituted",
      "label": "ln(P2/P1)",
-     "value": -2.49641,
+     "value": -2.50106,
      "unit": "",
-     "abs_tol": 0.0374
+     "abs_tol": 0.0375
     },
     {
      "id": "1_T2_1_T1",
@@ -23666,7 +23666,7 @@
      },
      "state": "substituted",
      "label": "1/T2 - 1/T1",
-     "value": 0.000520979,
+     "value": 0.00052066,
      "unit": "1/K",
      "abs_tol": 7.81e-06
     },
@@ -23678,9 +23678,9 @@
      },
      "state": "substituted",
      "label": "dHvap/R",
-     "value": 4791.77,
+     "value": 4803.62,
      "unit": "K",
-     "abs_tol": 71.9
+     "abs_tol": 72.1
     },
     {
      "id": "key_value_found",
@@ -23691,15 +23691,15 @@
      },
      "state": "value_found",
      "label": "dH",
-     "value": 39.8387,
+     "value": 39.9373,
      "unit": "kJ/mol",
-     "abs_tol": 0.797,
+     "abs_tol": 0.799,
      "require_unit": true,
      "also": [
       {
-       "value": 39838.7,
+       "value": 39937.3,
        "unit": "J/mol",
-       "abs_tol": 797.0
+       "abs_tol": 799.0
       }
      ]
     },
@@ -23708,24 +23708,24 @@
      "state": null,
      "role": "given",
      "label": "T1",
-     "value": 83.9,
+     "value": 84.0,
      "unit": "degC",
      "dim": {
       "K": 1
      },
-     "abs_tol": 8.39e-05
+     "abs_tol": 8.4e-05
     },
     {
      "id": "g_T2",
      "state": null,
      "role": "given",
      "label": "T2",
-     "value": 27.9,
+     "value": 28.0,
      "unit": "degC",
      "dim": {
       "K": 1
      },
-     "abs_tol": 2.79e-05
+     "abs_tol": 2.8e-05
     },
     {
      "id": "g_P1",
@@ -23744,12 +23744,12 @@
      "state": null,
      "role": "given",
      "label": "P2",
-     "value": 8.848,
+     "value": 8.807,
      "unit": "kPa",
      "dim": {
       "atm": 1
      },
-     "abs_tol": 8.85e-06
+     "abs_tol": 8.81e-06
     },
     {
      "id": "c_R",
@@ -24533,14 +24533,14 @@
     "substance": "unidentified",
     "true_substance": "2-propanol"
    },
-   "text": "Vapor pressure was measured for an unidentified liquid at six temperatures (plots at left). The straight-line fit is ln(P) = (-4814.7 K)(1/T) + 20.18, with P in torr and T in K. Find the heat of vaporization in kJ/mol and the normal boiling point in °C.",
+   "text": "Vapor pressure was measured for an unidentified liquid at six temperatures (plots at left). The straight-line fit is ln(P) = (-4827.1 K)(1/T) + 20.22, with P in torr and T in K. Find the heat of vaporization in kJ/mol and the normal boiling point in °C.",
    "givens": {
     "slope": {
-     "value": -4814.7,
+     "value": -4827.1,
      "unit": "K"
     },
     "intercept": {
-     "value": 20.18,
+     "value": 20.22,
      "unit": ""
     }
    },
@@ -24664,28 +24664,28 @@
     {
      "id": "SLOPE_SIGN_KEPT",
      "state": "dH_found",
-     "value": -40.029,
+     "value": -40.133,
      "unit": "kJ/mol",
-     "abs_tol": 0.801
+     "abs_tol": 0.803
     },
     {
      "id": "KJ_WITH_R_IN_J",
      "state": "dH_found",
-     "value": 40029.0,
+     "value": 40133.0,
      "unit": "kJ/mol",
-     "abs_tol": 801.0
+     "abs_tol": 803.0
     },
     {
      "id": "ONE_ATM_IN_TORR_LINE",
      "state": "bp_found",
-     "value": -34.562,
+     "value": -34.421,
      "unit": "degC",
      "abs_tol": 1.0
     },
     {
      "id": "KPA_IN_TORR_LINE",
      "state": "bp_found",
-     "value": 36.245,
+     "value": 36.246,
      "unit": "degC",
      "abs_tol": 1.0
     }
@@ -24827,62 +24827,62 @@
    "reveal_with_problem": {
     "measured_degC_torr": [
      [
-      37.3,
-      107.7
+      37.4,
+      107.3
      ],
      [
-      44.7,
-      153.0
+      44.8,
+      152.5
      ],
      [
-      52.1,
-      218.1
+      52.2,
+      217.6
      ],
      [
-      59.5,
-      299.9
+      59.6,
+      299.4
      ],
      [
-      66.9,
-      414.4
+      67.0,
+      413.9
      ],
      [
-      74.3,
-      560.5
+      74.4,
+      560.2
      ]
     ],
-    "fit_slope_K": -4814.7,
-    "fit_intercept": 20.18
+    "fit_slope_K": -4827.1,
+    "fit_intercept": 20.22
    },
    "sim": {
     "measured_degC_torr": [
      [
-      37.3,
-      107.7
+      37.4,
+      107.3
      ],
      [
-      44.7,
-      153.0
+      44.8,
+      152.5
      ],
      [
-      52.1,
-      218.1
+      52.2,
+      217.6
      ],
      [
-      59.5,
-      299.9
+      59.6,
+      299.4
      ],
      [
-      66.9,
-      414.4
+      67.0,
+      413.9
      ],
      [
-      74.3,
-      560.5
+      74.4,
+      560.2
      ]
     ],
-    "fit_slope_K": -4814.7,
-    "fit_intercept": 20.18,
+    "fit_slope_K": -4827.1,
+    "fit_intercept": 20.22,
     "mark_P_torr": 760.0
    },
    "expected": [
@@ -24895,15 +24895,15 @@
      },
      "state": "dH_found",
      "label": "dHvap from the slope",
-     "value": 40.0294,
+     "value": 40.1325,
      "unit": "kJ/mol",
-     "abs_tol": 0.801,
+     "abs_tol": 0.803,
      "require_unit": true,
      "also": [
       {
-       "value": 40029.4,
+       "value": 40132.5,
        "unit": "J/mol",
-       "abs_tol": 801.0
+       "abs_tol": 803.0
       }
      ]
     },
@@ -24915,13 +24915,13 @@
      },
      "state": "bp_found",
      "label": "normal boiling point",
-     "value": 82.2655,
+     "value": 82.1317,
      "unit": "degC",
      "abs_tol": 1.0,
      "require_unit": true,
      "also": [
       {
-       "value": 355.42,
+       "value": 355.28,
        "unit": "K",
        "abs_tol": 1.0
       }
@@ -24932,19 +24932,19 @@
      "state": null,
      "role": "given",
      "label": "slope",
-     "value": -4814.7,
+     "value": -4827.1,
      "unit": "K",
      "dim": {
       "K": 1
      },
-     "abs_tol": 0.00481
+     "abs_tol": 0.00483
     },
     {
      "id": "g_intercept",
      "state": null,
      "role": "given",
      "label": "intercept",
-     "value": 20.18,
+     "value": 20.22,
      "unit": "",
      "dim": {},
      "abs_tol": 2.02e-05
@@ -25103,14 +25103,14 @@
     "substance": "unidentified",
     "true_substance": "2-propanol"
    },
-   "text": "Vapor pressure was measured for an unidentified liquid at six temperatures (plots at left). The straight-line fit is ln(P) = (-4813.9 K)(1/T) + 20.18, with P in torr and T in K. Find the heat of vaporization in kJ/mol and the normal boiling point in °C.",
+   "text": "Vapor pressure was measured for an unidentified liquid at six temperatures (plots at left). The straight-line fit is ln(P) = (-4826 K)(1/T) + 20.21, with P in torr and T in K. Find the heat of vaporization in kJ/mol and the normal boiling point in °C.",
    "givens": {
     "slope": {
-     "value": -4813.9,
+     "value": -4826.0,
      "unit": "K"
     },
     "intercept": {
-     "value": 20.18,
+     "value": 20.21,
      "unit": ""
     }
    },
@@ -25234,28 +25234,28 @@
     {
      "id": "SLOPE_SIGN_KEPT",
      "state": "dH_found",
-     "value": -40.023,
+     "value": -40.123,
      "unit": "kJ/mol",
-     "abs_tol": 0.8
+     "abs_tol": 0.802
     },
     {
      "id": "KJ_WITH_R_IN_J",
      "state": "dH_found",
-     "value": 40023.0,
+     "value": 40123.0,
      "unit": "kJ/mol",
-     "abs_tol": 800.0
+     "abs_tol": 802.0
     },
     {
      "id": "ONE_ATM_IN_TORR_LINE",
      "state": "bp_found",
-     "value": -34.602,
+     "value": -34.357,
      "unit": "degC",
      "abs_tol": 1.0
     },
     {
      "id": "KPA_IN_TORR_LINE",
      "state": "bp_found",
-     "value": 36.193,
+     "value": 36.374,
      "unit": "degC",
      "abs_tol": 1.0
     }
@@ -25397,62 +25397,62 @@
    "reveal_with_problem": {
     "measured_degC_torr": [
      [
-      37.3,
-      107.1
+      37.4,
+      106.7
      ],
      [
-      44.7,
-      155.1
+      44.8,
+      154.6
      ],
      [
-      52.1,
-      216.0
+      52.2,
+      215.5
      ],
      [
-      59.5,
-      299.9
+      59.6,
+      299.4
      ],
      [
-      66.9,
-      415.3
+      67.0,
+      414.8
      ],
      [
-      74.3,
-      559.9
+      74.4,
+      559.5
      ]
     ],
-    "fit_slope_K": -4813.9,
-    "fit_intercept": 20.18
+    "fit_slope_K": -4826.0,
+    "fit_intercept": 20.21
    },
    "sim": {
     "measured_degC_torr": [
      [
-      37.3,
-      107.1
+      37.4,
+      106.7
      ],
      [
-      44.7,
-      155.1
+      44.8,
+      154.6
      ],
      [
-      52.1,
-      216.0
+      52.2,
+      215.5
      ],
      [
-      59.5,
-      299.9
+      59.6,
+      299.4
      ],
      [
-      66.9,
-      415.3
+      67.0,
+      414.8
      ],
      [
-      74.3,
-      559.9
+      74.4,
+      559.5
      ]
     ],
-    "fit_slope_K": -4813.9,
-    "fit_intercept": 20.18,
+    "fit_slope_K": -4826.0,
+    "fit_intercept": 20.21,
     "mark_P_torr": 760.0
    },
    "expected": [
@@ -25465,15 +25465,15 @@
      },
      "state": "dH_found",
      "label": "dHvap from the slope",
-     "value": 40.0228,
+     "value": 40.1234,
      "unit": "kJ/mol",
-     "abs_tol": 0.8,
+     "abs_tol": 0.802,
      "require_unit": true,
      "also": [
       {
-       "value": 40022.8,
+       "value": 40123.4,
        "unit": "J/mol",
-       "abs_tol": 800.0
+       "abs_tol": 802.0
       }
      ]
     },
@@ -25485,13 +25485,13 @@
      },
      "state": "bp_found",
      "label": "normal boiling point",
-     "value": 82.2064,
+     "value": 82.3124,
      "unit": "degC",
      "abs_tol": 1.0,
      "require_unit": true,
      "also": [
       {
-       "value": 355.36,
+       "value": 355.46,
        "unit": "K",
        "abs_tol": 1.0
       }
@@ -25502,19 +25502,19 @@
      "state": null,
      "role": "given",
      "label": "slope",
-     "value": -4813.9,
+     "value": -4826.0,
      "unit": "K",
      "dim": {
       "K": 1
      },
-     "abs_tol": 0.00481
+     "abs_tol": 0.00483
     },
     {
      "id": "g_intercept",
      "state": null,
      "role": "given",
      "label": "intercept",
-     "value": 20.18,
+     "value": 20.21,
      "unit": "",
      "dim": {},
      "abs_tol": 2.02e-05
@@ -25673,14 +25673,14 @@
     "substance": "unidentified",
     "true_substance": "methanol"
    },
-   "text": "Vapor pressure was measured for an unidentified liquid at six temperatures (plots at left). The straight-line fit is ln(P) = (-4196.4 K)(1/T) + 19.04, with P in torr and T in K. Find the heat of vaporization in kJ/mol and the normal boiling point in °C.",
+   "text": "Vapor pressure was measured for an unidentified liquid at six temperatures (plots at left). The straight-line fit is ln(P) = (-4196.1 K)(1/T) + 19.05, with P in torr and T in K. Find the heat of vaporization in kJ/mol and the normal boiling point in °C.",
    "givens": {
     "slope": {
-     "value": -4196.4,
+     "value": -4196.1,
      "unit": "K"
     },
     "intercept": {
-     "value": 19.04,
+     "value": 19.05,
      "unit": ""
     }
    },
@@ -25804,28 +25804,28 @@
     {
      "id": "SLOPE_SIGN_KEPT",
      "state": "dH_found",
-     "value": -34.889,
+     "value": -34.886,
      "unit": "kJ/mol",
      "abs_tol": 0.698
     },
     {
      "id": "KJ_WITH_R_IN_J",
      "state": "dH_found",
-     "value": 34889.0,
+     "value": 34886.0,
      "unit": "kJ/mol",
      "abs_tol": 698.0
     },
     {
      "id": "ONE_ATM_IN_TORR_LINE",
      "state": "bp_found",
-     "value": -52.751,
+     "value": -52.882,
      "unit": "degC",
      "abs_tol": 1.0
     },
     {
      "id": "KPA_IN_TORR_LINE",
      "state": "bp_found",
-     "value": 17.829,
+     "value": 17.606,
      "unit": "degC",
      "abs_tol": 1.0
     }
@@ -25967,62 +25967,62 @@
    "reveal_with_problem": {
     "measured_degC_torr": [
      [
-      19.7,
-      111.3
+      19.6,
+      111.2
      ],
      [
-      27.1,
-      158.8
+      27.0,
+      158.6
      ],
      [
-      34.5,
-      223.9
+      34.4,
+      223.7
      ],
      [
-      41.9,
-      304.3
+      41.8,
+      304.2
      ],
      [
-      49.3,
-      417.1
+      49.2,
+      416.9
      ],
      [
-      56.7,
-      555.6
+      56.6,
+      555.5
      ]
     ],
-    "fit_slope_K": -4196.4,
-    "fit_intercept": 19.04
+    "fit_slope_K": -4196.1,
+    "fit_intercept": 19.05
    },
    "sim": {
     "measured_degC_torr": [
      [
-      19.7,
-      111.3
+      19.6,
+      111.2
      ],
      [
-      27.1,
-      158.8
+      27.0,
+      158.6
      ],
      [
-      34.5,
-      223.9
+      34.4,
+      223.7
      ],
      [
-      41.9,
-      304.3
+      41.8,
+      304.2
      ],
      [
-      49.3,
-      417.1
+      49.2,
+      416.9
      ],
      [
-      56.7,
-      555.6
+      56.6,
+      555.5
      ]
     ],
-    "fit_slope_K": -4196.4,
-    "fit_intercept": 19.04,
+    "fit_slope_K": -4196.1,
+    "fit_intercept": 19.05,
     "mark_P_torr": 760.0
    },
    "expected": [
@@ -26035,13 +26035,13 @@
      },
      "state": "dH_found",
      "label": "dHvap from the slope",
-     "value": 34.8889,
+     "value": 34.8864,
      "unit": "kJ/mol",
      "abs_tol": 0.698,
      "require_unit": true,
      "also": [
       {
-       "value": 34888.9,
+       "value": 34886.4,
        "unit": "J/mol",
        "abs_tol": 698.0
       }
@@ -26055,13 +26055,13 @@
      },
      "state": "bp_found",
      "label": "normal boiling point",
-     "value": 65.0871,
+     "value": 64.7905,
      "unit": "degC",
      "abs_tol": 1.0,
      "require_unit": true,
      "also": [
       {
-       "value": 338.24,
+       "value": 337.94,
        "unit": "K",
        "abs_tol": 1.0
       }
@@ -26072,7 +26072,7 @@
      "state": null,
      "role": "given",
      "label": "slope",
-     "value": -4196.4,
+     "value": -4196.1,
      "unit": "K",
      "dim": {
       "K": 1
@@ -26084,10 +26084,10 @@
      "state": null,
      "role": "given",
      "label": "intercept",
-     "value": 19.04,
+     "value": 19.05,
      "unit": "",
      "dim": {},
-     "abs_tol": 1.9e-05
+     "abs_tol": 1.91e-05
     },
     {
      "id": "c_R",
@@ -37207,9 +37207,9 @@
    "context": {
     "substance": "ethanol",
     "one_atm_point": true,
-    "bp_K": 351.52,
-    "lo_K": 291.52,
-    "hi_K": 376.52
+    "bp_K": 351.54999999999995,
+    "lo_K": 291.54999999999995,
+    "hi_K": 376.54999999999995
    },
    "text": "Ethanol has a vapor pressure of 101.3 kPa at 78.4 °C. Its heat of vaporization is 38.6 kJ/mol. At what temperature will its vapor pressure be 129 torr? Report the answer in K.",
    "givens": {
@@ -37876,14 +37876,14 @@
    "context": {
     "substance": "ethanol",
     "one_atm_point": true,
-    "bp_K": 351.52,
-    "lo_K": 291.52,
-    "hi_K": 376.52
+    "bp_K": 351.54999999999995,
+    "lo_K": 291.54999999999995,
+    "hi_K": 376.54999999999995
    },
-   "text": "Ethanol has a vapor pressure of 1.77 atm at 94.2 °C. Its heat of vaporization is 38.6 kJ/mol. At what temperature will its vapor pressure be 760 torr? Report the answer in K.",
+   "text": "Ethanol has a vapor pressure of 1.77 atm at 94.3 °C. Its heat of vaporization is 38.6 kJ/mol. At what temperature will its vapor pressure be 760 torr? Report the answer in K.",
    "givens": {
     "T1": {
-     "value": 94.2,
+     "value": 94.3,
      "unit": "degC"
     },
     "P1": {
@@ -38057,7 +38057,7 @@
     {
      "id": "CELSIUS_NOT_CONVERTED",
      "state": "value_found",
-     "value": 93.121,
+     "value": 93.219,
      "unit": "K",
      "abs_tol": 1.0
     },
@@ -38071,21 +38071,21 @@
     {
      "id": "SIGN_FLIPPED",
      "state": "value_found",
-     "value": 384.73,
+     "value": 384.84,
      "unit": "K",
      "abs_tol": 3.85
     },
     {
      "id": "LOG10_FOR_LN",
      "state": "value_found",
-     "value": 360.28,
+     "value": 360.38,
      "unit": "K",
      "abs_tol": 3.6
     },
     {
      "id": "PRESSURE_UNITS_MIXED",
      "state": "value_found",
-     "value": 705.99,
+     "value": 706.36,
      "unit": "K",
      "abs_tol": 7.06
     }
@@ -38094,39 +38094,39 @@
    "sim": {
     "measured_degC_torr": [
      [
-      70.3,
-      564.2
+      70.4,
+      564.3
      ],
      [
-      76.7,
-      710.1
+      76.8,
+      710.2
      ],
      [
-      83.1,
+      83.2,
       899.6
      ],
      [
-      89.4,
+      89.5,
       1139.0
      ],
      [
-      95.8,
+      95.9,
       1423.0
      ],
      [
-      102.2,
+      102.3,
       1771.0
      ]
     ],
-    "fit_slope_K": -4646.2,
+    "fit_slope_K": -4648.1,
     "fit_intercept": 19.85,
     "problem_points": [
      [
-      94.2,
+      94.3,
       1345.0
      ],
      [
-      78.32,
+      78.41,
       760.0
      ]
     ],
@@ -38220,7 +38220,7 @@
      },
      "state": "T_in_K",
      "label": "T1 in K",
-     "value": 367.35,
+     "value": 367.45,
      "unit": "K",
      "abs_tol": 0.2
     },
@@ -38321,13 +38321,13 @@
      },
      "state": "value_found",
      "label": "T2",
-     "value": 351.471,
+     "value": 351.563,
      "unit": "K",
      "abs_tol": 1.0,
      "require_unit": true,
      "also": [
       {
-       "value": 78.3214,
+       "value": 78.4129,
        "unit": "degC",
        "abs_tol": 1.0
       }
@@ -38338,12 +38338,12 @@
      "state": null,
      "role": "given",
      "label": "T1",
-     "value": 94.2,
+     "value": 94.3,
      "unit": "degC",
      "dim": {
       "K": 1
      },
-     "abs_tol": 9.42e-05
+     "abs_tol": 9.43e-05
     },
     {
      "id": "g_P1",
@@ -38538,9 +38538,9 @@
    "context": {
     "substance": "ethanol",
     "one_atm_point": false,
-    "bp_K": 351.52,
-    "lo_K": 291.52,
-    "hi_K": 376.52
+    "bp_K": 351.54999999999995,
+    "lo_K": 291.54999999999995,
+    "hi_K": 376.54999999999995
    },
    "text": "Ethanol has a vapor pressure of 1.97 atm at 97.5 °C. Its heat of vaporization is 38.6 kJ/mol. At what temperature will its vapor pressure be 150 torr? Report the answer in K.",
    "givens": {
@@ -39207,18 +39207,18 @@
    "context": {
     "substance": "ethanol",
     "one_atm_point": true,
-    "bp_K": 351.52,
-    "lo_K": 291.52,
-    "hi_K": 376.52
+    "bp_K": 351.54999999999995,
+    "lo_K": 291.54999999999995,
+    "hi_K": 376.54999999999995
    },
-   "text": "Ethanol has a vapor pressure of 101.3 kPa at 78.4 °C. Its heat of vaporization is 38.6 kJ/mol. What is its vapor pressure at 63.9 °C? Report the answer in atm.",
+   "text": "Ethanol has a vapor pressure of 101.3 kPa at 78.4 °C. Its heat of vaporization is 38.6 kJ/mol. What is its vapor pressure at 64 °C? Report the answer in atm.",
    "givens": {
     "T1": {
      "value": 78.4,
      "unit": "degC"
     },
     "T2": {
-     "value": 63.9,
+     "value": 64.0,
      "unit": "degC"
     },
     "P1": {
@@ -39370,70 +39370,70 @@
     {
      "id": "CELSIUS_NOT_CONVERTED",
      "state": "value_found",
-     "value": 1.4586e-06,
+     "value": 1.6339e-06,
      "unit": "atm",
-     "abs_tol": 0.0113
+     "abs_tol": 0.0114
     },
     {
      "id": "KJ_WITH_R_IN_J",
      "state": "value_found",
      "value": 0.99919,
      "unit": "atm",
-     "abs_tol": 0.0113
+     "abs_tol": 0.0114
     },
     {
      "id": "SIGN_FLIPPED",
      "state": "value_found",
-     "value": 1.7646,
+     "value": 1.7574,
      "unit": "atm",
      "abs_tol": 0.0176
     },
     {
      "id": "LOG10_FOR_LN",
      "state": "value_found",
-     "value": 0.27024,
+     "value": 0.27279,
      "unit": "atm",
-     "abs_tol": 0.0113
+     "abs_tol": 0.0114
     }
    ],
    "reveal_with_problem": null,
    "sim": {
     "measured_degC_torr": [
      [
-      55.9,
-      309.2
+      56.0,
+      310.5
      ],
      [
-      62.0,
-      400.4
+      62.1,
+      401.7
      ],
      [
-      68.1,
-      514.9
+      68.2,
+      516.1
      ],
      [
       74.2,
-      642.3
+      643.2
      ],
      [
       80.3,
-      814.4
+      815.0
      ],
      [
       86.4,
       1013.0
      ]
     ],
-    "fit_slope_K": -4592.8,
-    "fit_intercept": 19.69,
+    "fit_slope_K": -4597.4,
+    "fit_intercept": 19.71,
     "problem_points": [
      [
       78.4,
       759.8
      ],
      [
-      63.9,
-      430.5
+      64.0,
+      432.3
      ]
     ],
     "asked_point": 2
@@ -39538,7 +39538,7 @@
      },
      "state": "T_in_K",
      "label": "T2 in K",
-     "value": 337.05,
+     "value": 337.15,
      "unit": "K",
      "abs_tol": 0.2
     },
@@ -39569,9 +39569,9 @@
      "dim": {},
      "state": "substituted",
      "label": "P2/P1",
-     "value": 0.566572,
+     "value": 0.568892,
      "unit": "",
-     "abs_tol": 0.0085
+     "abs_tol": 0.00853
     },
     {
      "id": "P1_P2",
@@ -39579,9 +39579,9 @@
      "dim": {},
      "state": "substituted",
      "label": "P1/P2",
-     "value": 1.765,
+     "value": 1.7578,
      "unit": "",
-     "abs_tol": 0.0265
+     "abs_tol": 0.0264
     },
     {
      "id": "ln_P2_P1",
@@ -39589,9 +39589,9 @@
      "dim": {},
      "state": "substituted",
      "label": "ln(P2/P1)",
-     "value": -0.568151,
+     "value": -0.564065,
      "unit": "",
-     "abs_tol": 0.00852
+     "abs_tol": 0.00846
     },
     {
      "id": "1_T2_1_T1",
@@ -39601,9 +39601,9 @@
      },
      "state": "substituted",
      "label": "1/T2 - 1/T1",
-     "value": 0.000122373,
+     "value": 0.000121493,
      "unit": "1/K",
-     "abs_tol": 1.84e-06
+     "abs_tol": 1.82e-06
     },
     {
      "id": "dHvap_R",
@@ -39625,18 +39625,18 @@
      },
      "state": "value_found",
      "label": "P2",
-     "value": 0.566432,
+     "value": 0.568751,
      "unit": "atm",
-     "abs_tol": 0.0113,
+     "abs_tol": 0.0114,
      "require_unit": true,
      "also": [
       {
-       "value": 430.488,
+       "value": 432.251,
        "unit": "torr",
-       "abs_tol": 8.61
+       "abs_tol": 8.65
       },
       {
-       "value": 57.3937,
+       "value": 57.6287,
        "unit": "kPa",
        "abs_tol": 1.15
       }
@@ -39659,12 +39659,12 @@
      "state": null,
      "role": "given",
      "label": "T2",
-     "value": 63.9,
+     "value": 64.0,
      "unit": "degC",
      "dim": {
       "K": 1
      },
-     "abs_tol": 6.39e-05
+     "abs_tol": 6.4e-05
     },
     {
      "id": "g_P1",
@@ -39844,9 +39844,9 @@
    "context": {
     "substance": "ethanol",
     "one_atm_point": true,
-    "bp_K": 351.52,
-    "lo_K": 291.52,
-    "hi_K": 376.52
+    "bp_K": 351.54999999999995,
+    "lo_K": 291.54999999999995,
+    "hi_K": 376.54999999999995
    },
    "text": "Ethanol has a vapor pressure of 400 torr at 62.1 °C. Its heat of vaporization is 38.6 kJ/mol. What is its vapor pressure at 78.4 °C? Report the answer in torr.",
    "givens": {
@@ -40474,18 +40474,18 @@
    "context": {
     "substance": "ethanol",
     "one_atm_point": true,
-    "bp_K": 351.52,
-    "lo_K": 291.52,
-    "hi_K": 376.52
+    "bp_K": 351.54999999999995,
+    "lo_K": 291.54999999999995,
+    "hi_K": 376.54999999999995
    },
-   "text": "Ethanol has a vapor pressure of 101.3 kPa at 78.4 °C. Its heat of vaporization is 38.6 kJ/mol. What is its vapor pressure at 370 K? Report the answer in torr.",
+   "text": "Ethanol has a vapor pressure of 101.3 kPa at 78.4 °C. Its heat of vaporization is 38.6 kJ/mol. What is its vapor pressure at 370.1 K? Report the answer in torr.",
    "givens": {
     "T1": {
      "value": 78.4,
      "unit": "degC"
     },
     "T2": {
-     "value": 370.0,
+     "value": 370.1,
      "unit": "K"
     },
     "P1": {
@@ -40637,23 +40637,23 @@
     {
      "id": "KJ_WITH_R_IN_J",
      "state": "value_found",
-     "value": 760.31,
+     "value": 760.32,
      "unit": "torr",
-     "abs_tol": 29.4
+     "abs_tol": 29.5
     },
     {
      "id": "SIGN_FLIPPED",
      "state": "value_found",
-     "value": 393.28,
+     "value": 391.95,
      "unit": "torr",
-     "abs_tol": 29.4
+     "abs_tol": 29.5
     },
     {
      "id": "LOG10_FOR_LN",
      "state": "value_found",
-     "value": 3461.4,
+     "value": 3488.5,
      "unit": "torr",
-     "abs_tol": 34.6
+     "abs_tol": 34.9
     }
    ],
    "reveal_with_problem": null,
@@ -40665,35 +40665,35 @@
      ],
      [
       77.3,
-      729.0
+      729.6
      ],
      [
       84.2,
-      948.6
+      950.0
      ],
      [
       91.1,
-      1208.0
+      1211.0
      ],
      [
       98.0,
-      1531.0
+      1535.0
      ],
      [
-      104.9,
-      1923.0
+      105.0,
+      1929.0
      ]
     ],
-    "fit_slope_K": -4671.1,
-    "fit_intercept": 19.92,
+    "fit_slope_K": -4674.4,
+    "fit_intercept": 19.93,
     "problem_points": [
      [
       78.4,
       759.8
      ],
      [
-      96.85,
-      1468.0
+      96.95,
+      1473.0
      ]
     ],
     "asked_point": 2
@@ -40817,9 +40817,9 @@
      "dim": {},
      "state": "substituted",
      "label": "P2/P1",
-     "value": 1.93198,
+     "value": 1.93854,
      "unit": "",
-     "abs_tol": 0.029
+     "abs_tol": 0.0291
     },
     {
      "id": "P1_P2",
@@ -40827,9 +40827,9 @@
      "dim": {},
      "state": "substituted",
      "label": "P1/P2",
-     "value": 0.517604,
+     "value": 0.515852,
      "unit": "",
-     "abs_tol": 0.00776
+     "abs_tol": 0.00774
     },
     {
      "id": "ln_P2_P1",
@@ -40837,9 +40837,9 @@
      "dim": {},
      "state": "substituted",
      "label": "ln(P2/P1)",
-     "value": 0.658544,
+     "value": 0.661934,
      "unit": "",
-     "abs_tol": 0.00988
+     "abs_tol": 0.00993
     },
     {
      "id": "1_T2_1_T1",
@@ -40849,9 +40849,9 @@
      },
      "state": "substituted",
      "label": "1/T2 - 1/T1",
-     "value": -0.000141843,
+     "value": -0.000142573,
      "unit": "1/K",
-     "abs_tol": 2.13e-06
+     "abs_tol": 2.14e-06
     },
     {
      "id": "dHvap_R",
@@ -40873,20 +40873,20 @@
      },
      "state": "value_found",
      "label": "P2",
-     "value": 1467.94,
+     "value": 1472.93,
      "unit": "torr",
-     "abs_tol": 29.4,
+     "abs_tol": 29.5,
      "require_unit": true,
      "also": [
       {
-       "value": 1.9315,
+       "value": 1.93806,
        "unit": "atm",
-       "abs_tol": 0.0386
+       "abs_tol": 0.0388
       },
       {
-       "value": 195.709,
+       "value": 196.374,
        "unit": "kPa",
-       "abs_tol": 3.91
+       "abs_tol": 3.93
       }
      ]
     },
@@ -40907,7 +40907,7 @@
      "state": null,
      "role": "given",
      "label": "T2",
-     "value": 370.0,
+     "value": 370.1,
      "unit": "K",
      "dim": {
       "K": 1
@@ -41092,18 +41092,18 @@
    "context": {
     "substance": "ethanol",
     "one_atm_point": true,
-    "bp_K": 351.52,
-    "lo_K": 291.52,
-    "hi_K": 376.52
+    "bp_K": 351.54999999999995,
+    "lo_K": 291.54999999999995,
+    "hi_K": 376.54999999999995
    },
-   "text": "Ethanol has a vapor pressure of 760 torr at 78.4 °C. Its heat of vaporization is 38600 J/mol. At what temperature is its vapor pressure 36.44 kPa? Report the answer in °C.",
+   "text": "Ethanol has a vapor pressure of 760 torr at 78.4 °C. Its heat of vaporization is 38600 J/mol. At what temperature is its vapor pressure 36.41 kPa? Report the answer in °C.",
    "givens": {
     "T2": {
      "value": 78.4,
      "unit": "degC"
     },
     "P1": {
-     "value": 36.44,
+     "value": 36.41,
      "unit": "kPa"
     },
     "P2": {
@@ -41255,28 +41255,28 @@
     {
      "id": "CELSIUS_NOT_CONVERTED",
      "state": "value_found",
-     "value": 77.069,
+     "value": 77.068,
      "unit": "degC",
      "abs_tol": 1.0
     },
     {
      "id": "SIGN_FLIPPED",
      "state": "value_found",
-     "value": 107.91,
+     "value": 107.93,
      "unit": "degC",
      "abs_tol": 1.08
     },
     {
      "id": "LOG10_FOR_LN",
      "state": "value_found",
-     "value": 66.962,
+     "value": 66.953,
      "unit": "degC",
      "abs_tol": 1.0
     },
     {
      "id": "PRESSURE_UNITS_MIXED",
      "state": "value_found",
-     "value": 12.661,
+     "value": 12.646,
      "unit": "degC",
      "abs_tol": 1.0
     }
@@ -41286,35 +41286,35 @@
     "measured_degC_torr": [
      [
       45.1,
-      191.7
+      191.5
      ],
      [
       53.4,
-      277.3
+      277.1
      ],
      [
       61.6,
-      390.7
+      390.5
      ],
      [
       69.9,
-      544.0
+      543.9
      ],
      [
       78.1,
-      748.0
+      747.9
      ],
      [
       86.4,
       1023.0
      ]
     ],
-    "fit_slope_K": -4628.8,
-    "fit_intercept": 19.8,
+    "fit_slope_K": -4631.7,
+    "fit_intercept": 19.81,
     "problem_points": [
      [
-      53.13,
-      273.3
+      53.11,
+      273.1
      ],
      [
       78.4,
@@ -41423,7 +41423,7 @@
      },
      "state": "P_same_units",
      "label": "P1 in torr",
-     "value": 273.322,
+     "value": 273.097,
      "unit": "torr",
      "abs_tol": 2.73
     },
@@ -41445,7 +41445,7 @@
      "dim": {},
      "state": "substituted",
      "label": "P2/P1",
-     "value": 2.7806,
+     "value": 2.78289,
      "unit": "",
      "abs_tol": 0.0417
     },
@@ -41455,7 +41455,7 @@
      "dim": {},
      "state": "substituted",
      "label": "P1/P2",
-     "value": 0.359635,
+     "value": 0.359339,
      "unit": "",
      "abs_tol": 0.00539
     },
@@ -41465,9 +41465,9 @@
      "dim": {},
      "state": "substituted",
      "label": "ln(P2/P1)",
-     "value": 1.02267,
+     "value": 1.02349,
      "unit": "",
-     "abs_tol": 0.0153
+     "abs_tol": 0.0154
     },
     {
      "id": "1_T2_1_T1",
@@ -41477,9 +41477,9 @@
      },
      "state": "substituted",
      "label": "1/T2 - 1/T1",
-     "value": -0.000220271,
+     "value": -0.000220448,
      "unit": "1/K",
-     "abs_tol": 3.3e-06
+     "abs_tol": 3.31e-06
     },
     {
      "id": "dHvap_R",
@@ -41501,13 +41501,13 @@
      },
      "state": "value_found",
      "label": "T1",
-     "value": 53.1338,
+     "value": 53.115,
      "unit": "degC",
      "abs_tol": 1.0,
      "require_unit": true,
      "also": [
       {
-       "value": 326.284,
+       "value": 326.265,
        "unit": "K",
        "abs_tol": 1.0
       }
@@ -41530,7 +41530,7 @@
      "state": null,
      "role": "given",
      "label": "P1",
-     "value": 36.44,
+     "value": 36.41,
      "unit": "kPa",
      "dim": {
       "atm": 1
@@ -41715,9 +41715,9 @@
    "context": {
     "substance": "ethanol",
     "one_atm_point": false,
-    "bp_K": 351.52,
-    "lo_K": 291.52,
-    "hi_K": 376.52
+    "bp_K": 351.54999999999995,
+    "lo_K": 291.54999999999995,
+    "hi_K": 376.54999999999995
    },
    "text": "Ethanol has a vapor pressure of 115.5 kPa at 81.9 °C. Its heat of vaporization is 38.6 kJ/mol. At what temperature is its vapor pressure 1410 torr? Report the answer in K.",
    "givens": {
@@ -42377,9 +42377,9 @@
    "context": {
     "substance": "ethanol",
     "one_atm_point": true,
-    "bp_K": 351.52,
-    "lo_K": 291.52,
-    "hi_K": 376.52
+    "bp_K": 351.54999999999995,
+    "lo_K": 291.54999999999995,
+    "hi_K": 376.54999999999995
    },
    "text": "Ethanol has a vapor pressure of 105 torr at 32.6 °C. Its heat of vaporization is 38.6 kJ/mol. At what temperature is its vapor pressure 101.3 kPa? Report the answer in K.",
    "givens": {
@@ -43039,9 +43039,9 @@
    "context": {
     "substance": "ethanol",
     "one_atm_point": true,
-    "bp_K": 351.52,
-    "lo_K": 291.52,
-    "hi_K": 376.52
+    "bp_K": 351.54999999999995,
+    "lo_K": 291.54999999999995,
+    "hi_K": 376.54999999999995
    },
    "text": "Ethanol has a vapor pressure of 101.3 kPa at 78.4 °C. Its heat of vaporization is 38.6 kJ/mol. What is its vapor pressure at 330.6 K? Report the answer in atm.",
    "givens": {
@@ -43657,14 +43657,14 @@
    "context": {
     "substance": "ethanol",
     "one_atm_point": false,
-    "bp_K": 351.52,
-    "lo_K": 291.52,
-    "hi_K": 376.52
+    "bp_K": 351.54999999999995,
+    "lo_K": 291.54999999999995,
+    "hi_K": 376.54999999999995
    },
-   "text": "Ethanol has a vapor pressure of 1.34 atm at 86.3 °C. Its heat of vaporization is 38.6 kJ/mol. What is its vapor pressure at 314 K? Report the answer in atm.",
+   "text": "Ethanol has a vapor pressure of 1.34 atm at 86.3 °C. Its heat of vaporization is 38.6 kJ/mol. What is its vapor pressure at 314.1 K? Report the answer in atm.",
    "givens": {
     "T1": {
-     "value": 314.0,
+     "value": 314.1,
      "unit": "K"
     },
     "T2": {
@@ -43827,52 +43827,52 @@
     {
      "id": "SIGN_FLIPPED",
      "state": "value_found",
-     "value": 8.6906,
+     "value": 8.6498,
      "unit": "atm",
-     "abs_tol": 0.0869
+     "abs_tol": 0.0865
     },
     {
      "id": "LOG10_FOR_LN",
      "state": "value_found",
-     "value": 0.018094,
+     "value": 0.018291,
      "unit": "atm",
-     "abs_tol": 0.00413
+     "abs_tol": 0.00415
     }
    ],
    "reveal_with_problem": null,
    "sim": {
     "measured_degC_torr": [
      [
-      32.9,
-      106.9
+      33.0,
+      107.4
      ],
      [
-      45.1,
-      191.7
+      45.2,
+      192.4
      ],
      [
-      57.4,
-      331.7
+      57.5,
+      332.5
      ],
      [
-      69.7,
-      545.6
+      69.8,
+      546.5
      ],
      [
       82.0,
-      878.8
+      879.5
      ],
      [
       94.3,
       1348.0
      ]
     ],
-    "fit_slope_K": -4646.7,
+    "fit_slope_K": -4648.1,
     "fit_intercept": 19.86,
     "problem_points": [
      [
-      40.85,
-      157.0
+      40.95,
+      157.8
      ],
      [
       86.3,
@@ -44000,9 +44000,9 @@
      "dim": {},
      "state": "substituted",
      "label": "P2/P1",
-     "value": 6.48554,
+     "value": 6.45509,
      "unit": "",
-     "abs_tol": 0.0973
+     "abs_tol": 0.0968
     },
     {
      "id": "P1_P2",
@@ -44010,9 +44010,9 @@
      "dim": {},
      "state": "substituted",
      "label": "P1/P2",
-     "value": 0.154189,
+     "value": 0.154917,
      "unit": "",
-     "abs_tol": 0.00231
+     "abs_tol": 0.00232
     },
     {
      "id": "ln_P2_P1",
@@ -44020,7 +44020,7 @@
      "dim": {},
      "state": "substituted",
      "label": "ln(P2/P1)",
-     "value": 1.86958,
+     "value": 1.86487,
      "unit": "",
      "abs_tol": 0.028
     },
@@ -44032,9 +44032,9 @@
      },
      "state": "substituted",
      "label": "1/T2 - 1/T1",
-     "value": -0.000402685,
+     "value": -0.000401671,
      "unit": "1/K",
-     "abs_tol": 6.04e-06
+     "abs_tol": 6.03e-06
     },
     {
      "id": "dHvap_R",
@@ -44056,20 +44056,20 @@
      },
      "state": "value_found",
      "label": "P1",
-     "value": 0.206613,
+     "value": 0.207588,
      "unit": "atm",
-     "abs_tol": 0.00413,
+     "abs_tol": 0.00415,
      "require_unit": true,
      "also": [
       {
-       "value": 157.026,
+       "value": 157.767,
        "unit": "torr",
-       "abs_tol": 3.14
+       "abs_tol": 3.16
       },
       {
-       "value": 20.9351,
+       "value": 21.0339,
        "unit": "kPa",
-       "abs_tol": 0.419
+       "abs_tol": 0.421
       }
      ]
     },
@@ -44078,7 +44078,7 @@
      "state": null,
      "role": "given",
      "label": "T1",
-     "value": 314.0,
+     "value": 314.1,
      "unit": "K",
      "dim": {
       "K": 1
@@ -44275,14 +44275,14 @@
    "context": {
     "substance": "ethanol",
     "one_atm_point": false,
-    "bp_K": 351.52,
-    "lo_K": 291.52,
-    "hi_K": 376.52
+    "bp_K": 351.54999999999995,
+    "lo_K": 291.54999999999995,
+    "hi_K": 376.54999999999995
    },
-   "text": "Ethanol has a vapor pressure of 15.22 kPa at 34.2 °C. Its heat of vaporization is 38.6 kJ/mol. What is its vapor pressure at 81.1 °C? Report the answer in kPa.",
+   "text": "Ethanol has a vapor pressure of 15.19 kPa at 34.2 °C. Its heat of vaporization is 38.6 kJ/mol. What is its vapor pressure at 81.2 °C? Report the answer in kPa.",
    "givens": {
     "T1": {
-     "value": 81.1,
+     "value": 81.2,
      "unit": "degC"
     },
     "T2": {
@@ -44290,7 +44290,7 @@
      "unit": "degC"
     },
     "P2": {
-     "value": 15.22,
+     "value": 15.19,
      "unit": "kPa"
     },
     "dH": {
@@ -44438,23 +44438,23 @@
     {
      "id": "KJ_WITH_R_IN_J",
      "state": "value_found",
-     "value": 15.25,
+     "value": 15.22,
      "unit": "kPa",
      "abs_tol": 2.25
     },
     {
      "id": "SIGN_FLIPPED",
      "state": "value_found",
-     "value": 2.06,
+     "value": 2.0484,
      "unit": "kPa",
      "abs_tol": 2.25
     },
     {
      "id": "LOG10_FOR_LN",
      "state": "value_found",
-     "value": 1521.6,
+     "value": 1531.6,
      "unit": "kPa",
-     "abs_tol": 15.2
+     "abs_tol": 15.3
     }
    ],
    "reveal_with_problem": null,
@@ -44462,39 +44462,39 @@
     "measured_degC_torr": [
      [
       26.2,
-      75.68
+      75.53
      ],
      [
       38.8,
-      143.9
+      143.8
      ],
      [
       51.4,
-      254.8
+      254.7
      ],
      [
-      63.9,
-      430.5
+      64.0,
+      430.7
      ],
      [
-      76.5,
-      705.4
+      76.6,
+      706.1
      ],
      [
-      89.1,
-      1116.0
+      89.2,
+      1118.0
      ]
     ],
-    "fit_slope_K": -4628.7,
-    "fit_intercept": 19.8,
+    "fit_slope_K": -4626.7,
+    "fit_intercept": 19.79,
     "problem_points": [
      [
-      81.1,
-      843.4
+      81.2,
+      844.9
      ],
      [
       34.2,
-      114.2
+      113.9
      ]
     ],
     "asked_point": 1
@@ -44587,7 +44587,7 @@
      },
      "state": "T_in_K",
      "label": "T1 in K",
-     "value": 354.25,
+     "value": 354.35,
      "unit": "K",
      "abs_tol": 0.2
     },
@@ -44630,9 +44630,9 @@
      "dim": {},
      "state": "substituted",
      "label": "P2/P1",
-     "value": 0.13535,
+     "value": 0.13485,
      "unit": "",
-     "abs_tol": 0.00203
+     "abs_tol": 0.00202
     },
     {
      "id": "P1_P2",
@@ -44640,7 +44640,7 @@
      "dim": {},
      "state": "substituted",
      "label": "P1/P2",
-     "value": 7.38828,
+     "value": 7.41565,
      "unit": "",
      "abs_tol": 0.111
     },
@@ -44650,9 +44650,9 @@
      "dim": {},
      "state": "substituted",
      "label": "ln(P2/P1)",
-     "value": -1.99989,
+     "value": -2.00359,
      "unit": "",
-     "abs_tol": 0.03
+     "abs_tol": 0.0301
     },
     {
      "id": "1_T2_1_T1",
@@ -44662,9 +44662,9 @@
      },
      "state": "substituted",
      "label": "1/T2 - 1/T1",
-     "value": 0.000430754,
+     "value": 0.000431551,
      "unit": "1/K",
-     "abs_tol": 6.46e-06
+     "abs_tol": 6.47e-06
     },
     {
      "id": "dHvap_R",
@@ -44686,18 +44686,18 @@
      },
      "state": "value_found",
      "label": "P1",
-     "value": 112.45,
+     "value": 112.644,
      "unit": "kPa",
      "abs_tol": 2.25,
      "require_unit": true,
      "also": [
       {
-       "value": 1.10979,
+       "value": 1.11171,
        "unit": "atm",
        "abs_tol": 0.0222
       },
       {
-       "value": 843.441,
+       "value": 844.898,
        "unit": "torr",
        "abs_tol": 16.9
       }
@@ -44708,12 +44708,12 @@
      "state": null,
      "role": "given",
      "label": "T1",
-     "value": 81.1,
+     "value": 81.2,
      "unit": "degC",
      "dim": {
       "K": 1
      },
-     "abs_tol": 8.11e-05
+     "abs_tol": 8.12e-05
     },
     {
      "id": "g_T2",
@@ -44732,7 +44732,7 @@
      "state": null,
      "role": "given",
      "label": "P2",
-     "value": 15.22,
+     "value": 15.19,
      "unit": "kPa",
      "dim": {
       "atm": 1
@@ -44905,11 +44905,11 @@
    "context": {
     "substance": "ethanol",
     "one_atm_point": false,
-    "bp_K": 351.52,
-    "lo_K": 291.52,
-    "hi_K": 376.52
+    "bp_K": 351.54999999999995,
+    "lo_K": 291.54999999999995,
+    "hi_K": 376.54999999999995
    },
-   "text": "An unidentified liquid has a vapor pressure of 127.6 kPa at 84.6 °C and a vapor pressure of 14.07 kPa at 32.6 °C. What is the molar heat of vaporization of the liquid? Report the answer in kJ/mol.",
+   "text": "An unidentified liquid has a vapor pressure of 127.6 kPa at 84.6 °C and a vapor pressure of 14.05 kPa at 32.6 °C. What is the molar heat of vaporization of the liquid? Report the answer in kJ/mol.",
    "givens": {
     "T1": {
      "value": 84.6,
@@ -44924,7 +44924,7 @@
      "unit": "kPa"
     },
     "P2": {
-     "value": 14.07,
+     "value": 14.05,
      "unit": "kPa"
     }
    },
@@ -45050,23 +45050,23 @@
     {
      "id": "CELSIUS_NOT_CONVERTED",
      "state": "value_found",
-     "value": 0.97224,
+     "value": 0.97287,
      "unit": "kJ/mol",
-     "abs_tol": 0.771
+     "abs_tol": 0.772
     },
     {
      "id": "KJ_WITH_R_IN_J",
      "state": "value_found",
-     "value": 38560.0,
+     "value": 38584.0,
      "unit": "kJ/mol",
      "abs_tol": 386.0
     },
     {
      "id": "LOG10_FOR_LN",
      "state": "value_found",
-     "value": 16.746,
+     "value": 16.757,
      "unit": "kJ/mol",
-     "abs_tol": 0.771
+     "abs_tol": 0.772
     }
    ],
    "reveal_with_problem": null,
@@ -45074,30 +45074,30 @@
     "measured_degC_torr": [
      [
       24.6,
-      70.09
+      69.97
      ],
      [
       38.2,
-      139.2
+      139.1
      ],
      [
       51.8,
-      256.4
+      256.2
      ],
      [
       65.4,
-      454.6
+      454.3
      ],
      [
       79.0,
-      783.0
+      782.9
      ],
      [
       92.6,
       1261.0
      ]
     ],
-    "fit_slope_K": -4631.5,
+    "fit_slope_K": -4633.9,
     "fit_intercept": 19.81,
     "problem_points": [
      [
@@ -45106,7 +45106,7 @@
      ],
      [
       32.6,
-      105.5
+      105.4
      ]
     ],
     "asked_point": 0
@@ -45221,7 +45221,7 @@
      "dim": {},
      "state": "substituted",
      "label": "P2/P1",
-     "value": 0.110266,
+     "value": 0.11011,
      "unit": "",
      "abs_tol": 0.00165
     },
@@ -45231,7 +45231,7 @@
      "dim": {},
      "state": "substituted",
      "label": "P1/P2",
-     "value": 9.06894,
+     "value": 9.08185,
      "unit": "",
      "abs_tol": 0.136
     },
@@ -45241,7 +45241,7 @@
      "dim": {},
      "state": "substituted",
      "label": "ln(P2/P1)",
-     "value": -2.20486,
+     "value": -2.20628,
      "unit": "",
      "abs_tol": 0.0331
     },
@@ -45265,7 +45265,7 @@
      },
      "state": "substituted",
      "label": "dHvap/R",
-     "value": 4637.92,
+     "value": 4640.91,
      "unit": "K",
      "abs_tol": 69.6
     },
@@ -45278,15 +45278,15 @@
      },
      "state": "value_found",
      "label": "dH",
-     "value": 38.5596,
+     "value": 38.5845,
      "unit": "kJ/mol",
-     "abs_tol": 0.771,
+     "abs_tol": 0.772,
      "require_unit": true,
      "also": [
       {
-       "value": 38559.6,
+       "value": 38584.5,
        "unit": "J/mol",
-       "abs_tol": 771.0
+       "abs_tol": 772.0
       }
      ]
     },
@@ -45331,7 +45331,7 @@
      "state": null,
      "role": "given",
      "label": "P2",
-     "value": 14.07,
+     "value": 14.05,
      "unit": "kPa",
      "dim": {
       "atm": 1
@@ -45491,18 +45491,18 @@
    "context": {
     "substance": "ethanol",
     "one_atm_point": true,
-    "bp_K": 351.52,
-    "lo_K": 291.52,
-    "hi_K": 376.52
+    "bp_K": 351.54999999999995,
+    "lo_K": 291.54999999999995,
+    "hi_K": 376.54999999999995
    },
-   "text": "An unidentified liquid has a vapor pressure of 760 torr at 78.4 °C and a vapor pressure of 14.94 kPa at 33.8 °C. What is the molar heat of vaporization of the liquid? Report the answer in kJ/mol.",
+   "text": "An unidentified liquid has a vapor pressure of 760 torr at 78.4 °C and a vapor pressure of 14.91 kPa at 33.9 °C. What is the molar heat of vaporization of the liquid? Report the answer in kJ/mol.",
    "givens": {
     "T1": {
      "value": 78.4,
      "unit": "degC"
     },
     "T2": {
-     "value": 33.8,
+     "value": 33.9,
      "unit": "degC"
     },
     "P1": {
@@ -45510,7 +45510,7 @@
      "unit": "torr"
     },
     "P2": {
-     "value": 14.94,
+     "value": 14.91,
      "unit": "kPa"
     }
    },
@@ -45654,70 +45654,70 @@
     {
      "id": "CELSIUS_NOT_CONVERTED",
      "state": "value_found",
-     "value": 0.94562,
+     "value": 0.95155,
      "unit": "kJ/mol",
-     "abs_tol": 0.77
+     "abs_tol": 0.773
     },
     {
      "id": "KJ_WITH_R_IN_J",
      "state": "value_found",
-     "value": 38507.0,
+     "value": 38646.0,
      "unit": "kJ/mol",
-     "abs_tol": 385.0
+     "abs_tol": 386.0
     },
     {
      "id": "LOG10_FOR_LN",
      "state": "value_found",
-     "value": 16.723,
+     "value": 16.784,
      "unit": "kJ/mol",
-     "abs_tol": 0.77
+     "abs_tol": 0.773
     },
     {
      "id": "PRESSURE_UNITS_MIXED",
      "state": "value_found",
-     "value": 79.039,
+     "value": 79.283,
      "unit": "kJ/mol",
-     "abs_tol": 0.79
+     "abs_tol": 0.793
     }
    ],
    "reveal_with_problem": null,
    "sim": {
     "measured_degC_torr": [
      [
-      25.8,
-      74.34
+      25.9,
+      74.1
      ],
      [
-      37.9,
-      136.2
+      38.0,
+      135.9
      ],
      [
-      50.0,
-      239.8
+      50.1,
+      239.4
      ],
      [
       62.2,
-      403.0
+      402.8
      ],
      [
       74.3,
-      644.2
+      644.3
      ],
      [
       86.4,
-      1028.0
+      1029.0
      ]
     ],
-    "fit_slope_K": -4646.0,
-    "fit_intercept": 19.85,
+    "fit_slope_K": -4664.9,
+    "fit_intercept": 19.91,
     "problem_points": [
      [
       78.4,
       760.0
      ],
      [
-      33.8,
-      112.1
+      33.9,
+      111.8
      ]
     ],
     "asked_point": 0
@@ -45822,7 +45822,7 @@
      },
      "state": "T_in_K",
      "label": "T2 in K",
-     "value": 306.95,
+     "value": 307.05,
      "unit": "K",
      "abs_tol": 0.2
     },
@@ -45846,7 +45846,7 @@
      },
      "state": "P_same_units",
      "label": "P2 in torr",
-     "value": 112.059,
+     "value": 111.834,
      "unit": "torr",
      "abs_tol": 1.12
     },
@@ -45856,7 +45856,7 @@
      "dim": {},
      "state": "substituted",
      "label": "P2/P1",
-     "value": 0.147446,
+     "value": 0.14715,
      "unit": "",
      "abs_tol": 0.00221
     },
@@ -45866,7 +45866,7 @@
      "dim": {},
      "state": "substituted",
      "label": "P1/P2",
-     "value": 6.78213,
+     "value": 6.79577,
      "unit": "",
      "abs_tol": 0.102
     },
@@ -45876,7 +45876,7 @@
      "dim": {},
      "state": "substituted",
      "label": "ln(P2/P1)",
-     "value": -1.91429,
+     "value": -1.9163,
      "unit": "",
      "abs_tol": 0.0287
     },
@@ -45888,9 +45888,9 @@
      },
      "state": "substituted",
      "label": "1/T2 - 1/T1",
-     "value": 0.000413314,
+     "value": 0.000412253,
      "unit": "1/K",
-     "abs_tol": 6.2e-06
+     "abs_tol": 6.18e-06
     },
     {
      "id": "dHvap_R",
@@ -45900,9 +45900,9 @@
      },
      "state": "substituted",
      "label": "dHvap/R",
-     "value": 4631.57,
+     "value": 4648.36,
      "unit": "K",
-     "abs_tol": 69.5
+     "abs_tol": 69.7
     },
     {
      "id": "key_value_found",
@@ -45913,15 +45913,15 @@
      },
      "state": "value_found",
      "label": "dH",
-     "value": 38.5068,
+     "value": 38.6465,
      "unit": "kJ/mol",
-     "abs_tol": 0.77,
+     "abs_tol": 0.773,
      "require_unit": true,
      "also": [
       {
-       "value": 38506.8,
+       "value": 38646.5,
        "unit": "J/mol",
-       "abs_tol": 770.0
+       "abs_tol": 773.0
       }
      ]
     },
@@ -45942,12 +45942,12 @@
      "state": null,
      "role": "given",
      "label": "T2",
-     "value": 33.8,
+     "value": 33.9,
      "unit": "degC",
      "dim": {
       "K": 1
      },
-     "abs_tol": 3.38e-05
+     "abs_tol": 3.39e-05
     },
     {
      "id": "g_P1",
@@ -45966,7 +45966,7 @@
      "state": null,
      "role": "given",
      "label": "P2",
-     "value": 14.94,
+     "value": 14.91,
      "unit": "kPa",
      "dim": {
       "atm": 1
@@ -46126,14 +46126,14 @@
    "context": {
     "substance": "ethanol",
     "one_atm_point": false,
-    "bp_K": 351.52,
-    "lo_K": 291.52,
-    "hi_K": 376.52
+    "bp_K": 351.54999999999995,
+    "lo_K": 291.54999999999995,
+    "hi_K": 376.54999999999995
    },
-   "text": "An unidentified liquid has a vapor pressure of 43.12 kPa at 330.1 K and a vapor pressure of 817 torr at 353.5 K. What is the molar heat of vaporization of the liquid? Report the answer in kJ/mol.",
+   "text": "An unidentified liquid has a vapor pressure of 43.08 kPa at 330.2 K and a vapor pressure of 817 torr at 353.5 K. What is the molar heat of vaporization of the liquid? Report the answer in kJ/mol.",
    "givens": {
     "T1": {
-     "value": 330.1,
+     "value": 330.2,
      "unit": "K"
     },
     "T2": {
@@ -46141,7 +46141,7 @@
      "unit": "K"
     },
     "P1": {
-     "value": 43.12,
+     "value": 43.08,
      "unit": "kPa"
     },
     "P2": {
@@ -46271,39 +46271,39 @@
     {
      "id": "KJ_WITH_R_IN_J",
      "state": "value_found",
-     "value": 38420.0,
+     "value": 38635.0,
      "unit": "kJ/mol",
-     "abs_tol": 384.0
+     "abs_tol": 386.0
     },
     {
      "id": "LOG10_FOR_LN",
      "state": "value_found",
-     "value": 16.685,
+     "value": 16.779,
      "unit": "kJ/mol",
-     "abs_tol": 0.768
+     "abs_tol": 0.773
     },
     {
      "id": "PRESSURE_UNITS_MIXED",
      "state": "value_found",
-     "value": 121.96,
+     "value": 122.56,
      "unit": "kJ/mol",
-     "abs_tol": 1.22
+     "abs_tol": 1.23
     }
    ],
    "reveal_with_problem": null,
    "sim": {
     "measured_degC_torr": [
      [
-      49.0,
-      230.3
+      49.1,
+      229.7
      ],
      [
-      56.8,
-      320.6
+      56.9,
+      320.0
      ],
      [
-      64.7,
-      442.4
+      64.8,
+      442.0
      ],
      [
       72.6,
@@ -46311,19 +46311,19 @@
      ],
      [
       80.5,
-      820.6
+      821.2
      ],
      [
       88.4,
-      1099.0
+      1101.0
      ]
     ],
-    "fit_slope_K": -4621.4,
-    "fit_intercept": 19.78,
+    "fit_slope_K": -4651.0,
+    "fit_intercept": 19.86,
     "problem_points": [
      [
-      56.95,
-      323.4
+      57.05,
+      323.1
      ],
      [
       80.35,
@@ -46420,7 +46420,7 @@
      },
      "state": "P_same_units",
      "label": "P1 in torr",
-     "value": 323.427,
+     "value": 323.127,
      "unit": "torr",
      "abs_tol": 3.23
     },
@@ -46442,7 +46442,7 @@
      "dim": {},
      "state": "substituted",
      "label": "P2/P1",
-     "value": 2.52608,
+     "value": 2.52842,
      "unit": "",
      "abs_tol": 0.0379
     },
@@ -46452,9 +46452,9 @@
      "dim": {},
      "state": "substituted",
      "label": "P1/P2",
-     "value": 0.395871,
+     "value": 0.395504,
      "unit": "",
-     "abs_tol": 0.00594
+     "abs_tol": 0.00593
     },
     {
      "id": "ln_P2_P1",
@@ -46462,7 +46462,7 @@
      "dim": {},
      "state": "substituted",
      "label": "ln(P2/P1)",
-     "value": 0.926667,
+     "value": 0.927595,
      "unit": "",
      "abs_tol": 0.0139
     },
@@ -46474,9 +46474,9 @@
      },
      "state": "substituted",
      "label": "1/T2 - 1/T1",
-     "value": -0.000200531,
+     "value": -0.000199613,
      "unit": "1/K",
-     "abs_tol": 3.01e-06
+     "abs_tol": 2.99e-06
     },
     {
      "id": "dHvap_R",
@@ -46486,9 +46486,9 @@
      },
      "state": "substituted",
      "label": "dHvap/R",
-     "value": 4621.07,
+     "value": 4646.96,
      "unit": "K",
-     "abs_tol": 69.3
+     "abs_tol": 69.7
     },
     {
      "id": "key_value_found",
@@ -46499,15 +46499,15 @@
      },
      "state": "value_found",
      "label": "dH",
-     "value": 38.4196,
+     "value": 38.6348,
      "unit": "kJ/mol",
-     "abs_tol": 0.768,
+     "abs_tol": 0.773,
      "require_unit": true,
      "also": [
       {
-       "value": 38419.6,
+       "value": 38634.8,
        "unit": "J/mol",
-       "abs_tol": 768.0
+       "abs_tol": 773.0
       }
      ]
     },
@@ -46516,7 +46516,7 @@
      "state": null,
      "role": "given",
      "label": "T1",
-     "value": 330.1,
+     "value": 330.2,
      "unit": "K",
      "dim": {
       "K": 1
@@ -46540,7 +46540,7 @@
      "state": null,
      "role": "given",
      "label": "P1",
-     "value": 43.12,
+     "value": 43.08,
      "unit": "kPa",
      "dim": {
       "atm": 1
@@ -46713,14 +46713,14 @@
     "substance": "unidentified",
     "true_substance": "ethanol"
    },
-   "text": "Vapor pressure was measured for an unidentified liquid at six temperatures (plots at left). The straight-line fit is ln(P) = (-4614.3 K)(1/T) + 19.75, with P in torr and T in K. Find the heat of vaporization in kJ/mol and the normal boiling point in K.",
+   "text": "Vapor pressure was measured for an unidentified liquid at six temperatures (plots at left). The straight-line fit is ln(P) = (-4618.6 K)(1/T) + 19.77, with P in torr and T in K. Find the heat of vaporization in kJ/mol and the normal boiling point in K.",
    "givens": {
     "slope": {
-     "value": -4614.3,
+     "value": -4618.6,
      "unit": "K"
     },
     "intercept": {
-     "value": 19.75,
+     "value": 19.77,
      "unit": ""
     }
    },
@@ -46844,28 +46844,28 @@
     {
      "id": "SLOPE_SIGN_KEPT",
      "state": "dH_found",
-     "value": -38.363,
+     "value": -38.399,
      "unit": "kJ/mol",
-     "abs_tol": 0.767
+     "abs_tol": 0.768
     },
     {
      "id": "KJ_WITH_R_IN_J",
      "state": "dH_found",
-     "value": 38363.0,
+     "value": 38399.0,
      "unit": "kJ/mol",
-     "abs_tol": 767.0
+     "abs_tol": 768.0
     },
     {
      "id": "ONE_ATM_IN_TORR_LINE",
      "state": "bp_found",
-     "value": 233.64,
+     "value": 233.62,
      "unit": "K",
      "abs_tol": 1.0
     },
     {
      "id": "KPA_IN_TORR_LINE",
      "state": "bp_found",
-     "value": 304.94,
+     "value": 304.82,
      "unit": "K",
      "abs_tol": 1.0
     }
@@ -47008,61 +47008,61 @@
     "measured_degC_torr": [
      [
       33.4,
-      110.3
+      110.1
      ],
      [
       40.8,
-      155.8
+      155.6
      ],
      [
       48.2,
-      221.0
+      220.8
      ],
      [
       55.6,
-      304.0
+      303.7
      ],
      [
       63.0,
-      413.0
+      412.8
      ],
      [
       70.4,
-      557.1
+      557.0
      ]
     ],
-    "fit_slope_K": -4614.3,
-    "fit_intercept": 19.75
+    "fit_slope_K": -4618.6,
+    "fit_intercept": 19.77
    },
    "sim": {
     "measured_degC_torr": [
      [
       33.4,
-      110.3
+      110.1
      ],
      [
       40.8,
-      155.8
+      155.6
      ],
      [
       48.2,
-      221.0
+      220.8
      ],
      [
       55.6,
-      304.0
+      303.7
      ],
      [
       63.0,
-      413.0
+      412.8
      ],
      [
       70.4,
-      557.1
+      557.0
      ]
     ],
-    "fit_slope_K": -4614.3,
-    "fit_intercept": 19.75,
+    "fit_slope_K": -4618.6,
+    "fit_intercept": 19.77,
     "mark_P_torr": 760.0
    },
    "expected": [
@@ -47075,15 +47075,15 @@
      },
      "state": "dH_found",
      "label": "dHvap from the slope",
-     "value": 38.3633,
+     "value": 38.399,
      "unit": "kJ/mol",
-     "abs_tol": 0.767,
+     "abs_tol": 0.768,
      "require_unit": true,
      "also": [
       {
-       "value": 38363.3,
+       "value": 38399.0,
        "unit": "J/mol",
-       "abs_tol": 767.0
+       "abs_tol": 768.0
       }
      ]
     },
@@ -47095,13 +47095,13 @@
      },
      "state": "bp_found",
      "label": "normal boiling point",
-     "value": 351.789,
+     "value": 351.58,
      "unit": "K",
      "abs_tol": 1.0,
      "require_unit": true,
      "also": [
       {
-       "value": 78.64,
+       "value": 78.43,
        "unit": "degC",
        "abs_tol": 1.0
       }
@@ -47112,19 +47112,19 @@
      "state": null,
      "role": "given",
      "label": "slope",
-     "value": -4614.3,
+     "value": -4618.6,
      "unit": "K",
      "dim": {
       "K": 1
      },
-     "abs_tol": 0.00461
+     "abs_tol": 0.00462
     },
     {
      "id": "g_intercept",
      "state": null,
      "role": "given",
      "label": "intercept",
-     "value": 19.75,
+     "value": 19.77,
      "unit": "",
      "dim": {},
      "abs_tol": 1.98e-05
@@ -47283,14 +47283,14 @@
     "substance": "unidentified",
     "true_substance": "ethanol"
    },
-   "text": "Vapor pressure was measured for an unidentified liquid at six temperatures (plots at left). The straight-line fit is ln(P) = (-4652.6 K)(1/T) + 19.87, with P in torr and T in K. Find the heat of vaporization in kJ/mol and the normal boiling point in °C.",
+   "text": "Vapor pressure was measured for an unidentified liquid at six temperatures (plots at left). The straight-line fit is ln(P) = (-4657.3 K)(1/T) + 19.88, with P in torr and T in K. Find the heat of vaporization in kJ/mol and the normal boiling point in °C.",
    "givens": {
     "slope": {
-     "value": -4652.6,
+     "value": -4657.3,
      "unit": "K"
     },
     "intercept": {
-     "value": 19.87,
+     "value": 19.88,
      "unit": ""
     }
    },
@@ -47414,28 +47414,28 @@
     {
      "id": "SLOPE_SIGN_KEPT",
      "state": "dH_found",
-     "value": -38.682,
+     "value": -38.721,
      "unit": "kJ/mol",
      "abs_tol": 0.774
     },
     {
      "id": "KJ_WITH_R_IN_J",
      "state": "dH_found",
-     "value": 38682.0,
+     "value": 38721.0,
      "unit": "kJ/mol",
      "abs_tol": 774.0
     },
     {
      "id": "ONE_ATM_IN_TORR_LINE",
      "state": "bp_found",
-     "value": -38.998,
+     "value": -38.879,
      "unit": "degC",
      "abs_tol": 1.0
     },
     {
      "id": "KPA_IN_TORR_LINE",
      "state": "bp_found",
-     "value": 31.905,
+     "value": 32.013,
      "unit": "degC",
      "abs_tol": 1.0
     }
@@ -47578,61 +47578,61 @@
     "measured_degC_torr": [
      [
       33.4,
-      108.7
+      108.5
      ],
      [
       40.8,
-      156.4
+      156.2
      ],
      [
       48.2,
-      220.2
+      219.9
      ],
      [
       55.6,
-      305.0
+      304.8
      ],
      [
       63.0,
-      412.3
+      412.1
      ],
      [
       70.4,
-      560.4
+      560.3
      ]
     ],
-    "fit_slope_K": -4652.6,
-    "fit_intercept": 19.87
+    "fit_slope_K": -4657.3,
+    "fit_intercept": 19.88
    },
    "sim": {
     "measured_degC_torr": [
      [
       33.4,
-      108.7
+      108.5
      ],
      [
       40.8,
-      156.4
+      156.2
      ],
      [
       48.2,
-      220.2
+      219.9
      ],
      [
       55.6,
-      305.0
+      304.8
      ],
      [
       63.0,
-      412.3
+      412.1
      ],
      [
       70.4,
-      560.4
+      560.3
      ]
     ],
-    "fit_slope_K": -4652.6,
-    "fit_intercept": 19.87,
+    "fit_slope_K": -4657.3,
+    "fit_intercept": 19.88,
     "mark_P_torr": 760.0
    },
    "expected": [
@@ -47645,13 +47645,13 @@
      },
      "state": "dH_found",
      "label": "dHvap from the slope",
-     "value": 38.6817,
+     "value": 38.7208,
      "unit": "kJ/mol",
      "abs_tol": 0.774,
      "require_unit": true,
      "also": [
       {
-       "value": 38681.7,
+       "value": 38720.8,
        "unit": "J/mol",
        "abs_tol": 774.0
       }
@@ -47665,13 +47665,13 @@
      },
      "state": "bp_found",
      "label": "normal boiling point",
-     "value": 78.3429,
+     "value": 78.4324,
      "unit": "degC",
      "abs_tol": 1.0,
      "require_unit": true,
      "also": [
       {
-       "value": 351.49,
+       "value": 351.58,
        "unit": "K",
        "abs_tol": 1.0
       }
@@ -47682,19 +47682,19 @@
      "state": null,
      "role": "given",
      "label": "slope",
-     "value": -4652.6,
+     "value": -4657.3,
      "unit": "K",
      "dim": {
       "K": 1
      },
-     "abs_tol": 0.00465
+     "abs_tol": 0.00466
     },
     {
      "id": "g_intercept",
      "state": null,
      "role": "given",
      "label": "intercept",
-     "value": 19.87,
+     "value": 19.88,
      "unit": "",
      "dim": {},
      "abs_tol": 1.99e-05
@@ -47853,14 +47853,14 @@
     "substance": "unidentified",
     "true_substance": "ethanol"
    },
-   "text": "Vapor pressure was measured for an unidentified liquid at six temperatures (plots at left). The straight-line fit is ln(P) = (-4665.3 K)(1/T) + 19.91, with P in torr and T in K. Find the heat of vaporization in kJ/mol and the normal boiling point in °C.",
+   "text": "Vapor pressure was measured for an unidentified liquid at six temperatures (plots at left). The straight-line fit is ln(P) = (-4669.6 K)(1/T) + 19.92, with P in torr and T in K. Find the heat of vaporization in kJ/mol and the normal boiling point in °C.",
    "givens": {
     "slope": {
-     "value": -4665.3,
+     "value": -4669.6,
      "unit": "K"
     },
     "intercept": {
-     "value": 19.91,
+     "value": 19.92,
      "unit": ""
     }
    },
@@ -47984,28 +47984,28 @@
     {
      "id": "SLOPE_SIGN_KEPT",
      "state": "dH_found",
-     "value": -38.787,
+     "value": -38.823,
      "unit": "kJ/mol",
      "abs_tol": 0.776
     },
     {
      "id": "KJ_WITH_R_IN_J",
      "state": "dH_found",
-     "value": 38787.0,
+     "value": 38823.0,
      "unit": "kJ/mol",
      "abs_tol": 776.0
     },
     {
      "id": "ONE_ATM_IN_TORR_LINE",
      "state": "bp_found",
-     "value": -38.831,
+     "value": -38.732,
      "unit": "degC",
      "abs_tol": 1.0
     },
     {
      "id": "KPA_IN_TORR_LINE",
      "state": "bp_found",
-     "value": 31.938,
+     "value": 32.019,
      "unit": "degC",
      "abs_tol": 1.0
     }
@@ -48148,61 +48148,61 @@
     "measured_degC_torr": [
      [
       33.4,
-      109.0
+      108.8
      ],
      [
       40.8,
-      156.3
+      156.1
      ],
      [
       48.2,
-      217.9
+      217.6
      ],
      [
       55.6,
-      302.2
+      302.0
      ],
      [
       63.0,
-      416.5
+      416.3
      ],
      [
       70.4,
-      562.0
+      561.8
      ]
     ],
-    "fit_slope_K": -4665.3,
-    "fit_intercept": 19.91
+    "fit_slope_K": -4669.6,
+    "fit_intercept": 19.92
    },
    "sim": {
     "measured_degC_torr": [
      [
       33.4,
-      109.0
+      108.8
      ],
      [
       40.8,
-      156.3
+      156.1
      ],
      [
       48.2,
-      217.9
+      217.6
      ],
      [
       55.6,
-      302.2
+      302.0
      ],
      [
       63.0,
-      416.5
+      416.3
      ],
      [
       70.4,
-      562.0
+      561.8
      ]
     ],
-    "fit_slope_K": -4665.3,
-    "fit_intercept": 19.91,
+    "fit_slope_K": -4669.6,
+    "fit_intercept": 19.92,
     "mark_P_torr": 760.0
    },
    "expected": [
@@ -48215,13 +48215,13 @@
      },
      "state": "dH_found",
      "label": "dHvap from the slope",
-     "value": 38.7873,
+     "value": 38.8231,
      "unit": "kJ/mol",
      "abs_tol": 0.776,
      "require_unit": true,
      "also": [
       {
-       "value": 38787.3,
+       "value": 38823.1,
        "unit": "J/mol",
        "abs_tol": 776.0
       }
@@ -48235,13 +48235,13 @@
      },
      "state": "bp_found",
      "label": "normal boiling point",
-     "value": 78.2405,
+     "value": 78.2997,
      "unit": "degC",
      "abs_tol": 1.0,
      "require_unit": true,
      "also": [
       {
-       "value": 351.39,
+       "value": 351.45,
        "unit": "K",
        "abs_tol": 1.0
       }
@@ -48252,7 +48252,7 @@
      "state": null,
      "role": "given",
      "label": "slope",
-     "value": -4665.3,
+     "value": -4669.6,
      "unit": "K",
      "dim": {
       "K": 1
@@ -48264,7 +48264,7 @@
      "state": null,
      "role": "given",
      "label": "intercept",
-     "value": 19.91,
+     "value": 19.92,
      "unit": "",
      "dim": {},
      "abs_tol": 1.99e-05
@@ -59456,5 +59456,5 @@
    "opener_index": 5
   }
  ],
- "content_version": "9101405603"
+ "content_version": "4497b35a62"
 }

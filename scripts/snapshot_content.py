@@ -35,6 +35,7 @@ MODULES = {                      # module -> names of authored objects
 }
 TRAP_ID_MODULES = ["ch10_cc"]    # modules whose TRAPS list carries authored ids (ch13_ice's trap ids live in its code paths)
 PROSE_FILES = ["archetypes/*.py"]
+JSON_TABLES = ["archetypes/data/substances.json"]   # universal data: one line per record
 PROSE_MIN = 20
 
 
@@ -94,8 +95,17 @@ def prose_literals():
                         yield f"prose\t{p.stem}\t-\t{esc(s)}"
 
 
+def json_records():
+    for pat in JSON_TABLES:
+        for p in sorted(ROOT.glob(pat)):
+            doc = json.load(p.open(encoding="utf-8"))
+            for name in sorted(doc.get("substances", {})):
+                rec = {k: v for k, v in doc["substances"][name].items() if k != "source"}
+                yield f"json\t{p.name}\t{esc(name)}\t{json.dumps(rec, ensure_ascii=False, sort_keys=True)}"
+
 def collect():
     lines = []
+    lines.extend(json_records())
     for pat in CSV_GLOBS:
         for p in sorted(ROOT.glob(pat)):
             lines.extend(csv_cells(p))

@@ -4,6 +4,7 @@ INSTRUCTOR = yours to set.   DRAFT = my placeholder; replace or approve before s
 """
 import math
 from engine import to_canon, from_canon, solve_for, round_sig
+import _substances as _subs
 
 ID    = "ch10_cc"
 TITLE = "Clausius-Clapeyron"
@@ -21,28 +22,20 @@ VARIABLES = {
 # Six kinds of problem from one relation. "slope" is the six-measured-points lab form.
 KINDS = ["T2", "P2", "T1", "P1", "dH", "slope"]
 
-# ---- INSTRUCTOR: liquids. Each curve hangs from its normal boiling point (1 atm).
-#      Values from my memory, not NIST. Check them when it matters.
-#       name,              dHvap kJ/mol, normal bp degC, coldest degC to use
-SUBSTANCES = [
-  ("water",                40.66, 100.0,    5.0),
-  ("methanol",             35.2,   64.7,  -10.0),
-  ("ethanol",              38.56,  78.37, -10.0),
-  ("1-propanol",           41.4,   97.2,    0.0),
-  ("2-propanol",           39.9,   82.3,    0.0),
-  ("1-butanol",            43.3,  117.7,   25.0),
-  ("acetone",              31.30,  56.05, -20.0),
-  ("diethyl ether",        26.5,   34.6,  -30.0),
-  ("pentane",              25.8,   36.1,  -30.0),
-  ("hexane",               28.9,   68.7,  -10.0),
-  ("heptane",              31.8,   98.4,   10.0),
-  ("cyclohexane",          30.0,   80.7,   10.0),
-  ("benzene",              30.7,   80.1,   10.0),
-  ("toluene",              33.2,  110.6,   20.0),
-  ("chloroform",           29.2,   61.2,  -10.0),
-  ("carbon tetrachloride", 29.8,   76.7,    0.0),
-  ("ethyl acetate",        31.9,   77.1,    0.0),
+# ---- INSTRUCTOR: which liquids this archetype's problems may draw, and the coldest temperature a problem may use for each
+#      (a teaching choice: how far below the boiling point the questions go; it must sit above the melting point, which the tests check).
+#      The physical data (ΔHvap at the normal boiling point, boiling point, melting point) come from the universal table,
+#      archetypes/data/substances.json, instructor's NIST values, 9 Oct 2026. Each curve hangs from its normal boiling point (1 atm).
+LIQUIDS = [  # name, coldest degC a problem uses
+  ("water",                   5.0), ("methanol",             -10.0), ("ethanol",              -10.0), ("1-propanol",      -10.0),
+  ("2-propanol",            -10.0), ("1-butanol",            -10.0), ("acetone",              -20.0), ("diethyl ether",   -30.0),
+  ("pentane",               -30.0), ("hexane",               -10.0), ("heptane",               10.0), ("cyclohexane",      10.0),
+  ("benzene",                10.0), ("toluene",               20.0), ("chloroform",           -10.0), ("carbon tetrachloride", 0.0),
+  ("ethyl acetate",           0.0), ("2-butanol",            -10.0), ("isobutyl alcohol",     -10.0),
+  ("tert-butyl alcohol",     26.0),   # melts at 25.1 °C: a solid at room temperature
 ]
+# the table this file works from: (name, dHvap kJ/mol at Tb, normal bp degC, coldest degC a problem uses, normal mp degC)
+SUBSTANCES = [(n, *_subs.get(n, "dHvap_at_Tb_kJ_mol", "boiling_point_C"), cold, _subs.get(n, "melting_point_C")) for n, cold in LIQUIDS]
 P_MIXED_FRACTION = 0.70   # how often the two pressures are shown in different units
 T_IN_CELSIUS     = 0.70   # how often a temperature is shown in degC
 DH_IN_KJ         = 0.85   # how often dHvap is shown in kJ/mol
@@ -70,7 +63,7 @@ def residual(v, flags):
     return log(v["P2"] / v["P1"]) - sign * (v["dH"] / R) * (1.0 / v["T2"] - 1.0 / v["T1"])
 
 def draw_state(rng, liquids=None):
-    name, dH_kJ, bp_C, cold_C = rng.choice([x for x in SUBSTANCES if not liquids or x[0] in liquids])
+    name, dH_kJ, bp_C, cold_C, mp_C = rng.choice([x for x in SUBSTANCES if not liquids or x[0] in liquids])
     dH, bp = dH_kJ * 1000.0, bp_C + 273.15
     P_at = lambda T: math.exp(-(dH / R) * (1.0 / T - 1.0 / bp))          # atm
     lo, hi = max(cold_C + 273.15, bp - SPAN_BELOW_BP), bp + SPAN_ABOVE_BP

@@ -17,6 +17,7 @@ test-verify:
 test-modules:
 	$(NODE) tests/modules/units.test.js
 	$(PY) tests/modules/test_units.py
+	$(PY) tests/modules/test_substances.py
 
 test-regression:
 	$(NODE) tests/regression/integer_answer_accepted.test.js

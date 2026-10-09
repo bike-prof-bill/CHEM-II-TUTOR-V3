@@ -166,7 +166,8 @@ function handle(res, echo) {
   if (res.notebook_url) $("nbLink").href = res.notebook_url;
   if (res.title) $("build").textContent = "V3 · " + res.title;
   if (res.media && res.media.image) showImage(res.media);                    // the picture that goes with the opening question
-  if (res.simulation_url) { $("simCard").style.display = "block"; $("simFrame").src = "media/" + res.simulation_url; add("note", "A simulation is open on the left."); }
+  if (res.simulation_url) { const theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";   // the page knows its own colours; the server does not
+    $("simCard").style.display = "block"; $("simFrame").src = "media/" + res.simulation_url.replace(/\{theme\}/g, theme); add("note", "A simulation is open on the left."); }
   meter(res.progress); showPinned(res.pinned, res.pins); showChoices(res.choices);
   if (res.problem) showProblem(res.problem);
   if (res.sim) openSim(res.sim);
