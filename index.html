@@ -213,7 +213,8 @@ function showProblem(p) {
   $("problemText").className = ""; $("problemText").textContent = p.text;
   $("box").placeholder = "Your working, or a question…";   // givens are NOT listed as T1, P1…: sorting them is the student's job
   equations = p.equations || []; $("eqBtn").disabled = false;
-  $("eqList").innerHTML = ""; equations.forEach(e => { const b = document.createElement("button"); b.className = "eq"; b.textContent = e.text; b.onclick = () => { $("eqDlg").close(); send({ pick: e.id }); }; $("eqList").appendChild(b); });
+  // picking an equation records the choice with the server AND puts its text in the box, ready to be rearranged (instructor, 9 Oct)
+  $("eqList").innerHTML = ""; equations.forEach(e => { const b = document.createElement("button"); b.className = "eq"; b.textContent = e.text; b.onclick = async () => { $("eqDlg").close(); await send({ pick: e.id }); $("box").value = e.text; $("box").focus(); $("box").setSelectionRange(e.text.length, e.text.length); }; $("eqList").appendChild(b); });
   if (p.plots) drawPlots(p.plots, "Measured vapor pressures", false);
   add("note", "The problem is now on the left.");
 }
