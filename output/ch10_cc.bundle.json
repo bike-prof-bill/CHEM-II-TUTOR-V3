@@ -397,7 +397,7 @@
    "state": "T_in_K",
    "stage": "units",
    "label_when_done": "Temperatures in kelvin",
-   "ask": "What must be true of a temperature before it can go into this relation?",
+   "ask": "What must be true of a temperature before it can go into this relation? Convert and type the kelvin value(s).",
    "switch_ask": "What would it mean for the molecules if a temperature of zero on your scale were put into 1/T?",
    "notebook_prompt": "Explain why gas-law and vapor-pressure equations need absolute temperature, using an example I have not named. Do not solve any problem for me. Then ask me one short question and wait.",
    "return_ask": "Why does this relation need an absolute temperature?",
@@ -408,7 +408,7 @@
    "state": "dH_in_J",
    "stage": "units",
    "label_when_done": "ΔHvap in J/mol",
-   "ask": "Look at the units of R and of the heat of vaporization. What has to happen before they meet in one fraction?",
+   "ask": "Look at the units of R and of the heat of vaporization. What has to happen before they meet in one fraction? Convert one of them and type the value with its unit.",
    "switch_ask": "What units must ΔHvap/R end up with for the equation to balance?",
    "notebook_prompt": "Explain how to keep energy units consistent between the gas constant R and a heat of vaporization given in kJ/mol. Do not solve any problem for me. Then ask me one short question and wait.",
    "return_ask": "What did you find about the units of R and ΔHvap?",
@@ -419,7 +419,7 @@
    "state": "P_same_units",
    "stage": "units",
    "label_when_done": "Pressures in one unit",
-   "ask": "The two pressures sit in one ratio. What must be true of their units?",
+   "ask": "The two pressures sit in one ratio. What must be true of their units? Convert one and type it.",
    "switch_ask": "What should the units of P2/P1 be?",
    "notebook_prompt": "Explain why two pressures in a ratio must share a unit and how atm, torr and kPa relate. Do not solve any problem for me. Then ask me one short question and wait.",
    "return_ask": "What must be true of two pressures before you divide one by the other?",
@@ -463,7 +463,7 @@
    "state": "dH_found",
    "stage": "solve",
    "label_when_done": "ΔHvap from the slope",
-   "ask": "What does the slope of your line stand for and what heat of vaporization does it give?",
+   "ask": "What does the slope of your line stand for and what heat of vaporization does it give? Type the value with its unit.",
    "switch_ask": "If the line were steeper what would that say about how hard it is for a molecule to leave the liquid?",
    "notebook_prompt": "Explain how the slope of a plot of ln P against 1/T gives the heat of vaporization, using data different from mine. Do not solve my problem. Then ask me one short question and wait.",
    "return_ask": "How does the slope connect to the heat of vaporization?",
@@ -485,7 +485,7 @@
    "state": "bp_found",
    "stage": "solve",
    "label_when_done": "Normal boiling point found",
-   "ask": "What defines the normal boiling point and where is that on your line?",
+   "ask": "What defines the normal boiling point and where is that on your line? Type the temperature with its unit.",
    "switch_ask": "What would a pressure gauge read above the liquid at the moment it boils in an open beaker at sea level?",
    "notebook_prompt": "Explain what the normal boiling point means in terms of vapor pressure and how to find it from a straight-line fit of ln P against 1/T, using data different from mine. Then ask me one short question and wait.",
    "return_ask": "What condition defines the normal boiling point?",
@@ -56952,5 +56952,5 @@
    "opener_index": 5
   }
  ],
- "content_version": "f39a147081"
+ "content_version": "9b2074d7be"
 }

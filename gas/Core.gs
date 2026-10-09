@@ -636,9 +636,11 @@ var CORE = (function () {
       var trapAsk = ev.traps.length && arch.trap_notes[ev.traps[0]] ? arch.trap_notes[ev.traps[0]].ask : "";
       reply = nowActive ? ack + (trapAsk || (S.pendingUnit !== null ? "What are the units of that value?" : (nowMove.ask || arch.openers[S.openerIndex].question)))
                         : ack + "That completes this problem.";
-      // the same authored question twice in a row, with nothing new: say what this item can actually take
+      // words only (no number, no equation, no pick) at a checkable item, or the same question twice with nothing new:
+      // say what this item can actually take. Plain mode cannot read a sentence; it should not pretend it did not arrive.
       var nb = nowActive ? entry(V, nowActive) : null;
-      if (nb && !ev.newly.length && reply === S.lastReply && !trapAsk) {
+      var wordsOnly = !!msg.trim() && !nums.length && !eqSeen && !tableSeen && !pickId && S.pendingUnit === null;
+      if (nb && !ev.newly.length && !trapAsk && (wordsOnly || reply === S.lastReply)) {
         var hint = { number: "This step is checked on the value: type it, with its unit.", equation: "This step is checked on the equation: type it on one line, the unknown alone on the left.",
                      pick: "This step is a choice: open the Equations list.", direction: "This step is a choice: pick one of the options.", table: "This step is checked on the table: type the three rows I:, C:, E:.",
                      text: "", reflection: "" }[nb.kind] || "";

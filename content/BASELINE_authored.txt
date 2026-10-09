@@ -1,11 +1,11 @@
-csv	content_ch10_cc_moves.csv	P_same_units	ask	The two pressures sit in one ratio. What must be true of their units?
+csv	content_ch10_cc_moves.csv	P_same_units	ask	The two pressures sit in one ratio. What must be true of their units? Convert one and type it.
 csv	content_ch10_cc_moves.csv	P_same_units	notebook_prompt	Explain why two pressures in a ratio must share a unit and how atm, torr and kPa relate. Do not solve any problem for me. Then ask me one short question and wait.
 csv	content_ch10_cc_moves.csv	P_same_units	park_text	1 atm = 760 torr = 101.325 kPa. Put both pressures in the same unit.
 csv	content_ch10_cc_moves.csv	P_same_units	return_ask	What must be true of two pressures before you divide one by the other?
 csv	content_ch10_cc_moves.csv	P_same_units	state	P_same_units
 csv	content_ch10_cc_moves.csv	P_same_units	status	DRAFT
 csv	content_ch10_cc_moves.csv	P_same_units	switch_ask	What should the units of P2/P1 be?
-csv	content_ch10_cc_moves.csv	T_in_K	ask	What must be true of a temperature before it can go into this relation?
+csv	content_ch10_cc_moves.csv	T_in_K	ask	What must be true of a temperature before it can go into this relation? Convert and type the kelvin value(s).
 csv	content_ch10_cc_moves.csv	T_in_K	notebook_prompt	Explain why gas-law and vapor-pressure equations need absolute temperature, using an example I have not named. Do not solve any problem for me. Then ask me one short question and wait.
 csv	content_ch10_cc_moves.csv	T_in_K	park_text	Add 273.15 to each Celsius temperature to get kelvin.
 csv	content_ch10_cc_moves.csv	T_in_K	return_ask	Why does this relation need an absolute temperature?
@@ -17,21 +17,21 @@ csv	content_ch10_cc_moves.csv	account_given	return_ask	In your own words what di
 csv	content_ch10_cc_moves.csv	account_given	state	account_given
 csv	content_ch10_cc_moves.csv	account_given	status	DRAFT
 csv	content_ch10_cc_moves.csv	account_given	switch_ask	What would a pressure gauge above the liquid read as it warms and what must the molecules at the surface be doing to cause that?
-csv	content_ch10_cc_moves.csv	bp_found	ask	What defines the normal boiling point and where is that on your line?
+csv	content_ch10_cc_moves.csv	bp_found	ask	What defines the normal boiling point and where is that on your line? Type the temperature with its unit.
 csv	content_ch10_cc_moves.csv	bp_found	notebook_prompt	Explain what the normal boiling point means in terms of vapor pressure and how to find it from a straight-line fit of ln P against 1/T, using data different from mine. Then ask me one short question and wait.
 csv	content_ch10_cc_moves.csv	bp_found	park_text	Set P to 760 torr in your line and solve for T.
 csv	content_ch10_cc_moves.csv	bp_found	return_ask	What condition defines the normal boiling point?
 csv	content_ch10_cc_moves.csv	bp_found	state	bp_found
 csv	content_ch10_cc_moves.csv	bp_found	status	DRAFT
 csv	content_ch10_cc_moves.csv	bp_found	switch_ask	What would a pressure gauge read above the liquid at the moment it boils in an open beaker at sea level?
-csv	content_ch10_cc_moves.csv	dH_found	ask	What does the slope of your line stand for and what heat of vaporization does it give?
+csv	content_ch10_cc_moves.csv	dH_found	ask	What does the slope of your line stand for and what heat of vaporization does it give? Type the value with its unit.
 csv	content_ch10_cc_moves.csv	dH_found	notebook_prompt	Explain how the slope of a plot of ln P against 1/T gives the heat of vaporization, using data different from mine. Do not solve my problem. Then ask me one short question and wait.
 csv	content_ch10_cc_moves.csv	dH_found	park_text	Slope = -ΔHvap/R so ΔHvap = -(slope)(R).
 csv	content_ch10_cc_moves.csv	dH_found	return_ask	How does the slope connect to the heat of vaporization?
 csv	content_ch10_cc_moves.csv	dH_found	state	dH_found
 csv	content_ch10_cc_moves.csv	dH_found	status	DRAFT
 csv	content_ch10_cc_moves.csv	dH_found	switch_ask	If the line were steeper what would that say about how hard it is for a molecule to leave the liquid?
-csv	content_ch10_cc_moves.csv	dH_in_J	ask	Look at the units of R and of the heat of vaporization. What has to happen before they meet in one fraction?
+csv	content_ch10_cc_moves.csv	dH_in_J	ask	Look at the units of R and of the heat of vaporization. What has to happen before they meet in one fraction? Convert one of them and type the value with its unit.
 csv	content_ch10_cc_moves.csv	dH_in_J	notebook_prompt	Explain how to keep energy units consistent between the gas constant R and a heat of vaporization given in kJ/mol. Do not solve any problem for me. Then ask me one short question and wait.
 csv	content_ch10_cc_moves.csv	dH_in_J	park_text	Either multiply ΔHvap in kJ/mol by 1000 to get J/mol or use R = 0.008314 kJ/(mol K).
 csv	content_ch10_cc_moves.csv	dH_in_J	return_ask	What did you find about the units of R and ΔHvap?

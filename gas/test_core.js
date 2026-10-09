@@ -119,7 +119,7 @@ const fmtU = u => u === "degC" ? "°C" : u;
   say(S, "More molecules have enough energy to escape the liquid surface as it warms."); say(S, "", null, { pick: "eq_a" }); say(S, V.eq_checks[0].park_text);
   let r1 = say(S, "Temperature must be in Kelvin"); let r2 = say(S, "must be in K");
   ok(!r1.log.counted_fail && !r2.log.counted_fail, "words at a number item cost nothing");
-  ok(r2.reply !== r1.reply && /type it, with its unit/i.test(r2.reply), "the second identical question carries a plain hint about what the step takes: " + r2.reply);
+  ok(/type it, with its unit/i.test(r1.reply) && /type it, with its unit/i.test(r2.reply), "words at a number item get the plain hint at once (instructor's second live run): " + r1.reply);
   const ts = V.expected.filter(e => e.state === "T_in_K");
   r1 = say(S, `T1 = ${ts[0].value} K,  T2 =${ts[1].value}K`);
   ok(S.board.T_in_K === "ticked", "two assignments on one line, comma-separated, both read");
