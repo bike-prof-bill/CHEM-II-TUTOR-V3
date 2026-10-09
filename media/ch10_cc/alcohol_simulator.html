@@ -11,12 +11,15 @@
     vapour pressure rises with temperature and how the steepness of ln P against 1/T
     reflects the heat of vaporization; four alcohols; P–T and ln P–1/T views; one
     temperature slider; no heat of vaporization or boiling point stated in words.
+  Revision, 9 Oct 2026 (instructor): seven alcohols instead of four (tert-butyl alcohol
+    left out); temperature axis starts at −30 °C instead of the lowest melting point.
   Data source: docs/ch10_cc_DATA_TABLE_for_simulations.md (instructor, NIST Chemistry
     WebBook, 9 Oct 2026): ΔHvap at the normal boiling point, normal boiling point,
     normal melting point, R = 8.314 J/(mol·K). Model: the tutor's own, a
     Clausius–Clapeyron line through (normal boiling point, 1 atm) with constant ΔHvap.
   URL parameters:
-    substance  methanol | ethanol | 1-propanol | 2-propanol (case-insensitive; common
+    substance  methanol | ethanol | 1-propanol | 2-propanol | 1-butanol | 2-butanol |
+               isobutyl alcohol (case-insensitive; common
                synonyms accepted). Default: 2-propanol. An unrecognised value falls back
                to 2-propanol with a visible notice.
     theme      light | dark. Default: the system setting.
@@ -144,11 +147,15 @@
     'methanol':   { label: 'methanol',   h: 35.2, tb: 64.6, tm: -97.2 },
     'ethanol':    { label: 'ethanol',    h: 38.6, tb: 78.4, tm: -114.2 },
     '1-propanol': { label: '1-propanol', h: 41.4, tb: 97.2, tm: -126.2 },
-    '2-propanol': { label: '2-propanol', h: 40.0, tb: 82.4, tm: -89.5 }
+    '2-propanol': { label: '2-propanol', h: 40.0, tb: 82.4, tm: -89.5 },
+    '1-butanol':  { label: '1-butanol',  h: 43.3, tb: 117.5, tm: -89.6 },
+    '2-butanol':  { label: '2-butanol',  h: 40.8, tb: 98.9, tm: -114.7 },
+    'isobutyl alcohol': { label: 'isobutyl alcohol', h: 41.8, tb: 107.7, tm: -108.0 }
   };
-  var ORDER = ['methanol', 'ethanol', '1-propanol', '2-propanol'];
+  var ORDER = ['methanol', 'ethanol', '1-propanol', '2-propanol', '1-butanol', '2-butanol', 'isobutyl alcohol'];
   var DEFAULT_SUBSTANCE = '2-propanol';           // from the instructor's brief
   var R = 8.314;                                   // J/(mol·K), from the table
+  var AXIS_START_C = -30;                          // instructor, 9 Oct 2026: axis and curves start here, not at the melting point
 
   var KELVIN_OFFSET = 273.15;   // UNVERIFIED – instructor to confirm (°C to K; must match the problems)
   var TORR_PER_ATM = 760;       // UNVERIFIED – instructor to confirm (1 atm = 760 torr exactly)
@@ -163,7 +170,12 @@
     'n-propanol': '1-propanol', 'n-propyl alcohol': '1-propanol',
     'propyl alcohol': '1-propanol', 'propan-1-ol': '1-propanol', '1 propanol': '1-propanol',
     'isopropanol': '2-propanol', 'isopropyl alcohol': '2-propanol',
-    'propan-2-ol': '2-propanol', '2 propanol': '2-propanol'
+    'propan-2-ol': '2-propanol', '2 propanol': '2-propanol',
+    'n-butanol': '1-butanol', 'n-butyl alcohol': '1-butanol', 'butyl alcohol': '1-butanol',
+    'butan-1-ol': '1-butanol', '1 butanol': '1-butanol',
+    'sec-butanol': '2-butanol', 'sec-butyl alcohol': '2-butanol', 'butan-2-ol': '2-butanol', '2 butanol': '2-butanol',
+    'isobutanol': 'isobutyl alcohol', '2-methyl-1-propanol': 'isobutyl alcohol',
+    '2-methylpropan-1-ol': 'isobutyl alcohol'
   };
 
   // ---------------------------------------------------------------------------
@@ -174,12 +186,12 @@
     var d = DATA[s];
     return Math.log(TORR_PER_ATM) - (d.h * 1000 / R) * (1 / toK(tc) - 1 / toK(d.tb));
   }
-  function tMin(s) { return DATA[s].tm; }
+  function tMin(s) { return Math.max(DATA[s].tm, AXIS_START_C); }
   function tMax(s) {
     return Math.ceil((DATA[s].tb + MARGIN_MIN_C) / MARGIN_ROUND_C - 1e-9) * MARGIN_ROUND_C;
   }
 
-  // Axes are the same for all four liquids, so switching liquids shows real differences.
+  // Axes are the same for every liquid, so switching liquids shows real differences.
   function floorTo(v, step) { return Math.floor(v / step + 1e-9) * step; }
   function ceilTo(v, step) { return Math.ceil(v / step - 1e-9) * step; }
   var allTmin = Math.min.apply(null, ORDER.map(tMin));
@@ -190,7 +202,7 @@
 
   var VIEWS = {
     pt: {
-      x: { min: floorTo(allTmin, 20), max: ceilTo(allTmax, 20), grid: 20, labelEvery: 40,
+      x: { min: floorTo(allTmin, 10), max: ceilTo(allTmax, 10), grid: 10, labelEvery: 30,
            fmt: function (v) { return fmtSigned(v, 0); }, title: 'Temperature, T (°C)' },
       y: { min: 0, max: ceilTo(maxP * 1.05, 200), grid: 200, labelEvery: 200,
            fmt: function (v) { return String(Math.round(v)); }, title: 'Vapour pressure, P (torr)' },
@@ -198,10 +210,10 @@
       yOf: function (s, tc) { return Math.exp(lnP(s, tc)); }
     },
     ln: {
-      x: { min: floorTo(1 / toK(allTmax), 0.0005), max: ceilTo(1 / toK(allTmin), 0.0005),
-           grid: 0.0005, labelEvery: 0.001,
+      x: { min: floorTo(1 / toK(allTmax), 0.0002), max: ceilTo(1 / toK(allTmin), 0.0002),
+           grid: 0.0002, labelEvery: 0.0004,
            fmt: function (v) { return v.toFixed(4); }, title: '1/T (K⁻¹)' },
-      y: { min: floorTo(minLn, 5), max: ceilTo(maxLn, 5), grid: 5, labelEvery: 5,
+      y: { min: floorTo(minLn, 1), max: ceilTo(maxLn, 1), grid: 1, labelEvery: 2,
            fmt: function (v) { return fmtSigned(v, 0); }, title: 'ln (P / torr)' },
       xOf: function (tc) { return 1 / toK(tc); },
       yOf: function (s, tc) { return lnP(s, tc); }
@@ -421,7 +433,7 @@
     ctx.save();
     ctx.beginPath(); ctx.rect(PAD.l, PAD.t, pw, ph); ctx.clip();
 
-    // the curve: melting point to tMax only
+    // the curve: from the axis start (all seven melt below it) to tMax
     var s = state.s, a = tMin(s), b = tMax(s), steps = 400;
     ctx.strokeStyle = css('--curve');
     ctx.lineWidth = 2.5; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
@@ -466,7 +478,7 @@
     if (state.view === 'pt') {
       return 'Model curve of vapour pressure in torr (vertical axis, ' + v.y.fmt(v.y.min) + ' to ' + v.y.fmt(v.y.max) +
         ') against temperature in °C (horizontal axis, ' + v.x.fmt(v.x.min) + ' to ' + v.x.fmt(v.x.max) + ') for ' + d.label +
-        '. The curve starts at ' + lo + ' (below that the substance is solid) and ends at ' + hi +
+        '. The curve is shown from ' + lo + ' to ' + hi +
         '. It stays close to zero at low temperatures, then rises more and more steeply as the temperature increases. ' +
         'The marker is at ' + t + ', where the model gives a vapour pressure of about ' + twoSig(Math.exp(lnP(s, state.t))) + ' torr.';
     }
@@ -474,7 +486,7 @@
       ') against 1/T in K⁻¹ (horizontal axis, ' + v.x.fmt(v.x.min) + ' to ' + v.x.fmt(v.x.max) + ') for ' + d.label +
       '. The points lie on a straight line that falls from upper left to lower right, running from 1/T = ' +
       threeSig(1 / toK(tMax(s))) + ' K⁻¹ (' + hi + ') to 1/T = ' + threeSig(1 / toK(tMin(s))) + ' K⁻¹ (' + lo +
-      '; below that the substance is solid). The marker is at ' + t + ', where 1/T is about ' +
+      '). The marker is at ' + t + ', where 1/T is about ' +
       threeSig(1 / toK(state.t)) + ' K⁻¹ and ln (P / torr) is about ' + fmtSigned(lnP(s, state.t), 1) + '.';
   }
 
