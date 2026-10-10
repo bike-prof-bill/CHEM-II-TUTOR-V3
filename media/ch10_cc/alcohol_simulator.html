@@ -3,28 +3,35 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vapour pressure and temperature (DRAFT)</title>
+<title>Vapor pressure and temperature</title>
 <!--
-  DRAFT – not for students until the instructor approves it.
+  Approved by the instructor, 10 Oct 2026 (the DRAFT mark removed by Fable, no other change).
   Date: 9 Oct 2026. Built by Simulation_Claude.
   Brief (one line): ch10_cc, opener "The Rubbing Alcohol Chill": show how an alcohol's
-    vapour pressure rises with temperature and how the steepness of ln P against 1/T
+    vapor pressure rises with temperature and how the steepness of ln P against 1/T
     reflects the heat of vaporization; four alcohols; P–T and ln P–1/T views; one
     temperature slider; no heat of vaporization or boiling point stated in words.
   Revision, 9 Oct 2026 (instructor): seven alcohols instead of four (tert-butyl alcohol
     left out); temperature axis starts at −30 °C instead of the lowest melting point.
+  Revision, 10 Oct 2026 (change request, approved): the problem's liquid (methanol, ethanol or
+    2-propanol) is labelled "your liquid", never named; the curve is labelled "from the equation
+    you used"; the pressure reading is given to 3 significant figures (test values within 1%).
+  Revision, 10 Oct 2026 (instructor): three alcohols only (methanol, ethanol, 2-propanol), plus
+    water as a named comparison. Water's curve starts at its melting point, 0 °C. Spelling
+    "vapor" throughout, to match the other pages.
   Data source: docs/ch10_cc_DATA_TABLE_for_simulations.md (instructor, NIST Chemistry
     WebBook, 9 Oct 2026): ΔHvap at the normal boiling point, normal boiling point,
     normal melting point, R = 8.314 J/(mol·K). Model: the tutor's own, a
     Clausius–Clapeyron line through (normal boiling point, 1 atm) with constant ΔHvap.
   URL parameters:
-    substance  methanol | ethanol | 1-propanol | 2-propanol | 1-butanol | 2-butanol |
-               isobutyl alcohol (case-insensitive; common
-               synonyms accepted). Default: 2-propanol. An unrecognised value falls back
-               to 2-propanol with a visible notice.
+    substance  methanol | ethanol | 2-propanol (case-insensitive; common
+               synonyms accepted). Default: 2-propanol. The liquid sent here is shown as
+               "your liquid" (first in the menu); the named list stays for comparison. An
+               unrecognised value falls back to 2-propanol with a visible notice that does not
+               repeat the name.
     theme      light | dark. Default: the system setting.
-  Numbers not from the table (each marked UNVERIFIED below): 273.15 (°C to K),
-    760 torr = 1 atm, the curve's upper margin, the 25.0 °C starting temperature.
+  Numbers not from the table: the curve's upper margin and the 25.0 °C starting temperature,
+    accepted by the instructor as cartoon choices, 10 Oct 2026. 273.15 and 760 are exact by definition.
   Nothing is fetched, stored, or sent. Nothing moves unless the student moves it.
 -->
 <style>
@@ -103,7 +110,7 @@
 </style>
 </head>
 <body>
-  <h1>Vapour pressure and temperature</h1>
+  <h1>Vapor pressure and temperature</h1>
   <p class="notice" id="notice" role="status" hidden></p>
 
   <div class="controls">
@@ -118,7 +125,7 @@
   </div>
 
   <div class="plot">
-    <canvas id="graph" role="img" aria-label="Graph of the model vapour-pressure curve; description follows below the graph" aria-describedby="desc"></canvas>
+    <canvas id="graph" role="img" aria-label="Graph of the vapor-pressure curve from the equation you used; description follows below the graph" aria-describedby="desc"></canvas>
   </div>
 
   <div class="slider">
@@ -146,36 +153,26 @@
   var DATA = {
     'methanol':   { label: 'methanol',   h: 35.2, tb: 64.6, tm: -97.2 },
     'ethanol':    { label: 'ethanol',    h: 38.6, tb: 78.4, tm: -114.2 },
-    '1-propanol': { label: '1-propanol', h: 41.4, tb: 97.2, tm: -126.2 },
     '2-propanol': { label: '2-propanol', h: 40.0, tb: 82.4, tm: -89.5 },
-    '1-butanol':  { label: '1-butanol',  h: 43.3, tb: 117.5, tm: -89.6 },
-    '2-butanol':  { label: '2-butanol',  h: 40.8, tb: 98.9, tm: -114.7 },
-    'isobutyl alcohol': { label: 'isobutyl alcohol', h: 41.8, tb: 107.7, tm: -108.0 }
+    'water':      { label: 'water',      h: 40.66, tb: 100.0, tm: 0.0 }
   };
-  var ORDER = ['methanol', 'ethanol', '1-propanol', '2-propanol', '1-butanol', '2-butanol', 'isobutyl alcohol'];
+  var ORDER = ['methanol', 'ethanol', '2-propanol', 'water'];
   var DEFAULT_SUBSTANCE = '2-propanol';           // from the instructor's brief
   var R = 8.314;                                   // J/(mol·K), from the table
   var AXIS_START_C = -30;                          // instructor, 9 Oct 2026: axis and curves start here, not at the melting point
 
-  var KELVIN_OFFSET = 273.15;   // UNVERIFIED – instructor to confirm (°C to K; must match the problems)
-  var TORR_PER_ATM = 760;       // UNVERIFIED – instructor to confirm (1 atm = 760 torr exactly)
-  var MARGIN_MIN_C = 5;         // UNVERIFIED – instructor to confirm (curve runs at least 5 °C past the boiling point...)
-  var MARGIN_ROUND_C = 10;      // UNVERIFIED – instructor to confirm (...then up to the next multiple of 10 °C, so the end of the curve does not give the boiling point away)
-  var START_T_C = 25.0;         // UNVERIFIED – instructor to confirm (temperature the slider starts at)
+  var KELVIN_OFFSET = 273.15;   // exact, by definition (0 °C = 273.15 K)
+  var TORR_PER_ATM = 760;       // exact, by definition (1 atm = 760 torr)
+  var MARGIN_MIN_C = 5;         // cartoon choice, accepted by the instructor 10 Oct 2026 (curve runs at least 5 °C past the boiling point...)
+  var MARGIN_ROUND_C = 10;      // accepted 10 Oct 2026 (...then up to the next multiple of 10 °C, so the end of the curve does not give the boiling point away)
+  var START_T_C = 25.0;         // cartoon choice, accepted 10 Oct 2026 (temperature the slider starts at)
 
   // Other names the tutor might send. Spelling variants only; no chemistry.
   var ALIASES = {
     'methyl alcohol': 'methanol',
     'ethyl alcohol': 'ethanol',
-    'n-propanol': '1-propanol', 'n-propyl alcohol': '1-propanol',
-    'propyl alcohol': '1-propanol', 'propan-1-ol': '1-propanol', '1 propanol': '1-propanol',
     'isopropanol': '2-propanol', 'isopropyl alcohol': '2-propanol',
-    'propan-2-ol': '2-propanol', '2 propanol': '2-propanol',
-    'n-butanol': '1-butanol', 'n-butyl alcohol': '1-butanol', 'butyl alcohol': '1-butanol',
-    'butan-1-ol': '1-butanol', '1 butanol': '1-butanol',
-    'sec-butanol': '2-butanol', 'sec-butyl alcohol': '2-butanol', 'butan-2-ol': '2-butanol', '2 butanol': '2-butanol',
-    'isobutanol': 'isobutyl alcohol', '2-methyl-1-propanol': 'isobutyl alcohol',
-    '2-methylpropan-1-ol': 'isobutyl alcohol'
+    'propan-2-ol': '2-propanol', '2 propanol': '2-propanol'
   };
 
   // ---------------------------------------------------------------------------
@@ -205,7 +202,7 @@
       x: { min: floorTo(allTmin, 10), max: ceilTo(allTmax, 10), grid: 10, labelEvery: 30,
            fmt: function (v) { return fmtSigned(v, 0); }, title: 'Temperature, T (°C)' },
       y: { min: 0, max: ceilTo(maxP * 1.05, 200), grid: 200, labelEvery: 200,
-           fmt: function (v) { return String(Math.round(v)); }, title: 'Vapour pressure, P (torr)' },
+           fmt: function (v) { return String(Math.round(v)); }, title: 'Vapor pressure, P (torr)' },
       xOf: function (tc) { return tc; },
       yOf: function (s, tc) { return Math.exp(lnP(s, tc)); }
     },
@@ -229,9 +226,9 @@
     return (v < 0 && Number(t) !== 0 ? MINUS : '') + t;
   }
   var SUP = { '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '-': '⁻' };
-  function twoSig(x) {
-    if (x >= 0.001) return String(Number(x.toPrecision(2)));
-    var p = x.toExponential(1).split('e');
+  function sigP(x) {   // vapor pressure to 3 significant figures
+    if (x >= 0.001) return String(Number(x.toPrecision(3)));
+    var p = x.toExponential(2).split('e');
     var e = String(Number(p[1])).replace(/./g, function (c) { return SUP[c] || c; });
     return p[0] + ' × 10' + e;
   }
@@ -255,10 +252,13 @@
   if (rawSubstance) {
     var found = resolveSubstance(rawSubstance);
     if (found) {
-      state.s = found;
+      // The problem's liquid is never named: it joins the menu as "your liquid", first.
+      var d0 = DATA[found];
+      DATA['your liquid'] = { label: 'your liquid', h: d0.h, tb: d0.tb, tm: d0.tm };
+      ORDER.unshift('your liquid');
+      state.s = 'your liquid';
     } else {
-      var shown = rawSubstance.length > 40 ? rawSubstance.slice(0, 40) + '…' : rawSubstance;
-      notice.textContent = 'No data for “' + shown + '” here; showing ' + DATA[DEFAULT_SUBSTANCE].label + '.';
+      notice.textContent = 'This page has no data for your liquid; showing ' + DATA[DEFAULT_SUBSTANCE].label + ' instead.';
       notice.hidden = false;
     }
   }
@@ -445,6 +445,12 @@
     }
     ctx.stroke();
 
+    // label: the curve is the equation's, not measured data (top-left in P–T, top-right in ln P, away from the line)
+    ctx.font = '600 12px system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif';
+    ctx.textBaseline = 'top'; ctx.textAlign = state.view === 'pt' ? 'left' : 'right';
+    var lx = state.view === 'pt' ? PAD.l + 6 : PAD.l + pw - 6;
+    ctx.lineWidth = 3; ctx.strokeStyle = css('--bg'); ctx.strokeText('from the equation you used', lx, PAD.t + 4);
+    ctx.fillStyle = css('--fg'); ctx.fillText('from the equation you used', lx, PAD.t + 4);
     // marker with dashed guides to both axes
     var mx = X(v.xOf(state.t)), my = Y(v.yOf(s, state.t));
     ctx.strokeStyle = css('--marker');
@@ -476,13 +482,13 @@
     var lo = fmtSigned(tMin(s), 1) + ' °C', hi = fmtSigned(tMax(s), 0) + ' °C';
     var t = fmtSigned(state.t, 1) + ' °C';
     if (state.view === 'pt') {
-      return 'Model curve of vapour pressure in torr (vertical axis, ' + v.y.fmt(v.y.min) + ' to ' + v.y.fmt(v.y.max) +
+      return 'Curve from the equation you used: vapor pressure in torr (vertical axis, ' + v.y.fmt(v.y.min) + ' to ' + v.y.fmt(v.y.max) +
         ') against temperature in °C (horizontal axis, ' + v.x.fmt(v.x.min) + ' to ' + v.x.fmt(v.x.max) + ') for ' + d.label +
         '. The curve is shown from ' + lo + ' to ' + hi +
         '. It stays close to zero at low temperatures, then rises more and more steeply as the temperature increases. ' +
-        'The marker is at ' + t + ', where the model gives a vapour pressure of about ' + twoSig(Math.exp(lnP(s, state.t))) + ' torr.';
+        'The marker is at ' + t + ', where the model gives a vapor pressure of about ' + sigP(Math.exp(lnP(s, state.t))) + ' torr.';
     }
-    return 'Model plot of ln (P / torr) (vertical axis, ' + v.y.fmt(v.y.min) + ' to ' + v.y.fmt(v.y.max) +
+    return 'Line from the equation you used: ln (P / torr) (vertical axis, ' + v.y.fmt(v.y.min) + ' to ' + v.y.fmt(v.y.max) +
       ') against 1/T in K⁻¹ (horizontal axis, ' + v.x.fmt(v.x.min) + ' to ' + v.x.fmt(v.x.max) + ') for ' + d.label +
       '. The points lie on a straight line that falls from upper left to lower right, running from 1/T = ' +
       threeSig(1 / toK(tMax(s))) + ' K⁻¹ (' + hi + ') to 1/T = ' + threeSig(1 / toK(tMin(s))) + ' K⁻¹ (' + lo +
@@ -492,7 +498,7 @@
 
   function shortAnnouncement() {
     var s = state.s, t = fmtSigned(state.t, 1) + ' °C';
-    if (state.view === 'pt') return DATA[s].label + ', ' + t + ': vapour pressure about ' + twoSig(Math.exp(lnP(s, state.t))) + ' torr.';
+    if (state.view === 'pt') return DATA[s].label + ', ' + t + ': vapor pressure about ' + sigP(Math.exp(lnP(s, state.t))) + ' torr.';
     return DATA[s].label + ', ' + t + ': 1/T about ' + threeSig(1 / toK(state.t)) + ' K⁻¹, ln (P / torr) about ' + fmtSigned(lnP(s, state.t), 1) + '.';
   }
 

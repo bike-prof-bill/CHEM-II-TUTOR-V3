@@ -10,7 +10,7 @@ var FALLBACK_MODEL = "gemini-3.5-flash";
 var LOG_HEADERS = ["ts", "build_stamp", "content_version", "event_type", "session_id", "student_id", "attempt_id", "archetype_id",
   "variant_id", "problem_kind", "state", "register", "face", "gate", "entering_done", "leaving_done", "newly", "tries_on_state",
   "counted_fail", "after_bailout", "seconds_away", "trap_ids", "structured", "model_accept", "second_reader", "guards",
-  "fallback_used", "turn_kind", "clean", "done", "credit", "student_text", "reply_text", "model_name", "model_ms", "server_ms", "verdict_ms", "say_ms", "queued", "queue_ms"];
+  "fallback_used", "turn_kind", "clean", "done", "credit", "student_text", "reply_text", "model_name", "model_ms", "server_ms", "verdict_ms", "say_ms", "stage", "tries_on_stage", "queued", "queue_ms"];
 var MASTERY_HEADERS = ["ts", "student_id", "archetype_id", "variant_id", "problem_kind", "attempt_id", "turns", "clean", "credit", "outcome", "build_stamp", "content_version", "queued", "queue_ms"];
 
 function setupV3() {
@@ -132,6 +132,14 @@ function services_(props) {
     set: function (k, v) { props.setProperty(k, v); }, remove: function (k) { props.deleteProperty(k); }, now: function () { return Date.now(); } };
 }
 function append_(props, sheetName, values) { return logqAppend(services_(props), sheetName, values); }
+// Run once after pasting a new version: relabel row 1 of Log and Mastery with the current column names. Columns are only ever
+// appended, so existing rows keep their meaning; the new columns gain their labels.
+function refreshHeaders() {
+  var props = PropertiesService.getScriptProperties(), ss = SpreadsheetApp.openById(props.getProperty("SHEET_ID"));
+  ss.getSheetByName("Log").getRange(1, 1, 1, LOG_HEADERS.length).setValues([LOG_HEADERS]);
+  ss.getSheetByName("Mastery").getRange(1, 1, 1, MASTERY_HEADERS.length).setValues([MASTERY_HEADERS]);
+  Logger.log("Headers refreshed: Log " + LOG_HEADERS.length + " columns, Mastery " + MASTERY_HEADERS.length + " columns.");
+}
 function flushLog() { var props = PropertiesService.getScriptProperties(); var r = logqFlush(services_(props)); Logger.log("flushed " + r.flushed + " pending row(s)" + (r.locked ? " (lock busy; try again)" : "") + "; still pending: " + logqPendingCount(services_(props))); }
 function json_(o) { return text_(JSON.stringify(o)); }
 function text_(s) { return ContentService.createTextOutput(s).setMimeType(ContentService.MimeType.JSON); }

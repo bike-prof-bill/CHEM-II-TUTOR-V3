@@ -1,16 +1,19 @@
 // node gas/test_core.js  -- scripted students through the real logic. No network, no Google.
-const CORE = require("./Core.gs"); const ARCH = require("./Archetype_ch10_cc.gs")["ch10_cc"];
+const CORE = require("./Core.gs"); const ARCH = require("./Archetype_ch10_cc_test.gs")["ch10_cc"];
 let pass = 0, fail = 0; const ok = (c, m) => { c ? pass++ : (fail++, console.log("  FAIL:", m)); };
 const find = kind => ARCH.variants.findIndex(v => v.kind === kind && v.board.some(b => b.state === "T_in_K"));
 const say = (S, m, model, extra) => CORE.processTurn(ARCH, S, Object.assign({ message: m, now: Date.now() }, extra || {}), model || null);
 const key = V => V.expected.find(t => t.role === "key");
 const fmtU = u => u === "degC" ? "°C" : u;
+const predict = (S, V, model) => { const d = V.board.find(b => b.id === "direction_predicted"); if (d) say(S, "", model, { pick: d.right[0] }); };
+const REFLECT = "The rearrangement was hardest; I would tell a friend to undo the natural log first.";
 
 // 1. strong student, offline mode (no model): straight through, any order
 { const i = find("T2"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "t1" });
   let r = say(S, "hi"); ok(!r.problem, "greeting must not reveal problem");
   r = say(S, "A larger fraction of the molecules have enough kinetic energy to overcome the attractions and escape.");
   ok(r.problem && r.problem.text === V.text, "account reveals problem"); ok(!JSON.stringify(r).includes("true_substance"), "no hidden fields leak");
+  predict(S, V);                                                            // temperature problems carry the prediction too (vent scenario, 10 Oct)
   const k = key(V); r = say(S, "I get " + k.value.toFixed(2));            // bare number, no unit
   ok(!r.done && /units/i.test(r.reply), "bare key asks for units"); r = say(S, fmtU(k.unit));
   ok(S.board.value_found !== "ticked" && S.board.T_in_K === "ticked", "right number is recorded but does NOT count before the rearrangement");
@@ -20,12 +23,13 @@ const fmtU = u => u === "degC" ? "°C" : u;
   ok(S.board.value_found === "ticked", "the number typed earlier now counts, without retyping");
   ok(r.sim && r.sim.measured_degC_torr.length === 6, "sim released on value");
   r = say(S, "The measurement only gives pressure; the energy distribution of molecules is inferred from how steeply it rises.");
-  ok(r.done && r.credit, "clean finish earns credit"); }
+  ok(!r.done && S.board.meaning_given === "ticked", "meaning accepted; the reflection still stands between the student and done");
+  r = say(S, REFLECT); ok(r.done && r.credit, "clean finish earns credit"); }
 
 // 2. weak student: trap, then stray -> notebook card without a model call; return; two more -> park
 { const i = find("P2") > -1 ? find("P2") : find("T2"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 1, stamp: "t2" });
   let calls = 0; const model = () => { calls++; return { accept: 1, turn_kind: "answer", socratic_response: "What happens next?" }; };
-  say(S, "The water molecules at the surface gain energy and escape into the vapor bubbles.", model);
+  say(S, "The water molecules at the surface gain energy and escape into the vapor bubbles.", model); predict(S, V, model);
   say(S, "", model, { pick: "eq_c" }); ok(S.tries.setup === 1, "wrong pick counts once (ladder is per stage: setup)");
   say(S, "", model, { pick: "eq_a" }); ok(S.board.relation_chosen === "ticked", "right pick ticks");
   say(S, V.eq_checks[0].park_text, model); ok(S.board.rearranged === "ticked", "canonical rearrangement accepted");
@@ -145,7 +149,8 @@ const fmtU = u => u === "degC" ? "°C" : u;
   const asking = (sys, hist, msg) => ({ socratic_response: "Good. The forces are moderate. And how would you summarize all three accounts together?", accept: 1, turn_kind: "answer" });
   say(S, "More molecules have enough energy to escape the liquid surface as it warms.", asking); say(S, "", asking, { pick: "eq_a" }); say(S, V.eq_checks[0].park_text, asking);
   V.expected.filter(e => e.role === "intermediate" || e.role === "key").forEach(e => say(S, e.value + " " + e.unit, asking));
-  const r = say(S, "The value says the attractions are moderate; the measurements support the picture only roughly.", asking);
+  say(S, "The value says the attractions are moderate; the measurements support the picture only roughly.", asking);
+  const r = say(S, REFLECT, asking);     // the reflection is the last item now
   ok(r.done && !/\?/.test(r.reply) && /QUESTION_AFTER_COMPLETION/.test(r.log.guards), "completion: question cut, guard logged: " + JSON.stringify(r.reply));
   const r2 = say(S, "thanks", asking); ok(r2.done && !/\?/.test(r2.reply), "after completion: still no question"); }
 
@@ -159,19 +164,23 @@ const fmtU = u => u === "degC" ? "°C" : u;
   const r = say(S, "what do you mean by infer"); ok(r.log.turn_kind === "question" && !r.log.counted_fail, "a plea for help costs nothing: " + r.log.turn_kind); }
 
 // 6k. label words (SCENARIO_CLAUDE, approved 9 Oct): naming the phenomenon without a mechanism is asked again and never counted
-{ const oi = ARCH.openers.findIndex(o => /Rubbing/.test(o.title)), i = ARCH.variants.findIndex(v => v.opener_index === oi), S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: oi, stamp: "lbl" });
-  ok(ARCH.openers[oi].label_words.indexOf("volatile") > -1 && ARCH.openers[oi].keywords.indexOf("escape") > -1, "the opener carries label words and the approved keywords");
-  let r = say(S, "Alcohol is more volatile than water so it evaporates and dries fast.");
+{ const LIVE = require("./Archetype_ch10_cc.gs")["ch10_cc"];       // the student-facing bundle: label words live on its openers
+  const oi = LIVE.openers.findIndex(o => /Rubbing/.test(o.title)), i = LIVE.variants.findIndex(v => v.opener_index === oi), S = CORE.newSession(LIVE, { variantIndex: i, openerIndex: oi, stamp: "lbl" });
+  const sayL = (m, x) => CORE.processTurn(LIVE, S, Object.assign({ message: m, now: 1 }, x || {}), null);
+  ok(LIVE.openers[oi].label_words.indexOf("volatile") > -1 && LIVE.openers[oi].keywords.indexOf("escape") > -1, "the opener carries label words and the approved keywords");
+  let r = sayL("Alcohol is more volatile than water so it evaporates and dries fast.");
   ok(S.board.account_given !== "ticked" && !r.log.counted_fail && /OPENER_LABEL_ONLY/.test(r.log.guards), "a label-only account is not ticked, not counted, flagged: " + r.log.guards);
-  r = say(S, "Alcohol molecules attract each other weakly, so a larger fraction has the energy to escape the surface.");
+  r = sayL("Alcohol molecules attract each other weakly, so a larger fraction has the energy to escape the surface.");
   ok(S.board.account_given === "ticked", "a mechanism account is accepted"); }
 
 // 7. every variant of every kind can be completed by a student who types only the key(s)
-{ let bad = 0; ARCH.variants.forEach((V, i) => { const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: i % 6, stamp: "v" + i });
+{ let bad = 0; ARCH.variants.forEach((V, i) => { const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "v" + i });
     say(S, "A greater fraction of molecules has the kinetic energy to escape the liquid surface.");
-    say(S, "", null, { pick: V.kind === "slope" ? "eq_b" : "eq_a" });
+    predict(S, V); say(S, "", null, { pick: V.kind === "slope" ? "eq_b" : "eq_a" });
     V.eq_checks.forEach(k => { say(S, k.park_text); if (S.board[k.state] !== "ticked") { bad++; console.log("   canonical form rejected:", k.park_text); } });
     V.expected.filter(t => t.role === "key").forEach(t => say(S, t.value + " " + fmtU(t.unit)));
-    const r = say(S, "Only pressure and temperature were measured; what the molecules do is inferred from the fit.");
-    if (!(r.done && r.credit)) bad++; }); ok(bad === 0, bad + " variants could not be completed"); }
+    V.expected.filter(t => t.derive).forEach(t => { const k = V.expected.find(e => e.id === t.derive.from); say(S, (t.derive.base - k.value).toPrecision(5) + " " + fmtU(t.unit)); });   // a derived item (the bird's pressure difference)
+    say(S, "Only pressure and temperature were measured; what the molecules do is inferred from the fit.");
+    const r = say(S, REFLECT);
+    if (!(r.done && r.credit)) { bad++; if (bad < 4) console.log("   not completed:", V.variant_id, V.kind, CORE.activeState(S, V)); } }); ok(bad === 0, bad + " variants could not be completed"); }
 console.log(`\n${pass} passed, ${fail} failed`); process.exit(fail ? 1 : 0);

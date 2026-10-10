@@ -78,7 +78,7 @@ var CORE = (function () {
         if (!isLive(S, V, eqr.state) || !eb.requires.every(function (r) { return isSet(S, r); })) notes.push("Their equation is valid, but an earlier item is not yet established. Ask them to do that first.");
         else { tick(S, V, eqr.state, ev.newly); (S.pinned.rearranged = S.pinned.rearranged || []).push(eqr.shown); if (eb.pin) addPin(S, eqr.state, eb.label_when_done || eqr.state, eqr.shown); notes.push("The student's equation holds under substitution and the unknown stands alone. Confirmed by the server."); }
       } else if (eqr.verdict === "HOLDS_NOT_ISOLATED") notes.push("Their equation is algebraically true but the unknown does not yet stand alone on the left. That is progress, not an error. Ask what operation is still in the way. Do not do it for them.");
-      else if (eqr.verdict === "TRAP") { eqBad = true; ev.traps.push(eqr.trap); notes.push("EQUATION CHECK (" + eqr.trap + "): " + arch.trap_notes[eqr.trap].note + " Work on THEIR expression, one step at a time. Do not write the correct form."); }
+      else if (eqr.verdict === "TRAP") { eqBad = true; ev.traps.push(eqr.trap); notes.push("EQUATION CHECK (" + eqr.trap + "): " + trapNote(arch, V, eqr.trap).note + " Work on THEIR expression, one step at a time. Do not write the correct form."); }
       else if (eqr.verdict === "WRONG") { eqBad = true; notes.push("EQUATION CHECK: their equation does not hold when the server substitutes values. Read what they wrote, not what they meant (an unbracketed denominator is a real error). Ask about one step of THEIR algebra. Do not write the correct form."); }
       else notes.push("The server could not read their equation. Ask them to retype it on one line with brackets around every numerator and denominator.");
     });
@@ -101,16 +101,19 @@ var CORE = (function () {
     var nums = parseNumbers(plainLines.join("\n")).concat(worked), strays = 0, unitOnly = (!nums.length && S.pendingUnit !== null) ? parseNumbers("1 " + msg)[0] : null;
     if (unitOnly && unitOnly.unit) {                       // "K" sent on its own after a bare number
       var pt = V.expected[S.pendingUnit.idx];
-      if (unitOnly.unit === S.pendingUnit.unit) { S.matched[S.pendingUnit.idx] = true; S.pendingUnit = null; notes.push(pt.label + ": units supplied. Confirmed."); }
+      if (unitOnly.unit === S.pendingUnit.unit) { S.matched[S.pendingUnit.idx] = true; S.values = S.values || {}; S.values[S.pendingUnit.idx] = S.pendingUnit.x; S.pendingUnit = null; notes.push(pt.label + ": units supplied. Confirmed."); }
       else if (!UNITS.vecSame(UNITS.dim(unitOnly.unit), UNITS.dim(S.pendingUnit.unit))) { ev.guards.push("WRONG_DIMENSION"); notes.push("The unit they supplied is of a different kind of quantity than the one asked for. Do not accept it. Ask what kind of quantity this value is."); }
     }
     nums.forEach(function (n) {
       S.produced.push(n.x);
       var c = classify(n, S, V);
       if (c.type === "expected" || c.type === "needs_unit") {
-        c.ids.forEach(function (ix) { S.matched[ix] = true; });
-        if (c.needs && !S.matched[c.needs.idx]) { S.pendingUnit = c.needs; notes.push("The value for '" + V.expected[c.needs.idx].label + "' is right but has no units. Ask for the units. Do not advance."); }
-      } else if (c.type === "trap") { ev.traps.push(c.trap.id); var tn = arch.trap_notes[c.trap.id]; notes.push("KNOWN WRONG TURN (" + c.trap.id + "): " + (tn ? tn.note : "") + " Do not name the fix. Ask one question aimed at it."); }
+        c.ids.forEach(function (ix) { S.matched[ix] = true; S.values = S.values || {};      // the student's own accepted value, in the entry's unit
+          var e = V.expected[ix], v = n.x; if (n.unit && e.unit && n.unit !== e.unit) { var cv = UNITS.convert(n.x, n.unit, e.unit); if (cv !== null) v = cv; } S.values[ix] = v; });
+        // a bare number that IS a declared intermediate is that intermediate; it does not also leave the key waiting for a unit
+        // (a unitless ratio can equal the answer's value in another unit when the known quantity is 1 in that unit: found by the second scenario, 10 Oct)
+        if (c.type === "needs_unit" && c.needs && !S.matched[c.needs.idx]) { S.pendingUnit = c.needs; notes.push("The value for '" + V.expected[c.needs.idx].label + "' is right but has no units. Ask for the units. Do not advance."); }
+      } else if (c.type === "trap") { ev.traps.push(c.trap.id); notes.push("KNOWN WRONG TURN (" + c.trap.id + "): " + trapNote(arch, V, c.trap.id).note + " Do not name the fix. Ask one question aimed at it."); }
       else if (c.type === "wrong_dimension") { ev.guards.push("WRONG_DIMENSION"); strays++; notes.push("The number is right for one step but carries a unit of a different kind of quantity (" + c.typed + "). Do not accept it. Ask what kind of quantity that value measures."); }
       else if (c.type === "stray") strays++;
     });
@@ -261,7 +264,8 @@ var CORE = (function () {
     var med = (arch.openers[S.openerIndex] && arch.openers[S.openerIndex].media) || {};
     if (med.simulation && !S.mediaSimOpen && ((med.simulation_opens === "account" && isSet(S, "account_given")) || (med.simulation_opens !== "account" && simDue))) {
       S.mediaSimOpen = true; var subst = (V.context && (V.context.true_substance || V.context.substance)) || "";
-      res.simulation_url = med.simulation.replace(/\{substance\}/g, encodeURIComponent(subst));
+      var params = Object.assign({ substance: subst }, V.sim_params || {});      // the archetype's own placeholders ({T}, {unit}, ...)
+      res.simulation_url = med.simulation.replace(/\{(\w+)\}/g, function (m, k) { return k === "theme" ? m : (params[k] !== undefined ? encodeURIComponent(String(params[k])) : m); });
     }
     if (!provisional && !S.done && activeState(S, V) === null) { S.done = true; S.credit = S.clean && S.board["meaning_given"] === "ticked"; ev.completed = true; }
     res.done = S.done; res.credit = S.credit;

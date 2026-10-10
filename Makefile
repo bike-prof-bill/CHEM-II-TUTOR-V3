@@ -13,6 +13,9 @@ test-gen:
 test-verify:
 	$(NODE) gas/test_core.js
 	$(NODE) gas/test_ice.js
+	$(NODE) gas/test_syringe.js
+	$(NODE) gas/test_bird.js
+	$(NODE) gas/test_vent.js
 
 test-modules:
 	$(NODE) tests/modules/units.test.js

@@ -33,6 +33,9 @@ LIQUIDS = [  # name, coldest degC a problem uses
   ("benzene",                10.0), ("toluene",               20.0), ("chloroform",           -10.0), ("carbon tetrachloride", 0.0),
   ("ethyl acetate",           0.0), ("2-butanol",            -10.0), ("isobutyl alcohol",     -10.0),
   ("tert-butyl alcohol",     26.0),   # melts at 25.1 °C: a solid at room temperature
+  ("dichloromethane",       -30.0),   # added 10 Oct 2026 for The Syringe Boiling Trick (instructor approved)
+  ("CFC-11",                -30.0),   # added 10 Oct 2026 for The Drinking Bird (instructor approved)
+  ("HFE-7000",              -30.0),
 ]
 # the table this file works from: (name, dHvap kJ/mol at Tb, normal bp degC, coldest degC a problem uses, normal mp degC)
 SUBSTANCES = [(n, *_subs.get(n, "dHvap_at_Tb_kJ_mol", "boiling_point_C"), cold, _subs.get(n, "melting_point_C")) for n, cold in LIQUIDS]
@@ -62,10 +65,36 @@ def residual(v, flags):
     sign = +1.0 if flags.get("sign_flipped") else -1.0
     return log(v["P2"] / v["P1"]) - sign * (v["dH"] / R) * (1.0 / v["T2"] - 1.0 / v["T1"])
 
-def draw_state(rng, liquids=None):
-    name, dH_kJ, bp_C, cold_C, mp_C = rng.choice([x for x in SUBSTANCES if not liquids or x[0] in liquids])
+def draw_state(rng, liquids=None, limits=None, kind=None):
+    """limits (per opener, from content_ch10_cc_limits.csv): the known point is the normal boiling point at 1 atm and the
+    other temperature lies in [lo_C, hi_C] for that liquid; the unknown pressure is the one at the other temperature."""
+    pool = [x for x in SUBSTANCES if not liquids or x[0] in liquids]
+    if limits: pool = [x for x in pool if x[0] in limits] or pool
+    name, dH_kJ, bp_C, cold_C, mp_C = rng.choice(pool)
     dH, bp = dH_kJ * 1000.0, bp_C + 273.15
     P_at = lambda T: math.exp(-(dH / R) * (1.0 / T - 1.0 / bp))          # atm
+    if limits and name in limits:
+        L = limits[name]
+        depth_m = None
+        if L.get("other_by") == "depth":                                               # The Deep-Sea Vent: pressure from depth, temperature from the model
+            step = L.get("depth_step_m") or 10.0; n_lo = int(round(L["depth_lo_m"] / step)); n_hi = int(round(L["depth_hi_m"] / step))
+            depth_m = step * rng.randint(n_lo, n_hi); P_other = 1.0 + depth_m / 10.0        # atm: the air plus about 1 atm per 10 m of water
+            T_known = bp; T_other = 1.0 / (1.0 / bp - (R / dH) * math.log(P_other))        # the model inverted
+        elif L["known_point"] == "boiling point":
+            T_known = bp; T_other = rng.uniform(L["lo_C"] + 273.15, L["hi_C"] + 273.15)
+        else:                                                                          # a drawn known temperature with the model's pressure there
+            T_known = rng.uniform(L["known_lo_C"] + 273.15, L["known_hi_C"] + 273.15)
+            T_other = T_known + rng.uniform(L["lo_C"], L["hi_C"]) if L["offset"] else rng.uniform(L["lo_C"] + 273.15, L["hi_C"] + 273.15)
+        s = {"T1": T_known, "T2": T_other, "P1": P_at(T_known), "P2": P_at(T_other), "dH": dH}       # point 1 = the known point
+        if kind in ("P1", "T1"):                                                       # the unknown is point 1: swap
+            s = {"T1": T_other, "T2": T_known, "P1": P_at(T_other), "P2": P_at(T_known), "dH": dH}
+        ctx = {"substance": name, "one_atm_point": L["known_point"] == "boiling point", "bp_K": bp, "lo_K": min(T_known, T_other), "hi_K": max(T_known, T_other),
+               "limited": True, "min_gap": L.get("min_gap", 2.0), "max_P_atm": 250.0 if depth_m is not None else 20.0}
+        if depth_m is not None:                                                        # the pressure at depth is not printed; the depth is
+            other = "P1" if kind in ("P1", "T1") else "P2"                            # the pressure at the unknown's point
+            ctx.update({"depth_m": depth_m, "hidden": [other], "extra_givens": {"depth": {"value": depth_m, "unit": "m"}},
+                        "fixed_units": {"T1" if other == "P2" else "T2": "degC", "P1": "atm", "P2": "atm"}})
+        return s, ctx
     lo, hi = max(cold_C + 273.15, bp - SPAN_BELOW_BP), bp + SPAN_ABOVE_BP
     one_atm = rng.random() < ONE_ATM_POINT
     T1 = bp if one_atm else rng.uniform(lo, hi)
@@ -85,15 +114,17 @@ def pick_unit(rng, name, shown):
     if rng.random() < P_MIXED_FRACTION: return rng.choice([u for u in ("atm", "torr") if u != other[0]])
     return other[0]
 
-def acceptable(full):
-    return abs(full["T2"] - full["T1"]) >= 8.0 and 0.003 < full["P1"] < 20 and 0.003 < full["P2"] < 20
+def acceptable(full, ctx=None):
+    gap = (ctx or {}).get("min_gap", 8.0) if (ctx or {}).get("limited") else 8.0      # a scenario may allow a smaller temperature gap
+    pmax = (ctx or {}).get("max_P_atm", 20.0)                                           # the vent reaches 201 atm
+    return abs(full["T2"] - full["T1"]) >= gap and 0.003 < full["P1"] < pmax and 0.003 < full["P2"] < pmax
 
 # ---- grading windows (instructor, 19 Sept): +/- 1 K on temperatures, 2 % elsewhere.
 def window(kind, value): return 1.0 if kind == "temperature" else 0.02 * abs(value)
 
 # ---- THE BOARD for one problem: what must be established, and what must come first.
 #      Conversions appear only when this problem's numbers call for them.
-def board_for(shown, unknown):
+def board_for(shown, unknown, ctx=None):
     need = []
     if any(s["unit"] == "degC" for n, s in shown.items() if n in ("T1", "T2")): need.append("T_in_K")
     if "dH" in shown and shown["dH"]["unit"] == "kJ/mol":                        need.append("dH_in_J")
@@ -104,10 +135,57 @@ def board_for(shown, unknown):
          {"state": "rearranged",      "kind": "equation", "register": "symbolic", "requires": ["relation_chosen"], "explicit": True, "pin": True}]
     b += [{"state": s, "kind": "number", "register": "symbolic", "requires": ["account_given"], "pin": True,
            "rule": "any" if s == "P_same_units" else "all"} for s in need]
-    b += [{"state": "substituted",   "kind": "number", "register": "symbolic",  "requires": ["rearranged"] + need, "rule": "any"},
-          {"state": "value_found",   "kind": "number", "register": "macro",     "requires": ["substituted"], "rule": "all", "opens_sim": True},
+    b += [{"state": "substituted",   "kind": "number", "register": "symbolic",  "requires": ["rearranged"] + need, "rule": "any"}]
+    # Optional items. Defaults (instructor, 10 Oct): the prediction on every pressure problem, the reflection on every problem.
+    # A scenario's openers row may add or remove them: "+direction_predicted", "-reflection".
+    items = (ctx or {}).get("items") or {}
+    want = lambda name, default: (name not in items.get("remove", [])) and (default or name in items.get("add", []))
+    with_direction = want("direction_predicted", unknown in ("P1", "P2", "T1", "T2")) and unknown in ("P1", "P2", "T1", "T2")
+    with_reflection = want("reflection", True)
+    if with_direction:                                        # SCENARIO_CLAUDE, approved 10 Oct: predict before computing (pressure kinds; temperature kinds from the vent)
+        q = "pressure" if unknown in ("P1", "P2") else "temperature"
+        b.insert(1, {"state": "direction_predicted", "kind": "direction", "register": "macro", "requires": ["account_given"], "explicit": True, "pin": True,
+                     "options": [{"id": "direction:higher", "text": f"higher than the {q} I was given"}, {"id": "direction:lower", "text": f"lower than the {q} I was given"},
+                                 {"id": "direction:same", "text": f"the same as the {q} I was given"}],
+                     "right": ["direction:" + _direction(shown, unknown, (ctx or {}).get("_full"))]})
+    if (ctx or {}).get("depth_m") is not None:                   # The Deep-Sea Vent: the pressure at the vent from its depth, before substitution
+        b.insert(len([x for x in b if x["kind"] != "number"]) if False else next(i for i, x in enumerate(b) if x["state"] == "substituted"),
+                 {"state": "P_from_depth", "kind": "number", "register": "symbolic", "requires": ["account_given"], "rule": "all", "pin": True})
+        next(x for x in b if x["state"] == "substituted")["requires"].append("P_from_depth")
+    b += [{"state": "value_found",   "kind": "number", "register": "macro",     "requires": ["substituted"] + (["direction_predicted"] if with_direction else []), "rule": "all", "opens_sim": True},
           {"state": "meaning_given", "kind": "text",   "register": "inference", "requires": ["value_found"], "credit_gate": True}]
+    if "dP_found" in items.get("add", []) and unknown in ("P1", "P2"):     # The Drinking Bird: how much higher is the pressure in the body
+        mg = next(x for x in b if x["state"] == "meaning_given"); mg["requires"] = ["dP_found"]
+        b.insert(b.index(mg), {"state": "dP_found", "kind": "number", "register": "macro", "requires": ["value_found"], "rule": "all", "pin": True})
+    if with_reflection: b.append({"state": "reflection", "kind": "reflection", "register": "inference", "requires": ["meaning_given"]})   # never graded (approved 10 Oct)
     return b
+
+def extra_targets(full, shown, unknown, ans_unit, ctx):
+    """Declared numbers a scenario adds. The Drinking Bird: body pressure minus head pressure, in the answer unit, either sign.
+    `derive` tells the verifier to grade it against the student's OWN accepted head pressure (so the 2 % allowance on the head
+    pressure is not counted twice): expected = base - value typed for the entry named."""
+    items = (ctx or {}).get("items") or {}; out = []
+    if (ctx or {}).get("depth_m") is not None:                   # The Deep-Sea Vent: 1 atm + depth/10 atm, within 2 %, unit required
+        hid = (ctx.get("hidden") or ["P2"])[0]; P = full[hid]
+        out.append(T("P_from_depth", "pressure at the vent", P, "atm", 0.02 * P, role="intermediate", require_unit=True))
+    if "dP_found" not in items.get("add", []) or unknown not in ("P1", "P2"): return out
+    known = "P1" if unknown == "P2" else "P2"
+    P_known = from_canon("pressure", ans_unit, full[known]); P_unknown = from_canon("pressure", ans_unit, full[unknown])
+    dP = P_known - P_unknown
+    return [T("dP_found", "body minus head pressure", dP, ans_unit, 0.02 * abs(dP), role="intermediate", require_unit=True,
+              derive={"from": "key_value_found", "base": round_sig(P_known, 6)},                  # expected = base - student's head pressure
+              also=[{"value": round_sig(-dP, 6), "unit": ans_unit, "abs_tol": round_sig(0.02 * abs(dP), 3)}])]
+
+def _direction(shown, unknown, full=None):
+    """Which way the unknown lies from the known one. A pressure: decided by the two temperatures (higher T, higher P).
+    A temperature: decided by the two pressures (higher P, higher boiling T)."""
+    if unknown in ("P1", "P2"):
+        other = "P1" if unknown == "P2" else "P2"
+        Tu = shown["T1" if unknown == "P1" else "T2"]; Tk = shown["T1" if other == "P1" else "T2"]
+        tu = Tu["value"] + (273.15 if Tu["unit"] == "degC" else 0); tk = Tk["value"] + (273.15 if Tk["unit"] == "degC" else 0)
+    else:
+        pu = full["P1" if unknown == "T1" else "P2"]; pk = full["P2" if unknown == "T1" else "P1"]; tu, tk = pu, pk
+    return "higher" if tu > tk * (1 + 1e-9) else ("lower" if tu < tk * (1 - 1e-9) else "same")
 
 # ---- constants a student may restate without it meaning anything. Declared, never guessed (rebuild spec, Change 2).
 #      Any other number that matches nothing is a stray. The 1 is the 1 in 1/T. R in kJ (0.008314) is not here:
@@ -152,6 +230,8 @@ def targets_for(full, shown, unknown, ans_unit):
     dinv = 1 / full["T2"] - 1 / full["T1"]
     out.append(T("substituted", "1/T2 - 1/T1", dinv, "1/K", 0.015 * abs(dinv)))
     out.append(T("substituted", "dHvap/R", full["dH"] / R, "K", 0.015 * full["dH"] / R))
+    if unknown in ("T1", "T2"):
+        inv = 1.0 / full[unknown]; out.append(T("substituted", f"1/{unknown}", inv, "1/K", 0.015 * inv))
     kind = VARIABLES[unknown]["kind"]
     key = from_canon(kind, ans_unit, full[unknown])
     also = []
@@ -181,7 +261,26 @@ TRAPS = [
   {"id": "LOG10_FOR_LN",          "applies": lambda s, u: True, "value": lambda A, s, k, u, au, key: _as_student(k, u, au, flags={"log10": True})},
   {"id": "PRESSURE_UNITS_MIXED",  "applies": lambda s, u: "P1" in s and "P2" in s and s["P1"]["unit"] != s["P2"]["unit"],
    "value": lambda A, s, k, u, au, key: _as_student(k, u, au, swap={"P1": s["P1"]["value"], "P2": s["P2"]["value"]})},
+  # SCENARIO_CLAUDE, approved 10 Oct: the pressure ratio typed as the answer, with a pressure unit. Detectable only when the
+  # known pressure is not 1 in the unit typed (then the ratio IS the answer numerically and the unit settles nothing).
+  {"id": "RATIO_NOT_SCALED", "applies": lambda s, u: u in ("P1", "P2") and abs(_known_P(s, u) - 1.0) > 0.02,
+   "value": lambda A, s, k, u, au, key: _ratio_as_answer(s, k, u, au, key)},
+  # The Drinking Bird (SCENARIO_CLAUDE, approved 10 Oct): the head pressure that water's heat of vaporization gives in place of the
+  # sealed liquid's. Declared only when the liquid's own value is far enough from water's for the two answers to differ.
+  # The Deep-Sea Vent (approved 10 Oct): 1/T typed as the answer, with the answer's unit (bare, it is the declared 1/T step)
+  {"id": "RECIPROCAL_NOT_TAKEN", "applies": lambda s, u: u in ("T1", "T2"),
+   "value": lambda A, s, k, u, au, key: 1.0 / (key + (273.15 if au == "degC" else 0.0))},
+  {"id": "WATER_DH_USED", "openers": ["The Drinking Bird"], "applies": lambda s, u: u in ("P1", "P2") and abs(_dH_kJ(s) - _WATER_DH_KJ) > 0.10 * _WATER_DH_KJ,
+   "value": lambda A, s, k, u, au, key: _as_student(k, u, au, swap={"dH": _WATER_DH_KJ * 1000.0})},
 ]
+_WATER_DH_KJ = _subs.get("water", "dHvap_at_Tb_kJ_mol")
+def _dH_kJ(shown): v = shown["dH"]; return v["value"] if v["unit"] == "kJ/mol" else v["value"] / 1000.0
+def _known_P(shown, unknown):
+    other = "P1" if unknown == "P2" else "P2"; return shown[other]["value"]           # in its own unit, as the student sees it
+def _ratio_as_answer(shown, known, unknown, ans_unit, key):
+    other = "P1" if unknown == "P2" else "P2"
+    known_in_ans = from_canon("pressure", ans_unit, known[other])
+    return key / known_in_ans                                                           # P_unknown / P_known, which has no unit
 
 # ---- how a typed equation is read and checked (by substitution, as V2 did; never by matching strings).
 EQUATION_SYMBOLS = {            # what the student may type  ->  the variable it means
@@ -234,6 +333,10 @@ def slope_equation_checks(rng):
 
 # ---- DRAFT. What the tutor is told, and what is asked if the model is unavailable, when a trap value appears.
 TRAP_NOTES = {
+  "RECIPROCAL_NOT_TAKEN": {"note": "They stopped at 1/T: the number is the reciprocal of the temperature, typed as if it were the temperature.",
+                           "ask": "That number is 1/T. What is one more step to get T?"},
+  "RATIO_NOT_SCALED":    {"note": "They typed the ratio of the two pressures as if it were the pressure asked for. A ratio has no unit; the unknown pressure is the known one times or divided by it.",
+                          "ask": "That number is a ratio of two pressures. It has no unit. How do you use the pressure you know to get the one you are finding?"},
   "CELSIUS_NOT_CONVERTED": {"note": "Their number is what results when a temperature is left in degC.", "ask": "Look at the temperatures you put into 1/T. What scale are they on, and what scale does the relation need?"},
   "KJ_WITH_R_IN_J":        {"note": "Their number is what results when dHvap in kJ meets R in J.", "ask": "Write out the units of ΔHvap and of R side by side. Do they cancel?"},
   "SIGN_FLIPPED":          {"note": "Their number is what results when the negative sign is lost or the ratio is inverted without it.", "ask": "As the temperature goes up, should the vapor pressure go up or down, and does your number do that?"},
@@ -259,6 +362,16 @@ def measured(rng, dH, T_ref, P_ref_atm, lo, hi):
     m = (6 * sum(x * y for x, y in zip(xs, ys)) - sx * sy) / (6 * sum(x * x for x in xs) - sx * sx)
     return pts, m, (sy - m * sx) / 6
 
+def sim_params(full, shown, unknown, ans_unit, ctx=None):
+    """Values a scenario's simulation may take from the problem (placeholders in its address): {T} = the temperature in °C at
+    which the unknown pressure is asked (for a pressure problem) or the second point otherwise; {T_known} = the other point's
+    temperature in °C (the body temperature for The Drinking Bird, the boiling point for the syringe); {unit} = the answer's unit."""
+    t_unknown = full["T2" if unknown in ("P2", "T2", "dH") else "T1"] - 273.15      # the temperature at the unknown's point
+    t_known = full["T1" if unknown in ("P2", "T2", "dH") else "T2"] - 273.15
+    out = {"T": f"{t_unknown:.1f}", "T_known": f"{t_known:.1f}", "unit": "°C" if ans_unit == "degC" else ans_unit}
+    if (ctx or {}).get("depth_m") is not None: out["depth"] = f"{ctx['depth_m']:g}"      # {depth} in m, for The Deep-Sea Vent
+    if ans_unit in ("degC", "K"): out["unit"] = "C" if ans_unit == "degC" else "K"           # a temperature unit as a simulation reads it
+    return out
 def sim_payload(full, unknown, rng):
     lo, hi = min(full["T1"], full["T2"]) - 8.0, max(full["T1"], full["T2"]) + 8.0
     pts, m, b = measured(rng, full["dH"], full["T1"], full["P1"], lo, hi)
@@ -299,10 +412,15 @@ def slope_kind(rng, state, ctx):
       {"state": "bp_found",        "kind": "number", "register": "macro",     "requires": ["rearranged_T"], "rule": "all"},
       {"state": "meaning_given",   "kind": "text",   "register": "inference", "requires": ["dH_found", "bp_found"], "credit_gate": True},
     ]
+    items = (ctx or {}).get("items") or {}
+    if "reflection" not in items.get("remove", []): board.append({"state": "reflection", "kind": "reflection", "register": "inference", "requires": ["meaning_given"]})
     unit = "°C" if ans_T == "degC" else "K"
-    text = (f"Vapor pressure was measured for an unidentified {_hidden(ctx)} at six temperatures (plots at left). "    # DRAFT
-            f"The straight-line fit is ln(P) = ({m:g} K)(1/T) + {b:g}, with P in torr and T in K. "
-            f"Find the heat of vaporization in kJ/mol and the normal boiling point in {unit}.")
+    if ctx.get("template"):                                           # the scenario's own sentence (the generator gives the fitted line, P in torr)
+        text = ctx["template"].format(liquid="a related " + _class_word(ctx).split(" ", 1)[1] if _class_word(ctx) != "water" else "water", m=f"{m:g} K", b=f"{b:g}", Punit="torr") + f" Give the boiling point in {unit}."
+    else:
+        text = (f"Vapor pressure was measured for an unidentified {_hidden(ctx)} at six temperatures (plots at left). "    # DRAFT
+                f"The straight-line fit is ln(P) = ({m:g} K)(1/T) + {b:g}, with P in torr and T in K. "
+                f"Find the heat of vaporization in kJ/mol and the normal boiling point in {unit}.")
     return {"context": {"substance": "unidentified", "true_substance": ctx["substance"]}, "text": text,
             "givens": {"slope": {"value": m, "unit": "K"}, "intercept": {"value": b, "unit": ""}},
             "board": board, "targets": targets, "traps": traps,
@@ -319,8 +437,24 @@ def _hidden(ctx):
     """How a problem names a liquid it must not identify: by class when the class is an alcohol (instructor, 9 Oct), else 'liquid'."""
     return "alcohol" if _subs.get(ctx["substance"], "class") == "alcohol" else "liquid"
 def _fmt(s): return f"{s['value']:g} {'°C' if s['unit'] == 'degC' else s['unit']}"
+def _class_word(ctx):
+    """'an alcohol', 'a ketone', 'an ether', 'an alkane', 'an ester', 'a haloalkane'; water stays 'water'."""
+    c = _subs.get(ctx["substance"], "class")
+    if c == "water": return "water"
+    return ("an " if c[0] in "aeiou" else "a ") + c
 def render_text(shown, unknown, ans_unit, ctx):
     f = {n: _fmt(s) for n, s in shown.items()}
+    if ctx.get("hidden"): f.update({h: "(not shown)" for h in ctx["hidden"] if h not in f})   # a scenario that hides a variable must supply its own sentence
+    if ctx.get("template") and unknown == "dH":                       # the scenario's own sentence for a ΔHvap problem: the liquid stays unnamed
+        return ctx["template"].format(liquid="a related " + _class_word(ctx).split(" ", 1)[1] if _class_word(ctx) != "water" else "water",
+                                      P1=f.get("P1", ""), T1=f.get("T1", ""), P2=f.get("P2", ""), T2=f.get("T2", ""), unit=ans_unit)
+    if ctx.get("template") and unknown in ("P1", "P2", "T1", "T2"):   # the scenario's own sentence (SCENARIO_CLAUDE, 10 Oct)
+        known, other = ("P1", "T1") if unknown in ("P2", "T2") else ("P2", "T2")
+        t_unknown = "T2" if unknown in ("P2", "T2") else "T1"
+        fill = {"liquid": _class_word(ctx), "T_known": f.get(other, ""), "P_known": f.get(known, ""), "T_unknown": f.get(t_unknown, ""), "dHvap": f["dH"], "unit": "°C" if ans_unit == "degC" else ans_unit,
+                "depth": (f"{ctx['depth_m']:g} m" if ctx.get("depth_m") is not None else "")}
+        fill.update({"T_syringe": fill["T_unknown"], "T_boil": fill["T_known"], "T_body": fill["T_known"], "P_body": fill["P_known"], "T_head": fill["T_unknown"]})
+        return ctx["template"].format(**fill)
     liquid = f"An unidentified {_hidden(ctx)}" if unknown == "dH" else ctx["substance"].capitalize()
     pts = []
     if "T1" in f and "P1" in f: pts.append(f"a vapor pressure of {f['P1']} at {f['T1']}")

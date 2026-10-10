@@ -73,11 +73,18 @@ function near(x, v, tol) { return Math.abs(x - v) <= tol; }
 // A typed unit must equal the declared form's unit (no silent conversion: converting IS the student's step).
 // A bare number matches any form by value, but cannot tick an entry that requires a unit.
 // Pure: reads only its arguments. `ticked` is the set of states already set, as {state: true}.
-function match(n, expected, traps, ticked) {
-  var hits = [], needs = null, wrongDim = null, given = null, constant = null;
+// `accepted` (optional): values the student has already had accepted, by entry id. An entry with `derive` is graded against them:
+// expected = derive.base - accepted[derive.from] (The Drinking Bird's pressure difference, graded against the student's own head
+// pressure so its allowance is not counted twice). Such an entry is skipped until the entry it depends on has been accepted.
+function match(n, expected, traps, ticked, accepted) {
+  var hits = [], needs = null, wrongDim = null, given = null, constant = null; accepted = accepted || {};
   for (var i = 0; i < expected.length; i++) {
-    var t = expected[i];
-    var forms = [{ value: t.value, unit: t.unit, abs_tol: t.abs_tol }].concat(t.also || []);
+    var t = expected[i], forms;
+    if (t.derive) {
+      if (accepted[t.derive.from] === undefined) continue;
+      var dv = t.derive.base - accepted[t.derive.from];
+      forms = [{ value: dv, unit: t.unit, abs_tol: t.abs_tol }, { value: -dv, unit: t.unit, abs_tol: t.abs_tol }];
+    } else forms = [{ value: t.value, unit: t.unit, abs_tol: t.abs_tol }].concat(t.also || []);
     for (var f = 0; f < forms.length; f++) {
       var F = forms[f], fu = F.unit || "";
       if (!near(n.x, F.value, F.abs_tol)) continue;
@@ -88,7 +95,7 @@ function match(n, expected, traps, ticked) {
       if (n.unit && !fu) continue;                                 // a unit on a unitless quantity is not that quantity
       if (t.role === "given") { given = given || i; break; }
       if (t.role === "constant") { constant = constant || i; break; }
-      if (!n.unit && t.require_unit && fu) { if (!needs) needs = { idx: i, unit: fu }; break; }
+      if (!n.unit && t.require_unit && fu) { if (!needs) needs = { idx: i, unit: fu, x: n.x }; break; }
       hits.push(i); break;
     }
   }
@@ -116,6 +123,7 @@ function match(n, expected, traps, ticked) {
   return { type: "stray" };
 }
 function tickedSet(S) { var t = {}; for (var st in S.board) if (isSet(S, st)) t[st] = true; return t; }
-function classify(n, S, V) { return match(n, V.expected, V.traps, tickedSet(S)); }
+function acceptedValues(S, V) { var a = {}; V.expected.forEach(function (e, i) { if (S.values && S.values[i] !== undefined) a[e.id] = S.values[i]; }); return a; }
+function classify(n, S, V) { return match(n, V.expected, V.traps, tickedSet(S), acceptedValues(S, V)); }
 
-if (typeof module !== "undefined") module.exports = { eqSide: eqSide, holdsOn: holdsOn, holdsAny: holdsAny, checkEquation: checkEquation, cellEqual: cellEqual, checkTable: checkTable, near: near, match: match, tickedSet: tickedSet, classify: classify };
+if (typeof module !== "undefined") module.exports = { acceptedValues: acceptedValues, eqSide: eqSide, holdsOn: holdsOn, holdsAny: holdsAny, checkEquation: checkEquation, cellEqual: cellEqual, checkTable: checkTable, near: near, match: match, tickedSet: tickedSet, classify: classify };

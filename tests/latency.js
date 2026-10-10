@@ -1,6 +1,6 @@
 // Latency of Phase A (the deterministic verdict) and of Phase B without a model, over a scripted run of every Clausius variant.
 // Prints p50 / p95 / max in milliseconds. The model's own time is measured on the server (say_ms, model_ms in the log).
-const CORE = require("../gas/Core.gs"); const ARCH = require("../gas/Archetype_ch10_cc.gs")["ch10_cc"];
+const CORE = require("../gas/Core.gs"); const ARCH = require("../gas/Archetype_ch10_cc_test.gs")["ch10_cc"];
 const tA = [], tB = [];
 ARCH.variants.forEach((V, i) => {
   const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "lat" });

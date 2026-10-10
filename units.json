@@ -56,6 +56,12 @@
       "dim": {
         "L": 1
       }
+    },
+    "length": {
+      "canonical": "m",
+      "dim": {
+        "m": 1
+      }
     }
   },
   "units": {
@@ -227,6 +233,30 @@
       "aliases": [
         "mL",
         "cm³"
+      ]
+    },
+    "m": {
+      "dimension": "length",
+      "factor": 1,
+      "offset": 0,
+      "aliases": [
+        "m",
+        "meter",
+        "meters",
+        "metre",
+        "metres"
+      ]
+    },
+    "km": {
+      "dimension": "length",
+      "factor": 1000,
+      "offset": 0,
+      "aliases": [
+        "km",
+        "kilometer",
+        "kilometers",
+        "kilometre",
+        "kilometres"
       ]
     }
   }

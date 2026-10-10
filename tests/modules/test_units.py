@@ -17,6 +17,6 @@ for u, d in engine.UNITS["units"].items():
 owner = {}
 for u, d in engine.UNITS["units"].items():
     for a in d["aliases"]:
-        k = a.replace(" ", "").lower()
+        k = a.replace(" ", "")                                     # exact spelling: M (molar) and m (metre) may coexist
         check(owner.setdefault(k, u) == u, f"alias {a!r} is claimed by both {owner[k]} and {u}")
 print(f"units (python): {'all pass' if not fails else str(fails) + ' failed'}"); sys.exit(1 if fails else 0)

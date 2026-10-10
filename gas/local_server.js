@@ -2,7 +2,7 @@
 // Same Core.gs, same archetype file, no Google, no model (plain mode). Log rows print to the terminal.
 const http = require("http"), fs = require("fs"), path = require("path"), CORE = require("./Core.gs");
 const ARCHETYPES = {};                                       // every generated gas/Archetype_*.gs file, found by name
-fs.readdirSync(__dirname).filter(f => /^Archetype_.*\.gs$/.test(f)).forEach(f => Object.assign(ARCHETYPES, require(path.join(__dirname, f))));
+fs.readdirSync(__dirname).filter(f => /^Archetype_.*\.gs$/.test(f) && !/_test\.gs$/.test(f)).forEach(f => Object.assign(ARCHETYPES, require(path.join(__dirname, f))));
 const sessions = {}, turns = {}, history = {};
 http.createServer((req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*"); res.setHeader("Access-Control-Allow-Headers", "*"); res.setHeader("Content-Type", "application/json");

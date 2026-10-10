@@ -1,6 +1,6 @@
 // Regression (rebuild spec, Change 1): the wrong-try ladder counted per item when per stage was decided, so two fails
 // on different items of one stage produced two notebook cards (one per item). Now tries are keyed by stage.
-const CORE = require("../../gas/Core.gs"); const ARCH = require("../../gas/Archetype_ch10_cc.gs")["ch10_cc"];
+const CORE = require("../../gas/Core.gs"); const ARCH = require("../../gas/Archetype_ch10_cc_test.gs")["ch10_cc"];
 let pass = 0, fail = 0; const ok = (c, m) => { c ? pass++ : (fail++, console.log("  FAIL:", m)); };
 const say = (S, m, extra) => CORE.processTurn(ARCH, S, Object.assign({ message: m, now: Date.now() }, extra || {}), null);
 const fmtU = u => u === "degC" ? "°C" : u;
@@ -10,6 +10,7 @@ const i = ARCH.variants.findIndex(v => v.board.some(b => b.id === "T_in_K") && v
 const V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "stage" });
 ok(V.board.find(b => b.id === "T_in_K").stage === V.board.find(b => b.id === "dH_in_J").stage, "both conversions belong to one stage: " + V.board.find(b => b.id === "T_in_K").stage);
 say(S, "A larger fraction of the molecules has enough kinetic energy to escape the liquid surface.");
+const dir = V.board.find(b => b.id === "direction_predicted"); if (dir) say(S, "", { pick: dir.right[0] });     // temperature problems predict first
 say(S, "", { pick: "eq_a" }); say(S, V.eq_checks[0].park_text);
 ok(CORE.activeState(S, V) === "T_in_K", "setup done; the first units item is active");
 let r = say(S, "I get 123456"); ok(r.log.counted_fail && r.log.state === "T_in_K" && !r.card, "first stray, attributed to T_in_K: no card yet");

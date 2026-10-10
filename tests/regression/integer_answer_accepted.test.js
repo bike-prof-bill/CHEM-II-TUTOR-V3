@@ -23,7 +23,7 @@ r = CORE.match({ x: 4, unit: null }, expected, traps, { value_found: true });
 ok(r.type === "stray", "a trap for a state already set is not reported");
 
 // a real variant from the bundle: the matcher is the same function the turn uses
-const ARCH = require("../../gas/Archetype_ch10_cc.gs")["ch10_cc"];
+const ARCH = require("../../gas/Archetype_ch10_cc_test.gs")["ch10_cc"];
 const V = ARCH.variants.find(v => v.kind === "T2"), key = V.expected.find(e => e.role === "key");
 r = CORE.match({ x: key.value, unit: null }, V.expected, V.traps, {});
 ok(r.type === "needs_unit" && r.needs.unit === key.unit, "bare key value asks for its unit");

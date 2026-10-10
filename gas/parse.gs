@@ -4,9 +4,9 @@ var UNITS_DATA = (typeof UNITS_DATA !== "undefined") ? UNITS_DATA : (typeof requ
 
 // ---------- units as data: dimension vectors, conversion, aliases ----------
 var UNITS = (function (D) {
-  var byAlias = {}, aliases = [];
+  var byAlias = {}, byExact = {}, aliases = [];
   for (var u in D.units) {
-    D.units[u].aliases.forEach(function (a) { byAlias[a.replace(/\s+/g, "").toLowerCase()] = u; aliases.push(a); });
+    D.units[u].aliases.forEach(function (a) { byExact[a.replace(/\s+/g, "")] = u; byAlias[a.replace(/\s+/g, "").toLowerCase()] = u; aliases.push(a); });
   }
   aliases.sort(function (a, b) { return b.length - a.length; });
   function vecAdd(a, b, sign) { var out = {}, k; for (k in a) out[k] = (out[k] || 0) + a[k]; for (k in b) out[k] = (out[k] || 0) + sign * b[k]; for (k in out) if (Math.abs(out[k]) < 1e-9) delete out[k]; return out; }
@@ -16,7 +16,8 @@ var UNITS = (function (D) {
     var a = D.units[from], b = D.units[to]; if (!a || !b || a.dimension !== b.dimension) return null;
     return ((x * a.factor + a.offset) - b.offset) / b.factor;
   }
-  function canon(alias) { return alias ? (byAlias[alias.replace(/\s+/g, "").toLowerCase()] || null) : null; }
+  // exact spelling first (M is molar, m is a metre), then case-insensitive (torr, Torr, TORR)
+  function canon(alias) { if (!alias) return null; var k = alias.replace(/\s+/g, ""); return byExact[k] || byAlias[k.toLowerCase()] || null; }
   var esc = function (a) { return a.replace(/[.*+?^${}()|[\]\\\/]/g, "\\$&").replace(/\s+/g, "\\s*"); };
   var unitPattern = aliases.map(esc).join("|");
   return { dim: dim, convert: convert, canon: canon, vecSame: vecSame, unitPattern: unitPattern, aliases: aliases, data: D };

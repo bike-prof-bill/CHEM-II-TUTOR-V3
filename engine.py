@@ -160,7 +160,7 @@ def declare(v, A):
         if "for_state" in tr: tr["state"] = tr.pop("for_state")
     return v
 
-def make_variant(A, seed, kind=None, tries=60, liquids=None, moves=None, fixed=None):
+def make_variant(A, seed, kind=None, tries=60, liquids=None, moves=None, fixed=None, limits=None, opener_title=None, template=None, items=None):
     rng = random.Random(seed)
     for _ in range(tries):
         if fixed is not None:                                    # a fixed problem (no random state): one shot
@@ -168,15 +168,20 @@ def make_variant(A, seed, kind=None, tries=60, liquids=None, moves=None, fixed=N
             if v is None: break
             k = v["kind"]
         else:
-            state, context = A.draw_state(rng, liquids)
+            state, context = A.draw_state(rng, liquids, limits=limits, kind=kind) if limits else A.draw_state(rng, liquids)
             k = kind or rng.choice(A.KINDS)
+            if opener_title: context["opener"] = opener_title      # a trap or a sentence may belong to one scenario
+            if template: context["template"] = template            # the scenario's own problem sentence
+            if items: context["items"] = items                     # the scenario's optional items (+add / -remove)
             if k in getattr(A, "SPECIAL", {}):
                 v = A.SPECIAL[k](rng, state, context)
             else:
                 v = _standard(A, rng, state, context, k)
         if v is None: continue
         declare(v, A)                                            # steps 5-6 -> one table
-        stamp_board(v, A, moves)                                 # the step map as a schema
+        v["_kind"] = k
+        stamp_board(v, A, moves, opener_title)                   # the step map as a schema
+        v.pop("_kind", None)
         reasons = validate(v)                                    # step 7
         if reasons:
             for r in reasons: REJECTS[r[0]] += 1
@@ -187,29 +192,35 @@ def make_variant(A, seed, kind=None, tries=60, liquids=None, moves=None, fixed=N
     raise RuntimeError(f"no acceptable variant for seed {seed}")
 
 def _standard(A, rng, state, context, unknown):
-    shown = {}
+    shown, hidden, fixed = {}, set((context or {}).get("hidden", [])), (context or {}).get("fixed_units", {})
     for name, spec in A.VARIABLES.items():
         if name == unknown: continue
-        unit = A.pick_unit(rng, name, shown)
+        unit = fixed.get(name) or A.pick_unit(rng, name, shown)
         shown[name] = {"value": round_shown(from_canon(spec["kind"], unit, state[name]), spec["round"][unit]), "unit": unit}
     known = {n: to_canon(A.VARIABLES[n]["kind"], s["unit"], s["value"]) for n, s in shown.items()}
+    for h in hidden: shown.pop(h, None)                          # known to the solver, not printed (the vent's pressure comes from its depth)
+    extra = dict((context or {}).get("extra_givens", {}))        # printed instead (the depth)
     uspec = A.VARIABLES[unknown]
     key_canon = solve_for(A.residual, known, unknown, *uspec["bounds"])
     if key_canon is None: return None
     full = dict(known); full[unknown] = key_canon
-    if abs(A.residual(full, {})) > 1e-9 or not A.acceptable(full): return None
+    if abs(A.residual(full, {})) > 1e-9 or not A.acceptable(full, context): return None
     ans_unit = rng.choice(uspec["answer_units"])
     targets = A.targets_for(full, shown, unknown, ans_unit)
+    if hasattr(A, "extra_targets"): targets += A.extra_targets(full, shown, unknown, ans_unit, context)
     key = [t for t in targets if t.get("role") == "key"][0]
     traps = []
     for t in A.TRAPS:
         if not t["applies"](shown, unknown): continue
+        if t.get("openers") and context.get("opener") not in t["openers"]: continue        # a trap that belongs to one scenario
         val = t["value"](A, shown, known, unknown, ans_unit, key["value"])
         if val is None or not math.isfinite(val): continue
         traps.append({"id": t["id"], "state": key["state"], "value": round_sig(val, 5), "unit": ans_unit,
                       "abs_tol": round_sig(max(key["abs_tol"], 0.01 * abs(val)), 3)})
-    return {"context": context, "text": A.render_text(shown, unknown, ans_unit, context), "givens": shown,
-            "board": A.board_for(shown, unknown), "targets": targets, "traps": traps,
+    context["_full"] = full; board = A.board_for(shown, unknown, context); context.pop("_full", None)   # the board rule may need the solved state
+    return {"context": context, "text": A.render_text(shown, unknown, ans_unit, context), "givens": dict(shown, **extra),
+            "sim_params": A.sim_params(full, shown, unknown, ans_unit, context) if hasattr(A, "sim_params") else {},   # {name: value} for a simulation's address
+            "board": board, "targets": targets, "traps": traps,
             "reveal_with_problem": None, "sim": A.sim_payload(full, unknown, rng),
             "eq_checks": A.equation_check(rng, unknown)}
 
@@ -217,11 +228,13 @@ def _standard(A, rng, state, context, unknown):
 FACE_OF_KIND = {"pick": "choice", "direction": "choice", "number": "check", "equation": "check", "table": "check", "text": "why", "reflection": "why"}
 KINDS_OF_ITEM = set(FACE_OF_KIND)
 
-def stamp_board(v, A, moves):
+def stamp_board(v, A, moves, opener_title=None):
     """Every item gets the full schema: id, stage, kind, register, face, requires, branch, label_when_done, pin,
-    explicit, credit_gate. `stage` and `label_when_done` come from the instructor's moves file (by item id);
-    an item with no stage is its own stage, which is the pre-rebuild behaviour."""
-    moves = moves or {}
+    explicit, credit_gate. `stage` and `label_when_done` come from the instructor's moves file (by item id, the
+    scenario's own row first, then the archetype row); an item with no stage is its own stage."""
+    base = _moves_for_kind(moves or {}, v.get("kind") or v.get("_kind"))
+    over = getattr(moves, "by_opener", {}).get(opener_title, {}) if moves else {}
+    moves = {k: dict(base.get(k, {}), **over.get(k, {})) for k in set(base) | set(over)}
     seen = set()
     for b in v["board"]:
         b["id"] = b.get("id") or b["state"]; b["state"] = b["id"]
@@ -257,16 +270,87 @@ def read_openers(path):
             out[-1]["fits"] = out[-1]["liquids"]        # what this scenario fits: liquids for one archetype, problem ids for another
             col = lambda j: (r[j].strip() if len(r) > j else "")
             out[-1]["media"] = {"image_with_question": col(7), "image_after_account": col(8), "image_alt": col(9),
-                                "simulation": col(10), "simulation_opens": (col(11) or "meaning").lower()}   # instructor's pictures and simulation, optional
+                                "simulation": col(10), "simulation_opens": (col(11) or "meaning").lower(), "credit": col(13)}   # instructor's pictures and simulation, optional
             out[-1]["label_words"] = [x.strip() for x in col(12).replace(",", ";").split(";") if x.strip()]   # naming without mechanism (SCENARIO_CLAUDE, 9 Oct)
+            out[-1]["items"] = {"add": [x[1:].strip() for x in col(14).replace(",", ";").split(";") if x.strip().startswith("+")],
+                                "remove": [x[1:].strip() for x in col(14).replace(",", ";").split(";") if x.strip().startswith("-")]}   # per-scenario sub-list (instructor, 10 Oct)
     return out
 
 def read_moves(path):
     """Instructor's CSV: one row per step-map item, keyed by the `state` column (the item id). A row whose
-    `state` is `stage:<name>` gives stage-level defaults for switch_ask, notebook_prompt, return_ask, park_text."""
-    return {r["state"].strip(): r for r in csv.DictReader(open(path, encoding="utf-8-sig")) if r.get("state", "").strip()}
+    `state` is `stage:<name>` gives stage-level defaults for switch_ask, notebook_prompt, return_ask, park_text.
+    A row with the `opener` column filled applies to that scenario only (per-scenario override, 10 Oct); its
+    non-empty cells replace the archetype row's. Returns the archetype rows; overrides hang on `.by_opener`."""
+    moves, by_opener = {}, {}
+    for r in csv.DictReader(open(path, encoding="utf-8-sig")):
+        state = r.get("state", "").strip()
+        if not state: continue
+        opener = next((v.strip() for k, v in r.items() if k and k.lower().startswith("opener") and v), "")
+        row = {k: v for k, v in r.items() if k and not k.lower().startswith("opener")}
+        if opener: by_opener.setdefault(opener, {})[state] = {k: v for k, v in row.items() if v}
+        else: moves[state] = row                                      # "item@P1;P2" is an archetype row for those kinds only
+    moves = _Moves(moves); moves.by_opener = by_opener
+    return moves
 
-def build(A, n_per_kind, seed0=1, openers=None, moves=None):
+def _moves_for_kind(moves, kind):
+    """Archetype rows that apply to one problem kind: `item@K1;K2` wins over `item` for those kinds."""
+    out = {k: v for k, v in moves.items() if "@" not in k}
+    for k, v in moves.items():
+        if "@" in k:
+            item, kinds = k.split("@", 1)
+            if kind in [x.strip() for x in kinds.replace(",", ";").split(";")]: out[item] = dict(out.get(item, {}), **{a: b for a, b in v.items() if b})
+    return out
+class _Moves(dict): pass
+
+def read_errors(path):
+    """Named-error questions: note and ask per error id; a row with `opener` filled applies to that scenario only."""
+    base, by_opener = {}, {}
+    if not os.path.exists(path): return base, by_opener
+    for r in csv.DictReader(open(path, encoding="utf-8-sig")):
+        eid = r.get("error id", "").strip()
+        if not eid: continue
+        cells = {k: v for k, v in (("note", r.get("note (what the tutor is told)", "").strip()), ("ask", r.get("ask (if no model, the question asked)", "").strip())) if v}
+        op = r.get("opener (blank = every scenario)", "").strip()
+        (by_opener.setdefault(op, {}) if op else base).setdefault(eid, {}).update(cells)
+    return base, by_opener
+
+def read_limits(path):
+    """Generator limits per opener and liquid. `known point` is "boiling point" (known state = the normal boiling point, at standard pressure)
+    or "temperature" (known state = a temperature drawn from [known lo, hi], with the model's pressure there). The other
+    temperature is drawn from [other lo, hi], as an offset from the known temperature when `offset` is yes. `min gap` is the
+    smallest allowed difference between the two temperatures (the archetype's default otherwise)."""
+    out = {}
+    if not os.path.exists(path): return out
+    for r in csv.DictReader(open(path, encoding="utf-8-sig")):
+        g = lambda key: next((v.strip() for k, v in r.items() if k and k.lower().startswith(key)), "")
+        op, liq = g("opener"), g("liquid")
+        if not op or not liq: continue
+        f = lambda key, default=None: (float(g(key)) if g(key) not in ("", None) else default)
+        out.setdefault(op, {})[liq] = {"known_point": "boiling point" if "boil" in g("known point").lower() else "temperature",
+                                       "known_lo_C": f("known temperature, low"), "known_hi_C": f("known temperature, high"),
+                                       "lo_C": f("other temperature, low"), "hi_C": f("other temperature, high"),
+                                       "offset": g("other is an offset").lower().startswith("y"), "min_gap": f("minimum gap", 2.0),
+                                       "other_by": "depth" if g("other set by").lower().startswith("depth") else "temperature",
+                                       "depth_lo_m": f("depth low"), "depth_hi_m": f("depth high"), "depth_step_m": f("depth step", 10.0)}
+    return out
+
+def read_sentences(path):
+    """Per-scenario problem-sentence templates (SCENARIO_CLAUDE, 10 Oct): opener -> {kind -> template}. Placeholders in braces."""
+    out = {}
+    if not os.path.exists(path): return out
+    for r in csv.DictReader(open(path, encoding="utf-8-sig")):
+        op = r.get("opener", "").strip(); t = r.get("template (placeholders in braces)", "").strip()
+        if not op or not t: continue
+        kinds = [k.strip() for k in r.get("problem kinds", "").replace(",", ";").split(";") if k.strip()] or ["*"]
+        for k in kinds: out.setdefault(op, {})[k] = t
+    return out
+
+def _merge_trap_notes(notes, errors):
+    out = {k: dict(v) for k, v in notes.items()}
+    for eid, cells in errors.items(): out.setdefault(eid, {}).update(cells)
+    return out
+
+def build(A, n_per_kind, seed0=1, openers=None, moves=None, errors=None, limits=None, sentences=None):
     """OPENERS AND VARIANTS ALIGN (instructor, 20 Sept). Problems are made FOR a scenario: each opener names the
     liquids it fits, and every variant is born attached to one opener. No opener, no problem."""
     variants, seed = [], seed0
@@ -280,9 +364,10 @@ def build(A, n_per_kind, seed0=1, openers=None, moves=None):
                 for fid in op["fits"]:
                     v = make_variant(A, seed, moves=moves, fixed=fid); v["opener_index"] = oi; variants.append(v); seed += 1
             else:
+                lim = (limits or {}).get(op["title"]); tpl = (sentences or {}).get(op["title"], {})
                 for k in (op["kinds"] or A.KINDS):
                     for _ in range(n_per_kind):
-                        v = make_variant(A, seed, k, liquids=op["fits"], moves=moves); v["opener_index"] = oi; variants.append(v); seed += 1
+                        v = make_variant(A, seed, k, liquids=op["fits"], moves=moves, limits=lim, opener_title=op["title"], template=tpl.get(k) or tpl.get("*"), items=op.get("items")); v["opener_index"] = oi; variants.append(v); seed += 1
     elif fixed_pool:
         for f in fixed_pool: variants.append(make_variant(A, seed, moves=moves, fixed=f["id"])); seed += 1
     else:
@@ -290,6 +375,8 @@ def build(A, n_per_kind, seed0=1, openers=None, moves=None):
             for _ in range(n_per_kind): variants.append(make_variant(A, seed, k, moves=moves)); seed += 1
     out = {"contract": 3, "archetype_id": A.ID, "title": A.TITLE, "relation": A.RELATION_TEXT, "notebook_url": A.NOTEBOOK_URL,
            "kinds": list(A.KINDS), "mechanism_words": list(getattr(A, "MECHANISM_WORDS", [])),
-           "equation_picks": A.EQUATION_PICKS, "trap_notes": A.TRAP_NOTES, "equation_symbols": A.EQUATION_SYMBOLS, "equation_constants": A.EQUATION_CONSTANTS, "openers": openers or [], "moves": moves or {}, "variants": variants}
+           "equation_picks": A.EQUATION_PICKS, "trap_notes": _merge_trap_notes(A.TRAP_NOTES, (errors or ({}, {}))[0]), "trap_notes_by_opener": (errors or ({}, {}))[1],
+           "equation_symbols": A.EQUATION_SYMBOLS, "equation_constants": A.EQUATION_CONSTANTS, "openers": openers or [],
+           "moves": dict(moves or {}), "moves_by_opener": getattr(moves, "by_opener", {}) if moves else {}, "variants": variants}
     out["content_version"] = hashlib.sha1(json.dumps(out, sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:10]
     return out

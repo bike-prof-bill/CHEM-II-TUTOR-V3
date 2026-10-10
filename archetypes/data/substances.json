@@ -5,7 +5,9 @@
   "melting_point_C": "normal melting point, °C",
   "boiling_point_C": "normal boiling point at 1 atm, °C",
   "dHvap_at_Tb_kJ_mol": "enthalpy of vaporization AT THE NORMAL BOILING POINT, kJ/mol",
-  "class": "functional-group class, used only for wording (e.g. 'an unidentified alcohol')"
+  "class": "functional-group class, used only for wording (e.g. 'an unidentified alcohol')",
+  "density_g_mL": "density, g/mL, at density_temperature_C",
+  "density_temperature_C": "temperature of the density value, °C"
  },
  "substances": {
   "water": {
@@ -18,9 +20,13 @@
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "formula": "standard",
-    "class": "standard classification"
+    "class": "standard classification",
+    "density_g_mL": "NIST reference data, supplied by the instructor 2026-10-10",
+    "density_temperature_C": "NIST reference data, supplied by the instructor 2026-10-10"
    },
-   "class": "water"
+   "class": "water",
+   "density_g_mL": 0.998,
+   "density_temperature_C": 20.0
   },
   "methanol": {
    "formula": "CH₃OH",
@@ -46,9 +52,13 @@
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "formula": "standard",
-    "class": "standard classification"
+    "class": "standard classification",
+    "density_g_mL": "NIST reference data, supplied by the instructor 2026-10-10",
+    "density_temperature_C": "NIST reference data, supplied by the instructor 2026-10-10"
    },
-   "class": "alcohol"
+   "class": "alcohol",
+   "density_g_mL": 0.789,
+   "density_temperature_C": 20.0
   },
   "1-propanol": {
    "formula": "CH₃CH₂CH₂OH",
@@ -102,9 +112,13 @@
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "formula": "standard",
-    "class": "standard classification"
+    "class": "standard classification",
+    "density_g_mL": "NIST reference data, supplied by the instructor 2026-10-10",
+    "density_temperature_C": "NIST reference data, supplied by the instructor 2026-10-10"
    },
-   "class": "ketone"
+   "class": "ketone",
+   "density_g_mL": 0.791,
+   "density_temperature_C": 20.0
   },
   "diethyl ether": {
    "formula": "(C₂H₅)₂O",
@@ -116,9 +130,13 @@
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "formula": "standard",
-    "class": "standard classification"
+    "class": "standard classification",
+    "density_g_mL": "NIST reference data, supplied by the instructor 2026-10-10",
+    "density_temperature_C": "NIST reference data, supplied by the instructor 2026-10-10"
    },
-   "class": "ether"
+   "class": "ether",
+   "density_g_mL": 0.713,
+   "density_temperature_C": 20.0
   },
   "pentane": {
    "formula": "C₅H₁₂",
@@ -130,9 +148,13 @@
     "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-09",
     "formula": "standard",
-    "class": "standard classification"
+    "class": "standard classification",
+    "density_g_mL": "NIST reference data, supplied by the instructor 2026-10-10",
+    "density_temperature_C": "NIST reference data, supplied by the instructor 2026-10-10"
    },
-   "class": "alkane"
+   "class": "alkane",
+   "density_g_mL": 0.626,
+   "density_temperature_C": 20.0
   },
   "hexane": {
    "formula": "C₆H₁₄",
@@ -287,6 +309,60 @@
     "class": "standard classification"
    },
    "class": "alcohol"
+  },
+  "dichloromethane": {
+   "formula": "CH₂Cl₂",
+   "melting_point_C": -96.5,
+   "boiling_point_C": 39.9,
+   "dHvap_at_Tb_kJ_mol": 28.06,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-10; NIST lists 176.65 K (Timmermans) to 178.2 K; lower value taken",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-10; 313 ± 1 K, average of 12 evaluated determinations; rounded to 39.9 °C (instructor, 10 Oct 2026)",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-10; Majer and Svoboda (1985), at 313 K",
+    "formula": "standard",
+    "class": "standard classification",
+    "density_g_mL": "NIST reference data, supplied by the instructor 2026-10-10",
+    "density_temperature_C": "NIST reference data, supplied by the instructor 2026-10-10"
+   },
+   "class": "haloalkane",
+   "density_g_mL": 1.326,
+   "density_temperature_C": 20.0
+  },
+  "CFC-11": {
+   "formula": "CCl₃F",
+   "melting_point_C": -111.0,
+   "boiling_point_C": 23.8,
+   "dHvap_at_Tb_kJ_mol": 25.2,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-10",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-10",
+    "dHvap_at_Tb_kJ_mol": "NIST Chemistry WebBook, supplied by the instructor 2026-10-10",
+    "formula": "standard",
+    "class": "instructor",
+    "density_g_mL": "NIST reference data, supplied by the instructor 2026-10-10",
+    "density_temperature_C": "NIST reference data, supplied by the instructor 2026-10-10"
+   },
+   "class": "chlorofluorocarbon",
+   "density_g_mL": 1.488,
+   "density_temperature_C": 20.0
+  },
+  "HFE-7000": {
+   "formula": "C₃F₇OCH₃",
+   "melting_point_C": -122.5,
+   "boiling_point_C": 34.2,
+   "dHvap_at_Tb_kJ_mol": 28.4,
+   "source": {
+    "melting_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-10",
+    "boiling_point_C": "NIST Chemistry WebBook, supplied by the instructor 2026-10-10",
+    "dHvap_at_Tb_kJ_mol": "manufacturer's data sheet, supplied by the instructor 2026-10-10; 142 J/g × 200.05 g/mol",
+    "formula": "standard",
+    "class": "instructor",
+    "density_g_mL": "manufacturer's data sheet, supplied by the instructor 2026-10-10 (about 1.41 g/mL at 20 °C)",
+    "density_temperature_C": "manufacturer's data sheet, supplied by the instructor 2026-10-10 (about 1.41 g/mL at 20 °C)"
+   },
+   "class": "hydrofluoroether",
+   "density_g_mL": 1.4,
+   "density_temperature_C": 25.0
   }
  }
 }

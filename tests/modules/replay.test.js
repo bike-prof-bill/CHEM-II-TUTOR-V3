@@ -1,6 +1,6 @@
 // Phase A is a pure function of the message and the session: the same input on two identical sessions gives identical results and
 // identical sessions afterwards. This is what makes logged turns replayable.
-const CORE = require("../../gas/Core.gs"); const ARCH = require("../../gas/Archetype_ch10_cc.gs")["ch10_cc"];
+const CORE = require("../../gas/Core.gs"); const ARCH = require("../../gas/Archetype_ch10_cc_test.gs")["ch10_cc"];
 let pass = 0, fail = 0; const ok = (c, m) => { c ? pass++ : (fail++, console.log("  FAIL:", m)); };
 const clone = o => JSON.parse(JSON.stringify(o));
 const V = ARCH.variants.find(v => v.kind === "dH"), i = ARCH.variants.indexOf(V);

@@ -58,3 +58,63 @@ meaning_given,ask,3.7,22,11.0,,Look back at your result. What does it let you cl
 meaning_given,switch_ask,6.7,13,13.0,actually; instrument,What did the instrument actually measure and what did you infer from it?
 meaning_given,notebook_prompt,6.8,36,12.0,finished,Help me think about what a vapor pressure measurement lets a chemist infer about molecules in the liquid and what it cannot. Do not give me a finished answer. Ask me one short question and wait.
 meaning_given,return_ask,7.8,12,12.0,difference; inferred,What is the difference between what was measured and what was inferred?
+account_given,switch_ask,6.8,24,12.0,,A pressure gauge inside the syringe would read lower after you pull the plunger. What does that lower pressure let the water molecules do?
+account_given,notebook_prompt,4.4,59,9.8,lowering,I am learning why a liquid can boil without being heated. Explain what the molecules in a liquid are doing when it boils. Explain why lowering the pressure above a liquid can make it boil. Use a liquid other than water. Do not solve any problem for me. Then ask me one short question and wait for my answer.
+account_given,return_ask,7.2,18,18.0,notebook,"In your own words, what did the notebook show you about why lower pressure lets a liquid boil?"
+account_given,park_text,5.4,27,9.0,,"When the pressure on a liquid drops to its vapor pressure, molecules inside the liquid can form bubbles of vapor. The liquid boils. No heat is needed."
+direction_predicted,ask,5.6,25,8.3,,"Before any math, compare the two temperatures. Will the pressure you are finding be higher or lower than the pressure you were given? Pick one."
+direction_predicted,switch_ask,8.2,25,12.5,,"Think about the molecules at the surface. At the lower of your two temperatures, do more or fewer of them have enough energy to escape?"
+direction_predicted,notebook_prompt,5.8,57,11.4,calculate,"I need to predict how the vapor pressure of a liquid changes when its temperature changes, before I calculate anything. Explain what the molecules are doing and which way the pressure goes. Use a liquid I have not named. Do not solve any problem for me. Then ask me one short question and wait for my answer."
+direction_predicted,return_ask,9.1,11,11.0,notebook,What did the notebook show you about temperature and vapor pressure?
+direction_predicted,park_text,7.8,26,8.7,,"Vapor pressure goes up when temperature goes up. It goes down when temperature goes down. In a cooler liquid, fewer molecules have enough energy to escape."
+meaning_given,ask,4.0,31,10.3,,The pressure you found is the pressure inside the syringe at the moment the liquid starts to boil. What does it tell you about the molecules? How sure can you be?
+meaning_given,switch_ask,6.7,28,14.0,every,"We used one value of ΔHvap for every temperature between your two temperatures. If that is not quite true, how far can you trust the pressure you found?"
+reflection,ask,1.2,19,9.5,,"Which step was hardest for you? In one sentence, what would you tell a friend who is stuck there?"
+account_given,switch_ask,6.3,28,14.0,thermometer,A thermometer on the wet head reads a few degrees colder than one on the body. What does the colder glass do to the molecules inside the head?
+account_given,notebook_prompt,5.6,65,13.0,container; evaporate,I am learning how a drinking bird toy works. Explain what water molecules do when they evaporate from a wet surface. Then explain why a sealed glass container that is cool at one end and warm at the other has a different vapor pressure at each end. Do not solve any problem for me. Then ask me one short question and wait for my answer.
+account_given,return_ask,4.9,17,17.0,notebook,"In your own words, what did the notebook show you about the two ends of the bird?"
+account_given,park_text,6.2,34,11.3,evaporating,"Water evaporating from the felt cools the head. Inside the glass, the cooler head has a lower vapor pressure than the warm body. The higher pressure in the body pushes liquid up the neck."
+dP_found,ask,2.8,27,9.0,difference,Now compare the two ends of the bird. How much higher is the pressure in the body than in the head? Type the difference with its unit.
+dP_found,switch_ask,2.6,22,11.0,,"You have the pressure in the warm body and the pressure in the cool head. Which is larger, and by how much?"
+dP_found,notebook_prompt,4.6,56,11.2,container; difference,I need to find the difference between two vapor pressures in a sealed container that is warm at one end and cool at the other. Explain what that difference means and how to find it. Use numbers different from mine. Do not solve my problem. Then ask me one short question and wait for my answer.
+dP_found,return_ask,6.0,10,10.0,difference,What does the difference between the two pressures tell you?
+dP_found,park_text,5.8,12,12.0,,Subtract: the pressure in the body minus the pressure in the head.
+meaning_given,ask,2.6,32,10.7,difference,"That difference pushes liquid up the neck. Think of drinking through a straw. In the bird, what acts like your mouth, and what acts like the air pushing down on the drink?"
+meaning_given,switch_ask,8.0,19,19.0,,"Inside the cool head, what are the vapor molecules doing that the ones in the warm body are not?"
+value_found@P1;P2,ask,4.9,29,9.7,logarithm; natural,"Carry it through to the pressure you are finding. If you have the ln (natural logarithm) of a pressure ratio, what undoes ln? Type the pressure with its unit."
+value_found@P1;P2,switch_ask,3.2,14,7.0,prediction,Look at the prediction pinned on your screen. Does your number agree with it?
+value_found@P1;P2,notebook_prompt,3.0,38,9.5,,Show me how to solve an equation like ln(x/a) = b for x. Use letters and numbers different from mine. Do not solve my problem. Then give me one short practice problem and wait for my answer.
+value_found@P1;P2,return_ask,4.9,19,9.5,logarithm; natural,What undoes ln (natural logarithm)? And what do you do after that to get the pressure you are finding?
+value_found@P1;P2,park_text,5.8,26,13.0,,Undo the ln: e raised to the other side gives the ratio of the two pressures. Then solve that ratio for the pressure you are finding.
+account_given,switch_ask,5.4,26,13.0,,A pressure gauge at the vent reads far higher than at the surface. What must the molecules inside a bubble do to push back against that?
+account_given,notebook_prompt,4.6,56,11.2,,I am learning why very hot water on the deep sea floor does not boil. Explain what molecules must do to form a bubble of vapor inside a liquid. Explain how the pressure on the liquid changes that. Do not solve any problem for me. Then ask me one short question and wait for my answer.
+account_given,return_ask,5.9,14,14.0,notebook,"In your own words, what did the notebook show you about pressure and bubbles?"
+account_given,park_text,6.9,33,16.5,,"A bubble forms only when the vapor inside it pushes back as hard as the liquid around it. Deep water presses hard, so the water must be much hotter before it can boil."
+direction_predicted@T1;T2,ask,6.5,25,8.3,,"Before any math, compare the two pressures. Will the temperature you are finding be higher or lower than the temperature you were given? Pick one."
+direction_predicted@T1;T2,switch_ask,5.9,22,11.0,,"Think about a bubble trying to form. Under more pressure, do the molecules need more energy or less to push it open?"
+direction_predicted@T1;T2,notebook_prompt,5.2,60,12.0,calculate,"I need to predict how the boiling point of a liquid changes when the pressure on it changes, before I calculate anything. Explain what the molecules are doing and which way the boiling point goes. Use a liquid I have not named. Do not solve any problem for me. Then ask me one short question and wait for my answer."
+direction_predicted@T1;T2,return_ask,5.9,11,11.0,notebook,What did the notebook show you about pressure and boiling point?
+direction_predicted@T1;T2,park_text,5.5,19,9.5,,Boiling point goes up when the pressure goes up. The molecules need more energy to push a bubble open.
+P_from_depth,ask,0.6,21,7.0,,How hard does the water press at the vent? Use the depth to find the pressure. Type it with its unit.
+P_from_depth,switch_ask,2.3,23,7.7,,Picture the column of water above the vent. Each 10 m of it adds about 1 atm. What does the air above the sea add?
+P_from_depth,notebook_prompt,3.4,40,10.0,,"Explain how the pressure under water grows with depth, and why the air above the water counts too. Use a depth different from mine. Do not solve my problem. Then ask me one short question and wait for my answer."
+P_from_depth,return_ask,4.8,10,10.0,notebook,What did the notebook show you about pressure and depth?
+P_from_depth,park_text,4.8,11,11.0,every,Pressure = 1 atm from the air + 1 atm for every 10 m of water.
+value_found@T1;T2,ask,3.4,21,7.0,,"Carry it through to the temperature. If you have 1/T, what is one more step? Type the temperature with its unit."
+value_found@T1;T2,switch_ask,3.2,14,7.0,prediction,Look at the prediction pinned on your screen. Does your number agree with it?
+value_found@T1;T2,notebook_prompt,3.4,44,11.0,,"Show me how to solve an equation like 1/x = a - b for x, and how to check that the answer makes sense. Use numbers different from mine. Do not solve my problem. Then give me one short practice problem and wait for my answer."
+value_found@T1;T2,return_ask,0.1,10,10.0,,What is the last step to get T from 1/T?
+value_found@T1;T2,park_text,1.8,22,7.3,reciprocal,Solve for 1/T first. Then take the reciprocal: T = 1 ÷ (your value of 1/T). Convert to °C if the problem asks for it.
+meaning_given,ask,3.7,26,8.7,,Your temperature is where water starts to boil at that depth. What does it tell you about the water molecules there? How sure can you be?
+meaning_given,switch_ask,6.8,24,12.0,every; vaporization,We used water's heat of vaporization at 100 °C for every temperature up to yours. How far can you trust the answer at great depth?
+account_given,switch_ask,9.1,34,17.0,alcohol; monitor,"At the same temperature, a vapor monitor reads much higher over the alcohol than over the water. What does that tell you about how strongly each kind of molecule holds on to its neighbors?"
+account_given,notebook_prompt,6.3,48,9.6,alcohol; attractions; evaporate,I am learning why some liquids evaporate faster than others at the same temperature. Explain it in terms of the attractions between molecules. Use liquids other than alcohol and water. Do not solve any problem for me. Then ask me one short question and wait for my answer.
+account_given,return_ask,10.4,18,18.0,evaporates; notebook,"In your own words, what did the notebook show you about why one liquid evaporates faster than another?"
+account_given,park_text,8.0,33,16.5,easily,"Molecules that hold on to their neighbors less strongly escape into vapor more easily. More of them leave each second, so the liquid dries faster and carries more heat away from your skin."
+value_found@dH,ask,0.5,11,5.5,,Carry it through to ΔHvap. Type the value with its unit.
+value_found@dH,switch_ask,1.7,21,7.0,vaporize,Does your answer make sense? Most liquids in our table need 25 to 45 kJ/mol to vaporize. Is yours in that range?
+value_found@dH,notebook_prompt,2.7,38,9.5,,Show me how to solve an equation like ln(a) = -(x/R)(b - c) for x. Use numbers different from mine. Do not solve my problem. Then give me one short practice problem and wait for my answer.
+value_found@dH,return_ask,3.8,8,8.0,algebra,Which step of the algebra was blocking you?
+value_found@dH,park_text,0.5,15,5.0,Multiply,Divide ln(P2/P1) by (1/T2 - 1/T1). Multiply by -R. Give ΔHvap in kJ/mol.
+meaning_given,ask,6.5,36,12.0,,Your ΔHvap is the energy it takes to pull a mole of the liquid's molecules away from their neighbors and into vapor. What does your number tell you about those molecules? How sure can you be?
+meaning_given,switch_ask,6.7,13,13.0,actually; instrument,What did the instrument actually measure and what did you infer from it?

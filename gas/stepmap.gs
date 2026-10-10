@@ -42,10 +42,21 @@ function stateSatisfied(S, V, state) {
 }
 function stageOf(V, state) { var b = entry(V, state); return b ? (b.stage || b.id) : state; }
 // The instructor's moves file: the item's row, with the stage row (`stage:<name>`) filling any empty column.
+// Per-scenario override first (a moves row whose `opener` column names this variant's scenario), then the item's archetype row,
+// then the stage row (`stage:<name>`). A non-empty cell wins at each level (SCENARIO_CLAUDE, approved 10 Oct).
+function openerTitle(arch, V) { var o = arch.openers && arch.openers[V.opener_index]; return o ? o.title : ""; }
+// Precedence: the scenario's row, then the archetype's row for this problem kind ("item@P1;P2"), then the item's row, then the stage row.
 function moveFor(arch, V, state) {
+  var over = ((arch.moves_by_opener || {})[openerTitle(arch, V)] || {})[state] || {};
+  var byKind = {}; for (var key in arch.moves) { var at = key.indexOf("@"); if (at > -1 && key.slice(0, at) === state && key.slice(at + 1).split(/[;,]/).map(function (x) { return x.trim(); }).indexOf(V.kind) > -1) byKind = arch.moves[key]; }
   var item = arch.moves[state] || {}, st = arch.moves["stage:" + stageOf(V, state)] || {}, out = {};
-  [item, st].forEach(function (src) { for (var k in src) if (src[k] && !out[k]) out[k] = src[k]; });
+  [over, byKind, item, st].forEach(function (src) { for (var k in src) if (src[k] && !out[k]) out[k] = src[k]; });
   return out;
+}
+// A named error's note and question, with the scenario's own wording first.
+function trapNote(arch, V, id) {
+  var over = ((arch.trap_notes_by_opener || {})[openerTitle(arch, V)] || {})[id] || {}, base = (arch.trap_notes || {})[id] || {};
+  return { note: over.note || base.note || "", ask: over.ask || base.ask || "" };
 }
 function addPin(S, id, label, text) {
   S.pins = S.pins.filter(function (p) { return p.id !== id; }); S.pins.push({ id: id, label: label, text: text });
@@ -75,12 +86,12 @@ function newSession(arch, pick) {
 function problemPayload(arch, V, S) {     // what the browser is allowed to have once the account is given
   var med = (S && arch.openers[S.openerIndex] && arch.openers[S.openerIndex].media) || {};
   return { title: arch.title, text: V.text, givens: V.givens, plots: V.reveal_with_problem || null,
-    media: { image: med.image_after_account || "", alt: med.image_alt || "" },
+    media: { image: med.image_after_account || "", alt: med.image_alt || "", credit: med.credit || "" },
     equations: arch.equation_picks.map(function (e) { return { id: e.id, text: e.text }; }) };
 }
 function openerMedia(arch, S) {           // what the browser may show WITH the opening question, before anything is earned
   var med = (arch.openers[S.openerIndex] && arch.openers[S.openerIndex].media) || {};
-  return { image: med.image_with_question || "", alt: med.image_alt || "" };
+  return { image: med.image_with_question || "", alt: med.image_alt || "", credit: med.credit || "" };
 }
 // Progress counts live items only. Labels are shown for ticked items only; labels ahead stay hidden.
 function progress(S, V) {
@@ -109,4 +120,4 @@ function chooseVariant(variants, filters, served, rand) {
   return { index: idx, variant_id: variants[idx].variant_id, reset: reset, remaining: fresh.length - 1 };
 }
 
-if (typeof module !== "undefined") module.exports = { chooseVariant: chooseVariant, entry: entry, isSet: isSet, liveItems: liveItems, isLive: isLive, activeState: activeState, tick: tick, stateSatisfied: stateSatisfied, stageOf: stageOf, moveFor: moveFor, addPin: addPin, optionsOf: optionsOf, pickItemFor: pickItemFor, newSession: newSession, problemPayload: problemPayload, openerMedia: openerMedia, progress: progress, choicesFor: choicesFor };
+if (typeof module !== "undefined") module.exports = { chooseVariant: chooseVariant, openerTitle: openerTitle, trapNote: trapNote, entry: entry, isSet: isSet, liveItems: liveItems, isLive: isLive, activeState: activeState, tick: tick, stateSatisfied: stateSatisfied, stageOf: stageOf, moveFor: moveFor, addPin: addPin, optionsOf: optionsOf, pickItemFor: pickItemFor, newSession: newSession, problemPayload: problemPayload, openerMedia: openerMedia, progress: progress, choicesFor: choicesFor };

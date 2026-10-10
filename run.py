@@ -8,7 +8,10 @@ def one(name):
     A = importlib.import_module(name)
     openers = engine.read_openers(f"content_{name}_openers.csv")
     moves   = engine.read_moves(f"content_{name}_moves.csv")
-    out = engine.build(A, a.per_kind, a.seed, openers, moves)
+    errors  = engine.read_errors(f"content_{name}_errors.csv")
+    limits  = engine.read_limits(f"content_{name}_limits.csv")
+    sentences = engine.read_sentences(f"content_{name}_sentences.csv")
+    out = engine.build(A, a.per_kind, a.seed, openers, moves, errors, limits, sentences)
     os.makedirs("output", exist_ok=True); os.makedirs("gas", exist_ok=True)
     json.dump(out, open(f"output/{name}.bundle.json", "w"), indent=1, ensure_ascii=False)
     open(f"gas/Archetype_{name}.gs", "w").write(
@@ -20,6 +23,13 @@ def one(name):
     dropped = sum(1 for v in out["variants"] if v.get("dropped"))
     print(f"[{name}] declared numbers per variant: {min(len(v['expected']) for v in out['variants'])}-{max(len(v['expected']) for v in out['variants'])} | variants with a restated-given intermediate removed: {dropped}")
     print(f"[{name}] kinds:", dict(collections.Counter(v["kind"] for v in out["variants"])), "| thrown away:", dict(engine.REJECTS))
+    fx = f"tests/fixtures/content_{name}_openers_allkinds.csv"
+    if os.path.exists(fx):                                        # a test-only bundle from retired openers, so every kind stays exercised
+        for k in engine.REJECTS: engine.REJECTS[k] = 0
+        tb = engine.build(A, a.per_kind, a.seed, engine.read_openers(fx), moves, errors, limits, sentences)
+        open(f"gas/Archetype_{name}_test.gs", "w").write("// GENERATED test fixture (retired openers, every kind). Not for Apps Script; not loaded by the servers.\n"
+          "var ARCHETYPES_TEST = (typeof ARCHETYPES_TEST === 'undefined') ? {} : ARCHETYPES_TEST;\n" + f"ARCHETYPES_TEST[{json.dumps(name)}] = " + json.dumps(tb, ensure_ascii=False) + ";\nif (typeof module !== 'undefined') module.exports = ARCHETYPES_TEST;\n")
+        print(f"[{name}] test fixture: {len(tb['variants'])} variants over {len(engine.read_openers(fx))} retired openers")
     if hasattr(A, "SUBSTANCES"):
         used = {l for o in openers for l in o["fits"]}
         print(f"[{name}] liquids with no scenario yet (never asked):", ", ".join(x[0] for x in A.SUBSTANCES if x[0] not in used) or "none")
