@@ -201,7 +201,8 @@
     "image_alt": "",
     "simulation": "",
     "simulation_opens": "meaning"
-   }
+   },
+   "label_words": []
   },
   {
    "title": "The Boiling Bell Jar Flash",
@@ -229,7 +230,8 @@
     "image_alt": "",
     "simulation": "",
     "simulation_opens": "meaning"
-   }
+   },
+   "label_words": []
   },
   {
    "title": "The Rubbing Alcohol Chill",
@@ -238,11 +240,11 @@
    "target": "Intermolecular force strength dictating relative vapor pressure and volatility",
    "keywords": [
     "weaker",
-    "intermolecular attractions",
-    "cohesive forces",
+    "attractions",
+    "intermolecular",
     "fraction",
-    "evaporate",
-    "volatility"
+    "energy",
+    "escape"
    ],
    "liquids": [
     "methanol",
@@ -272,7 +274,14 @@
     "image_alt": "Two panels. Left: a student dabs rubbing alcohol on her arm, shivers, and a vapor monitor reads very high. Right: the same student dabs water, her arm stays wet, and the monitor reads low. A box labelled The Science is blanked out until you answer.",
     "simulation": "ch10_cc/alcohol_simulator.html?substance={substance}&theme={theme}",
     "simulation_opens": "meaning"
-   }
+   },
+   "label_words": [
+    "volatile",
+    "volatility",
+    "evaporate",
+    "evaporates",
+    "dries fast"
+   ]
   },
   {
    "title": "The Crushed Cooled Flask",
@@ -300,7 +309,8 @@
     "image_alt": "",
     "simulation": "",
     "simulation_opens": "meaning"
-   }
+   },
+   "label_words": []
   },
   {
    "title": "The Ten-Degree Vapor Surge",
@@ -328,7 +338,8 @@
     "image_alt": "",
     "simulation": "",
     "simulation_opens": "meaning"
-   }
+   },
+   "label_words": []
   },
   {
    "title": "The Sealed Syringe Standoff",
@@ -356,7 +367,8 @@
     "image_alt": "",
     "simulation": "",
     "simulation_opens": "meaning"
-   }
+   },
+   "label_words": []
   }
  ],
  "moves": {
@@ -56952,5 +56964,5 @@
    "opener_index": 5
   }
  ],
- "content_version": "9b2074d7be"
+ "content_version": "7492a0f7ce"
 }

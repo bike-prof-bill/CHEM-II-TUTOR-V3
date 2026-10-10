@@ -1,0 +1,37 @@
+item,column,grade (Flesch-Kincaid),words,words per sentence,words of three syllables or more,text
+account_given,switch_ask,9.0,24,24.0,happening,"If you could watch the two reactions, forward and reverse, what would you see happening to how fast each runs as the mixture settles?"
+account_given,notebook_prompt,9.3,34,11.3,concentrations; directions; equilibrium; ICE-table; particles,"I am working on an ICE-table equilibrium problem. Explain, in terms of what particles are doing, why concentrations stop changing at equilibrium even though reactions continue in both directions. Do not solve any problem."
+account_given,return_ask,6.1,16,16.0,notebook; particles,"In your own words, what did the notebook show you about what the particles are doing?"
+relation_chosen,ask,7.0,21,10.5,concentrations; Equations; equilibrium; relates,The problem is on your screen. Open the Equations list and pick the form that relates the equilibrium concentrations to K.
+relation_chosen,switch_ask,7.6,15,15.0,inferred; quantities,"Which quantities in this problem are measured, and which one is being inferred from them?"
+relation_chosen,notebook_prompt,9.0,37,12.3,balanced; coefficients; equilibrium; equilibrium-constant; expression; ICE-table,"I am working on an ICE-table equilibrium problem. Explain how the equilibrium-constant expression is built from a balanced equation: what goes on top, what on the bottom, and where the coefficients go. Do not solve any problem."
+relation_chosen,return_ask,7.2,10,10.0,expression; notebook,What did the notebook show you about building the expression?
+approach,ask,3.6,15,15.0,,"In this problem, is K the thing you know, or the thing you are after?"
+approach,switch_ask,6.0,20,10.0,describes; equilibrium,"Look at the numbers you were given. Which of them describes the mixture at equilibrium, and which describes the start?"
+approach,notebook_prompt,11.7,31,10.3,concentrations; difference; equilibrium; ICE-table,I am working on an ICE-table equilibrium problem. Explain the difference between finding K from measured equilibrium concentrations and finding equilibrium concentrations from a known K. Do not solve any problem.
+approach,return_ask,4.8,12,12.0,notebook,What did the notebook show you about the two kinds of problem?
+table,ask,4.8,24,12.0,equilibrium; initial,"Set up the ICE table: one column per species, rows for initial, change and equilibrium. Write the change row in terms of one x."
+table,switch_ask,5.9,21,10.5,disappear; particle,"If one reaction event happens, how many of each particle disappear and how many appear? Write that as the change row."
+table,notebook_prompt,7.4,37,12.3,coefficients; equilibrium; every; ICE-table; multiples,"I am working on an ICE-table equilibrium problem. Explain why every change in an ICE table can be written with a single x, and how the coefficients set the multiples of x. Do not solve any problem."
+table,return_ask,3.7,10,10.0,notebook,What did the notebook show you about the change row?
+method,ask,6.0,16,8.0,equilibrium; expression; substituted,Look at your equilibrium expression with the table substituted. How will you solve it for x?
+method,switch_ask,5.0,18,9.0,algebra; expression,"Is the expression a perfect square on both sides, or not? What does that decide about the algebra?"
+method,notebook_prompt,8.8,36,12.0,equilibrium; expression; formula; ICE-table; quadratic,I am working on an ICE-table equilibrium problem. Explain when an equilibrium expression can be solved by taking the square root of both sides and when the quadratic formula is needed. Do not solve any problem.
+method,return_ask,6.0,10,10.0,notebook,What did the notebook show you about choosing the method?
+expression_set,ask,17.0,23,23.0,denominator; equilibrium; every; expression; numerator; substituted,"Write the equilibrium expression with the equilibrium row of your table substituted in, on one line, with brackets around every numerator and denominator."
+expression_set,switch_ask,6.3,23,11.5,equilibrium; expression,"Read your equilibrium row aloud, species by species. Which of those entries belong on top of the expression and which on the bottom?"
+expression_set,notebook_prompt,10.6,40,13.3,denominator; equilibrium; expression; ICE-table; substituted,"I am working on an ICE-table equilibrium problem. Explain how the equilibrium row of an ICE table is substituted into the K expression, and why brackets around a denominator matter when the expression is typed. Do not solve any problem."
+expression_set,return_ask,8.4,10,10.0,notebook; substituting,What did the notebook show you about substituting the table?
+x_found,ask,-0.8,8,4.0,,Solve for x. State it with its units.
+x_found,switch_ask,6.9,16,16.0,possibly,"Before solving, what is the largest value x could possibly have in this problem, and why?"
+x_found,notebook_prompt,6.4,26,8.7,equilibrium; ICE-table; represents,I am working on an ICE-table equilibrium problem. Explain what x represents in an ICE table and what limits its size. Do not solve any problem.
+x_found,return_ask,3.8,8,8.0,notebook,What did the notebook show you about x?
+value_found,ask,4.8,10,10.0,quantity,"Now the quantity the problem asks for, with its units."
+value_found,switch_ask,7.8,21,21.0,equilibrium,"Which entry in your equilibrium row is the one the question asks about, and what is it in terms of x?"
+value_found,notebook_prompt,7.6,27,9.0,concentrations; equilibrium; ICE-table,I am working on an ICE-table equilibrium problem. Explain how the equilibrium concentrations follow from x once the change row is known. Do not solve any problem.
+value_found,return_ask,4.9,13,13.0,notebook,What did the notebook show you about going from x to the answer?
+meaning_given,ask,9.2,29,14.5,comparison; concentrations; equilibrium,Compare the equilibrium concentrations you found with what you started with. What does that comparison show about how far the reaction went before the forward and reverse rates matched?
+meaning_given,switch_ask,11.6,25,25.0,equilibrium; original; particles,"If you could see the particles at equilibrium, roughly what fraction of the original reactant would still be intact, and what is the rest doing?"
+meaning_given,notebook_prompt,7.1,38,12.7,concentrations; equilibrium; ICE-table,"I am working on an ICE-table equilibrium problem. Explain what the size of K does and does not tell you about how far a reaction goes, and why the starting concentrations also matter. Do not solve any problem."
+meaning_given,return_ask,6.0,10,10.0,notebook,What did the notebook show you about extent of reaction?
+reflection,ask,2.9,12,12.0,,"Which step was hardest for you here, and in one sentence, why?"

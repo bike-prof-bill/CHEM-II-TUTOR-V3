@@ -103,7 +103,7 @@ csv	content_ch10_cc_openers.csv	The Crushed Cooled Flask	Question	Sealing steam 
 csv	content_ch10_cc_openers.csv	The Crushed Cooled Flask	Target concept	Dynamic condensation and vapor pressure collapse upon cooling
 csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Answer	Alcohol molecules have weaker intermolecular attractions than water, so a larger fraction of particles can overcome cohesive forces at room temperature to evaporate.
 csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	CHAPTER 10	The Rubbing Alcohol Chill
-csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Deterministic Keyword Check:	weaker, intermolecular attractions, cohesive forces, fraction, evaporate, volatility
+csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Deterministic Keyword Check:	weaker; attractions; intermolecular; fraction; energy; escape
 csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Liquids this scenario fits (names as in ch10_cc.py; separate with ;)	methanol;ethanol;1-propanol;2-propanol;1-butanol;2-butanol;isobutyl alcohol
 csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Question	Dabbing rubbing alcohol onto skin produces intense cold and rapid drying compared to water, while a vapor monitor logs a towering rate of escaping gas. What are the liquid alcohol molecules doing compared to water molecules that lets them flee into vapor so eagerly?
 csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Target concept	Intermolecular force strength dictating relative vapor pressure and volatility

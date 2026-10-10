@@ -158,6 +158,14 @@ const fmtU = u => u === "degC" ? "°C" : u;
   say(S, "More molecules have enough energy to escape the liquid surface as it warms."); say(S, "", null, { pick: "eq_a" }); say(S, V.eq_checks[0].park_text);
   const r = say(S, "what do you mean by infer"); ok(r.log.turn_kind === "question" && !r.log.counted_fail, "a plea for help costs nothing: " + r.log.turn_kind); }
 
+// 6k. label words (SCENARIO_CLAUDE, approved 9 Oct): naming the phenomenon without a mechanism is asked again and never counted
+{ const oi = ARCH.openers.findIndex(o => /Rubbing/.test(o.title)), i = ARCH.variants.findIndex(v => v.opener_index === oi), S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: oi, stamp: "lbl" });
+  ok(ARCH.openers[oi].label_words.indexOf("volatile") > -1 && ARCH.openers[oi].keywords.indexOf("escape") > -1, "the opener carries label words and the approved keywords");
+  let r = say(S, "Alcohol is more volatile than water so it evaporates and dries fast.");
+  ok(S.board.account_given !== "ticked" && !r.log.counted_fail && /OPENER_LABEL_ONLY/.test(r.log.guards), "a label-only account is not ticked, not counted, flagged: " + r.log.guards);
+  r = say(S, "Alcohol molecules attract each other weakly, so a larger fraction has the energy to escape the surface.");
+  ok(S.board.account_given === "ticked", "a mechanism account is accepted"); }
+
 // 7. every variant of every kind can be completed by a student who types only the key(s)
 { let bad = 0; ARCH.variants.forEach((V, i) => { const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: i % 6, stamp: "v" + i });
     say(S, "A greater fraction of molecules has the kinetic energy to escape the liquid surface.");

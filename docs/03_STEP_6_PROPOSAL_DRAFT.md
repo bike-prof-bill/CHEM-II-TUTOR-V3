@@ -1,4 +1,4 @@
-# Proposed step 6 (DRAFT, awaiting the instructor's approval)
+# Step 6 (approved 9 Oct 2026: 6a and 6b built; 6c and 6d wait on the instructor's material)
 
 Added to the rebuild after step 3 at the instructor's request (8 Oct 2026). Four items, none in `02_REBUILD_SPEC_spine_v2.md`. Nothing here changes a decision in the handoff; it extends the spec. Runs after step 5.
 

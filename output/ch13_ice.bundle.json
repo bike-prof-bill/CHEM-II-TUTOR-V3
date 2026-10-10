@@ -132,7 +132,8 @@
     "image_alt": "",
     "simulation": "",
     "simulation_opens": "meaning"
-   }
+   },
+   "label_words": []
   },
   {
    "title": "V2 opener 2",
@@ -162,7 +163,8 @@
     "image_alt": "",
     "simulation": "",
     "simulation_opens": "meaning"
-   }
+   },
+   "label_words": []
   },
   {
    "title": "V2 opener 3",
@@ -190,7 +192,8 @@
     "image_alt": "",
     "simulation": "",
     "simulation_opens": "meaning"
-   }
+   },
+   "label_words": []
   },
   {
    "title": "V2 opener 4",
@@ -218,7 +221,8 @@
     "image_alt": "",
     "simulation": "",
     "simulation_opens": "meaning"
-   }
+   },
+   "label_words": []
   },
   {
    "title": "V2 opener 5",
@@ -246,7 +250,8 @@
     "image_alt": "",
     "simulation": "",
     "simulation_opens": "meaning"
-   }
+   },
+   "label_words": []
   },
   {
    "title": "V2 opener 6",
@@ -276,7 +281,8 @@
     "image_alt": "",
     "simulation": "",
     "simulation_opens": "meaning"
-   }
+   },
+   "label_words": []
   }
  ],
  "moves": {
@@ -3907,5 +3913,5 @@
    "opener_index": 5
   }
  ],
- "content_version": "23d494bd05"
+ "content_version": "13a4d96cb1"
 }

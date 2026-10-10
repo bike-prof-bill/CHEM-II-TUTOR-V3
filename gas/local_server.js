@@ -3,7 +3,7 @@
 const http = require("http"), fs = require("fs"), path = require("path"), CORE = require("./Core.gs");
 const ARCHETYPES = {};                                       // every generated gas/Archetype_*.gs file, found by name
 fs.readdirSync(__dirname).filter(f => /^Archetype_.*\.gs$/.test(f)).forEach(f => Object.assign(ARCHETYPES, require(path.join(__dirname, f))));
-const sessions = {}, turns = {};
+const sessions = {}, turns = {}, history = {};
 http.createServer((req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*"); res.setHeader("Access-Control-Allow-Headers", "*"); res.setHeader("Content-Type", "application/json");
   if (req.method === "OPTIONS") return res.end();
@@ -16,15 +16,18 @@ http.createServer((req, res) => {
       else {
         let S = sessions[q.sessionId], r;
         if (q.action === "start" || q.action === "reset") {
-          const pool = arch.variants.map((v, i) => i).filter(i => (!q.kind || arch.variants[i].kind === q.kind) && (q.opener === undefined || q.opener === "" || arch.variants[i].opener_index === Number(q.opener)));
-          if (!pool.length) return res.end(JSON.stringify({ error: "no problem matches that opener and kind" }));
-          S = sessions[q.sessionId] = CORE.newSession(arch, { variantIndex: pool[Math.floor(Math.random() * pool.length)], openerIndex: Math.floor(Math.random() * arch.openers.length), stamp: Date.now().toString(36) });
+          const student = q.studentId || "Guest", hk = arch.archetype_id + "|" + student; history[hk] = history[hk] || [];
+          const pick = CORE.chooseVariant(arch.variants, { kind: q.kind, opener: q.opener }, /^Guest/.test(student) ? [] : history[hk]);   // never the same problem twice while others remain
+          if (!pick) return res.end(JSON.stringify({ error: "no problem matches that opener and kind" }));
+          if (!/^Guest/.test(student)) { if (pick.reset) history[hk] = []; history[hk].push(pick.variant_id); if (pick.reset) console.log("HISTORY_RESET |", hk); }
+          S = sessions[q.sessionId] = CORE.newSession(arch, { variantIndex: pick.index, openerIndex: Math.floor(Math.random() * arch.openers.length), stamp: Date.now().toString(36) });
           r = { reply: arch.openers[S.openerIndex].question, progress: CORE.progress(S, arch.variants[S.variantIndex]), notebook_url: arch.notebook_url, title: arch.title, media: CORE.openerMedia(arch, S), log: { event_type: "PROBLEM_OPEN", variant_id: S.variantId } };
         } else if (!S) r = { error: "no session; press New problem", log: {} };
         else if (q.action === "back") r = CORE.processBack(arch, S, Date.now());
-        else r = CORE.processTurn(arch, S, { message: q.message || "", pick: q.pick || null, table: q.table || null, history: q.history || [], now: Date.now() }, null);
+        else { const input = { message: q.message || "", pick: q.pick || null, table: q.table || null, history: q.history || [], now: Date.now() };
+               r = q.action === "verdict" ? CORE.verdict(arch, S, input) : q.action === "say" ? CORE.say(arch, S, input, null) : CORE.processTurn(arch, S, input, null); }
         (q.simEvents || []).forEach(e => console.log("SIM", JSON.stringify(e)));
-        const L = r.log || {}; console.log([L.event_type, L.variant_id, L.state, L.stage, L.face, L.gate, "newly=" + (L.newly || ""), "fail=" + L.counted_fail, "traps=" + (L.trap_ids || ""), "guards=" + (L.guards || "")].join(" | "));
+        const L = r.log || {}; if (r.log) console.log([L.event_type, L.variant_id, L.state, L.stage, L.face, L.gate, "newly=" + (L.newly || ""), "fail=" + L.counted_fail, "traps=" + (L.trap_ids || ""), "guards=" + (L.guards || "")].join(" | "));
         delete r.log; out = r; if (q.turnId) turns[q.turnId] = out;
       }
     } catch (e) { out = { error: String(e) }; }

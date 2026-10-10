@@ -251,13 +251,14 @@ def read_openers(path):
     for r in csv.reader(open(path, encoding="utf-8-sig")):
         if len(r) >= 5 and r[1].strip().endswith("?"):
             out.append({"title": r[0].strip(), "question": r[1].strip(), "model_answer": r[2].strip(),
-                        "target": r[3].strip(), "keywords": [k.strip() for k in r[4].split(",") if k.strip()],
+                        "target": r[3].strip(), "keywords": [k.strip() for k in r[4].replace(";", ",").split(",") if k.strip()],
                         "liquids": [x.strip() for x in (r[5] if len(r) > 5 else "").split(";") if x.strip()],
                         "kinds":   [x.strip() for x in (r[6] if len(r) > 6 else "").split(";") if x.strip()]})
             out[-1]["fits"] = out[-1]["liquids"]        # what this scenario fits: liquids for one archetype, problem ids for another
             col = lambda j: (r[j].strip() if len(r) > j else "")
             out[-1]["media"] = {"image_with_question": col(7), "image_after_account": col(8), "image_alt": col(9),
                                 "simulation": col(10), "simulation_opens": (col(11) or "meaning").lower()}   # instructor's pictures and simulation, optional
+            out[-1]["label_words"] = [x.strip() for x in col(12).replace(",", ";").split(";") if x.strip()]   # naming without mechanism (SCENARIO_CLAUDE, 9 Oct)
     return out
 
 def read_moves(path):

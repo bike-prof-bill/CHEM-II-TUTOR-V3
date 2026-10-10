@@ -180,8 +180,18 @@ async function send(extra) {
   const text = extra ? "" : $("box").value.trim(); if (busy || away || (!text && !extra)) return;
   if (text) { add("me", text); $("box").value = ""; }
   flushProbe(); setBusy(true);
-  const res = await call(Object.assign({ action: "turn", message: text, history, simEvents }, extra || {})); simEvents = [];
-  setBusy(false); handle(res, text || (extra && extra.pick ? "[picked: " + extra.pick + "]" : "")); $("box").focus();
+  // two phases: the verdict renders at once (checked labels, pins, meter, card); the sentence follows when the model is done
+  const echo = text || (extra && extra.pick ? "[picked: " + extra.pick + "]" : "");
+  const a = await call(Object.assign({ action: "verdict", message: text, history, simEvents }, extra || {})); simEvents = [];
+  if (a && !a.error && a.needs_say) {
+    handle(a, echo); if (a.checked && a.checked.length) add("note", "Checked: " + a.checked.join(", ") + ".");
+    const wait = add("tutor wait", "…");
+    const b = await call(Object.assign({ action: "say", message: text, history }, extra || {}));
+    wait.remove();
+    if (b && b.reply && a.checked && a.checked.length) b.reply = b.reply.replace(/^Checked: [^.]*\. ?/, "");   // already shown by the verdict
+    handle(b, "");
+  } else handle(a, echo);
+  setBusy(false); $("box").focus();
 }
 
 let doneShown = false;

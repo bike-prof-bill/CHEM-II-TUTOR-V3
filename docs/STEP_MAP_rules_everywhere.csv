@@ -9,4 +9,4 @@ Implied steps,Correct later work ticks the non-explicit symbolic steps before it
 "Ladder, two more after return","Stage parked: unmet items handed over (park_text, pinned values); problem continues; no credit"
 Completion,No live item left; tutor acknowledges and asks nothing
 Credit,Completion with a clean run (no park) and the meaning item ticked
-Never,Names the liquid; uses kPa; shows the answer; accepts a bare number as the final answer
+Never,Names the liquid; gives a problem value in kPa; shows the answer; accepts a bare number as the final answer
