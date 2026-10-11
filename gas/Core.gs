@@ -266,7 +266,9 @@ var CORE = (function () {
 
   // ---------- the response, both phases ----------
   function assemble(arch, S, V, ev, reply, card, provisional) {
-    var res = { reply: reply, progress: progress(S, V), card: card || null, pinned: S.pinned, pins: S.pins, choices: choicesFor(arch, S, V) };
+    var nextId = activeState(S, V), nextItem = nextId ? entry(V, nextId) : null;
+    var res = { reply: reply, progress: progress(S, V), card: card || null, pinned: S.pinned, pins: S.pins, choices: choicesFor(arch, S, V),
+                next: nextItem ? { id: nextItem.id, kind: nextItem.kind } : null };      // what the page may shape its input to
     if (ev.newly.indexOf("account_given") > -1 || ev.newly.indexOf("account_given(parked)") > -1) res.problem = problemPayload(arch, V, S);
     var simState = V.board.filter(function (x) { return x.opens_sim; })[0];
     var simDue = (simState && isSet(S, simState.id)) || (!simState && activeState(S, V) === "meaning_given");
@@ -282,7 +284,16 @@ var CORE = (function () {
     return res;
   }
 
-  return { verdict: verdict, say: say, processTurn: processTurn, processBack: processBack,
+  // A fingerprint of the code that is actually running: the source text of one function per module, hashed. Compared with the
+  // value run.py computed from the repository (SHELL_VERSION), it shows a stale paste in Apps Script, which a pasted constant cannot.
+  function shellFingerprint() {
+    var parts = [verdict, say, parseNumbers, evalArithmetic, match, checkEquation, liveItems, moveFor, applyLadder, checkDraft, buildSystem, fallbackReply, logRow, logqAppend];
+    var text = parts.map(function (f) { return String(f).replace(/\s+/g, " "); }).join("|"), h = 5381;
+    for (var i = 0; i < text.length; i++) h = ((h * 33) ^ text.charCodeAt(i)) >>> 0;
+    return h.toString(16);
+  }
+
+  return { shellFingerprint: shellFingerprint, verdict: verdict, say: say, processTurn: processTurn, processBack: processBack,
     parseNumbers: parseNumbers, hasAccount: hasAccount, openerCoverage: openerCoverage, newSession: newSession, match: match, units: UNITS,
     checkEquation: checkEquation, checkTable: checkTable, parseTableText: parseTableText, activeState: activeState, liveItems: liveItems,
     progress: progress, problemPayload: problemPayload, openerMedia: openerMedia, evalArithmetic: evalArithmetic, isAskingForHelp: isAskingForHelp,
