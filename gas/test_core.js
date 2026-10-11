@@ -233,6 +233,17 @@ const REFLECT = "The rearrangement was hardest; I would tell a friend to undo th
   say(S3, "More molecules have enough energy to escape the liquid surface as it warms."); predict(S3, V); say(S3, "", null, { pick: "eq_a" }); say(S3, V.eq_checks[0].park_text);
   r = say(S3, (k.value * 0.5).toPrecision(5) + " " + fmtU(k.unit)); ok(!r.log.near_miss && r.log.counted_fail, "half the answer is a stray, not a near miss"); }
 
+// 6q. instructor's run, 11 Oct: two kelvin values on one line joined by "&", one of them worked arithmetic; and a near miss on the first
+// wrong try is tutored by its own question, not by the stage's switch question (and the model is not called for it)
+{ const i = find("T2"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "amp1" });
+  say(S, "More molecules have enough energy to escape the liquid surface as it warms."); predict(S, V); say(S, "", null, { pick: "eq_a" }); say(S, V.eq_checks[0].park_text);
+  const t = V.expected.find(e => e.state === "T_in_K"), c = (t.value - 273.15).toFixed(2);
+  let r = say(S, "300.0K & (273.15 + " + c + ")K");
+  ok(S.board.T_in_K === "ticked" && !r.log.counted_fail, "ampersand-joined values: the worked one is read and the step ticks");
+  const k = key(V); let calls = 0; const m = () => { calls++; return { accept: 1, turn_kind: "answer", socratic_response: "Which numbers came from an instrument?" }; };
+  r = say(S, (k.value * 1.05).toPrecision(5) + " " + fmtU(k.unit), m);
+  ok(calls === 0 && r.log.near_miss === k.id && /^Which values did you use/.test(r.reply), "near miss on the first wrong try: no model call, the near-miss question, not the switch: " + r.reply); }
+
 // 7. every variant of every kind can be completed by a student who types only the key(s)
 { let bad = 0; ARCH.variants.forEach((V, i) => { const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "v" + i });
     say(S, "A greater fraction of molecules has the kinetic energy to escape the liquid surface.");

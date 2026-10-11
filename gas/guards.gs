@@ -14,7 +14,7 @@ function unearned(reply, S, V) {      // a number from the answer key that the s
 // Three cheap checks that moved out of the prompt (rebuild spec): run on the model's draft before the leak guard.
 var BANNED_OPENERS = ["Spot on", "Exactly right", "Perfect", "Great job", "You nailed it", "Excellent work"];   // instructor's V2 list
 // words of the tutor's own machinery that must not reach a student (the model wrote "in the measurement account", instructor's run, 11 Oct)
-var SHELL_WORDS = ["measurement account", "particle account", "step map", "credit gate", "second reader", "the item above", "this item", "the active item", "the gate"];
+var SHELL_WORDS = ["measurement account", "particle account", "symbolic account", "inference account", "macro account", "submicro account", "step map", "credit gate", "second reader", "the item above", "this item", "the active item", "the gate"];
 function firstThreeWords(t) { return String(t || "").toLowerCase().replace(/[^a-z0-9\s]/g, " ").trim().split(/\s+/).slice(0, 3).join(" "); }
 // -> list of failures: [] when the draft passes. `done` = the problem is complete after this turn (then zero questions is right).
 function checkDraft(reply, S, V, done, lastReply) {

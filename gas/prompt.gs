@@ -29,7 +29,12 @@ function buildSystem(arch, S, V, ctx) {
 }
 
 
-var SECOND_READER = "You are checking one student message for a FALSE statement about the chemistry. Reply strict JSON {\"found\":0|1,\"quote\":\"exact words from the message\",\"why\":\"...\"}. If nothing is false, found is 0. Do not judge completeness.";
+var SECOND_READER = "You are checking one student message for a FALSE statement about the chemistry. The message answers the scenario given first; " +
+  "comparisons in it (weaker, stronger, faster, less energy) are relative to the other substance or condition in that scenario, not absolute claims. " +
+  "Reply strict JSON {\"found\":0|1,\"quote\":\"exact words from the message\",\"why\":\"...\"}. found is 1 only for a statement that is false as chemistry. " +
+  "Not for incompleteness, informality, an unstated comparison, or a mechanism left out. If nothing is false, found is 0.";
+// the second reader's input: the scenario, then the message, so a relative claim is read in context (instructor's run, 11 Oct)
+function secondReaderMsg(arch, S, msg) { var o = arch.openers[S.openerIndex]; return "Scenario: " + (o ? o.question : "") + "\n\nStudent message: " + msg; }
 
 // The authored fallback: what the student reads when there is no model, the model failed, or every guard failed.
 // Plus the plain hint when words arrived at a checkable item (instructor, 9 Oct).
@@ -52,4 +57,4 @@ function fallbackReply(arch, S, V, ev, p) {
   return reply;
 }
 
-if (typeof module !== "undefined") module.exports = { RULES: RULES, buildSystem: buildSystem, SECOND_READER: SECOND_READER, HINT_OF_KIND: HINT_OF_KIND, fallbackReply: fallbackReply, nearMissAsk: nearMissAsk, NEAR_MISS_ASK: NEAR_MISS_ASK };
+if (typeof module !== "undefined") module.exports = { RULES: RULES, buildSystem: buildSystem, SECOND_READER: SECOND_READER, HINT_OF_KIND: HINT_OF_KIND, fallbackReply: fallbackReply, secondReaderMsg: secondReaderMsg, nearMissAsk: nearMissAsk, NEAR_MISS_ASK: NEAR_MISS_ASK };

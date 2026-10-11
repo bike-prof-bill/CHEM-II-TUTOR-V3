@@ -20,7 +20,7 @@ var CORE = (function () {
     var t0 = Date.now();
     var V = arch.variants[S.variantIndex], msg = String(input.message || "");
     var ev = { event_type: "TURN", entering: progress(S, V).done, active: activeState(S, V), newly: [], traps: [], guards: [],
-      counted_fail: false, after_bailout: false, model_accept: "", second_reader: "", fallback_used: false, structured: "", near_miss: "", repeat: false };
+      counted_fail: false, after_bailout: false, model_accept: "", second_reader: "", fallback_used: false, structured: "", near_miss: "", repeat: false, second_reader_quote: "" };
     var notes = [];
     S.turns++;
     var active = ev.active, b = active ? entry(V, active) : null;
@@ -96,7 +96,13 @@ var CORE = (function () {
     var worked = [], plainLines = [];
     numText.split(/\n/).forEach(function (line) {
       var rhs = line.indexOf("=") > -1 ? line.slice(line.lastIndexOf("=") + 1) : line, a = evalArithmetic(rhs, arch);
-      if (a) worked.push(a); else plainLines.push(line);
+      if (a) { worked.push(a); return; }
+      // several values on one line joined by &, "and", ";" or ", " (instructor's run, 11 Oct: "283.1K & (273.15 + 72.8)K"): each chunk
+      // that works out is a value; the rest of the line is read as plain numbers
+      var chunks = rhs.split(/\s*&\s*|\s+and\s+|\s*;\s*|,\s+/i), rest = [];
+      if (chunks.length > 1) chunks.forEach(function (c) { var w = evalArithmetic(c, arch); if (w) worked.push(w); else rest.push(c); });
+      else rest.push(line);
+      if (rest.length) plainLines.push(rest.join(" "));
     });
     var nums = parseNumbers(plainLines.join("\n")).concat(worked), strays = 0, unitOnly = (!nums.length && S.pendingUnit !== null) ? parseNumbers("1 " + msg)[0] : null;
     if (unitOnly && unitOnly.unit) {                       // "K" sent on its own after a bare number
@@ -162,7 +168,8 @@ var CORE = (function () {
     var lad = applyLadder(arch, S, V, ev, input);
     var p = { notes: notes, judge: judge, gateOK: gateOK, labelOnly: labelOnly, asking: asking, pickId: pickId, eqSeen: eqSeen, tableSeen: tableSeen, numsSeen: nums.length,
               wordsOnly: !!msg.trim() && !nums.length && !eqSeen && !tableSeen && !pickId && S.pendingUnit === null,
-              switchAsk: lad.switchAsk, history: input.history || [], msg: msg, now: input.now || 0, verdict_ms: 0 };
+              switchAsk: ev.near_miss ? null : lad.switchAsk,     // a near miss is tutored by its own question, not the switch (instructor, 11 Oct)
+              history: input.history || [], msg: msg, now: input.now || 0, verdict_ms: 0 };
     return finishA(arch, S, V, ev, { reply: lad.reply, card: lad.card, needsSay: !lad.card && !lad.reply, p: p }, t0);
   }
 
@@ -210,8 +217,8 @@ var CORE = (function () {
     var out = null, sr = null;
     if (model && (choiceNext || checkNext) && !ctx.judge && !p.asking) { model = null; }     // nothing to judge, nothing to answer: deterministic
     if (model) {
-      if (model.batch && ctx.judge) { var both = safeBatch(model, [{ system: buildSystem(arch, S, V, ctx), history: history, msg: msg }, { system: SECOND_READER, history: [], msg: msg }]); out = both[0]; sr = both[1]; }
-      else { out = safe(model, buildSystem(arch, S, V, ctx), history, msg); if (ctx.judge) sr = safe(model, SECOND_READER, [], msg); }
+      if (model.batch && ctx.judge) { var both = safeBatch(model, [{ system: buildSystem(arch, S, V, ctx), history: history, msg: msg }, { system: SECOND_READER, history: [], msg: secondReaderMsg(arch, S, msg) }]); out = both[0]; sr = both[1]; }
+      else { out = safe(model, buildSystem(arch, S, V, ctx), history, msg); if (ctx.judge) sr = safe(model, SECOND_READER, [], secondReaderMsg(arch, S, msg)); }
     }
     if (out) { reply = out.socratic_response; kind = out.turn_kind || kind; ev.model_accept = out.accept ? 1 : 0; }
     else if (ctx.judge) ev.model_accept = "no_model";
@@ -221,6 +228,7 @@ var CORE = (function () {
       // model says accept, or the second reader finds nothing false. Both verdicts are logged. In plain mode the gates alone decide.
       var modelYes = !!(out && out.accept), srFalse = !!(sr && sr.found && sr.quote && msg.indexOf(sr.quote) > -1);
       ev.second_reader = sr ? (srFalse ? "FALSE_CLAIM" : "clean") : "unavailable";
+      ev.second_reader_quote = (sr && sr.found) ? String(sr.quote || "") + " — " + String(sr.why || "") : "";   // so a disputed refusal can be read
       accepted = SECOND_READER_VETO ? !srFalse : (modelYes || !srFalse);
       if (!accepted && model) {                   // both readers against it: the model asks one question aimed at the false claim
         ev.guards.push("REPLY_AFFIRMED_ERROR");
