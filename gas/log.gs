@@ -11,7 +11,8 @@ function logRow(arch, S, V, ev, res, timing) {
     counted_fail: ev.counted_fail, after_bailout: !!ev.after_bailout, seconds_away: ev.seconds_away || "", trap_ids: (ev.traps || []).join(","),
     structured: ev.structured || "", model_accept: ev.model_accept === undefined ? "" : ev.model_accept, second_reader: ev.second_reader || "",
     guards: (ev.guards || []).join(","), fallback_used: !!ev.fallback_used, turn_kind: ev.turn_kind || "", clean: S.clean, done: S.done, credit: S.credit,
-    verdict_ms: timing && timing.verdict_ms !== undefined ? timing.verdict_ms : "", say_ms: timing && timing.say_ms !== undefined ? timing.say_ms : "" };
+    verdict_ms: timing && timing.verdict_ms !== undefined ? timing.verdict_ms : "", say_ms: timing && timing.say_ms !== undefined ? timing.say_ms : "",
+    near_miss: ev.near_miss || "", repeat: !!ev.repeat };
 }
 
 if (typeof module !== "undefined") module.exports = { GATE_OF_KIND: GATE_OF_KIND, logRow: logRow };

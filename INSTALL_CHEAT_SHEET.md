@@ -24,6 +24,8 @@ Plain mode asks only the authored questions. It is the right mode for testing th
 7. Paste that URL in a browser. You should see `{"alive":true,...}`.
 8. Open `index.html` → **Settings** → paste URL and token → **Test** → **Save** → **New problem**.
 
+**Which files to paste after a change:** the report names them. Rule of thumb: a change to `gas/*.gs` means that file; any change to a `content_*` file or to `archetypes/` means `Archetype_<archetype>` (the content is compiled into it) and usually `Shell_version`; `Shell_version` whenever `Core` or `Code` changed. The alive reply (`/exec` in a browser) shows `shell_ok` and each archetype's `content_version`; compare them with the report.
+
 **After any code change:** Deploy → **Manage deployments** → pencil → Version: **New version** → Deploy. The URL stays the same. Forgetting this is the usual reason "my change did nothing."
 
 ## Changing content

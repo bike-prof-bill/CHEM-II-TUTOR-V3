@@ -10,7 +10,7 @@ var FALLBACK_MODEL = "gemini-3.5-flash";
 var LOG_HEADERS = ["ts", "build_stamp", "content_version", "event_type", "session_id", "student_id", "attempt_id", "archetype_id",
   "variant_id", "problem_kind", "state", "register", "face", "gate", "entering_done", "leaving_done", "newly", "tries_on_state",
   "counted_fail", "after_bailout", "seconds_away", "trap_ids", "structured", "model_accept", "second_reader", "guards",
-  "fallback_used", "turn_kind", "clean", "done", "credit", "student_text", "reply_text", "model_name", "model_ms", "server_ms", "verdict_ms", "say_ms", "stage", "tries_on_stage", "queued", "queue_ms"];
+  "fallback_used", "turn_kind", "clean", "done", "credit", "student_text", "reply_text", "model_name", "model_ms", "server_ms", "verdict_ms", "say_ms", "stage", "tries_on_stage", "queued", "queue_ms", "near_miss", "repeat"];
 var MASTERY_HEADERS = ["ts", "student_id", "archetype_id", "variant_id", "problem_kind", "attempt_id", "turns", "clean", "credit", "outcome", "build_stamp", "content_version", "queued", "queue_ms"];
 
 function setupV3() {

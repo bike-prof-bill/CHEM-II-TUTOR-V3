@@ -213,6 +213,26 @@ const REFLECT = "The rearrangement was hardest; I would tell a friend to undo th
   const r2 = say(S2, "1/T1 - R·ln(P2/P1)/ΔHvap = 1/T2");
   ok(S2.board.rearranged !== "ticked" && /EQ:HOLDS_NOT_ISOLATED/.test(r2.log.structured), "true but 1/T2, not T2, on the right: still progress, not isolated"); }
 
+// 6p. instructor, 11 Oct: a calculated number outside the window but near the expected value, matching no trap, is a near miss:
+// counted, and the authored question asks which values they used; the same wrong number typed again costs nothing.
+{ const i = find("T2"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "nm1" });
+  say(S, "More molecules have enough energy to escape the liquid surface as it warms."); predict(S, V); say(S, "", null, { pick: "eq_a" });
+  say(S, V.eq_checks[0].park_text); const k = key(V), low = (k.value * 0.975).toPrecision(5) + " " + fmtU(k.unit);
+  let r = say(S, low); const stg = r.log.stage;
+  ok(r.log.near_miss === k.id && r.log.counted_fail && !r.card && S.tries[stg] === 1, "2.5 % low: near miss named, one wrong try, no card");
+  ok(/Which values did you use/.test(r.reply) && !/close|window/.test(r.reply), "the authored near-miss question, nothing about how close: " + r.reply);
+  r = say(S, low);
+  ok(r.log.repeat && !r.log.counted_fail && S.tries[stg] === 1 && !r.card, "the same number again: not counted, no card");
+  ok(/^That is the same number as before\. Which values did you use/.test(r.reply), "repeat sentence then the question: " + r.reply);
+  r = say(S, (k.value * 1.03).toPrecision(5) + " " + fmtU(k.unit));
+  ok(r.card && r.log.counted_fail, "a different near miss is the second wrong try: the notebook card");
+  const t = V.traps.find(x => x.value !== undefined && !x.openers), S2 = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "nm2" });
+  say(S2, "More molecules have enough energy to escape the liquid surface as it warms."); predict(S2, V); say(S2, "", null, { pick: "eq_a" }); say(S2, V.eq_checks[0].park_text);
+  r = say(S2, t.value + " " + fmtU(t.unit)); ok(r.log.trap_ids === t.id && !r.log.near_miss, "a trap value is the trap, never a near miss");
+  const S3 = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "nm3" });
+  say(S3, "More molecules have enough energy to escape the liquid surface as it warms."); predict(S3, V); say(S3, "", null, { pick: "eq_a" }); say(S3, V.eq_checks[0].park_text);
+  r = say(S3, (k.value * 0.5).toPrecision(5) + " " + fmtU(k.unit)); ok(!r.log.near_miss && r.log.counted_fail, "half the answer is a stray, not a near miss"); }
+
 // 7. every variant of every kind can be completed by a student who types only the key(s)
 { let bad = 0; ARCH.variants.forEach((V, i) => { const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "v" + i });
     say(S, "A greater fraction of molecules has the kinetic energy to escape the liquid surface.");

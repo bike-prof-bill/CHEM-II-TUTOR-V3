@@ -130,6 +130,10 @@
   "WATER_DH_USED": {
    "note": "The head pressure matches what water's heat of vaporization from the substance table (40.66 kJ/mol) gives in place of the sealed liquid's.",
    "ask": "Which liquid is sealed inside the glass? Look again at the heat of vaporization you used."
+  },
+  "NEAR_MISS": {
+   "note": "A calculated number outside the grading window but within ten percent of an unmet intermediate or the answer, matching no named error: most likely a calculator slip. Not told how close. Asked which values were used.",
+   "ask": "Which values did you use to get that number?"
   }
  },
  "trap_notes_by_opener": {
@@ -16909,5 +16913,5 @@
    "opener_index": 3
   }
  ],
- "content_version": "d23389a378"
+ "content_version": "55b6f7bdc7"
 }

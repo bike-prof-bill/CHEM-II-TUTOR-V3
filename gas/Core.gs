@@ -20,7 +20,7 @@ var CORE = (function () {
     var t0 = Date.now();
     var V = arch.variants[S.variantIndex], msg = String(input.message || "");
     var ev = { event_type: "TURN", entering: progress(S, V).done, active: activeState(S, V), newly: [], traps: [], guards: [],
-      counted_fail: false, after_bailout: false, model_accept: "", second_reader: "", fallback_used: false, structured: "" };
+      counted_fail: false, after_bailout: false, model_accept: "", second_reader: "", fallback_used: false, structured: "", near_miss: "", repeat: false };
     var notes = [];
     S.turns++;
     var active = ev.active, b = active ? entry(V, active) : null;
@@ -104,9 +104,16 @@ var CORE = (function () {
       if (unitOnly.unit === S.pendingUnit.unit) { S.matched[S.pendingUnit.idx] = true; S.values = S.values || {}; S.values[S.pendingUnit.idx] = S.pendingUnit.x; S.pendingUnit = null; notes.push(pt.label + ": units supplied. Confirmed."); }
       else if (!UNITS.vecSame(UNITS.dim(unitOnly.unit), UNITS.dim(S.pendingUnit.unit))) { ev.guards.push("WRONG_DIMENSION"); notes.push("The unit they supplied is of a different kind of quantity than the one asked for. Do not accept it. Ask what kind of quantity this value is."); }
     }
+    S.refused = S.refused || {};
+    var repeats = 0, wrongs = 0;                            // instructor, 11 Oct: the same wrong number typed again is not a new attempt
     nums.forEach(function (n) {
       S.produced.push(n.x);
       var c = classify(n, S, V);
+      if (c.type === "trap" || c.type === "near_miss" || c.type === "stray" || c.type === "wrong_dimension") {
+        var rk = n.x + "|" + (n.unit || ""); wrongs++;
+        if (S.refused[rk]) { repeats++; notes.push("This is the same number they typed before, refused then. It costs nothing this time. Say it is the same number; ask which values they used."); }
+        S.refused[rk] = true;
+      }
       if (c.type === "expected" || c.type === "needs_unit") {
         c.ids.forEach(function (ix) { S.matched[ix] = true; S.values = S.values || {};      // the student's own accepted value, in the entry's unit
           var e = V.expected[ix], v = n.x; if (n.unit && e.unit && n.unit !== e.unit) { var cv = UNITS.convert(n.x, n.unit, e.unit); if (cv !== null) v = cv; } S.values[ix] = v; });
@@ -115,8 +122,10 @@ var CORE = (function () {
         if (c.type === "needs_unit" && c.needs && !S.matched[c.needs.idx]) { S.pendingUnit = c.needs; notes.push("The value for '" + V.expected[c.needs.idx].label + "' is right but has no units. Ask for the units. Do not advance."); }
       } else if (c.type === "trap") { ev.traps.push(c.trap.id); notes.push("KNOWN WRONG TURN (" + c.trap.id + "): " + trapNote(arch, V, c.trap.id).note + " Do not name the fix. Ask one question aimed at it."); }
       else if (c.type === "wrong_dimension") { ev.guards.push("WRONG_DIMENSION"); strays++; notes.push("The number is right for one step but carries a unit of a different kind of quantity (" + c.typed + "). Do not accept it. Ask what kind of quantity that value measures."); }
+      else if (c.type === "near_miss") { ev.near_miss = c.id; strays++; notes.push("The number is near '" + V.expected[c.idx].label + "' but outside the grading window: most likely an arithmetic slip. Do not say how close it is. Do not confirm it. Ask which values they used."); }
       else if (c.type === "stray") strays++;
     });
+    if (wrongs && repeats === wrongs) { ev.repeat = true; strays = 0; ev.traps = []; }   // only repeats: no new wrong try, no new trap
     liveItems(S, V).forEach(function (bb) { if (bb.kind === "number" && !isSet(S, bb.id) && stateSatisfied(S, V, bb.id)) tick(S, V, bb.id, ev.newly); });
     ev.newly.forEach(function (st) { var e = entry(V, st); if (e && e.kind === "number") notes.push("Established and checked by the server: " + (e.label_when_done || st.replace(/_/g, " ")) + "."); });
     var keyWaiting = V.expected.some(function (t, i) { return t.role === "key" && S.matched[i] && !isSet(S, t.state); }) &&
@@ -197,7 +206,7 @@ var CORE = (function () {
     // instructor, 11 Oct: the same for a checkable item (equation, number, table): the authored question is asked, the model may
     // acknowledge but not question (his run of the four: the model asked for the next step's unit conversion while the rearrangement was open).
     // A student asking for help still gets the model's one-sentence answer before the authored question.
-    var checkNext = !!(b && CHECKABLE[b.kind] && !p.switchAsk && !ev.traps.length);
+    var checkNext = !!(b && CHECKABLE[b.kind] && !p.switchAsk && !ev.traps.length);   // a near miss or a repeat is not a trap: the authored question speaks
     var out = null, sr = null;
     if (model && (choiceNext || checkNext) && !ctx.judge && !p.asking) { model = null; }     // nothing to judge, nothing to answer: deterministic
     if (model) {
@@ -248,7 +257,8 @@ var CORE = (function () {
     // a choice item next (after any acceptance this turn): the model's acknowledgement stays, its question gives way to the authored one
     var nowA = activeState(S, V), nowB = nowA ? entry(V, nowA) : null;
     if (reply && !card && !ev.fallback_used && nowB && (nowB.kind === "pick" || nowB.kind === "direction" || CHECKABLE[nowB.kind]) && !p.switchAsk && !ev.traps.length) {
-      var nowAsk = moveFor(arch, V, nowA).ask; if (nowAsk) { var ackOnly = cutQuestions(reply); reply = (ackOnly ? ackOnly + " " : "") + nowAsk; }
+      var nowAsk = (ev.near_miss || ev.repeat) ? nearMissAsk(arch, V, ev) : moveFor(arch, V, nowA).ask;
+      if (nowAsk) { var ackOnly = cutQuestions(reply); reply = (ackOnly ? ackOnly + " " : "") + nowAsk; }
     }
     S.lastReply = reply; S.pending = null;
     var res = assemble(arch, S, V, ev, reply, card, false);
@@ -301,7 +311,7 @@ var CORE = (function () {
   // A fingerprint of the code that is actually running: the source text of one function per module, hashed. Compared with the
   // value run.py computed from the repository (SHELL_VERSION), it shows a stale paste in Apps Script, which a pasted constant cannot.
   function shellFingerprint() {
-    var parts = [verdict, say, parseNumbers, evalArithmetic, match, checkEquation, liveItems, moveFor, applyLadder, checkDraft, buildSystem, fallbackReply, logRow, logqAppend];
+    var parts = [verdict, say, parseNumbers, evalArithmetic, match, checkEquation, liveItems, moveFor, applyLadder, checkDraft, buildSystem, fallbackReply, nearMissAsk, logRow, logqAppend];
     var text = parts.map(function (f) { return String(f).replace(/\s+/g, " "); }).join("|"), h = 5381;
     for (var i = 0; i < text.length; i++) h = ((h * 33) ^ text.charCodeAt(i)) >>> 0;
     return h.toString(16);

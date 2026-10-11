@@ -35,10 +35,16 @@ var SECOND_READER = "You are checking one student message for a FALSE statement 
 // Plus the plain hint when words arrived at a checkable item (instructor, 9 Oct).
 var HINT_OF_KIND = { number: "This step is checked on the value: type it, with its unit.", equation: "This step is checked on the equation: type it on one line, the unknown by itself on one side.",
                      pick: "This step is a choice: open the Equations list.", direction: "This step is a choice: pick one of the options.", table: "This step is checked on the table: type the three rows I:, C:, E:.", text: "", reflection: "" };
+// The near-miss question: the archetype's errors file may give it (row NEAR_MISS); otherwise the instructor's default wording (11 Oct).
+var NEAR_MISS_ASK = "Which values did you use to get that number?", REPEAT_SENTENCE = "That is the same number as before.";
+function nearMissAsk(arch, V, ev) {
+  var a = (trapNote(arch, V, "NEAR_MISS").ask || NEAR_MISS_ASK);
+  return (ev.repeat ? REPEAT_SENTENCE + " " : "") + a;
+}
 function fallbackReply(arch, S, V, ev, p) {
   var nowActive = activeState(S, V), nowMove = nowActive ? moveFor(arch, V, nowActive) : {};
   var ack = ev.newly.length ? "Checked: " + ev.newly.map(function (st) { var e = entry(V, st.replace(/\(parked\)$/, "")); return (e && e.label_when_done) || st.replace(/_/g, " "); }).join(", ") + ". " : "";
-  var trapAsk = ev.traps.length ? trapNote(arch, V, ev.traps[0]).ask : "";
+  var trapAsk = ev.traps.length ? trapNote(arch, V, ev.traps[0]).ask : ((ev.near_miss || ev.repeat) && !ev.newly.length ? nearMissAsk(arch, V, ev) : "");
   var reply = nowActive ? ack + (trapAsk || (p.switchAsk && !ev.traps.length ? p.switchAsk : (S.pendingUnit !== null ? "What are the units of that value?" : (nowMove.ask || arch.openers[S.openerIndex].question))))
                         : ack + "That completes this problem.";
   var nb = nowActive ? entry(V, nowActive) : null;
@@ -46,4 +52,4 @@ function fallbackReply(arch, S, V, ev, p) {
   return reply;
 }
 
-if (typeof module !== "undefined") module.exports = { RULES: RULES, buildSystem: buildSystem, SECOND_READER: SECOND_READER, HINT_OF_KIND: HINT_OF_KIND, fallbackReply: fallbackReply };
+if (typeof module !== "undefined") module.exports = { RULES: RULES, buildSystem: buildSystem, SECOND_READER: SECOND_READER, HINT_OF_KIND: HINT_OF_KIND, fallbackReply: fallbackReply, nearMissAsk: nearMissAsk, NEAR_MISS_ASK: NEAR_MISS_ASK };

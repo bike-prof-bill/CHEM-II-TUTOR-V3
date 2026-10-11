@@ -123,10 +123,25 @@ function match(n, expected, traps, ticked, accepted) {
   if (given !== null) return { type: "given", id: expected[given].id };
   if (constant !== null) return { type: "constant", id: expected[constant].id };
   if (wrongDim) return { type: "wrong_dimension", id: expected[wrongDim.idx].id, unit: wrongDim.unit, typed: n.unit };
+  // instructor, 11 Oct: a calculated number outside the window but near an unmet intermediate or key, matching no trap, is a near miss
+  // (a calculator slip): the tutor asks which values they used. The nearest such entry is named; nothing is accepted.
+  var best = null;
+  for (var j = 0; j < expected.length; j++) {
+    var e = expected[j]; if (e.derive || ticked[e.state] || (e.role !== "intermediate" && e.role !== "key")) continue;
+    var fs = [{ value: e.value, unit: e.unit }].concat(e.also || []);
+    for (var g = 0; g < fs.length; g++) {
+      var G = fs[g], gu = G.unit || ""; if (!G.value) continue;
+      if (n.unit && gu && n.unit !== gu) continue; if (n.unit && !gu) continue;
+      var rel = Math.abs(n.x - G.value) / Math.abs(G.value);
+      if (rel <= NEAR_MISS_FRACTION && (!best || rel < best.rel)) best = { idx: j, rel: rel };
+    }
+  }
+  if (best) return { type: "near_miss", id: expected[best.idx].id, idx: best.idx, state: expected[best.idx].state };
   return { type: "stray" };
 }
+var NEAR_MISS_FRACTION = 0.10;   // outside the grading window, within this fraction of the expected value (instructor, 11 Oct)
 function tickedSet(S) { var t = {}; for (var st in S.board) if (isSet(S, st)) t[st] = true; return t; }
 function acceptedValues(S, V) { var a = {}; V.expected.forEach(function (e, i) { if (S.values && S.values[i] !== undefined) a[e.id] = S.values[i]; }); return a; }
 function classify(n, S, V) { return match(n, V.expected, V.traps, tickedSet(S), acceptedValues(S, V)); }
 
-if (typeof module !== "undefined") module.exports = { acceptedValues: acceptedValues, eqSide: eqSide, holdsOn: holdsOn, holdsAny: holdsAny, checkEquation: checkEquation, cellEqual: cellEqual, checkTable: checkTable, near: near, match: match, tickedSet: tickedSet, classify: classify };
+if (typeof module !== "undefined") module.exports = { NEAR_MISS_FRACTION: NEAR_MISS_FRACTION, acceptedValues: acceptedValues, eqSide: eqSide, holdsOn: holdsOn, holdsAny: holdsAny, checkEquation: checkEquation, cellEqual: cellEqual, checkTable: checkTable, near: near, match: match, tickedSet: tickedSet, classify: classify };
