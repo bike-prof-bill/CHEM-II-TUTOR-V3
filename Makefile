@@ -21,6 +21,7 @@ test-modules:
 	$(NODE) tests/modules/units.test.js
 	$(NODE) tests/modules/shell_modules.test.js
 	$(NODE) tests/modules/replay.test.js
+	$(NODE) tests/modules/syntax.test.js
 	$(PY) tests/modules/test_units.py
 	$(PY) tests/modules/test_substances.py
 

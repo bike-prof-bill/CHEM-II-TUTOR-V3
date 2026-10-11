@@ -36,7 +36,8 @@ function checkModels() {
 }
 
 function doGet() { var expected = (typeof SHELL_VERSION !== "undefined") ? SHELL_VERSION : "not pasted", actual = CORE.shellFingerprint();
-  return json_({ alive: true, build: BUILD_STAMP, shell_expected: expected, shell_actual: actual, shell_ok: expected === actual,   // a stale paste shows as shell_ok false archetypes: Object.keys(ARCHETYPES).map(function (k) { return { id: k, title: ARCHETYPES[k].title, kinds: ARCHETYPES[k].kinds, content_version: ARCHETYPES[k].content_version, openers: ARCHETYPES[k].openers.map(function (o) { return o.title; }) }; }) }); }
+  // a stale paste shows as shell_ok false
+  return json_({ alive: true, build: BUILD_STAMP, shell_expected: expected, shell_actual: actual, shell_ok: expected === actual, archetypes: Object.keys(ARCHETYPES).map(function (k) { return { id: k, title: ARCHETYPES[k].title, kinds: ARCHETYPES[k].kinds, content_version: ARCHETYPES[k].content_version, openers: ARCHETYPES[k].openers.map(function (o) { return o.title; }) }; }) }); }
 
 function doPost(e) {
   var t0 = Date.now();
