@@ -7,7 +7,7 @@ const sessions = {}, turns = {}, history = {};
 http.createServer((req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*"); res.setHeader("Access-Control-Allow-Headers", "*"); res.setHeader("Content-Type", "application/json");
   if (req.method === "OPTIONS") return res.end();
-  if (req.method === "GET") return res.end(JSON.stringify({ alive: true, build: "LOCAL-plain-mode", shell_version: (() => { try { return require("./Shell_version.gs"); } catch (e) { return "none"; } })(), archetypes: Object.keys(ARCHETYPES).map(k => ({ id: k, title: ARCHETYPES[k].title, kinds: ARCHETYPES[k].kinds, content_version: ARCHETYPES[k].content_version, openers: ARCHETYPES[k].openers.map(o => o.title) })) }));
+  if (req.method === "GET") return res.end(JSON.stringify({ alive: true, build: "LOCAL-plain-mode", shell_expected: (() => { try { return require("./Shell_version.gs"); } catch (e) { return "none"; } })(), shell_actual: CORE.shellFingerprint(), archetypes: Object.keys(ARCHETYPES).map(k => ({ id: k, title: ARCHETYPES[k].title, kinds: ARCHETYPES[k].kinds, content_version: ARCHETYPES[k].content_version, openers: ARCHETYPES[k].openers.map(o => o.title) })) }));
   let body = ""; req.on("data", c => body += c); req.on("end", () => {
     let out; try {
       const q = JSON.parse(body), arch = ARCHETYPES[q.archetypeId] || ARCHETYPES[Object.keys(ARCHETYPES)[0]];

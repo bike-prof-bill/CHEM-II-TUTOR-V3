@@ -223,7 +223,8 @@ function showPinned(p, pins) {
 let equations = [];
 function showImage(m) { const im = $("openerImg"), vd = $("openerVid"), isVideo = /\.(mp4|webm|mov)$/i.test(m.image);
   if (isVideo) { vd.src = "media/" + m.image; vd.setAttribute("aria-label", m.alt || ""); vd.style.display = "block"; im.style.display = "none"; }   // a video in the picture column: controls, silent, loops
-  else { im.src = "media/" + m.image; im.alt = m.alt || ""; im.style.display = "block"; vd.style.display = "none"; vd.removeAttribute("src"); }
+  else { im.onerror = () => add("note err", "The picture did not load. The page looked for it at: " + im.src); im.src = "media/" + m.image; im.alt = m.alt || ""; im.style.display = "block"; vd.style.display = "none"; vd.removeAttribute("src"); }
+  if (isVideo) vd.onerror = () => add("note err", "The video did not load. The page looked for it at: " + vd.src);
   const c = $("openerCredit"); c.innerHTML = ""; c.style.display = m.credit ? "block" : "none";   // the attribution the licence requires, URLs made into links
   if (m.credit) m.credit.split(/(https?:\/\/\S+)/).forEach(part => { if (/^https?:\/\//.test(part)) { const a = document.createElement("a"); a.href = part; a.target = "_blank"; a.rel = "noopener"; a.textContent = /creativecommons/.test(part) ? "licence" : "source"; c.appendChild(a); } else c.appendChild(document.createTextNode(part)); }); }
 function showProblem(p) {
