@@ -46,13 +46,15 @@ var NEAR_MISS_ASK = "Which values did you use to get that number?", REPEAT_SENTE
 // one matched. Units that do not cancel: the unit produced is named, and the question tutors toward the setup. Archetype rows
 // UNITS_OK_VALUE_WRONG and UNITS_DONT_CANCEL may replace the words; {produced} and {target} are filled in.
 var UNITS_OK_ASK = "Your units come out as {produced}, as they should, so the setup is sound. Check your calculation for errors.";
-var UNITS_DONT_CANCEL_ASK = "Your units come out as {produced}, not {target}. Which quantity is in the wrong place, or in the wrong unit?";
+var UNITS_DONT_CANCEL_ASK = "Your units come out as {produced}, which is not the unit of anything in this problem. Which quantity is in the wrong place, or in the wrong unit?";
+var UNITS_IN_LOG_ASK = "Inside {fn}, your units come out as {produced}; a logarithm takes a pure number. Which quantity is in the wrong place, or in the wrong unit?";
+var UNITS_MIXED_ASK = "You are adding or subtracting {produced}, which cannot be combined. Which quantity is in the wrong place, or in the wrong unit?";
 function nearMissAsk(arch, V, ev) {
   var a;
   if (ev.units_check === "ok_value_wrong") a = (ev.traps.length ? trapNote(arch, V, ev.traps[0]).ask + " " : "") + (trapNote(arch, V, "UNITS_OK_VALUE_WRONG").ask || UNITS_OK_ASK);
-  else if (ev.units_check) a = trapNote(arch, V, "UNITS_DONT_CANCEL").ask || UNITS_DONT_CANCEL_ASK;
+  else if (ev.units_check) a = trapNote(arch, V, "UNITS_DONT_CANCEL").ask || (ev.units_fail === "function" ? UNITS_IN_LOG_ASK : ev.units_fail === "mixed" ? UNITS_MIXED_ASK : UNITS_DONT_CANCEL_ASK);
   else a = trapNote(arch, V, "NEAR_MISS").ask || NEAR_MISS_ASK;
-  a = a.replace(/\{produced\}/g, ev.units_produced || "no unit").replace(/\{target\}/g, ev.units_target || "the unit asked for");
+  a = a.replace(/\{produced\}/g, ev.units_produced || "no unit").replace(/\{target\}/g, ev.units_target || "the unit asked for").replace(/\{fn\}/g, ev.units_fn || "the logarithm");
   return (ev.repeat ? REPEAT_SENTENCE + " " : "") + a;
 }
 function fallbackReply(arch, S, V, ev, p) {

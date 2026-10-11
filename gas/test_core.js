@@ -268,7 +268,16 @@ const REFLECT = "The rearrangement was hardest; I would tell a friend to undo th
   const S3 = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "un3" });
   say(S3, "More molecules have enough energy to escape the liquid surface as it warms."); predict(S3, V); say(S3, "", null, { pick: "eq_a" }); say(S3, V.eq_checks[0].park_text);
   r = say(S3, `1/(${T1K.toFixed(2)} K - ${R} J/(mol K) * ln(${P2c}/${P1})/${dHJ} J/mol)`);          // 1/T1 forgotten: K and 1/K added
-  ok(/dont_cancel/.test(r.log.units_check) && r.log.counted_fail && /units come out as/.test(r.reply) && /wrong place, or in the wrong unit/.test(r.reply), "unlike units added: counted, named: " + r.reply);
+  ok(/dont_cancel/.test(r.log.units_check) && r.log.counted_fail && /adding or subtracting K and 1\/K/.test(r.reply) && /wrong place, or in the wrong unit/.test(r.reply), "unlike units added: counted, named: " + r.reply);
+  const S5 = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "un5" });
+  say(S5, "More molecules have enough energy to escape the liquid surface as it warms."); predict(S5, V); say(S5, "", null, { pick: "eq_a" }); say(S5, V.eq_checks[0].park_text);
+  r = say(S5, `1/(1/${T1K.toFixed(2)} K - ${R} J/(mol K) * ln(${P2c}/${P1}/${dHJ} J/mol))`);         // the ln bracket swallowed the denominator (instructor's run, 11 Oct)
+  ok(r.log.units_check === "dont_cancel:mol/J" && /Inside ln, your units come out as mol\/J/.test(r.reply), "units left inside ln: named as such: " + r.reply);
+  const S6 = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "un6" });
+  say(S6, "More molecules have enough energy to escape the liquid surface as it warms."); predict(S6, V); say(S6, "", null, { pick: "eq_a" }); say(S6, V.eq_checks[0].park_text);
+  const tk = V.expected.find(e => e.state === "T_in_K");
+  r = say(S6, "must be in Kelvin. (273.15 + " + (tk.value - 273.15).toFixed(2) + ") K. & 1234.5 K");
+  ok(S6.board.T_in_K === "ticked", "words before a worked value and a full stop after it: still read (instructor's run, 11 Oct)");
   const S4 = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "un4" });
   say(S4, "More molecules have enough energy to escape the liquid surface as it warms."); predict(S4, V); say(S4, "", null, { pick: "eq_a" }); say(S4, V.eq_checks[0].park_text);
   const other = pu === "atm" ? "torr" : "atm", P2o = UNITS_CONV(g.P2.value, pu2, other).toPrecision(5) + " " + fmtU(other);

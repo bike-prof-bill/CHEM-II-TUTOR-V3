@@ -20,7 +20,7 @@ var CORE = (function () {
     var t0 = Date.now();
     var V = arch.variants[S.variantIndex], msg = String(input.message || "");
     var ev = { event_type: "TURN", entering: progress(S, V).done, active: activeState(S, V), newly: [], traps: [], guards: [],
-      counted_fail: false, after_bailout: false, model_accept: "", second_reader: "", fallback_used: false, structured: "", near_miss: "", repeat: false, second_reader_quote: "", units_check: "" };
+      counted_fail: false, after_bailout: false, model_accept: "", second_reader: "", fallback_used: false, structured: "", near_miss: "", repeat: false, second_reader_quote: "", units_check: "", units_fail: "", units_fn: "" };
     var notes = [];
     S.turns++;
     var active = ev.active, b = active ? entry(V, active) : null;
@@ -105,9 +105,11 @@ var CORE = (function () {
       for (var si = 0; si < sides.length; si++) { if (!/[A-Za-z]/.test(sides[si])) continue; var wu = evalWithUnits(sides[si], arch); if (wu && wu.fail) { unitsFail = wu; return; } if (wu) { worked.push(wu); return; } }
       // several values on one line joined by &, "and", ";" or ", " (instructor's run, 11 Oct: "283.1K & (273.15 + 72.8)K"): each chunk
       // that works out is a value; the rest of the line is read as plain numbers
+      // a chunk may carry words before it and a full stop after it ("it must be absolute. (273.15 + 46.7) K."): read from its first digit or bracket
       var chunks = rhs.split(/\s*&\s*|\s+and\s+|\s*;\s*|,\s+/i), rest = [];
-      if (chunks.length > 1) chunks.forEach(function (c) { var w = evalArithmetic(c, arch); if (w) worked.push(w); else rest.push(c); });
-      else rest.push(line);
+      var trimmed = function (c) { var m = /[-+]?(?:\d|\()/.exec(c); return (m ? c.slice(m.index) : c).replace(/[.\s]+$/, ""); };
+      if (chunks.length > 1) chunks.forEach(function (c) { var w = evalArithmetic(c, arch) || evalArithmetic(trimmed(c), arch); if (w) worked.push(w); else rest.push(c); });
+      else { var w1 = evalArithmetic(trimmed(rhs), arch); if (w1) worked.push(w1); else rest.push(line); }
       if (rest.length) plainLines.push(rest.join(" "));
     });
     var nums = parseNumbers(plainLines.join("\n")).concat(worked), strays = 0, unitOnly = (!nums.length && S.pendingUnit !== null) ? parseNumbers("1 " + msg)[0] : null;
@@ -149,6 +151,7 @@ var CORE = (function () {
     S.calcWarned = S.calcWarned || {};
     if (unitsFail && b && b.kind === "number") {            // units that do not cancel: a wrong setup, counted, named by the unit produced
       ev.units_check = "dont_cancel:" + (unitsFail.produced || unitsFail.fail); ev.units_produced = unitsFail.produced || ""; ev.units_target = targetUnits.filter(Boolean).join(" or ");
+      ev.units_fail = unitsFail.fail; ev.units_fn = unitsFail.fn || "";   // "function" (units left inside ln) or "mixed" (unlike units added)
       strays++; notes.push("The student typed the setup in full, but its units do not cancel (" + ev.units_check + "). The setup is wrong. Do not confirm. Ask which quantity is in the wrong place or the wrong unit.");
     }
     worked.forEach(function (n) {
