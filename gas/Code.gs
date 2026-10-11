@@ -35,7 +35,7 @@ function checkModels() {
   Logger.log("All usable models:\n" + names.join("\n"));
 }
 
-function doGet() { return json_({ alive: true, build: BUILD_STAMP, archetypes: Object.keys(ARCHETYPES).map(function (k) { return { id: k, title: ARCHETYPES[k].title, kinds: ARCHETYPES[k].kinds, content_version: ARCHETYPES[k].content_version, openers: ARCHETYPES[k].openers.map(function (o) { return o.title; }) }; }) }); }
+function doGet() { return json_({ alive: true, build: BUILD_STAMP, shell_version: (typeof SHELL_VERSION !== "undefined") ? SHELL_VERSION : "not pasted", archetypes: Object.keys(ARCHETYPES).map(function (k) { return { id: k, title: ARCHETYPES[k].title, kinds: ARCHETYPES[k].kinds, content_version: ARCHETYPES[k].content_version, openers: ARCHETYPES[k].openers.map(function (o) { return o.title; }) }; }) }); }
 
 function doPost(e) {
   var t0 = Date.now();

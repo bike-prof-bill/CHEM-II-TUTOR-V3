@@ -14,7 +14,7 @@ Plain mode asks only the authored questions. It is the right mode for testing th
 ## B. On Google (with Gemini)
 1. script.google.com → **New project** → rename to `V3 Tutor`.
 2. Make one script file per file in the `gas` folder except the test files (`test_*.js`, `Archetype_*_test.gs`) and `local_server.js`, named the same, and paste each in:
-   `Units` · `Archetype_ch10_cc` · `Archetype_ch13_ice` · `parse` · `match` · `stepmap` · `ladder` · `guards` · `prompt` · `log` · `logqueue` · `Core` · `Code`
+   `Units` · `Shell_version` · `Archetype_ch10_cc` · `Archetype_ch13_ice` · `parse` · `match` · `stepmap` · `ladder` · `guards` · `prompt` · `log` · `logqueue` · `Core` · `Code`
    (delete the empty `myFunction` stub). Order does not matter; Apps Script sees them as one program.
 3. Pick `setupV3` in the function menu → **Run** → approve permissions.
    **Execution log** shows: the new Sheet's address, and `APP_TOKEN`. Copy the token.
