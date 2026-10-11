@@ -42,14 +42,23 @@ var HINT_OF_KIND = { number: "This step is checked on the value: type it, with i
                      pick: "This step is a choice: open the Equations list.", direction: "This step is a choice: pick one of the options.", table: "This step is checked on the table: type the three rows I:, C:, E:.", text: "", reflection: "" };
 // The near-miss question: the archetype's errors file may give it (row NEAR_MISS); otherwise the instructor's default wording (11 Oct).
 var NEAR_MISS_ASK = "Which values did you use to get that number?", REPEAT_SENTENCE = "That is the same number as before.";
+// Units verdicts (instructor, 11 Oct): the setup typed in full. Right units, wrong value: "check your calculation", a known error named if
+// one matched. Units that do not cancel: the unit produced is named, and the question tutors toward the setup. Archetype rows
+// UNITS_OK_VALUE_WRONG and UNITS_DONT_CANCEL may replace the words; {produced} and {target} are filled in.
+var UNITS_OK_ASK = "Your units come out as {produced}, as they should, so the setup is sound. Check your calculation for errors.";
+var UNITS_DONT_CANCEL_ASK = "Your units come out as {produced}, not {target}. Which quantity is in the wrong place, or in the wrong unit?";
 function nearMissAsk(arch, V, ev) {
-  var a = (trapNote(arch, V, "NEAR_MISS").ask || NEAR_MISS_ASK);
+  var a;
+  if (ev.units_check === "ok_value_wrong") a = (ev.traps.length ? trapNote(arch, V, ev.traps[0]).ask + " " : "") + (trapNote(arch, V, "UNITS_OK_VALUE_WRONG").ask || UNITS_OK_ASK);
+  else if (ev.units_check) a = trapNote(arch, V, "UNITS_DONT_CANCEL").ask || UNITS_DONT_CANCEL_ASK;
+  else a = trapNote(arch, V, "NEAR_MISS").ask || NEAR_MISS_ASK;
+  a = a.replace(/\{produced\}/g, ev.units_produced || "no unit").replace(/\{target\}/g, ev.units_target || "the unit asked for");
   return (ev.repeat ? REPEAT_SENTENCE + " " : "") + a;
 }
 function fallbackReply(arch, S, V, ev, p) {
   var nowActive = activeState(S, V), nowMove = nowActive ? moveFor(arch, V, nowActive) : {};
   var ack = ev.newly.length ? "Checked: " + ev.newly.map(function (st) { var e = entry(V, st.replace(/\(parked\)$/, "")); return (e && e.label_when_done) || st.replace(/_/g, " "); }).join(", ") + ". " : "";
-  var trapAsk = ev.traps.length ? trapNote(arch, V, ev.traps[0]).ask : ((ev.near_miss || ev.repeat) && !ev.newly.length ? nearMissAsk(arch, V, ev) : "");
+  var trapAsk = (ev.units_check || ev.near_miss || ev.repeat) && !ev.newly.length ? nearMissAsk(arch, V, ev) : (ev.traps.length ? trapNote(arch, V, ev.traps[0]).ask : "");
   var reply = nowActive ? ack + (trapAsk || (p.switchAsk && !ev.traps.length ? p.switchAsk : (S.pendingUnit !== null ? "What are the units of that value?" : (nowMove.ask || arch.openers[S.openerIndex].question))))
                         : ack + "That completes this problem.";
   var nb = nowActive ? entry(V, nowActive) : null;

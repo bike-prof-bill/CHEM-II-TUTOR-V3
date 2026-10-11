@@ -20,7 +20,7 @@ var CORE = (function () {
     var t0 = Date.now();
     var V = arch.variants[S.variantIndex], msg = String(input.message || "");
     var ev = { event_type: "TURN", entering: progress(S, V).done, active: activeState(S, V), newly: [], traps: [], guards: [],
-      counted_fail: false, after_bailout: false, model_accept: "", second_reader: "", fallback_used: false, structured: "", near_miss: "", repeat: false, second_reader_quote: "" };
+      counted_fail: false, after_bailout: false, model_accept: "", second_reader: "", fallback_used: false, structured: "", near_miss: "", repeat: false, second_reader_quote: "", units_check: "" };
     var notes = [];
     S.turns++;
     var active = ev.active, b = active ? entry(V, active) : null;
@@ -94,9 +94,15 @@ var CORE = (function () {
       return line; }).join("\n");
     // arithmetic in a value statement, "T2 = (273.15 + 47.5) K": the worked result is the value; its parts are not strays
     var worked = [], plainLines = [];
+    var unitsFail = null;
     numText.split(/\n/).forEach(function (line) {
       var rhs = line.indexOf("=") > -1 ? line.slice(line.lastIndexOf("=") + 1) : line, a = evalArithmetic(rhs, arch);
       if (a) { worked.push(a); return; }
+      // the setup typed in full with its units (instructor, 11 Oct: "units cancel algebraically"): a value in the unit the units cancel to,
+      // or a failure (units that do not cancel inside ln, unlike units added) that is reported, not read for numbers.
+      // "… = ΔHvap" puts the setup on the left: whichever side of the = works out is the setup
+      var sides = line.indexOf("=") > -1 ? line.split("=") : [line];
+      for (var si = 0; si < sides.length; si++) { if (!/[A-Za-z]/.test(sides[si])) continue; var wu = evalWithUnits(sides[si], arch); if (wu && wu.fail) { unitsFail = wu; return; } if (wu) { worked.push(wu); return; } }
       // several values on one line joined by &, "and", ";" or ", " (instructor's run, 11 Oct: "283.1K & (273.15 + 72.8)K"): each chunk
       // that works out is a value; the rest of the line is read as plain numbers
       var chunks = rhs.split(/\s*&\s*|\s+and\s+|\s*;\s*|,\s+/i), rest = [];
@@ -134,13 +140,38 @@ var CORE = (function () {
     if (wrongs && repeats === wrongs) { ev.repeat = true; strays = 0; ev.traps = []; }   // only repeats: no new wrong try, no new trap
     liveItems(S, V).forEach(function (bb) { if (bb.kind === "number" && !isSet(S, bb.id) && stateSatisfied(S, V, bb.id)) tick(S, V, bb.id, ev.newly); });
     ev.newly.forEach(function (st) { var e = entry(V, st); if (e && e.kind === "number") notes.push("Established and checked by the server: " + (e.label_when_done || st.replace(/_/g, " ")) + "."); });
+    // units judged (instructor, 11 Oct): the target is what the active number item asks for, in any of its declared unit forms
+    var targetUnits = [], anyUnits = [];                   // the active item's units; and every unmet number item's, since a full setup may land on a later one
+    if (b && b.kind === "number") V.expected.forEach(function (e) {
+      if (e.role !== "intermediate" && e.role !== "key" || !e.state || isSet(S, e.state)) return;
+      var eb = entry(V, e.state); if (!eb || eb.kind !== "number" || !isLive(S, V, e.state)) return;
+      [{ unit: e.unit }].concat(e.also || []).forEach(function (f) { var u = f.unit || ""; if (anyUnits.indexOf(u) < 0) anyUnits.push(u); if (e.state === b.id && targetUnits.indexOf(u) < 0) targetUnits.push(u); }); });
+    S.calcWarned = S.calcWarned || {};
+    if (unitsFail && b && b.kind === "number") {            // units that do not cancel: a wrong setup, counted, named by the unit produced
+      ev.units_check = "dont_cancel:" + (unitsFail.produced || unitsFail.fail); ev.units_produced = unitsFail.produced || ""; ev.units_target = targetUnits.filter(Boolean).join(" or ");
+      strays++; notes.push("The student typed the setup in full, but its units do not cancel (" + ev.units_check + "). The setup is wrong. Do not confirm. Ask which quantity is in the wrong place or the wrong unit.");
+    }
+    worked.forEach(function (n) {
+      if (!n.units || !b || b.kind !== "number" || !targetUnits.length) return;
+      var hit = ev.newly.length || (S.matched && V.expected.some(function (e, ix) { return S.matched[ix] && e.state === b.id; }));
+      if (hit) return;                                        // the value was right: nothing to say about units
+      if (anyUnits.indexOf(n.unit) > -1) {                    // units cancel to a unit some unmet step asks for: the setup is sound, the arithmetic is not
+        ev.units_check = "ok_value_wrong"; ev.units_produced = n.unit; ev.units_target = n.unit;
+        if (!S.calcWarned[b.id] && !ev.repeat) { S.calcWarned[b.id] = true; ev.units_free = true; }   // not a wrong try the first time
+        notes.push("The student's setup has the right units (" + n.unit + "), so the setup is sound and the slip is in the arithmetic. Say the units come out right; ask them to check the calculation" + (ev.traps.length ? " (a known error is named above: say so)" : "") + ".");
+      } else {                                                // a value, but not in the unit asked for
+        ev.units_check = "dont_cancel:" + n.unit; ev.units_produced = n.unit; ev.units_target = targetUnits.filter(Boolean).join(" or ");
+        notes.push("The student's setup works out in " + n.unit + ", not the unit this step asks for (" + ev.units_target + "). The setup is wrong. Ask which quantity is in the wrong place or the wrong unit.");
+      }
+    });
     var keyWaiting = V.expected.some(function (t, i) { return t.role === "key" && S.matched[i] && !isSet(S, t.state); }) &&
                      liveItems(S, V).some(function (bb) { return (bb.kind === "equation" || bb.kind === "table") && !isSet(S, bb.id); });
     if (keyWaiting) notes.push("Their final value is right and is recorded, but it does not count until the symbolic step before it is on the board. Say so plainly and ask for that step.");
     if ((eqBad && b && b.kind === "equation") || (tableBad && b && b.kind === "table")) ev.counted_fail = true;
     else if ((eqSeen && !eqBad) || (tableSeen && !tableBad)) { /* a readable, true equation or table is never a wrong try */ }
     else if (b && b.kind !== "text" && b.kind !== "reflection" && !ev.newly.length && S.pendingUnit === null && (ev.traps.length || strays)) {
-      ev.counted_fail = true; if (strays && !ev.traps.length) notes.push("The student's number does not match anything the server expects at this point. Do not confirm it.");
+      // units right, value wrong: free the first time on this item (instructor, 11 Oct)
+      ev.counted_fail = !ev.units_free; if (strays && !ev.traps.length && !ev.units_check) notes.push("The student's number does not match anything the server expects at this point. Do not confirm it.");
     }
 
     // where we are after deterministic ticking
@@ -168,7 +199,7 @@ var CORE = (function () {
     var lad = applyLadder(arch, S, V, ev, input);
     var p = { notes: notes, judge: judge, gateOK: gateOK, labelOnly: labelOnly, asking: asking, pickId: pickId, eqSeen: eqSeen, tableSeen: tableSeen, numsSeen: nums.length,
               wordsOnly: !!msg.trim() && !nums.length && !eqSeen && !tableSeen && !pickId && S.pendingUnit === null,
-              switchAsk: ev.near_miss ? null : lad.switchAsk,     // a near miss is tutored by its own question, not the switch (instructor, 11 Oct)
+              switchAsk: (ev.near_miss || ev.units_check) ? null : lad.switchAsk,     // a near miss is tutored by its own question, not the switch (instructor, 11 Oct)
               history: input.history || [], msg: msg, now: input.now || 0, verdict_ms: 0 };
     return finishA(arch, S, V, ev, { reply: lad.reply, card: lad.card, needsSay: !lad.card && !lad.reply, p: p }, t0);
   }
@@ -213,7 +244,7 @@ var CORE = (function () {
     // instructor, 11 Oct: the same for a checkable item (equation, number, table): the authored question is asked, the model may
     // acknowledge but not question (his run of the four: the model asked for the next step's unit conversion while the rearrangement was open).
     // A student asking for help still gets the model's one-sentence answer before the authored question.
-    var checkNext = !!(b && CHECKABLE[b.kind] && !p.switchAsk && !ev.traps.length);   // a near miss or a repeat is not a trap: the authored question speaks
+    var checkNext = !!(b && CHECKABLE[b.kind] && !p.switchAsk && (!ev.traps.length || ev.units_check === "ok_value_wrong"));   // a near miss, a repeat or a units verdict: the authored question speaks
     var out = null, sr = null;
     if (model && (choiceNext || checkNext) && !ctx.judge && !p.asking) { model = null; }     // nothing to judge, nothing to answer: deterministic
     if (model) {
@@ -265,7 +296,7 @@ var CORE = (function () {
     // a choice item next (after any acceptance this turn): the model's acknowledgement stays, its question gives way to the authored one
     var nowA = activeState(S, V), nowB = nowA ? entry(V, nowA) : null;
     if (reply && !card && !ev.fallback_used && nowB && (nowB.kind === "pick" || nowB.kind === "direction" || CHECKABLE[nowB.kind]) && !p.switchAsk && !ev.traps.length) {
-      var nowAsk = (ev.near_miss || ev.repeat) ? nearMissAsk(arch, V, ev) : moveFor(arch, V, nowA).ask;
+      var nowAsk = (ev.units_check || ev.near_miss || ev.repeat) ? nearMissAsk(arch, V, ev) : moveFor(arch, V, nowA).ask;
       if (nowAsk) { var ackOnly = cutQuestions(reply); reply = (ackOnly ? ackOnly + " " : "") + nowAsk; }
     }
     S.lastReply = reply; S.pending = null;

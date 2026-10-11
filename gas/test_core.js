@@ -6,6 +6,7 @@ const say = (S, m, model, extra) => CORE.processTurn(ARCH, S, Object.assign({ me
 const key = V => V.expected.find(t => t.role === "key");
 const fmtU = u => u === "degC" ? "°C" : u;
 const predict = (S, V, model) => { const d = V.board.find(b => b.id === "direction_predicted"); if (d) say(S, "", model, { pick: d.right[0] }); };
+const UNITS_CONV = (x, a, b) => require("./parse.gs").UNITS.convert(x, a, b);
 const REFLECT = "The rearrangement was hardest; I would tell a friend to undo the natural log first.";
 
 // 1. strong student, offline mode (no model): straight through, any order
@@ -243,6 +244,36 @@ const REFLECT = "The rearrangement was hardest; I would tell a friend to undo th
   const k = key(V); let calls = 0; const m = () => { calls++; return { accept: 1, turn_kind: "answer", socratic_response: "Which numbers came from an instrument?" }; };
   r = say(S, (k.value * 1.05).toPrecision(5) + " " + fmtU(k.unit), m);
   ok(calls === 0 && r.log.near_miss === k.id && /^Which values did you use/.test(r.reply), "near miss on the first wrong try: no model call, the near-miss question, not the switch: " + r.reply); }
+
+// 6r. instructor, 11 Oct: "units are the whole enchilada". The setup typed in full with its units: units cancel to the unit asked for
+// and the value is right -> ticks; units right, value wrong -> "check your calculation", free the first time, counted the second;
+// units that do not cancel (inside ln, or unlike units added) -> counted, the unit produced is named; a dropped closing bracket is forgiven.
+{ const i = find("T2"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "un1" });
+  say(S, "More molecules have enough energy to escape the liquid surface as it warms."); predict(S, V); say(S, "", null, { pick: "eq_a" }); say(S, V.eq_checks[0].park_text);
+  const g = V.givens, R = 8.314, dHJ = g.dH.unit === "kJ/mol" ? g.dH.value * 1000 : g.dH.value;
+  const T1K = g.T1.unit === "degC" ? g.T1.value + 273.15 : g.T1.value, pu = g.P1.unit, pu2 = g.P2.unit;
+  const P1 = g.P1.value + " " + fmtU(pu), P2 = g.P2.value + " " + fmtU(pu2);
+  // T2 = 1 / (1/T1 - R ln(P2/P1)/dH), typed with units, the P2 given converted to P1's unit when they differ
+  const P2c = pu2 === pu ? P2 : UNITS_CONV(g.P2.value, pu2, pu).toPrecision(5) + " " + fmtU(pu);
+  const setup = `1/(1/${T1K.toFixed(2)} K - ${R} J/(mol K) * ln(${P2c}/${P1})/${dHJ} J/mol)`;
+  let r = say(S, setup + " = T2");
+  ok(S.board.T_in_K === "ticked" && S.board.value_found === "ticked" && !r.log.units_check, "full setup with units, right value: the steps tick, nothing said about units: " + r.reply.slice(0, 60));
+  const S2 = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "un2" });
+  say(S2, "More molecules have enough energy to escape the liquid surface as it warms."); predict(S2, V); say(S2, "", null, { pick: "eq_a" }); say(S2, V.eq_checks[0].park_text);
+  const wrongR = `1/(1/${T1K.toFixed(2)} K - 8.134 J/(mol K) * ln(${P2c}/${P1})/${dHJ} J/mol)`;        // R mistyped: units right, value wrong
+  r = say(S2, wrongR);
+  ok(r.log.units_check === "ok_value_wrong" && !r.log.counted_fail && /units come out as K, as they should/.test(r.reply) && /Check your calculation/.test(r.reply), "units right, value wrong: not counted the first time, told to check the calculation: " + r.reply);
+  r = say(S2, `1/(1/${T1K.toFixed(2)} K - 8.143 J/(mol K) * ln(${P2c}/${P1})/${dHJ} J/mol)`);
+  ok(r.log.units_check === "ok_value_wrong" && r.log.counted_fail, "the second arithmetic slip counts");
+  const S3 = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "un3" });
+  say(S3, "More molecules have enough energy to escape the liquid surface as it warms."); predict(S3, V); say(S3, "", null, { pick: "eq_a" }); say(S3, V.eq_checks[0].park_text);
+  r = say(S3, `1/(${T1K.toFixed(2)} K - ${R} J/(mol K) * ln(${P2c}/${P1})/${dHJ} J/mol)`);          // 1/T1 forgotten: K and 1/K added
+  ok(/dont_cancel/.test(r.log.units_check) && r.log.counted_fail && /units come out as/.test(r.reply) && /wrong place, or in the wrong unit/.test(r.reply), "unlike units added: counted, named: " + r.reply);
+  const S4 = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "un4" });
+  say(S4, "More molecules have enough energy to escape the liquid surface as it warms."); predict(S4, V); say(S4, "", null, { pick: "eq_a" }); say(S4, V.eq_checks[0].park_text);
+  const other = pu === "atm" ? "torr" : "atm", P2o = UNITS_CONV(g.P2.value, pu2, other).toPrecision(5) + " " + fmtU(other);
+  r = say(S4, `1/(1/${T1K.toFixed(2)} K - ${R} J/(mol K) * ln(${P2o}/${P1})/${dHJ} J/mol`);           // mixed pressure units inside ln, and one bracket short
+  ok(/dont_cancel:(atm\/torr|torr\/atm)/.test(r.log.units_check) && r.log.counted_fail, "torr and atm inside ln do not cancel; the missing bracket is forgiven: " + r.log.units_check); }
 
 // 7. every variant of every kind can be completed by a student who types only the key(s)
 { let bad = 0; ARCH.variants.forEach((V, i) => { const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "v" + i });

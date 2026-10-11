@@ -179,6 +179,82 @@ function evalArithmetic(text, arch) {
   try { var v = eqEval(eqParse(toks), {}); return isFinite(v) ? { x: v, unit: unit, worked: true } : null; } catch (e) { return null; }
 }
 
+// ---------- arithmetic WITH units: the setup typed in full, units cancelled algebraically (instructor, 11 Oct) ----------
+// e.g. a gas-constant unit times a temperature, divided by nothing, works out to an energy-per-amount unit; the value comes with it
+// Every number may carry a unit; a unit may also follow a bracket. Units are carried as a map of base symbols (K, torr, J, mol...)
+// taken from the unit's canonical name, so a compound unit times one of its base units cancels, while two units of one dimension with different names do not cancel
+// (converting a given is the student's step). + and - need the same unit map; ln, log, exp need a bare number; ^ needs a plain exponent.
+// Returns null when the text is not such an expression; returns { fail: "...", produced: "..." } when it is one but the units do not work.
+function unitKeys(u) {                                      // canonical unit name -> map of base symbols, from the name itself: no chemistry here
+  if (!u) return {};
+  var out = {}, parts = u.split("/"), add = function (txt, sign) { txt.replace(/[()]/g, " ").split(/[\s·*]+/).forEach(function (w) {
+    if (!w) return; var m = /^([A-Za-z°]+)(?:\^?\(?(-?\d+)\)?)?$/.exec(w); if (!m) return; var e = m[2] ? parseInt(m[2], 10) : 1; if (m[1] === "1") return;
+    out[m[1]] = (out[m[1]] || 0) + sign * e; }); };
+  if (parts[0] !== "1") add(parts[0], 1); for (var i = 1; i < parts.length; i++) add(parts[i], -1);
+  for (var k in out) if (!out[k]) delete out[k];
+  return out;
+}
+function keysToName(m) {                                     // map of base symbols -> a unit name, "J/(mol·K)" style, then canonical when known
+  var num = [], den = [];
+  Object.keys(m).sort().forEach(function (k) { var e = m[k]; (e > 0 ? num : den).push(k + (Math.abs(e) !== 1 ? "^" + Math.abs(e) : "")); });
+  var name = (num.length ? num.join("·") : "1") + (den.length ? "/" + (den.length > 1 ? "(" + den.join("·") + ")" : den[0]) : "");
+  if (!num.length && !den.length) return "";
+  var c = UNITS.canon(name); if (c !== null) return c;
+  if (den.length > 1) { var c2 = UNITS.canon((num.length ? num.join("·") : "1") + "/" + den.join("/")); if (c2 !== null) return c2; }
+  return name;
+}
+function keysSame(a, b) { var k; for (k in a) if (a[k] !== b[k]) return false; for (k in b) if (a[k] !== b[k]) return false; return true; }
+function keysMul(a, b, sign) { var out = {}, k; for (k in a) out[k] = a[k]; for (k in b) { out[k] = (out[k] || 0) + sign * b[k]; if (!out[k]) delete out[k]; } return out; }
+function evalWithUnits(text, arch) {                       // a dropped closing bracket at the end is forgiven (up to two)
+  var r = evalWithUnits1(text, arch); if (r) return r;
+  var opens = (String(text).match(/[(\[{]/g) || []).length, closes = (String(text).match(/[)\]}]/g) || []).length;
+  if (opens > closes && opens - closes <= 2) return evalWithUnits1(String(text) + ")".repeat(opens - closes), arch);
+  return null;
+}
+function evalWithUnits1(text, arch) {
+  var s = eqNormalize(String(text)).replace(/(\d),(?=\d{3}\b)/g, "$1").trim();
+  if (!/\d/.test(s) || !/[+\-*\/^]|ln|log|exp|sqrt/.test(s)) return null;
+  var unitRe = new RegExp("^\\s*(" + UNITS.unitPattern + ")(?![A-Za-z])"), toks = [], i = 0, sawUnit = false;
+  while (i < s.length) {
+    var c = s[i];
+    if (/\s/.test(c)) { i++; continue; }
+    if ("+-*/^()".indexOf(c) > -1) { toks.push({ t: c }); i++; if (c === ")") { var um = unitRe.exec(s.slice(i)); if (um && UNITS.canon(um[1]) !== null) { toks.push({ t: "unit", v: UNITS.canon(um[1]) }); i += um[0].length; sawUnit = true; } } continue; }
+    var m = /^(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?/.exec(s.slice(i));
+    if (m) { toks.push({ t: "num", v: parseFloat(m[0]) }); i += m[0].length;
+      var um2 = unitRe.exec(s.slice(i)); if (um2 && UNITS.canon(um2[1]) !== null) { toks.push({ t: "unit", v: UNITS.canon(um2[1]) }); i += um2[0].length; sawUnit = true; } continue; }
+    var w = /^[A-Za-z]+/.exec(s.slice(i));
+    if (w && EQ_FUNCS[w[0]]) { toks.push({ t: "fn", v: w[0] }); i += w[0].length; continue; }
+    return null;                                             // a symbol or a word: not a worked setup
+  }
+  if (!sawUnit) return null;                                 // plain arithmetic is evalArithmetic's job
+  var p = 0, fail = null;
+  function peek() { return toks[p]; }
+  function Q(v, k) { return { v: v, k: k }; }
+  function startsFactor(k) { return k && (k.t === "num" || k.t === "fn" || k.t === "("); }
+  function withUnit(q) { while (peek() && peek().t === "unit") { var u = toks[p++].v; q = Q(q.v, keysMul(q.k, unitKeys(u), 1)); } return q; }
+  function expr() { var a = term(); while (peek() && (peek().t === "+" || peek().t === "-")) { var op = toks[p++].t, b = term();
+      if (!keysSame(a.k, b.k) && !fail) fail = { fail: "mixed", left: keysToName(a.k), right: keysToName(b.k) };
+      a = Q(op === "+" ? a.v + b.v : a.v - b.v, a.k); } return a; }
+  function term() { var a = unary(); while (peek() && (peek().t === "*" || peek().t === "/" || startsFactor(peek()))) {
+      var op = startsFactor(peek()) ? "*" : toks[p++].t, b = unary();
+      a = op === "*" ? Q(a.v * b.v, keysMul(a.k, b.k, 1)) : Q(a.v / b.v, keysMul(a.k, b.k, -1)); } return a; }
+  function unary() { if (peek() && peek().t === "-") { p++; var q = unary(); return Q(-q.v, q.k); } if (peek() && peek().t === "+") { p++; return unary(); } return power(); }
+  function power() { var b = atom(); if (peek() && peek().t === "^") { p++; var e = unary(); if (Object.keys(e.k).length && !fail) fail = { fail: "exponent" };
+      var out = {}; for (var k in b.k) out[k] = b.k[k] * e.v; return Q(Math.pow(b.v, e.v), out); } return b; }
+  function atom() {
+    var k = toks[p++]; if (!k) throw "end";
+    if (k.t === "num") return withUnit(Q(k.v, {}));
+    if (k.t === "fn") { var a; if (peek() && peek().t === "(") { p++; a = expr(); if (!peek() || peek().t !== ")") throw "paren"; p++; a = withUnit(a); } else a = power();
+      if (Object.keys(a.k).length && !fail) fail = { fail: "function", fn: k.v, produced: keysToName(a.k) };
+      return Q(EQ_FUNCS[k.v](a.v), {}); }
+    if (k.t === "(") { var e = expr(); if (!peek() || peek().t !== ")") throw "paren"; p++; return withUnit(e); }
+    throw "unexpected";
+  }
+  try { var r = expr(); if (p !== toks.length || !isFinite(r.v)) return null;
+    if (fail) { fail.worked = true; fail.produced = fail.produced || (fail.left ? fail.left + " and " + fail.right : ""); return fail; }
+    return { x: r.v, unit: keysToName(r.k), worked: true, units: true, keys: r.k }; } catch (e) { return null; }
+}
+
 
 // ---------- the table kind: a grid of rows (initial, change, equilibrium) over columns; numbers and expressions in x, checked by substitution ----------
 function parseTableText(msg) {
@@ -191,4 +267,4 @@ function parseTableText(msg) {
   return (rows.C || rows.E) ? rows : null;
 }
 
-if (typeof module !== "undefined") module.exports = { UNITS: UNITS, SUP: SUP, GENERIC_MECHANISM: GENERIC_MECHANISM, MATH_WORDS: MATH_WORDS, parseNumbers: parseNumbers, stopWords: stopWords, hasAccount: hasAccount, openerCoverage: openerCoverage, EQ_FUNCS: EQ_FUNCS, eqNormalize: eqNormalize, eqTokens: eqTokens, eqParse: eqParse, eqEval: eqEval, eqVars: eqVars, eqVarsInText: eqVarsInText, isAskingForHelp: isAskingForHelp, evalArithmetic: evalArithmetic, parseTableText: parseTableText };
+if (typeof module !== "undefined") module.exports = { UNITS: UNITS, SUP: SUP, GENERIC_MECHANISM: GENERIC_MECHANISM, MATH_WORDS: MATH_WORDS, parseNumbers: parseNumbers, evalWithUnits: evalWithUnits, unitKeys: unitKeys, keysToName: keysToName, stopWords: stopWords, hasAccount: hasAccount, openerCoverage: openerCoverage, EQ_FUNCS: EQ_FUNCS, eqNormalize: eqNormalize, eqTokens: eqTokens, eqParse: eqParse, eqEval: eqEval, eqVars: eqVars, eqVarsInText: eqVarsInText, isAskingForHelp: isAskingForHelp, evalArithmetic: evalArithmetic, parseTableText: parseTableText };
