@@ -181,6 +181,38 @@ const REFLECT = "The rearrangement was hardest; I would tell a friend to undo th
   const before = calls; const d = V.board.find(b => b.id === "direction_predicted"); r = say(S, "", wander, { pick: d.right[0] });
   ok(calls === before && /Equations list/.test(r.reply), "after a right prediction nothing is judged and the next item is a pick: no model call, the authored question verbatim: " + r.reply); }
 
+// 6m. instructor, 11 Oct, after the model refused four true accounts: the gates have passed and the second reader finds nothing false,
+// so the account is accepted on the first turn whatever the model's accept says; the model's hold-out question never reaches the student.
+{ const i = find("T2"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "ho1" });
+  const holdout = (sys) => /checking one student message/.test(sys) ? { found: 0 } : { accept: 0, turn_kind: "answer", socratic_response: "What specific interactions hold the water molecules together?" };
+  const r = say(S, "Weaker intermolecular attractions in the alcohol mean its molecules need less energy to escape into the vapor.", holdout);
+  ok(S.board.account_given === "ticked" && r.problem, "true account accepted although the model held out");
+  ok(r.log.model_accept === 0 && r.log.second_reader === "clean" && r.log.guards.includes("MODEL_REFUSED_TRUE_ACCOUNT"), "both verdicts logged, the refusal flagged");
+  ok(!/specific interactions/.test(r.reply), "the hold-out question is not shown: " + r.reply); }
+
+// 6n. a checkable item next (the rearrangement): the model may acknowledge but the authored question is asked verbatim; with nothing to
+// judge the model is not called at all (instructor's run, 11 Oct: the model asked for the kelvin conversion while the equation was open)
+{ const i = find("T2"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "ck1" });
+  let calls = 0; const ahead = () => { calls++; return { accept: 1, turn_kind: "answer", socratic_response: "Good. What unit must the temperatures be in, and what does 82.5 °C become?" }; };
+  say(S, "More molecules have enough energy to escape the liquid surface as it warms.", ahead); predict(S, V, ahead);
+  let r = say(S, "", ahead, { pick: "eq_a" }); const asked = r.reply;
+  ok(/rearrange/.test(asked) && !/82\.5/.test(asked), "after the pick the authored rearrangement question is asked, not the model's: " + asked);
+  const before = calls; r = say(S, "I think the temperatures matter here", ahead);
+  ok(calls === before && /rearrange/.test(r.reply), "words at an equation item: no model call, the authored question (with the hint) again");
+  r = say(S, "what do you mean by rearrange", ahead);
+  ok(calls === before + 1 && /rearrange/.test(r.reply) && !/82\.5/.test(r.reply), "a question for help still reaches the model, whose own question gives way to the authored one"); }
+
+// 6o. instructor, 11 Oct: "either side is fine with algebra" — the unknown alone on the right is a valid rearrangement, pinned as typed
+{ const i = find("T2"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "rs1" });
+  say(S, "More molecules have enough energy to escape the liquid surface as it warms."); predict(S, V); say(S, "", null, { pick: "eq_a" });
+  const r = say(S, "1/(1/T1 - R·ln(P2/P1)/ΔHvap) = T2");
+  ok(S.board.rearranged === "ticked" && /EQ:VALID_ISOLATED/.test(r.log.structured), "unknown alone on the right accepted");
+  ok(r.pinned.rearranged[0].indexOf("= T2") > 0, "pinned as typed: " + r.pinned.rearranged[0]);
+  const S2 = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "rs2" });
+  say(S2, "More molecules have enough energy to escape the liquid surface as it warms."); predict(S2, V); say(S2, "", null, { pick: "eq_a" });
+  const r2 = say(S2, "1/T1 - R·ln(P2/P1)/ΔHvap = 1/T2");
+  ok(S2.board.rearranged !== "ticked" && /EQ:HOLDS_NOT_ISOLATED/.test(r2.log.structured), "true but 1/T2, not T2, on the right: still progress, not isolated"); }
+
 // 7. every variant of every kind can be completed by a student who types only the key(s)
 { let bad = 0; ARCH.variants.forEach((V, i) => { const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "v" + i });
     say(S, "A greater fraction of molecules has the kinetic energy to escape the liquid surface.");

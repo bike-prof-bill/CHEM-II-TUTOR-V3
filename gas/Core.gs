@@ -77,7 +77,7 @@ var CORE = (function () {
       if (eqr.verdict === "VALID_ISOLATED") {
         if (!isLive(S, V, eqr.state) || !eb.requires.every(function (r) { return isSet(S, r); })) notes.push("Their equation is valid, but an earlier item is not yet established. Ask them to do that first.");
         else { tick(S, V, eqr.state, ev.newly); (S.pinned.rearranged = S.pinned.rearranged || []).push(eqr.shown); if (eb.pin) addPin(S, eqr.state, eb.label_when_done || eqr.state, eqr.shown); notes.push("The student's equation holds under substitution and the unknown stands alone. Confirmed by the server."); }
-      } else if (eqr.verdict === "HOLDS_NOT_ISOLATED") notes.push("Their equation is algebraically true but the unknown does not yet stand alone on the left. That is progress, not an error. Ask what operation is still in the way. Do not do it for them.");
+      } else if (eqr.verdict === "HOLDS_NOT_ISOLATED") notes.push("Their equation is algebraically true but the unknown does not yet stand alone on one side. That is progress, not an error. Ask what operation is still in the way. Do not do it for them.");
       else if (eqr.verdict === "TRAP") { eqBad = true; ev.traps.push(eqr.trap); notes.push("EQUATION CHECK (" + eqr.trap + "): " + trapNote(arch, V, eqr.trap).note + " Work on THEIR expression, one step at a time. Do not write the correct form."); }
       else if (eqr.verdict === "WRONG") { eqBad = true; notes.push("EQUATION CHECK: their equation does not hold when the server substitutes values. Read what they wrote, not what they meant (an unbracketed denominator is a real error). Ask about one step of THEIR algebra. Do not write the correct form."); }
       else notes.push("The server could not read their equation. Ask them to retype it on one line with brackets around every numerator and denominator.");
@@ -177,6 +177,10 @@ var CORE = (function () {
   // ---------- Phase B ----------
   // model(system, history, msg) -> parsed JSON, or null. If model.batch([{system, history, msg}, ...]) exists, the draft and the
   // second reader go out together (fetchAll on Apps Script). With no model, the authored fallback speaks (plain mode).
+  var CHECKABLE = { equation: true, number: true, table: true };
+  // true: a false statement found by the second reader blocks acceptance even when the model accepts (the handoff's recorded decision,
+  // "the second reader can overrule the first"). false: the instructor's 11 Oct wording read literally, one of the two readers suffices.
+  var SECOND_READER_VETO = true;   // items the verifier decides; the authored question is what the tutor says there
   function say(arch, S, input, model) {
     var t0 = Date.now(), V = arch.variants[S.variantIndex];
     if (!S.pending) { var evx = { event_type: "SAY_WITHOUT_VERDICT", entering: progress(S, V).done, active: activeState(S, V), newly: [], traps: [], guards: [] }; var rx = assemble(arch, S, V, evx, "Press New problem.", null, false); rx.needs_say = false; return rx; }
@@ -190,23 +194,33 @@ var CORE = (function () {
     // what the tutor should say there, so the model is not asked to improvise one (instructor's run, 10 Oct: after a right prediction
     // the model asked its own "why" instead of sending the student to the Equations list).
     var choiceNext = !!(b && (b.kind === "pick" || b.kind === "direction") && !p.switchAsk && !ev.traps.length);
+    // instructor, 11 Oct: the same for a checkable item (equation, number, table): the authored question is asked, the model may
+    // acknowledge but not question (his run of the four: the model asked for the next step's unit conversion while the rearrangement was open).
+    // A student asking for help still gets the model's one-sentence answer before the authored question.
+    var checkNext = !!(b && CHECKABLE[b.kind] && !p.switchAsk && !ev.traps.length);
     var out = null, sr = null;
-    if (model && choiceNext && !ctx.judge) { model = null; }     // nothing to judge, a button to press: deterministic
+    if (model && (choiceNext || checkNext) && !ctx.judge && !p.asking) { model = null; }     // nothing to judge, nothing to answer: deterministic
     if (model) {
       if (model.batch && ctx.judge) { var both = safeBatch(model, [{ system: buildSystem(arch, S, V, ctx), history: history, msg: msg }, { system: SECOND_READER, history: [], msg: msg }]); out = both[0]; sr = both[1]; }
-      else { out = safe(model, buildSystem(arch, S, V, ctx), history, msg); if (out && ctx.judge && out.accept) sr = safe(model, SECOND_READER, [], msg); }
+      else { out = safe(model, buildSystem(arch, S, V, ctx), history, msg); if (ctx.judge) sr = safe(model, SECOND_READER, [], msg); }
     }
-    if (out) {
-      reply = out.socratic_response; kind = out.turn_kind || kind; ev.model_accept = out.accept ? 1 : 0;
-      if (ctx.judge && out.accept) {
-        accepted = true;
-        if (sr && sr.found && sr.quote && msg.indexOf(sr.quote) > -1) {
-          accepted = false; ev.second_reader = "FALSE_CLAIM"; ev.guards.push("REPLY_AFFIRMED_ERROR");
-          var c2 = Object.assign({}, ctx, { judge: false, extra: "A second reader found a false statement in the student's message: \"" + sr.quote + "\" (" + sr.why + "). Do not accept. Do not correct it for them. Ask one question aimed at it." });
-          var redo = safe(model, buildSystem(arch, S, V, c2), history, msg); reply = redo ? redo.socratic_response : null;
-        } else ev.second_reader = sr ? "clean" : "unavailable";
+    if (out) { reply = out.socratic_response; kind = out.turn_kind || kind; ev.model_accept = out.accept ? 1 : 0; }
+    else if (ctx.judge) ev.model_accept = "no_model";
+    if (ctx.judge) {
+      // The computer gates have passed (a sentence of their own, engaging the scene, naming a mechanism). Instructor, 11 Oct, after the
+      // model refused four true accounts in a row: the account is accepted when the gates and ONE of the two readers agree, i.e. the
+      // model says accept, or the second reader finds nothing false. Both verdicts are logged. In plain mode the gates alone decide.
+      var modelYes = !!(out && out.accept), srFalse = !!(sr && sr.found && sr.quote && msg.indexOf(sr.quote) > -1);
+      ev.second_reader = sr ? (srFalse ? "FALSE_CLAIM" : "clean") : "unavailable";
+      accepted = SECOND_READER_VETO ? !srFalse : (modelYes || !srFalse);
+      if (!accepted && model) {                   // both readers against it: the model asks one question aimed at the false claim
+        ev.guards.push("REPLY_AFFIRMED_ERROR");
+        var c2 = Object.assign({}, ctx, { judge: false, extra: "A second reader found a false statement in the student's message: \"" + sr.quote + "\" (" + sr.why + "). Do not accept. Do not correct it for them. Ask one question aimed at it." });
+        var redo = safe(model, buildSystem(arch, S, V, c2), history, msg); reply = redo ? redo.socratic_response : null;
       }
-    } else if (ctx.judge) { accepted = true; ev.model_accept = "no_model"; }       // plain mode: the gates alone decide
+      if (accepted && srFalse) ev.guards.push("SECOND_READER_OVERRULED");          // the model accepted what the second reader flagged
+      if (accepted && out && !modelYes) { ev.guards.push("MODEL_REFUSED_TRUE_ACCOUNT"); reply = null; }   // its draft was a hold-out question: the authored line speaks instead
+    }
     if (accepted) tick(S, V, active, ev.newly);
     if (p.judge && !accepted && hasAccount(msg, arch) && kind === "answer") ev.counted_fail = true;
     if (kind === "question" || kind === "offtopic" || p.labelOnly) ev.counted_fail = false;    // a label is asked again, never counted
@@ -233,7 +247,7 @@ var CORE = (function () {
     if (!reply) { ev.fallback_used = true; reply = fallbackReply(arch, S, V, ev, p); }
     // a choice item next (after any acceptance this turn): the model's acknowledgement stays, its question gives way to the authored one
     var nowA = activeState(S, V), nowB = nowA ? entry(V, nowA) : null;
-    if (reply && !card && !ev.fallback_used && nowB && (nowB.kind === "pick" || nowB.kind === "direction") && !p.switchAsk && !ev.traps.length) {
+    if (reply && !card && !ev.fallback_used && nowB && (nowB.kind === "pick" || nowB.kind === "direction" || CHECKABLE[nowB.kind]) && !p.switchAsk && !ev.traps.length) {
       var nowAsk = moveFor(arch, V, nowA).ask; if (nowAsk) { var ackOnly = cutQuestions(reply); reply = (ackOnly ? ackOnly + " " : "") + nowAsk; }
     }
     S.lastReply = reply; S.pending = null;

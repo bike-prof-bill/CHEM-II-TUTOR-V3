@@ -440,7 +440,7 @@
    "state": "rearranged",
    "stage": "setup",
    "label_when_done": "Rearranged for the unknown",
-   "ask": "Before any numbers go in: rearrange your relation so the quantity you are after stands alone on the left. Type it out.",
+   "ask": "Before any numbers go in: rearrange your relation so the quantity you are after stands by itself on one side. Type it out.",
    "switch_ask": "Which quantity is the one you are after and what is the last operation standing between it and being alone?",
    "notebook_prompt": "Show me how to rearrange an equation that has a natural log on one side and a difference of reciprocal temperatures on the other so that a chosen variable stands alone. Use symbols different from mine and do not use my numbers. Then give me one short practice rearrangement and wait for my answer.",
    "return_ask": "What operation undoes a natural log and what undoes a reciprocal?",
@@ -506,7 +506,7 @@
    "state": "rearranged_dH",
    "stage": "setup",
    "label_when_done": "Rearranged for ΔHvap",
-   "ask": "Before any numbers: write ΔHvap in terms of the slope of your line. Type the equation with ΔHvap alone on the left.",
+   "ask": "Before any numbers: write ΔHvap in terms of the slope of your line. Type the equation with ΔHvap by itself on one side.",
    "switch_ask": "Set your straight line beside the relation you picked. Which group of symbols sits where the slope sits?",
    "notebook_prompt": "Show me how to rearrange a straight-line equation of the form ln(y) = m(1/x) + b for a chosen variable, and how a slope can stand for a physical quantity. Use symbols different from mine and no numbers of mine. Then give me one short practice rearrangement and wait for my answer.",
    "return_ask": "Which part of the relation plays the part of the slope?",
@@ -528,7 +528,7 @@
    "state": "rearranged_T",
    "stage": "setup",
    "label_when_done": "Rearranged for T",
-   "ask": "Now rearrange your line so that T stands alone on the left. Type it.",
+   "ask": "Now rearrange your line so that T stands by itself on one side. Type it.",
    "switch_ask": "What would the gauge read at the normal boiling point and where does that reading go in your line?",
    "notebook_prompt": "Show me how to rearrange a straight-line equation of the form ln(y) = m(1/x) + b for a chosen variable, and how a slope can stand for a physical quantity. Use symbols different from mine and no numbers of mine. Then give me one short practice rearrangement and wait for my answer.",
    "return_ask": "What undoes a reciprocal and in what order do you clear the terms around 1/T?",
@@ -16909,5 +16909,5 @@
    "opener_index": 3
   }
  ],
- "content_version": "8c9971e226"
+ "content_version": "d23389a378"
 }

@@ -50,3 +50,6 @@ content-check:
 
 purity:
 	sh scripts/check_shell_purity.sh
+
+report:
+	$(PY) scripts/build_report.py

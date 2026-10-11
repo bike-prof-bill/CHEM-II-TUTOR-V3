@@ -33,7 +33,7 @@ var SECOND_READER = "You are checking one student message for a FALSE statement 
 
 // The authored fallback: what the student reads when there is no model, the model failed, or every guard failed.
 // Plus the plain hint when words arrived at a checkable item (instructor, 9 Oct).
-var HINT_OF_KIND = { number: "This step is checked on the value: type it, with its unit.", equation: "This step is checked on the equation: type it on one line, the unknown alone on the left.",
+var HINT_OF_KIND = { number: "This step is checked on the value: type it, with its unit.", equation: "This step is checked on the equation: type it on one line, the unknown by itself on one side.",
                      pick: "This step is a choice: open the Equations list.", direction: "This step is a choice: pick one of the options.", table: "This step is checked on the table: type the three rows I:, C:, E:.", text: "", reflection: "" };
 function fallbackReply(arch, S, V, ev, p) {
   var nowActive = activeState(S, V), nowMove = nowActive ? moveFor(arch, V, nowActive) : {};

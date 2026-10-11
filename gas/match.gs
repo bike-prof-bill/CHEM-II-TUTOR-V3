@@ -32,9 +32,12 @@ function checkEquation(msg, V, arch, S) {
     if (!L || !R) { if (looksSymbolic) out.push({ verdict: "UNREADABLE", state: checks[0].state }); return; }
     if (Object.keys(eqVars(R.tree, eqVars(L.tree, {}))).length < 2) return;                 // "T1 = 300.8" is not a rearrangement
     var shown = (L.text + " = " + R.text).replace(/\s+/g, " "), rhs = eqVars(R.tree, {});
-    var valid = checks.filter(function (ck) { return L.tree.v === ck.unknown && !rhs[ck.unknown] && holdsAny(L.tree, R.tree, ck); })[0];
+    // instructor, 11 Oct: "either side is fine with algebra". The unknown alone on the left OR on the right, the other side free of it.
+    var lhs = eqVars(L.tree, {});
+    var alone = function (ck) { return (L.tree.v === ck.unknown && !rhs[ck.unknown]) || (R.tree.v === ck.unknown && !lhs[ck.unknown]); };
+    var valid = checks.filter(function (ck) { return alone(ck) && holdsAny(L.tree, R.tree, ck); })[0];
     if (valid) { out.push({ verdict: "VALID_ISOLATED", state: valid.state, shown: shown }); return; }
-    var ck = checks.filter(function (k) { return L.tree.v === k.unknown; })[0] || checks[0];  // judge it against the one it is aiming at
+    var ck = checks.filter(function (k) { return L.tree.v === k.unknown || R.tree.v === k.unknown; })[0] || checks[0];  // judge it against the one it is aiming at
     var res = { verdict: "WRONG", state: ck.state, shown: shown };
     if (holdsAny(L.tree, R.tree, ck)) res.verdict = "HOLDS_NOT_ISOLATED";
     else for (var id in ck.bent) if (holdsOn(L.tree, R.tree, ck.bent[id])) { res.verdict = "TRAP"; res.trap = id; }

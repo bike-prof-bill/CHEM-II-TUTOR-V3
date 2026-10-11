@@ -310,6 +310,8 @@ async function fillMenus() {
     $("arch").onchange = kinds; kinds(); } catch (e) { }
 }
 if (!cfg.url || !cfg.token) openSettings(); else fillMenus();
+// instructor, 11 Oct: a copy of this page opened from inside the gas folder cannot find media/; say so at once (the 11 Oct detour)
+if (/\/gas\/[^\/]*$/.test(location.pathname)) add("note err", "This page is inside the gas folder. Pictures live beside the top-level index.html. Close this and open the index.html at the top of the repository.");
 </script>
 </body>
 </html>

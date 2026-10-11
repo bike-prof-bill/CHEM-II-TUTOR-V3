@@ -13,6 +13,8 @@ function unearned(reply, S, V) {      // a number from the answer key that the s
 
 // Three cheap checks that moved out of the prompt (rebuild spec): run on the model's draft before the leak guard.
 var BANNED_OPENERS = ["Spot on", "Exactly right", "Perfect", "Great job", "You nailed it", "Excellent work"];   // instructor's V2 list
+// words of the tutor's own machinery that must not reach a student (the model wrote "in the measurement account", instructor's run, 11 Oct)
+var SHELL_WORDS = ["measurement account", "particle account", "step map", "credit gate", "second reader", "the item above", "this item", "the active item", "the gate"];
 function firstThreeWords(t) { return String(t || "").toLowerCase().replace(/[^a-z0-9\s]/g, " ").trim().split(/\s+/).slice(0, 3).join(" "); }
 // -> list of failures: [] when the draft passes. `done` = the problem is complete after this turn (then zero questions is right).
 function checkDraft(reply, S, V, done, lastReply) {
@@ -22,6 +24,7 @@ function checkDraft(reply, S, V, done, lastReply) {
   if (BANNED_OPENERS.some(function (b) { return r.trim().toLowerCase().indexOf(b.toLowerCase()) === 0; })) f.push("BANNED_OPENER");
   if (lastReply && firstThreeWords(r) && firstThreeWords(r) === firstThreeWords(lastReply)) f.push("SAME_OPENING");
   if (unearned(r, S, V).length) f.push("REPLY_STATED_VALUE");
+  if (SHELL_WORDS.some(function (w) { return r.toLowerCase().indexOf(w) > -1; })) f.push("SHELL_VOCABULARY");
   return f;
 }
 function rewriteInstruction(failures, reply, S, V) {
@@ -32,9 +35,10 @@ function rewriteInstruction(failures, reply, S, V) {
   if (failures.indexOf("BANNED_OPENER") > -1) parts.push("Your draft opened with praise. Do not praise; name what was right in the student's words.");
   if (failures.indexOf("SAME_OPENING") > -1) parts.push("Your draft began with the same words as your last reply. Begin differently.");
   if (failures.indexOf("REPLY_STATED_VALUE") > -1) parts.push("Your draft stated a value the student has not produced (" + unearned(reply, S, V).join(", ") + "). Rewrite without it.");
+  if (failures.indexOf("SHELL_VOCABULARY") > -1) parts.push("Your draft used the tutor's internal words (such as 'account', 'item', 'gate'). Speak to the student in plain words about the chemistry.");
   return parts.join(" ");
 }
 // the cut: a completed problem's draft loses its question sentences; anything else failing falls back to the authored line
 function cutQuestions(reply) { return String(reply).split(/(?<=[.!])\s+/).filter(function (sn) { return !/\?/.test(sn); }).join(" ").trim() || null; }
 
-if (typeof module !== "undefined") module.exports = { unearned: unearned, BANNED_OPENERS: BANNED_OPENERS, checkDraft: checkDraft, rewriteInstruction: rewriteInstruction, cutQuestions: cutQuestions };
+if (typeof module !== "undefined") module.exports = { unearned: unearned, BANNED_OPENERS: BANNED_OPENERS, SHELL_WORDS: SHELL_WORDS, checkDraft: checkDraft, rewriteInstruction: rewriteInstruction, cutQuestions: cutQuestions };
