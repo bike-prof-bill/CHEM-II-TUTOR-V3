@@ -186,7 +186,12 @@ var CORE = (function () {
     var ctx = { progress: progress(S, V), active: active, register: b ? b.register : "", ask: move.ask, notes: notes, judge: p.judge && p.gateOK, lastItem: lastItem };
     if (p.switchAsk) { ctx.extra = "They are stuck inside one account. Move them to a different one. Ask toward this instead: " + p.switchAsk; ctx.judge = false; }
 
+    // A choice item (a pick from the Equations list, a prediction) is answered with buttons: the authored question is the whole of
+    // what the tutor should say there, so the model is not asked to improvise one (instructor's run, 10 Oct: after a right prediction
+    // the model asked its own "why" instead of sending the student to the Equations list).
+    var choiceNext = !!(b && (b.kind === "pick" || b.kind === "direction") && !p.switchAsk && !ev.traps.length);
     var out = null, sr = null;
+    if (model && choiceNext && !ctx.judge) { model = null; }     // nothing to judge, a button to press: deterministic
     if (model) {
       if (model.batch && ctx.judge) { var both = safeBatch(model, [{ system: buildSystem(arch, S, V, ctx), history: history, msg: msg }, { system: SECOND_READER, history: [], msg: msg }]); out = both[0]; sr = both[1]; }
       else { out = safe(model, buildSystem(arch, S, V, ctx), history, msg); if (out && ctx.judge && out.accept) sr = safe(model, SECOND_READER, [], msg); }
@@ -226,6 +231,11 @@ var CORE = (function () {
       }
     }
     if (!reply) { ev.fallback_used = true; reply = fallbackReply(arch, S, V, ev, p); }
+    // a choice item next (after any acceptance this turn): the model's acknowledgement stays, its question gives way to the authored one
+    var nowA = activeState(S, V), nowB = nowA ? entry(V, nowA) : null;
+    if (reply && !card && !ev.fallback_used && nowB && (nowB.kind === "pick" || nowB.kind === "direction") && !p.switchAsk && !ev.traps.length) {
+      var nowAsk = moveFor(arch, V, nowA).ask; if (nowAsk) { var ackOnly = cutQuestions(reply); reply = (ackOnly ? ackOnly + " " : "") + nowAsk; }
+    }
     S.lastReply = reply; S.pending = null;
     var res = assemble(arch, S, V, ev, reply, card, false);
     res.needs_say = false; res.checked = checkedLabels(V, ev);

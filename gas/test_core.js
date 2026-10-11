@@ -52,7 +52,7 @@ const REFLECT = "The rearrangement was hardest; I would tell a friend to undo th
 
 // 4. second reader overrules an accepting tutor
 { const i = find("T2"), S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "t4" });
-  const m = (sys) => /FALSE statement/.test(sys) ? { found: 1, quote: "the bonds inside each water molecule break", why: "evaporation does not break covalent bonds" }
+  const m = (sys) => /checking one student message/.test(sys) ? { found: 1, quote: "the bonds inside each water molecule break", why: "evaporation does not break covalent bonds" }
                                                   : { accept: 1, turn_kind: "answer", socratic_response: "What breaks?" };
   const r = say(S, "As it heats up the bonds inside each water molecule break and the atoms fly off as vapor.", m);
   ok(S.board.account_given !== "ticked" && r.log.second_reader === "FALSE_CLAIM" && !r.problem, "second reader blocks a false account"); }
@@ -172,6 +172,14 @@ const REFLECT = "The rearrangement was hardest; I would tell a friend to undo th
   ok(S.board.account_given !== "ticked" && !r.log.counted_fail && /OPENER_LABEL_ONLY/.test(r.log.guards), "a label-only account is not ticked, not counted, flagged: " + r.log.guards);
   r = sayL("Alcohol molecules attract each other weakly, so a larger fraction has the energy to escape the surface.");
   ok(S.board.account_given === "ticked", "a mechanism account is accepted"); }
+
+// 6l. a choice item next: the model may acknowledge but the authored question is asked (instructor's run, 10 Oct)
+{ const i = ARCH.variants.findIndex(v => v.kind === "P2"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "ch1" });
+  let calls = 0; const wander = (sys, hist, msg) => { calls++; return { socratic_response: "You noted that pressure drops. In terms of energy, why does a cooler liquid need a lower pressure to boil?", accept: 1, turn_kind: "answer" }; };
+  let r = say(S, "More molecules have enough energy to escape the liquid surface as it warms.", wander);
+  ok(S.board.account_given === "ticked" && /Pick one|higher or lower/.test(r.reply) && !/why does a cooler/.test(r.reply), "account accepted; the model's own question gives way to the authored prediction question: " + r.reply);
+  const before = calls; const d = V.board.find(b => b.id === "direction_predicted"); r = say(S, "", wander, { pick: d.right[0] });
+  ok(calls === before && /Equations list/.test(r.reply), "after a right prediction nothing is judged and the next item is a pick: no model call, the authored question verbatim: " + r.reply); }
 
 // 7. every variant of every kind can be completed by a student who types only the key(s)
 { let bad = 0; ARCH.variants.forEach((V, i) => { const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "v" + i });

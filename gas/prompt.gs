@@ -15,14 +15,15 @@ var RULES = [
 function buildSystem(arch, S, V, ctx) {
   var out = RULES, opener = arch.openers[S.openerIndex];
   if (!isSet(S, "account_given")) out += "\n\nOPENING QUESTION on the student's screen: " + opener.question +
-    "\nThe problem is hidden from the student and from you until this clears. What clears it: one clause about what the PARTICLES are doing that engages this scenario. Rough is fine.";
+    "\nThe problem is hidden from the student and from you until this clears. What clears it: one TRUE clause about what the PARTICLES are doing that engages this scenario. Rough is fine. Incomplete is fine. " +
+    "A true statement is accepted even if it leaves out the mechanism you would have named; the second reader checks only for FALSE statements. Reject only what is false, empty of particles, or about a different scene.";
   else out += "\n\nPROBLEM on the student's screen: " + V.text;
   out += "\n\nWHERE THE STUDENT IS: " + ctx.progress.done + " of " + ctx.progress.of + " established.";
   if (ctx.active) out += "\nNEXT THING TO ESTABLISH (" + ctx.register + " account): ask toward this, in your own words: " + (ctx.ask || "(no authored question; ask plainly)");
   else out += "\nEverything is established. The problem is over. Respond to what the student just said in one sentence. Ask nothing.";
   if (ctx.active && ctx.lastItem) out += "\nThis is the LAST item. If you accept it, the problem is complete: acknowledge their account in one or two sentences and ask nothing. A question after acceptance is wrong.";
   if (ctx.notes.length) out += "\n\nSERVER VERDICT THIS TURN:\n- " + ctx.notes.join("\n- ");
-  if (ctx.judge) out += "\n\nYOU JUDGE THIS TURN: set accept to 1 only if the student's message establishes the item above. If you correct or redirect, accept is 0.";
+  if (ctx.judge) out += "\n\nYOU JUDGE THIS TURN: set accept to 1 if the student's message is a TRUE statement that establishes the item above, however brief or incomplete. Do not hold out for the fuller account you have in mind: completeness is not the test, truth is. Set accept to 0 only for a false statement, no statement, or a different scene; if you correct or redirect, accept is 0.";
   if (ctx.extra) out += "\n\n" + ctx.extra;
   return out;
 }
