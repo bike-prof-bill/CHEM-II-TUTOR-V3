@@ -162,7 +162,9 @@ function meter(p) { if (!p) { $("meter").innerHTML = ""; $("doneCard").style.dis
 function showChoices(c) { document.querySelectorAll(".choices").forEach(e => e.remove()); if (!c) return;
   const d = document.createElement("div"); d.className = "msg choices"; c.options.forEach(o => { const b = document.createElement("button"); b.className = "eq"; b.textContent = o.text; b.onclick = () => send({ pick: o.id }); d.appendChild(b); }); $("log").appendChild(d); $("log").scrollTop = 1e9; }
 
+let lastNext = null;   // the next item the server reported, so the page can shape its input to it
 function handle(res, echo) {
+  if (res && "next" in res) lastNext = res.next;
   if (!res || res.error) { add("note err", (res && res.error) || "No reply."); return; }
   if (echo) history.push({ role: "user", text: echo });
   if (res.reply) { add("tutor", res.reply); history.push({ role: "model", text: res.reply }); history = history.slice(-12); }
@@ -221,7 +223,8 @@ function showPinned(p, pins) {
 let equations = [];
 function showImage(m) { const im = $("openerImg"), vd = $("openerVid"), isVideo = /\.(mp4|webm|mov)$/i.test(m.image);
   if (isVideo) { vd.src = "media/" + m.image; vd.setAttribute("aria-label", m.alt || ""); vd.style.display = "block"; im.style.display = "none"; }   // a video in the picture column: controls, silent, loops
-  else { im.src = "media/" + m.image; im.alt = m.alt || ""; im.style.display = "block"; vd.style.display = "none"; vd.removeAttribute("src"); }
+  else { im.onerror = () => add("note err", "The picture did not load. The page looked for it at: " + im.src); im.src = "media/" + m.image; im.alt = m.alt || ""; im.style.display = "block"; vd.style.display = "none"; vd.removeAttribute("src"); }
+  if (isVideo) vd.onerror = () => add("note err", "The video did not load. The page looked for it at: " + vd.src);
   const c = $("openerCredit"); c.innerHTML = ""; c.style.display = m.credit ? "block" : "none";   // the attribution the licence requires, URLs made into links
   if (m.credit) m.credit.split(/(https?:\/\/\S+)/).forEach(part => { if (/^https?:\/\//.test(part)) { const a = document.createElement("a"); a.href = part; a.target = "_blank"; a.rel = "noopener"; a.textContent = /creativecommons/.test(part) ? "licence" : "source"; c.appendChild(a); } else c.appendChild(document.createTextNode(part)); }); }
 function showProblem(p) {
@@ -231,7 +234,9 @@ function showProblem(p) {
   equations = p.equations || []; $("eqBtn").disabled = false;
   // picking an equation records the choice with the server; the relation is pinned under Your symbols. (9 Oct: the text was also placed in
   // the box; 11 Oct: removed, an un-rearranged equation sitting in the box while the tutor asks for the rearrangement confused the instructor.)
-  $("eqList").innerHTML = ""; equations.forEach(e => { const b = document.createElement("button"); b.className = "eq"; b.textContent = e.text; b.onclick = async () => { $("eqDlg").close(); await send({ pick: e.id }); $("box").focus(); }; $("eqList").appendChild(b); });
+  // instructor, 11 Oct: the picked equation goes into the box only when the next step is NOT a rearrangement of it
+  $("eqList").innerHTML = ""; equations.forEach(e => { const b = document.createElement("button"); b.className = "eq"; b.textContent = e.text; b.onclick = async () => { $("eqDlg").close(); await send({ pick: e.id });
+    if (!(lastNext && lastNext.kind === "equation")) { $("box").value = e.text; $("box").setSelectionRange(e.text.length, e.text.length); } $("box").focus(); }; $("eqList").appendChild(b); });
   if (p.plots) drawPlots(p.plots, "Measured vapor pressures", false);
   add("note", "The problem is now on the left.");
 }
