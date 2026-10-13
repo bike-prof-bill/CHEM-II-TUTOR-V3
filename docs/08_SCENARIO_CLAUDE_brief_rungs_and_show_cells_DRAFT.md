@@ -1,6 +1,6 @@
 # Brief for SCENARIO_CLAUDE: scenario roles and the `show` cells (DRAFT, 12 Oct 2026)
 
-From Fable, on the instructor's decisions of 11–12 Oct. Read `docs/06_SCENARIO_CLAUDE_role_DRAFT.md` first; this adds to it.
+From Fable, on the instructor's decisions of 11–12 Oct. Read `docs/06_SCENARIO_CLAUDE_role.md` first; this adds to it.
 Everything you draft is DRAFT until the instructor approves it.
 
 ## What changed

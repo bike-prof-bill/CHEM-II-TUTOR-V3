@@ -20,7 +20,7 @@ rules at the top of the project instructions apply unchanged: no praise, plain s
 
 ## The lanes
 
-Fable/ARCHITECT_CLAUDE (this chat), Opus (constructor; unused so far), SCENARIO_CLAUDE (`docs/06_SCENARIO_CLAUDE_role_DRAFT.md`:
+Fable/ARCHITECT_CLAUDE (this chat), Opus (constructor; unused so far), SCENARIO_CLAUDE (`docs/06_SCENARIO_CLAUDE_role.md`:
 drafts scenarios, step maps, moves, sources), Simulation_Claude (`docs/04_SIMULATION_CLAUDE_role.md`: builds simulation
 pages), the analysis side (measures, never modifies). The other chats cannot see this chat or the repository; every file moves
 through the instructor. Their hand-offs arrive here as zips.
@@ -70,7 +70,7 @@ the tutor runs them are regenerated into `docs/STEP_MAP_*.csv`; the rules into `
    chat) works and the other chats use it.
 5. **"Spinning away in GitHub"** (his last message): probably the Actions run or a slow push of the 13 MB vent video. Check the
    Actions tab with him; the last commits changed only the page and the fingerprint.
-6. Step 6c/6d; the worked → faded → independent sequence (`docs/06_SCENARIO_CLAUDE_role_DRAFT.md`, bottom); the
+6. Step 6c/6d; the worked → faded → independent sequence (`docs/06_SCENARIO_CLAUDE_role.md`, bottom); the
    `direction` kind's return with a better battery of questions (instructor); the equilibrium archetype.
 
 ## What to do first
