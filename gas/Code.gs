@@ -56,7 +56,7 @@ function doPost(e) {
       var rolesByOpener = {}; arch.openers.forEach(function (o, i) { rolesByOpener[i] = o.role || "floater"; });
       if (req.want && req.want.extra) { filters = { kind: req.want.kind, role: req.want.role, version: req.want.version, substance: req.want.substance, rolesByOpener: rolesByOpener }; rung = "worked"; extra = true; }
       else if (rec) { var w = CORE.nextAssignment(rec, arch); filters = { role: w.role, version: w.version, rolesByOpener: rolesByOpener }; rung = w.rung; }
-      else filters.excludeRole = "exam";                                                                  // the exam scenario is never served by chance
+      else filters.excludeRole = "exam";                                                                  // an unstepped student is never served the exam scenario by chance
       var pick = CORE.chooseVariant(arch.variants, filters, served);        // never the same problem twice while others remain (step 6a/6b)
       if (!pick) return json_({ error: "no problem matches that opener and kind" });
       if (!isGuest) { if (pick.reset) served = []; served.push(pick.variant_id); props.setProperty(histKey, JSON.stringify(served.slice(-500))); }

@@ -35,7 +35,7 @@ Independent problems). The `role` column of the openers file (blank = floater). 
 2. **Keyword candidates** from the chapter's own vocabulary, per scenario, for the instructor to approve into the `keywords`
    column (the chapters are in `reference/openstax/`, CC BY 4.0; paraphrase, do not quote into student-facing cells without the
    attribution line). A keyword shorter than four letters matches only as a whole word.
-3. **For a fixed-text archetype** (equilibrium): the problems themselves, six per scenario, in the problems sheet (`ch13_problems.csv`
+3. **For a fixed-text archetype** (equilibrium): the problems themselves, six per scenario, in the problems sheet (`docs/handoff_examples/ch13_problems.csv`
    is the model): sentence, every constant with its source, the expected value of every item, the trap values. For a generated
    archetype (Clausius-Clapeyron) the generator makes the numbers within the limits file; you do not write them.
 4. **Named errors** in the archetype's errors file (id, note, ask, opener, status), each with its detectable form: a value, a wrong

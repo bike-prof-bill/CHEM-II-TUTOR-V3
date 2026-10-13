@@ -26,7 +26,7 @@ retiring SCENARIO_CLAUDE's own hand-over, if the instructor asked it for one, sa
 - Media never passes through Fable: pages and pictures go to the instructor's `media/`; their rows go into `docs/MEDIA_SOURCES.csv`
   (via Fable) with the SHA-256 and the approval date.
 
-## File shapes (the chapter 13 zip is the model of a complete hand-off)
+## File shapes (the chapter 13 zip is the model of a complete hand-off: `docs/handoff_examples/`)
 
 - Openers: 15 columns + `role`. Moves: state, stage, label_when_done, ask, switch_ask, notebook_prompt, return_ask, park_text,
   status, opener, show, version. Errors: error id, note, ask, opener, status. Problems (fixed archetypes): id, opener, family,

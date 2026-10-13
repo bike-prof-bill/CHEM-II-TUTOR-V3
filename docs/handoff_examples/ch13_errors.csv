@@ -1,0 +1,11 @@
+﻿error id,note (what the tutor is told),ask,opener (blank = every scenario),"existing ch13_ice equivalent, if Fable prefers it",status
+CHANGE_COEFF_IGNORED,"The change row ignores the coefficients: x, or 1x, under H2 or NH3.","If hydrogen is used or made three times as fast as nitrogen, should its change just be x?",,,approved
+COEFF_NOT_EXPONENT,"The coefficients are in the table but not used as exponents: (1.20 - 3x) with no cube, or (2x) with no square.",The coefficients do double duty. What is the exponent for H2? For NH3?,,COEFFICIENT_NOT_SQUARED (if it covers cubes too),approved
+EXPONENT_NOT_IN_TABLE,"The exponents are there but the table's multiples are not: (1.20 - x)^3, or x^2 on top.",The 3 in 3H2 is an exponent here. Is it also in the change row?,,,approved
+START_ZERO_MISSING,"The initial row leaves out a species that starts at zero, or gives it a value though none was put in.",Was any of that species put in the vessel? Then what is its starting concentration?,,,approved
+CHANGE_SIGNS_REVERSED,"The change row's signs go the opposite way from the shift (e.g. -x, -3x, +2x when the mixture starts with ammonia only).",Which way did you predict the reaction would go? Do the signs in your change row agree?,,,approved
+MOLES_NOT_CONCENTRATION,Moles put into the expression when the vessel is not 1.00 L.,Kc uses concentrations. Is your vessel 1.00 L?,,,approved
+PHANTOM_ROOT,"x is the root that makes a concentration negative (for the instructor's numbers, x = 1.00).",Put that x into the equilibrium row. What concentration of carbon monoxide does it leave?,The Martian Fuel Factory,EXCEEDS_INITIAL (same idea: x beyond what was there),approved
+SQRT_ON_NONSQUARE,"The square root used when the starting amounts differ, so the expression is not a perfect square.",Is the bottom of your expression one thing times itself? Check the two starting concentrations.,The Martian Fuel Factory,,approved
+SQRT_ONE_SIDE,"The square root taken of only one side (for the instructor's numbers, x = 0.400).","Did you take the square root of both sides, K included?",The Martian Fuel Factory,,approved
+LEFTOVER_FOR_PRODUCT,"The leftover reactant given as the hydrogen, or x given as the leftover (for the instructor's numbers, 0.167 and 0.333 swapped).","Is x what reacted, or what is left?",The Martian Fuel Factory,,approved

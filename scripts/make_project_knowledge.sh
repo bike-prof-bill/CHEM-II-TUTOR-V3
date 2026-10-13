@@ -7,7 +7,7 @@ cd "$(dirname "$0")/.."
 OUT="${1:-project_knowledge_$(date +%Y-%m-%d).zip}"; TMP=$(mktemp -d)
 add() { f="$1"; n=$(echo "$f" | sed 's|/|__|g'); cp "$f" "$TMP/$n"; }
 for f in README.md REPOSITORY.md BUILD_LOG.md INSTALL_CHEAT_SHEET.md GUIDE_MOVES_AND_OPENERS.md units.json content_*.csv \
-         docs/*.md docs/*.csv docs/briefs_and_design/*.md docs/instructor_source_material/* \
+         docs/*.md docs/*.csv docs/briefs_and_design/*.md docs/instructor_source_material/* docs/handoff_examples/* \
          archetypes/*.py archetypes/data/*.json archetypes/data/*.md \
          gas/Core.gs gas/parse.gs gas/match.gs gas/stepmap.gs gas/ladder.gs gas/guards.gs gas/prompt.gs gas/log.gs gas/logqueue.gs gas/Code.gs gas/local_server.js \
          engine.py run.py tests/regression/README.md; do

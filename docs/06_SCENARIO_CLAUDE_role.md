@@ -50,7 +50,7 @@ version), and an `offer` row: the text shown after the reflection, offering a se
 
 Problem numbers: for a generated archetype (Clausius-Clapeyron) the generator makes them within the limits file; you do not
 write them. For a fixed-text archetype (equilibrium, instructor 13 Oct) you write each problem: its sentence, every constant
-with its source, the expected value of every item, and the trap values, in the problems sheet (`ch13_problems.csv` is the model),
+with its source, the expected value of every item, and the trap values, in the problems sheet (`docs/handoff_examples/ch13_problems.csv` is the model),
 six problems per scenario covering every starting family.
 
 ## What you deliver
