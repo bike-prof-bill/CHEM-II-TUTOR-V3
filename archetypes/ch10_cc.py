@@ -46,8 +46,7 @@ ONE_ATM_POINT    = 0.35   # how often one point is the normal boiling point
 SPAN_BELOW_BP, SPAN_ABOVE_BP = 60.0, 25.0
 
 # ---- words that mark a particle-level account in this chapter (moved out of the shell, 8 Oct; list unchanged).
-MECHANISM_WORDS = ["molecul", "particl", "atom", "ion", "electron", "collid", "collis", "energ", "attract", "escap",
-                   "vapor", "vapour", "condens", "surface", "kinetic", "bond", "force", "fraction", "distribut"]
+MECHANISM_WORDS = ["molecul", "particl", "atom", "ion", "electron", "collid", "collis", "energ", "attract", "escap", "vapor", "vapour", "condens", "surface", "kinetic", "bond", "force", "fraction", "distribut", "attach", "stick", "hold", "pull", "grip", "bound", "tied"]  # instructor, 11 Oct: "their vocabulary is pretty poor"; attach, stick, hold, pull, grip, bound, tied added (not cling)
 
 # ---- INSTRUCTOR: the unnamed Equations list the student picks from. `fits` says which kinds it is right for.
 EQUATION_PICKS = [
@@ -309,7 +308,9 @@ def equation_check(rng, unknown):
             p2 = solve_for(residual, k, "P2", 1e-6, 1e4, flags)
             if p2: k["P2"] = p2; out.append({n: round_sig(v, 9) for n, v in k.items()})
         return out
-    return [{"state": "rearranged", "unknown": unknown, "true": states({}), "alt": [],
+    # instructor, 11 Oct: "these are relative, not absolute; consistency is the key". The subscripts 1 and 2 are the student's to assign:
+    # an equation solved for the partner symbol, with every 1 and 2 swapped consistently, is the same equation. The shell swaps the pairs.
+    return [{"state": "rearranged", "unknown": unknown, "true": states({}), "alt": [], "relabel": [["T1", "T2"], ["P1", "P2"]],
              "bent": {"EQ_SIGN_FLIPPED": states({"sign_flipped": True}), "EQ_LOG_BASE": states({"log10": True})},
              "park_text": REARRANGED[unknown]}]
 

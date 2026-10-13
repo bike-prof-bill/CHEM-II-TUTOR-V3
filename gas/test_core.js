@@ -6,6 +6,7 @@ const say = (S, m, model, extra) => CORE.processTurn(ARCH, S, Object.assign({ me
 const key = V => V.expected.find(t => t.role === "key");
 const fmtU = u => u === "degC" ? "°C" : u;
 const predict = (S, V, model) => { const d = V.board.find(b => b.id === "direction_predicted"); if (d) say(S, "", model, { pick: d.right[0] }); };
+const optionsOfTest = (V, b) => b.options || [];
 const UNITS_CONV = (x, a, b) => require("./parse.gs").UNITS.convert(x, a, b);
 const REFLECT = "The rearrangement was hardest; I would tell a friend to undo the natural log first.";
 
@@ -283,6 +284,31 @@ const REFLECT = "The rearrangement was hardest; I would tell a friend to undo th
   const other = pu === "atm" ? "torr" : "atm", P2o = UNITS_CONV(g.P2.value, pu2, other).toPrecision(5) + " " + fmtU(other);
   r = say(S4, `1/(1/${T1K.toFixed(2)} K - ${R} J/(mol K) * ln(${P2o}/${P1})/${dHJ} J/mol`);           // mixed pressure units inside ln, and one bracket short
   ok(/dont_cancel:(atm\/torr|torr\/atm)/.test(r.log.units_check) && r.log.counted_fail, "torr and atm inside ln do not cancel; the missing bracket is forgiven: " + r.log.units_check); }
+
+// 6s. the instructor's four-scenario run, 11 Oct: a true equation solved for the wrong symbol is named (syringe, vent); a direction
+// given in words with a number in the sentence is read as the pick and the number is not a wrong try (bird); after the meaning,
+// the authored reflection prompt is asked, not the model's question (bird); "I give up" is a plea, not an answer (vent).
+{ const i = find("T2"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "wu1" });
+  const m = () => ({ accept: 1, turn_kind: "answer", socratic_response: "Model clause. Model question?" });
+  let r = say(S, "More molecules have enough energy to escape the liquid surface as it warms.", m);
+  const d = V.board.find(b => b.id === "direction_predicted"), word = optionsOfTest(V, d).find(o => o.id === d.right[0]).text.split(/\s+/)[0];
+  r = say(S, "The body is 6°C warmer, so the one I am finding is " + word + " than the pressure I was given", m);
+  ok(S.board.direction_predicted === "ticked" && !r.log.counted_fail && r.log.structured === d.right[0], "direction in words, with a number in the sentence: picked, not counted: " + r.log.structured);
+  say(S, "", m, { pick: "eq_a" });
+  r = say(S, "ΔHvap = -R*ln(P2/P1)/(1/T2 - 1/T1)", m);
+  ok(/EQ:WRONG_UNKNOWN/.test(r.log.structured) && !r.log.counted_fail && /solved for ΔHvap, but that is not the quantity/.test(r.reply), "wrong unknown named, not counted: " + r.reply);
+  // instructor, 11 Oct: "these are relative, not absolute; consistency is the key": the partner symbol isolated, every 1 and 2 swapped, is right
+  r = say(S, "T1 = 1/(1/T2 + R*ln(P2/P1)/ΔHvap)", m);
+  ok(S.board.rearranged === "ticked" && /EQ:VALID_ISOLATED/.test(r.log.structured), "solved for the partner symbol with the pairs swapped consistently: accepted");
+  const S9 = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "wu9" });
+  say(S9, "More molecules have enough energy to escape the liquid surface as it warms.", m); predict(S9, V, m); say(S9, "", m, { pick: "eq_a" });
+  r = say(S9, "T1 = 1/(1/T2 - R*ln(P2/P1)/ΔHvap)", m);
+  ok(S9.board.rearranged !== "ticked" && !/VALID/.test(r.log.structured), "the partner symbol with the pairing broken is not accepted: " + r.log.structured);
+  r = say(S, "I give up!!!!!", m);
+  ok(!r.log.counted_fail && r.log.turn_kind !== "answer" || !r.log.counted_fail, "a plea costs nothing");
+  say(S, V.eq_checks[0].park_text, m); const k = key(V); say(S, k.value + " " + fmtU(k.unit), m);
+  r = say(S, "The molecules hold each other more weakly than I thought, so they escape at a lower temperature.", m);
+  ok(S.board.meaning_given === "ticked" && /Which step was hardest/.test(r.reply) && !/Model question/.test(r.reply), "the authored reflection prompt follows the meaning: " + r.reply.slice(0, 80)); }
 
 // 7. every variant of every kind can be completed by a student who types only the key(s)
 { let bad = 0; ARCH.variants.forEach((V, i) => { const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "v" + i });

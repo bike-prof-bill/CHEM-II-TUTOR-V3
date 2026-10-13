@@ -164,7 +164,7 @@ function isAskingForHelp(msg) {
   var m = String(msg || "").trim().toLowerCase(); if (!m) return false;
   if (/\?\s*$/.test(m)) return true;
   if (/^(what|why|how|which|where|when|who|do|does|did|is|are|am|can|could|should|would|will|was|were|have|has|isn't|aren't|don't|doesn't|didn't|can't|couldn't|shouldn't|wouldn't)\b/.test(m)) return true;
-  return /\b(what do you mean|i (do not|don't|dont) (know|understand|get it|follow)|not sure|no idea|confused|i'?m lost|stuck|help( me)?|explain|huh|pardon|say (that )?again|meaning of|what is a|what's a)\b/.test(m);
+  return /\b(what do you mean|i (do not|don't|dont) (know|understand|get it|follow)|not sure|no idea|confused|i'?m lost|stuck|help( me)?|explain|huh|pardon|say (that )?again|meaning of|what is a|what's a|i give up|give up|i quit|forget it|this is the end|i can'?t do this)\b/.test(m);
 }
 
 // A statement whose right side is numbers joined by + - * / ^ and brackets, optionally ending in a unit: its value.

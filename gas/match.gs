@@ -39,8 +39,25 @@ function checkEquation(msg, V, arch, S) {
     if (valid) { out.push({ verdict: "VALID_ISOLATED", state: valid.state, shown: shown }); return; }
     var ck = checks.filter(function (k) { return L.tree.v === k.unknown || R.tree.v === k.unknown; })[0] || checks[0];  // judge it against the one it is aiming at
     var res = { verdict: "WRONG", state: ck.state, shown: shown };
-    if (holdsAny(L.tree, R.tree, ck)) res.verdict = "HOLDS_NOT_ISOLATED";
+    if (holdsAny(L.tree, R.tree, ck)) {
+      // true, but solved for a different symbol than the one this problem asks for (the instructor's syringe and vent runs, 11 Oct:
+      // P2 isolated when P1 was unknown; T2 when T1 was). Named, so the student is told which quantity is the unknown, not just "again".
+      var other = (L.tree.v && L.tree.v !== ck.unknown && !rhs[L.tree.v]) ? L.tree.v : (R.tree.v && R.tree.v !== ck.unknown && !lhs[R.tree.v]) ? R.tree.v : null;
+      res.verdict = other ? "WRONG_UNKNOWN" : "HOLDS_NOT_ISOLATED"; if (other) { res.isolated = other; res.unknown = ck.unknown; }
+    }
     else for (var id in ck.bent) if (holdsOn(L.tree, R.tree, ck.bent[id])) { res.verdict = "TRAP"; res.trap = id; }
+    // instructor, 11 Oct: the subscripts are relative; a student who calls the unknown by its partner's name and keeps every pair
+    // swapped consistently has the right equation. The check's "relabel" pairs (data from the archetype) say which symbols pair.
+    if (res.verdict !== "VALID_ISOLATED" && res.verdict !== "TRAP" && ck.relabel && ck.relabel.length) {
+      var swap = {}; ck.relabel.forEach(function (pr) { swap[pr[0]] = pr[1]; swap[pr[1]] = pr[0]; });
+      var partner = swap[ck.unknown];
+      var isoL = L.tree.v === partner && !rhs[partner], isoR = R.tree.v === partner && !lhs[partner];
+      if (partner && (isoL || isoR)) {
+        var permute = function (env) { var o = {}; for (var k in env) o[swap[k] || k] = env[k]; return o; };
+        var ck2 = { "true": ck["true"].map(permute), alt: (ck.alt || []).map(function (st) { return st.map(permute); }) };
+        if (holdsAny(L.tree, R.tree, ck2)) { res.verdict = "VALID_ISOLATED"; res.relabeled = partner; delete res.isolated; delete res.unknown; }
+      }
+    }
     out.push(res);
   });
   return out;
@@ -107,6 +124,7 @@ function match(n, expected, traps, ticked, accepted) {
   // A bare number that is a declared constant is that constant, before any trap: "step 2" is not the 1.9 K
   // a kJ-for-J slip produces. Typed WITH a unit, the same number cannot be a constant and reaches the traps.
   if (constant !== null && !n.unit) return { type: "constant", id: expected[constant].id };
+  if (given !== null) return { type: "given", id: expected[given].id };   // a restated given is the given, before any trap (11 Oct)
   for (var k = 0; k < traps.length; k++) {                 // value traps first, then bounds
     var tr = traps[k];
     if (ticked[tr.state] || tr.value === undefined) continue;
@@ -120,7 +138,6 @@ function match(n, expected, traps, ticked, accepted) {
     if (n.unit && tb.unit && n.unit !== tb.unit) continue;
     if (n.x > tb.above) return { type: "trap", id: tb.id, trap: tb };
   }
-  if (given !== null) return { type: "given", id: expected[given].id };
   if (constant !== null) return { type: "constant", id: expected[constant].id };
   if (wrongDim) return { type: "wrong_dimension", id: expected[wrongDim.idx].id, unit: wrongDim.unit, typed: n.unit };
   // instructor, 11 Oct: a calculated number outside the window but near an unmet intermediate or key, matching no trap, is a near miss

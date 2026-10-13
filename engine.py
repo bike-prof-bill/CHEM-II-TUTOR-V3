@@ -104,6 +104,12 @@ def _collide(a, b, tol_of, convert_too=False):
 CONSTANT_COLLISIONS_REJECT = False   # True = spec read literally: an intermediate equal to a constant rejects the variant
 DROP_INTERMEDIATE_EQUAL_TO_GIVEN = True   # an intermediate that equals a number on the page is not evidence; it is removed
 
+def _same_quantity(g, tr):
+    """A given and a trap of the same dimension whose values agree, in the trap's unit, within three trap windows: a student
+    who types that number with its unit has restated the given, so the trap can never be told apart from it."""
+    gv = convert(g["value"], g.get("unit") or "", tr.get("unit") or "")
+    if gv is None: return False
+    return abs(gv - tr["value"]) <= CLEARANCE * max(tr["abs_tol"], g.get("abs_tol", 0))
 def validate(v):
     """Rebuild spec, Change 2. Returns the list of reasons this variant is ambiguous; empty = ships.
     May remove an intermediate form that merely restates a given (see DROP_INTERMEDIATE_EQUAL_TO_GIVEN)."""
@@ -128,6 +134,15 @@ def validate(v):
         for e in E:
             if e.get("state") == tr["state"] and _collide(e, tr, lambda ta, tb: CLEARANCE * ta):
                 reasons.append(("trap_near_expected", tr["id"], e["id"]))
+    # a trap that lies on a given is undetectable (the student may simply have restated the given): drop the trap, keep the variant
+    # (the Drinking Bird, 11 Oct: kJ-with-R-in-J gives back the known pressure)
+    givens_all = [e for e in E if e["role"] == "given"]
+    kept = []
+    for tr in v["traps"]:
+        if "value" in tr and any(_same_quantity(g, tr) for g in givens_all):
+            v.setdefault("traps_dropped", []).append(tr["id"]); continue
+        kept.append(tr)
+    v["traps"] = kept
     keys = [e for e in E if e["role"] == "key"]
     for g in (e for e in E if e["role"] == "given"):
         for k in keys:
@@ -215,8 +230,11 @@ def _standard(A, rng, state, context, unknown):
         if t.get("openers") and context.get("opener") not in t["openers"]: continue        # a trap that belongs to one scenario
         val = t["value"](A, shown, known, unknown, ans_unit, key["value"])
         if val is None or not math.isfinite(val): continue
+        # the trap's window scales with its own value: the key's window was handed to a trap at 0.84 torr (a ratio typed as the answer)
+        # and matched every small number (the instructor's Drinking Bird run, 11 Oct); never wider than the key's own window
+        tol = key["abs_tol"] if abs(val) >= abs(key["value"]) or key["value"] == 0 else key["abs_tol"] * abs(val) / abs(key["value"])
         traps.append({"id": t["id"], "state": key["state"], "value": round_sig(val, 5), "unit": ans_unit,
-                      "abs_tol": round_sig(max(key["abs_tol"], 0.01 * abs(val)), 3)})
+                      "abs_tol": round_sig(max(tol, 0.005 * abs(val)), 3)})
     context["_full"] = full; board = A.board_for(shown, unknown, context); context.pop("_full", None)   # the board rule may need the solved state
     return {"context": context, "text": A.render_text(shown, unknown, ans_unit, context), "givens": dict(shown, **extra),
             "sim_params": A.sim_params(full, shown, unknown, ans_unit, context) if hasattr(A, "sim_params") else {},   # {name: value} for a simulation's address

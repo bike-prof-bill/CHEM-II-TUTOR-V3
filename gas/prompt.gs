@@ -49,8 +49,11 @@ var UNITS_OK_ASK = "Your units come out as {produced}, as they should, so the se
 var UNITS_DONT_CANCEL_ASK = "Your units come out as {produced}, which is not the unit of anything in this problem. Which quantity is in the wrong place, or in the wrong unit?";
 var UNITS_IN_LOG_ASK = "Inside {fn}, your units come out as {produced}; a logarithm takes a pure number. Which quantity is in the wrong place, or in the wrong unit?";
 var UNITS_MIXED_ASK = "You are adding or subtracting {produced}, which cannot be combined. Which quantity is in the wrong place, or in the wrong unit?";
+// DRAFT (Fable, 11 Oct): a true equation solved for the wrong symbol. The instructor's syringe and vent runs stalled on this with no clue.
+var WRONG_UNKNOWN_ASK = "Your equation is solved for {isolated}, but that is not the quantity this problem asks for. Read the problem again: which quantity is the unknown?";
 function nearMissAsk(arch, V, ev) {
   var a;
+  if (ev.wrong_unknown) return (trapNote(arch, V, "WRONG_UNKNOWN").ask || WRONG_UNKNOWN_ASK).replace(/\{isolated\}/g, ev.wrong_unknown.isolated).replace(/\{unknown\}/g, ev.wrong_unknown.unknown);
   if (ev.units_check === "ok_value_wrong") a = (ev.traps.length ? trapNote(arch, V, ev.traps[0]).ask + " " : "") + (trapNote(arch, V, "UNITS_OK_VALUE_WRONG").ask || UNITS_OK_ASK);
   else if (ev.units_check) a = trapNote(arch, V, "UNITS_DONT_CANCEL").ask || (ev.units_fail === "function" ? UNITS_IN_LOG_ASK : ev.units_fail === "mixed" ? UNITS_MIXED_ASK : UNITS_DONT_CANCEL_ASK);
   else a = trapNote(arch, V, "NEAR_MISS").ask || NEAR_MISS_ASK;
@@ -60,7 +63,7 @@ function nearMissAsk(arch, V, ev) {
 function fallbackReply(arch, S, V, ev, p) {
   var nowActive = activeState(S, V), nowMove = nowActive ? moveFor(arch, V, nowActive) : {};
   var ack = ev.newly.length ? "Checked: " + ev.newly.map(function (st) { var e = entry(V, st.replace(/\(parked\)$/, "")); return (e && e.label_when_done) || st.replace(/_/g, " "); }).join(", ") + ". " : "";
-  var trapAsk = (ev.units_check || ev.near_miss || ev.repeat) && !ev.newly.length ? nearMissAsk(arch, V, ev) : (ev.traps.length ? trapNote(arch, V, ev.traps[0]).ask : "");
+  var trapAsk = (ev.units_check || ev.near_miss || ev.repeat || ev.wrong_unknown) && !ev.newly.length ? nearMissAsk(arch, V, ev) : (ev.traps.length ? trapNote(arch, V, ev.traps[0]).ask : "");
   var reply = nowActive ? ack + (trapAsk || (p.switchAsk && !ev.traps.length ? p.switchAsk : (S.pendingUnit !== null ? "What are the units of that value?" : (nowMove.ask || arch.openers[S.openerIndex].question))))
                         : ack + "That completes this problem.";
   var nb = nowActive ? entry(V, nowActive) : null;

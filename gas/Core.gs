@@ -20,7 +20,7 @@ var CORE = (function () {
     var t0 = Date.now();
     var V = arch.variants[S.variantIndex], msg = String(input.message || "");
     var ev = { event_type: "TURN", entering: progress(S, V).done, active: activeState(S, V), newly: [], traps: [], guards: [],
-      counted_fail: false, after_bailout: false, model_accept: "", second_reader: "", fallback_used: false, structured: "", near_miss: "", repeat: false, second_reader_quote: "", units_check: "", units_fail: "", units_fn: "" };
+      counted_fail: false, after_bailout: false, model_accept: "", second_reader: "", fallback_used: false, structured: "", near_miss: "", repeat: false, second_reader_quote: "", units_check: "", units_fail: "", units_fn: "", wrong_unknown: null };
     var notes = [];
     S.turns++;
     var active = ev.active, b = active ? entry(V, active) : null;
@@ -35,7 +35,9 @@ var CORE = (function () {
     // a pick: Equations list, an approach/method list, or a direction (typed direction words count too)
     var pickId = input.pick || null;
     if (!pickId && b && b.kind === "direction" && msg) {
-      var hitsDir = optionsOf(arch, V, b).filter(function (o) { return new RegExp("\\b" + o.text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "i").test(msg); });
+      var esc = function (t) { return t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); };
+      var hitsDir = optionsOf(arch, V, b).filter(function (o) { return new RegExp("\\b" + esc(o.text) + "\\b", "i").test(msg); });
+      if (!hitsDir.length) hitsDir = optionsOf(arch, V, b).filter(function (o) { var w = o.text.split(/\s+/).filter(function (x) { return x.toLowerCase() !== "the"; })[0]; return w && new RegExp("\\b" + esc(w) + "\\b", "i").test(msg); });   // the direction word alone ("the head pressure is lower", 11 Oct)
       if (hitsDir.length === 1) pickId = hitsDir[0].id;
     }
     if (pickId) {
@@ -77,6 +79,9 @@ var CORE = (function () {
       if (eqr.verdict === "VALID_ISOLATED") {
         if (!isLive(S, V, eqr.state) || !eb.requires.every(function (r) { return isSet(S, r); })) notes.push("Their equation is valid, but an earlier item is not yet established. Ask them to do that first.");
         else { tick(S, V, eqr.state, ev.newly); (S.pinned.rearranged = S.pinned.rearranged || []).push(eqr.shown); if (eb.pin) addPin(S, eqr.state, eb.label_when_done || eqr.state, eqr.shown); notes.push("The student's equation holds under substitution and the unknown stands alone. Confirmed by the server."); }
+      } else if (eqr.verdict === "WRONG_UNKNOWN") {
+        ev.wrong_unknown = { isolated: symbolShown(arch, eqr.isolated), unknown: symbolShown(arch, eqr.unknown) };
+        notes.push("Their equation is true but solved for " + ev.wrong_unknown.isolated + "; this problem asks for " + ev.wrong_unknown.unknown + ". Say which quantity is the unknown here; do not rearrange it for them.");
       } else if (eqr.verdict === "HOLDS_NOT_ISOLATED") notes.push("Their equation is algebraically true but the unknown does not yet stand alone on one side. That is progress, not an error. Ask what operation is still in the way. Do not do it for them.");
       else if (eqr.verdict === "TRAP") { eqBad = true; ev.traps.push(eqr.trap); notes.push("EQUATION CHECK (" + eqr.trap + "): " + trapNote(arch, V, eqr.trap).note + " Work on THEIR expression, one step at a time. Do not write the correct form."); }
       else if (eqr.verdict === "WRONG") { eqBad = true; notes.push("EQUATION CHECK: their equation does not hold when the server substitutes values. Read what they wrote, not what they meant (an unbracketed denominator is a real error). Ask about one step of THEIR algebra. Do not write the correct form."); }
@@ -172,7 +177,7 @@ var CORE = (function () {
     if (keyWaiting) notes.push("Their final value is right and is recorded, but it does not count until the symbolic step before it is on the board. Say so plainly and ask for that step.");
     if ((eqBad && b && b.kind === "equation") || (tableBad && b && b.kind === "table")) ev.counted_fail = true;
     else if ((eqSeen && !eqBad) || (tableSeen && !tableBad)) { /* a readable, true equation or table is never a wrong try */ }
-    else if (b && b.kind !== "text" && b.kind !== "reflection" && !ev.newly.length && S.pendingUnit === null && (ev.traps.length || strays)) {
+    else if (b && b.kind !== "text" && b.kind !== "reflection" && b.kind !== "pick" && b.kind !== "direction" && !ev.newly.length && S.pendingUnit === null && (ev.traps.length || strays)) {
       // units right, value wrong: free the first time on this item (instructor, 11 Oct)
       ev.counted_fail = !ev.units_free; if (strays && !ev.traps.length && !ev.units_check) notes.push("The student's number does not match anything the server expects at this point. Do not confirm it.");
     }
@@ -228,6 +233,7 @@ var CORE = (function () {
   // model(system, history, msg) -> parsed JSON, or null. If model.batch([{system, history, msg}, ...]) exists, the draft and the
   // second reader go out together (fetchAll on Apps Script). With no model, the authored fallback speaks (plain mode).
   var CHECKABLE = { equation: true, number: true, table: true };
+  function symbolShown(arch, v) { var a = arch.equation_symbols && arch.equation_symbols[v]; return (a && a[0]) || v; }
   // true: a false statement found by the second reader blocks acceptance even when the model accepts (the handoff's recorded decision,
   // "the second reader can overrule the first"). false: the instructor's 11 Oct wording read literally, one of the two readers suffices.
   var SECOND_READER_VETO = true;   // items the verifier decides; the authored question is what the tutor says there
@@ -247,7 +253,7 @@ var CORE = (function () {
     // instructor, 11 Oct: the same for a checkable item (equation, number, table): the authored question is asked, the model may
     // acknowledge but not question (his run of the four: the model asked for the next step's unit conversion while the rearrangement was open).
     // A student asking for help still gets the model's one-sentence answer before the authored question.
-    var checkNext = !!(b && CHECKABLE[b.kind] && !p.switchAsk && (!ev.traps.length || ev.units_check === "ok_value_wrong"));   // a near miss, a repeat or a units verdict: the authored question speaks
+    var checkNext = !!(b && (CHECKABLE[b.kind] || b.kind === "reflection") && !p.switchAsk && (!ev.traps.length || ev.units_check === "ok_value_wrong"));   // a near miss, a repeat or a units verdict: the authored question speaks
     var out = null, sr = null;
     if (model && (choiceNext || checkNext) && !ctx.judge && !p.asking) { model = null; }     // nothing to judge, nothing to answer: deterministic
     if (model) {
@@ -298,8 +304,11 @@ var CORE = (function () {
     if (!reply) { ev.fallback_used = true; reply = fallbackReply(arch, S, V, ev, p); }
     // a choice item next (after any acceptance this turn): the model's acknowledgement stays, its question gives way to the authored one
     var nowA = activeState(S, V), nowB = nowA ? entry(V, nowA) : null;
-    if (reply && !card && !ev.fallback_used && nowB && (nowB.kind === "pick" || nowB.kind === "direction" || CHECKABLE[nowB.kind]) && !p.switchAsk && !ev.traps.length) {
-      var nowAsk = (ev.units_check || ev.near_miss || ev.repeat) ? nearMissAsk(arch, V, ev) : moveFor(arch, V, nowA).ask;
+    // instructor, 11 Oct: the authored question everywhere. The model keeps its own question only where that question IS the tutoring:
+    // a free-text attempt the gates or readers refused (nothing ticked, the same text item still active), a plea for help, a trap, a switch.
+    var refusedText = nowB && nowB.kind === "text" && nowA === ev.active && !ev.newly.length;
+    if (reply && !card && !ev.fallback_used && nowB && !refusedText && !p.switchAsk && (!ev.traps.length || ev.units_check === "ok_value_wrong")) {
+      var nowAsk = (ev.units_check || ev.near_miss || ev.repeat || ev.wrong_unknown) ? nearMissAsk(arch, V, ev) : moveFor(arch, V, nowA).ask;
       if (nowAsk) { var ackOnly = cutQuestions(reply); reply = (ackOnly ? ackOnly + " " : "") + nowAsk; }
     }
     S.lastReply = reply; S.pending = null;
@@ -353,7 +362,7 @@ var CORE = (function () {
   // A fingerprint of the code that is actually running: the source text of one function per module, hashed. Compared with the
   // value run.py computed from the repository (SHELL_VERSION), it shows a stale paste in Apps Script, which a pasted constant cannot.
   function shellFingerprint() {
-    var parts = [verdict, say, parseNumbers, evalArithmetic, match, checkEquation, liveItems, moveFor, applyLadder, checkDraft, buildSystem, fallbackReply, nearMissAsk, logRow, logqAppend];
+    var parts = [verdict, say, parseNumbers, evalArithmetic, match, checkEquation, liveItems, moveFor, applyLadder, checkDraft, buildSystem, fallbackReply, nearMissAsk, symbolShown, logRow, logqAppend];
     var text = parts.map(function (f) { return String(f).replace(/\s+/g, " "); }).join("|"), h = 5381;
     for (var i = 0; i < text.length; i++) h = ((h * 33) ^ text.charCodeAt(i)) >>> 0;
     return h.toString(16);

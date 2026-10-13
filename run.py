@@ -22,7 +22,8 @@ def one(name):
     print(f"[{name}] {len(out['variants'])} variants, {len(openers)} openers, {len(moves)} move rows. content_version {out['content_version']}")
     dropped = sum(1 for v in out["variants"] if v.get("dropped"))
     print(f"[{name}] declared numbers per variant: {min(len(v['expected']) for v in out['variants'])}-{max(len(v['expected']) for v in out['variants'])} | variants with a restated-given intermediate removed: {dropped}")
-    print(f"[{name}] kinds:", dict(collections.Counter(v["kind"] for v in out["variants"])), "| thrown away:", dict(engine.REJECTS))
+    tdrop = collections.Counter(t for v in out["variants"] for t in v.get("traps_dropped", []))
+    print(f"[{name}] kinds:", dict(collections.Counter(v["kind"] for v in out["variants"])), "| thrown away:", dict(engine.REJECTS), "| traps dropped as lying on a given:", dict(tdrop))
     fx = f"tests/fixtures/content_{name}_openers_allkinds.csv"
     if os.path.exists(fx):                                        # a test-only bundle from retired openers, so every kind stays exercised
         for k in engine.REJECTS: engine.REJECTS[k] = 0
