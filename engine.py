@@ -399,9 +399,9 @@ def build(A, n_per_kind, seed0=1, openers=None, moves=None, errors=None, limits=
                         for _ in range(n_per_kind):
                             t = (tpl.get(k + "@" + ver) if ver else None) or tpl.get(k) or tpl.get("*")
                             v = make_variant(A, seed, k, liquids=op["fits"], moves=moves, limits=lim, opener_title=op["title"], template=t, items=op.get("items"), version=ver); v["opener_index"] = oi; variants.append(v); seed += 1
-    elif fixed_pool:
+    elif fixed_pool and openers is None:                        # no openers file at all; an openers file with no row builds nothing (no opener, no problem)
         for f in fixed_pool: variants.append(make_variant(A, seed, moves=moves, fixed=f["id"])); seed += 1
-    else:
+    elif not fixed_pool:
         for k in A.KINDS:
             for _ in range(n_per_kind): variants.append(make_variant(A, seed, k, moves=moves)); seed += 1
     out = {"contract": 3, "archetype_id": A.ID, "title": A.TITLE, "relation": A.RELATION_TEXT, "notebook_url": A.NOTEBOOK_URL,

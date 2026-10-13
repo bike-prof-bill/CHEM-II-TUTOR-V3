@@ -263,3 +263,14 @@ Shell `bb174cdf`, `CODE_VERSION 9d1709f9`; content per the generate line.
 - 13 Oct: `docs/handoff_examples/` holds the chapter 13 zip as SCENARIO_CLAUDE sent it (the model hand-off the brief points to); included in the kit.
 - 13 Oct: the openers header (chapter 10) and two code comments still said the exam scenario "is never served"; corrected to the 13 Oct rule (served once, unannounced, at Independent). SCENARIO_CLAUDE caught it.
 - 13 Oct: handover written (`docs/13_HANDOVER_TO_ARCHITECT_CLAUDE_2.md`) at the instructor's request; Fable (second) hands the helm to the third ARCHITECT_CLAUDE. The instructor has not yet installed the chapter 13 zip; the running tutor is at shell `a26b3186`.
+
+## 13 Oct 2026 (late): third ARCHITECT_CLAUDE; Q versus K skeleton
+
+- Repository received (`Archive.zip`, HEAD `f06e0af`); `make test` entirely green before any change. Tutor confirmed current by the alive reply (shell `6671cbe2`, ch10 `3c7a971cb6`, ch13 `972b9cf0cc`).
+- Instructor: fixed problems are the default for every new archetype; scenario writing stays with SCENARIO_CLAUDE; the December target is his.
+- **`archetypes/ch13_q_vs_k.py`** (skeleton): account → Q expression (pick) → [concentrations] → Q (number, key, `after` the pick) → direction (forward | reverse | neither, checked against Q and K) → meaning → reflection. Named errors as values: `Q_INVERTED`, `COEFFICIENTS_AS_MULTIPLIERS`, `EXPONENTS_DROPPED`, each kept only when clearly apart from Q. Four placeholder problems (V2's, status DRAFT) so the harness can walk it; no Haber or WGS (decision on record 13 Oct). Four reaction rows in `reactions.json` marked "source needed".
+- **Factory gate:** an openers file with no row ships nothing: `engine.build` builds unattached fixed problems only when there is no openers file at all; `run.py` writes no `gas/Archetype_<a>.gs` and no bundle for an archetype with zero variants and says so. The test fixture (`tests/fixtures/content_ch13_q_vs_k_openers_allkinds.csv`, one DRAFT opener) builds `gas/Archetype_ch13_q_vs_k_test.gs` for the suites only. `check_generated.sh` pins it.
+- Content files: openers (header only), moves (7 rows, all DRAFT), errors (4 rows, DRAFT). Tests: `test_ch13_q_vs_k.py` (Q re-derived, directions, traps, DRAFT marks, no reuse, sources present, the gate), `gas/test_q_vs_k.js` (21 checks: a wrong expression, both named errors fired, the direction by click and by typed word, every placeholder completable clean).
+- Direction option texts start with a bare word (forward, reverse, neither): the shell's typed-word match takes the first token of the option text, so a comma after it broke the match (found by the harness).
+- `docs/14_SCENARIO_CLAUDE_brief_Q_vs_K.md`: the brief. `__MACOSX/` added to `.gitignore`; the tracked `.DS_Store` untracked (it was committed before the ignore line existed).
+- Nothing to paste into Apps Script this round: the shell is unchanged and the new archetype ships no bundle.

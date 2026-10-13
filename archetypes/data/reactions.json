@@ -16,6 +16,38 @@
    "source": {
     "Kc": "based on NIST thermodynamic values (instructor, 11 Oct 2026)"
    }
+  },
+  "hi_formation": {
+   "equation": "H2(g) + I2(g) <=> 2HI(g)",
+   "Kc": 54.3,
+   "T_C": 430.0,
+   "source": {
+    "Kc": "source needed: V2's value (reference/v2/Code_V2-6.txt); the instructor confirms or replaces before any problem using it is approved."
+   }
+  },
+  "n2o4_dissociation": {
+   "equation": "N2O4(g) <=> 2NO2(g)",
+   "Kc": 0.211,
+   "T_C": 100.0,
+   "source": {
+    "Kc": "source needed: V2's value (reference/v2/Code_V2-6.txt); the instructor confirms or replaces before any problem using it is approved."
+   }
+  },
+  "so3_formation": {
+   "equation": "2SO2(g) + O2(g) <=> 2SO3(g)",
+   "Kc": 280.0,
+   "T_C": null,
+   "source": {
+    "Kc": "source needed: V2 used 280 in one problem and 250 in another at an unstated temperature; the instructor sets the value and the temperature."
+   }
+  },
+  "methanol_synthesis": {
+   "equation": "CO(g) + 2H2(g) <=> CH3OH(g)",
+   "Kc": 50.0,
+   "T_C": null,
+   "source": {
+    "Kc": "source needed: V2's value at an unstated temperature; the instructor confirms or replaces."
+   }
   }
  }
 }

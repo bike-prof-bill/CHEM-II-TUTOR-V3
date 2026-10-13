@@ -1,0 +1,5 @@
+﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),status
+Q_INVERTED,,,,DRAFT: SCENARIO_CLAUDE writes the note and the ask; detectable form: 1/Q typed as Q
+COEFFICIENTS_AS_MULTIPLIERS,,,,"DRAFT: detectable form: coefficients multiplied in, not used as exponents"
+EXPONENTS_DROPPED,,,,DRAFT: detectable form: every exponent read as 1
+DIRECTION_REVERSED,,,,DRAFT: not a value; the wrong pick on shift_predicted is a wrong try. Listed so the ask can be scenario-specific.
