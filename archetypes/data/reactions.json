@@ -1,0 +1,21 @@
+{
+ "_about": "Reactions used by fixed equilibrium problems (like substances.json): one record per reaction, each value with its source. The shell never reads it; the archetype does.",
+ "reactions": {
+  "haber_ammonia": {
+   "equation": "N2(g) + 3H2(g) <=> 2NH3(g)",
+   "Kc": 0.06,
+   "T_C": 500.0,
+   "source": {
+    "Kc": "instructor, 10 Oct 2026: derived from NIST ΔG values; the course's rule-of-thumb (zeroth-order) value."
+   }
+  },
+  "wgs": {
+   "equation": "CO(g) + H2O(g) <=> CO2(g) + H2(g)",
+   "Kc": 4.0,
+   "T_K": 800,
+   "source": {
+    "Kc": "based on NIST thermodynamic values (instructor, 11 Oct 2026)"
+   }
+  }
+ }
+}

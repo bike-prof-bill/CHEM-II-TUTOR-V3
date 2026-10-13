@@ -20,7 +20,7 @@ Built from the repository on the date in the zip's name by `scripts/make_project
 file names with `__` (so `docs__STEP_MAP_rules_everywhere.csv` is `docs/STEP_MAP_rules_everywhere.csv` in the repository).
 
 Read first: `BUILD_LOG.md` (what has been built, step by step, with the instructor's decisions), then the role document for the
-lane you are in (`docs__04_SIMULATION_CLAUDE_role_DRAFT.md`, `docs__06_SCENARIO_CLAUDE_role_DRAFT.md`), then
+lane you are in (`docs__04_SIMULATION_CLAUDE_role.md`, `docs__06_SCENARIO_CLAUDE_role_DRAFT.md`), then
 `docs__STEP_MAP_ch10_cc_Rubbing_Alcohol_Chill.csv` and `docs__STEP_MAP_rules_everywhere.csv`.
 
 Not here: generated files (`gas/Archetype_*.gs`, `gas/Units.gs`, `output/*.json`), pictures and simulations (`media/`), tests.

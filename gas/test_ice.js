@@ -1,79 +1,102 @@
-// node gas/test_ice.js  -- scripted students through the second archetype. Same Core.gs; no chemistry shared with ch10_cc.
-const CORE = require("./Core.gs"); const ARCH = require("./Archetype_ch13_ice.gs")["ch13_ice"];
+// The equilibrium archetype (ch13_ice): twelve fixed problems, two scenarios (SCENARIO_CLAUDE, instructor-approved 13 Oct 2026).
+// Run with: node gas/test_ice.js
+const CORE = require("./Core.gs"), ARCH = require("./Archetype_ch13_ice.gs")["ch13_ice"];
 let pass = 0, fail = 0; const ok = (c, m) => { c ? pass++ : (fail++, console.log("  FAIL:", m)); };
-const say = (S, m, model, extra) => CORE.processTurn(ARCH, S, Object.assign({ message: m, now: Date.now() }, extra || {}), model || null);
-const byFixed = id => ARCH.variants.findIndex(v => v.fixed_id === id);
-const key = V => V.expected.find(t => t.role === "key");
-const ACCOUNT = "The forward and reverse reactions run at the same rate, so particles keep reacting both ways while the amounts stop changing.";
-const tableText = V => "I: " + V.table.rows.I.join(" | ") + "\nC: " + V.table.rows.C.join(" | ") + "\nE: " + V.table.rows.E.join(" | ");
+const byFixed = (id) => ARCH.variants.findIndex(v => v.fixed_id === id);
+const say = (S, m, extra) => CORE.processTurn(ARCH, S, Object.assign({ message: m, now: Date.now() }, extra || {}), null);
+const roles = {}; ARCH.openers.forEach((o, i) => { roles[i] = o.role || "floater"; });
+const ACC_H = "Nitrogen and hydrogen molecules collide and form ammonia while ammonia molecules break apart; the forward and reverse rates become equal.";
+const ACC_M = "Carbon monoxide and steam molecules collide and swap atoms to make carbon dioxide and hydrogen; those swap back; the two rates become equal.";
 
-// 1. find-K problem, straight through: branch opens on the approach pick; table; x; K (unitless key); direction; meaning; reflection
-{ const i = byFixed("hi_findK"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "i1" });
-  let r = say(S, "hi"); ok(!r.problem, "greeting must not reveal the problem");
-  r = say(S, ACCOUNT); ok(r.problem && r.problem.text === V.text && r.problem.title === ARCH.title, "account reveals the problem, with the archetype title");
-  const liveBefore = CORE.liveItems(S, V).map(b => b.id);
-  ok(liveBefore.indexOf("x_found") < 0 && liveBefore.indexOf("method") < 0 && r.progress.of === liveBefore.length, "branch items are not live, not counted, before the pick: " + r.progress.of);
-  r = say(S, "", null, { pick: "eq_k" }); ok(S.board.relation_chosen === "ticked" && r.pins.some(p => p.id === "relation_chosen"), "relation picked and pinned");
-  ok(r.choices && r.choices.item === "approach" && r.choices.options.length === 2, "the page is offered the approach buttons");
-  r = say(S, "", null, { pick: "approach:solveX" }); ok(S.tries.setup === 1 && S.board.approach !== "ticked", "wrong approach is a wrong try on the setup stage");
-  r = say(S, "", null, { pick: "approach:findK" }); ok(S.board.approach === "ticked", "right approach ticks");
-  const live = CORE.liveItems(S, V).map(b => b.id);
-  ok(live.indexOf("x_found") > -1 && live.indexOf("method") < 0 && live.indexOf("expression_set") < 0, "find-K branch opens x_found only; solve-for-x items stay hidden");
-  ok(r.progress.of === live.length, "progress counts live items only: " + r.progress.of);
-  r = say(S, "C: -x | -x | +x"); ok(S.board.table !== "ticked" && r.log.counted_fail && /TABLE:/.test(r.log.structured), "a change row without the coefficient is a wrong table, counted");
-  r = say(S, tableText(V)); ok(S.board.table === "ticked" && r.pins.some(p => p.id === "table"), "right table ticks and is pinned; " + r.log.structured);
-  r = say(S, "so x = 0.78 M"); ok(S.board.x_found === "ticked", "x found");
-  const k = key(V); r = say(S, "Kc = " + k.value.toFixed(1)); ok(S.board.value_found === "ticked" && !k.require_unit, "a unitless K is accepted bare (declared, no unit required)");
-  r = say(S, "About a fifth of the hydrogen is left, so the reaction went most of the way before the two rates matched.");
-  ok(S.board.meaning_given === "ticked" && !r.done, "meaning accepted; the reflection still stands between the student and done");
-  r = say(S, "ok"); ok(S.board.reflection !== "ticked" && !r.log.counted_fail, "a one-word reflection is asked again, never counted");
-  r = say(S, "The change row was hardest because I kept forgetting the coefficient on HI.");
-  ok(r.done && S.clean && S.board.reflection === "ticked", "reflection closes the problem; clean run (credit-eligibility is the Independent rung's)"); }
+// 1. the bundle
+ok(ARCH.variants.length === 12 && ARCH.openers.length === 2, "twelve problems, two scenarios");
+ok(ARCH.openers.find(o => o.title === "The Martian Fuel Factory").role === "worked" && ARCH.openers.find(o => o.title === "The Haber-Bosch Harvest").role === "exam", "roles: Martian worked, Haber exam");
+ok(CORE.workedVersion(ARCH) === "equal", "the worked rung starts on the equal-start version");
+ok(ARCH.variants.filter(v => v.kind === "haber_setup").every(v => !v.board.some(b => b.id === "x_found")), "Haber problems stop before x");
+ok(ARCH.variants.filter(v => v.kind === "wgs_equilibrium").every(v => ["x_found", "other_root_checked", "value_found", "leftover_found", "K_confirmed"].every(s => v.board.some(b => b.id === s))), "Martian problems solve through to the check");
+ok(!ARCH.variants.find(v => v.fixed_id === "H3").board.some(b => b.id === "Q_found") && ARCH.variants.find(v => v.fixed_id === "H5").expected.some(e => e.state === "Q_found" && e.value === 4), "no Q item when a reactant is absent; H5's Q is 4");
+ok(!ARCH.variants.find(v => v.fixed_id === "H1").board.some(b => b.id === "conc_found") && ARCH.variants.find(v => v.fixed_id === "H2").board.some(b => b.id === "conc_found"), "the concentration step only when the vessel is not one litre");
 
-// 2. solve-for-x, perfect square: method branch; "49 = (2x)^2/(0.2-x)^2" read as K = ...; coefficient trap in the algebra and in the number
-{ const i = byFixed("hi_ps"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 4, stamp: "i2" });
-  say(S, ACCOUNT); say(S, "", null, { pick: "eq_k" }); say(S, "", null, { pick: "approach:solveX" });
-  let r = say(S, tableText(V)); ok(S.board.table === "ticked", "table");
-  r = say(S, "", null, { pick: "method:smallx" }); ok(S.tries.solve === 1, "small-x is not a method here: wrong try on the solve stage");
-  r = say(S, "", null, { pick: "method:sqrt" }); ok(S.board.method === "ticked", "square root is a right method for a perfect square");
-  r = say(S, "K = 2x^2/(0.2-x)^2"); ok(r.log.trap_ids === "EQ_COEFFICIENT_NOT_SQUARED" && S.board.expression_set !== "ticked", "2x^2 for (2x)^2 is named in the algebra: " + r.log.trap_ids);
-  r = say(S, "49 = (2x)^2/(0.2-x)^2"); ok(S.board.expression_set === "ticked", "the literal K on the left is read as K: expression accepted; " + r.log.structured);
-  const xt = V.traps.find(t => t.id === "COEFFICIENT_NOT_SQUARED" && t.state === "x_found");
-  r = say(S, "x = " + xt.value + " M"); ok(r.log.trap_ids === "COEFFICIENT_NOT_SQUARED", "the x from the unsquared coefficient is named");
-  const x = V.expected.find(e => e.state === "x_found"); r = say(S, "x = " + x.value.toFixed(4) + " M"); ok(S.board.x_found === "ticked", "x");
-  const k = key(V); r = say(S, "[HI] = " + k.value.toFixed(3)); ok(/units/i.test(r.reply) && S.board.value_found !== "ticked", "a bare concentration asks for its unit");
-  r = say(S, "M"); ok(S.board.value_found === "ticked", "unit supplied: the small number with units is accepted (integer-bug regression, second archetype)"); }
+// 2. Haber H3 at Independent: the shift, named wrong tables, the expression's named errors, no x
+{ const i = byFixed("H3"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "h3", rung: "independent" });
+  let r = say(S, "Ammonia molecules break apart into nitrogen and hydrogen while nitrogen and hydrogen collide to re-form ammonia; the rates become equal.");
+  ok(S.board.account_given === "ticked" && r.problem, "account accepted, problem revealed");
+  say(S, "", { pick: "eq_k" }); say(S, "", { pick: "approach:solveX" });
+  r = say(S, "", { pick: "direction:more" }); ok(S.board.shift_predicted !== "ticked" && r.log.counted_fail, "the wrong shift (more ammonia when only ammonia is present) is a wrong try");
+  r = say(S, "", { pick: "direction:less" }); ok(S.board.shift_predicted === "ticked", "shift toward less ammonia: ticked");
+  r = say(S, "I: 0 | 0 | 0.500\nC: +x | +x | -x\nE: x | x | 0.500 - x"); ok(r.log.trap_ids === "CHANGE_COEFF_IGNORED" && /three times as fast/.test(r.reply), "change row ignoring the coefficients is named with the approved question: " + r.reply.slice(0, 60));
+  r = say(S, "I: 0 | 0 | 0.500\nC: -x | -3x | +2x\nE: -x | -3x | 0.500 + 2x"); ok(r.log.trap_ids === "CHANGE_SIGNS_REVERSED" && /signs in your change row agree/.test(r.reply), "signs against the shift are named");
+  r = say(S, "I: 0 | 0 | 0.500\nC: +x | +3x | -2x\nE: x | 3x | 0.500 - 2x"); ok(S.board.table === "ticked" && /TABLE:OK/.test(r.log.structured), "the right table ticks");
+  r = say(S, "0.060 = (0.500 - 2x) / ((x)(3x))"); ok(/EQ:TRAP/.test(r.log.structured) && r.log.trap_ids === "EQ_COEFF_NOT_EXPONENT" && /double duty/.test(r.reply), "coefficients not used as exponents: named: " + r.reply.slice(0, 60));
+  r = say(S, "0.060 = (0.500 - x)^2 / ((x)(x)^3)"); ok(r.log.trap_ids === "EQ_EXPONENT_NOT_IN_TABLE" && /also in the change row/.test(r.reply), "exponents present, the table's multiples missing: named");
+  r = say(S, "0.060 = (0.500 - 2x)^2 / ((x)(3x)^3)"); ok(S.board.expression_set === "ticked", "the right expression ticks");
+  r = say(S, "", { pick: "method:sqrt" }); ok(r.log.counted_fail, "the square root is wrong for a quartic");
+  r = say(S, "", { pick: "method:solver" }); ok(S.board.method === "ticked", "a graph or a solver: right");
+  say(S, "No species runs out: the molecules keep reacting both ways at equal rates, so all three are present.");
+  r = say(S, "The signs in the change row were hardest; predict the shift first."); ok(r.done && !r.credit && S.clean === false, "done at Independent; not clean after the wrong tries, so not credit-eligible"); }
 
-// 3. quadratic: the unbracketed denominator in the algebra and the number it produces; conservation bound
-{ const i = byFixed("pcl5_quad"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 1, stamp: "i3" });
-  say(S, ACCOUNT); say(S, "", null, { pick: "eq_k" }); say(S, "", null, { pick: "approach:solveX" }); say(S, tableText(V));
-  let r = say(S, "", null, { pick: "method:sqrt" }); ok(S.board.method !== "ticked" && S.tries.solve === 1, "square root does not fit a non-square problem");
-  say(S, "", null, { pick: "method:quadratic" }); ok(S.board.method === "ticked", "quadratic fits");
-  r = say(S, "K = x^2/0.80-x"); ok(r.log.trap_ids === "EQ_ORDER_OF_OPERATIONS", "unbracketed denominator named in the algebra: " + r.log.trap_ids);
-  ok(S.bailed.solve, "two wrong tries on the solve stage (wrong method, then the algebra) gave the notebook card: ladder is per stage");
-  CORE.processBack(ARCH, S, Date.now() + 5000); say(S, "The notebook showed that the denominator has to be bracketed so the whole 0.80 minus x is divided.");
-  r = say(S, "0.042 = x^2/(0.80-x)"); ok(S.board.expression_set === "ticked", "expression with K's value on the left accepted after return");
-  const oo = V.traps.find(t => t.id === "ORDER_OF_OPERATIONS"); r = say(S, oo.value + " M"); ok(r.log.trap_ids === "ORDER_OF_OPERATIONS", "the number from the unbracketed form is named, before the conservation bound");
-  r = say(S, "1.5 M"); ok(r.log.trap_ids === "EXCEEDS_INITIAL", "a concentration above the starting amount is the conservation trap");
-  ok(r.log.event_type === "PARK" && S.board.value_found === "parked", "two more wrong tries after the return park the stage"); }
+// 3. Haber H2 at Faded: concentrations with units, Q = 0, the initial row in moles, a product given a start it did not have
+{ const i = byFixed("H2"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "h2" });
+  say(S, ACC_H); say(S, "", { pick: "eq_k" }); say(S, "", { pick: "approach:solveX" });
+  let r = say(S, "0.500 M, 1.500 M, 0 M"); ok(S.board.conc_found === "ticked", "three concentrations on one line: ticked");
+  r = say(S, "0"); ok(S.board.Q_found === "ticked", "Q = 0 with no products: ticked");
+  say(S, "", { pick: "direction:more" });
+  r = say(S, "I: 1.00 | 3.00 | 0\nC: -x | -3x | +2x\nE: 1.00 - x | 3.00 - 3x | 2x"); ok(r.log.trap_ids === "MOLES_NOT_CONCENTRATION" && /Is your vessel 1.00 L/.test(r.reply), "moles in the initial row: named");
+  r = say(S, "I: 0.500 | 1.500 | 0.100\nC: -x | -3x | +2x\nE: 0.500 - x | 1.500 - 3x | 0.100 + 2x"); ok(r.log.trap_ids === "START_ZERO_MISSING", "a start given to the absent product: named: " + r.log.trap_ids);
+  ok(r.card, "two wrong tries on the table stage at Faded: the notebook card"); }
 
-// 4. every fixed problem can be completed by a student who gives the canonical table, expression, numbers and sentences
-{ let bad = 0; ARCH.variants.forEach((V, i) => { const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "c" + i });
-    say(S, ACCOUNT); say(S, "", null, { pick: "eq_k" }); say(S, "", null, { pick: V.kind === "findK" ? "approach:findK" : "approach:solveX" });
-    say(S, tableText(V));
-    if (V.kind !== "findK") { say(S, "", null, { pick: "method:quadratic" }); V.eq_checks.forEach(k => { say(S, k.park_text); if (S.board[k.state] !== "ticked") { bad++; console.log("   canonical expression rejected:", k.park_text); } }); }
-    V.expected.filter(e => e.role === "intermediate" && e.state === "x_found").forEach(e => say(S, e.value + " " + e.unit));
-    V.expected.filter(e => e.role === "key").forEach(e => say(S, e.value + (e.unit ? " " + e.unit : "")));
-    say(S, "Most of the reactant is still there, so the reaction did not go far before the rates matched.");
-    const r = say(S, "Setting up the change row was the hardest step because the coefficients decide the multiples of x.");
-    if (!(r.done && S.clean)) { bad++; console.log("   not completed:", V.fixed_id, JSON.stringify(S.board), CORE.activeState(S, V)); } });
-  ok(bad === 0, bad + " fixed problems could not be completed"); }
+// 4. Martian M1 on the Worked rung: show cells, every named error, the roots in order, the check after the leftover, the offer
+{ const i = byFixed("M1"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "m1", rung: "worked" });
+  ok(/collide and swap atoms/.test(CORE.showFor(ARCH, V, S, "account_given")), "the account show cell is found");
+  let r = say(S, ACC_M); ok(/puts products over reactants/.test(r.reply), "the relation show cell is the next prompt");
+  say(S, "", { pick: "eq_k" }); say(S, "", { pick: "approach:solveX" }); say(S, "0.500 M & 0.500 M & 0 M & 0 M"); say(S, "0"); say(S, "", { pick: "direction:more" });
+  say(S, "I: 0.500 | 0.500 | 0 | 0\nC: -x | -x | +x | +x\nE: 0.500 - x | 0.500 - x | x | x");
+  r = say(S, "4 = x^2/(0.500-x)^2"); ok(S.board.expression_set === "ticked" && /perfect square/.test(r.reply) || S.board.expression_set === "ticked", "the expression ticks");
+  say(S, "", { pick: "method:sqrt" });
+  r = say(S, "1.0"); ok(r.log.trap_ids === "PHANTOM_ROOT" && /What concentration of carbon monoxide does it leave/.test(r.reply), "the phantom root typed as x: named, before x is known");
+  r = say(S, "0.4"); ok(r.log.trap_ids === "SQRT_ONE_SIDE" && /both sides, K included/.test(r.reply), "the square root of one side: named");
+  ok(!r.card, "no notebook card on the Worked rung after two named errors");
+  r = say(S, "0.3333"); ok(S.board.x_found === "ticked" && /negative value/.test(r.reply), "x ticks; the other-root show cell follows");
+  r = say(S, "1.0"); ok(S.board.other_root_checked === "ticked", "the same number after x is known is the other root");
+  r = say(S, "0.1667 M"); ok(S.board.value_found !== "ticked" && S.board.leftover_found !== "ticked", "the leftover typed at the hydrogen step is kept but ticks nothing yet");
+  r = say(S, "3.3333 M"); ok(r.log.trap_ids === "MOLES_NOT_CONCENTRATION" && /Kc uses concentrations/.test(r.reply), "hydrogen in moles: named");
+  r = say(S, "0.3333 M"); ok(S.board.value_found === "ticked" && S.board.leftover_found === "ticked", "the hydrogen ticks, and the kept leftover with it");
+  r = say(S, "4.00"); ok(S.board.K_confirmed === "ticked", "K put back together, after the leftover: ticked");
+  say(S, "No: the molecules keep swapping both ways at equal rates, so the amounts hold.");
+  r = say(S, "The roots were hardest; keep the one that leaves every concentration positive.");
+  ok(r.done && r.offer && /less steam/.test(r.offer.text) && r.offer.want.version === "unequal" && r.offer.want.extra, "done; the offer of the unequal-start version: " + (r.offer && r.offer.want.version));
+  const p2 = CORE.chooseVariant(ARCH.variants, Object.assign({ rolesByOpener: roles }, r.offer.want), []);
+  ok(p2 && ["M3", "M4"].indexOf(ARCH.variants[p2.index].fixed_id) > -1, "the offered problem is one of the unequal-start pair"); }
 
-// 5. the table reader
-{ const i = byFixed("n2o4_findK"), V = ARCH.variants[i];
-  ok(CORE.checkTable(CORE.parseTableText("Initial 0.500, 0\nChange −x, +2x\nEquilibrium 0.500 − x, 2x"), V, ARCH).ok, "words, commas, unicode minus");
-  ok(CORE.checkTable(CORE.parseTableText("I: 0.5 | 0\nC: -x | 2x\nE: 0.5-x | 2 x"), V, ARCH).ok, "pipes, no plus sign, spaced 2 x");
-  const t = CORE.checkTable(CORE.parseTableText("C: -x | +x\nE: 0.5 - x | x"), V, ARCH); ok(!t.ok && t.wrong.join("") === "CE", "coefficient dropped in both rows is wrong, rows named");
-  ok(CORE.parseTableText("the answer is 42") === null, "prose is not a table"); }
+// 5. M3: the quadratic, the square root misapplied; M5: the shift to the left, the negative other root in either sign
+{ const i = byFixed("M3"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "m3", rung: "independent" });   // Independent: no card after the wrong method pick
+  say(S, ACC_M); say(S, "", { pick: "eq_k" }); say(S, "", { pick: "approach:solveX" }); say(S, "0.500 M, 0.300 M, 0 M, 0 M"); say(S, "0"); say(S, "", { pick: "direction:more" });
+  say(S, "I: 0.500 | 0.300 | 0 | 0\nC: -x | -x | +x | +x\nE: 0.500 - x | 0.300 - x | x | x"); say(S, "4 = x^2/((0.500-x)(0.300-x))");
+  let r = say(S, "", { pick: "method:sqrt" }); ok(r.log.counted_fail, "the square root is wrong when the starts differ");
+  say(S, "", { pick: "method:quadratic" });
+  r = say(S, "0.3333"); ok(r.log.trap_ids === "SQRT_ON_NONSQUARE" && /one thing times itself/.test(r.reply), "x from a square root on a non-square: named");
+  r = say(S, "0.2427"); ok(S.board.x_found === "ticked", "x from the quadratic: ticked");
+  r = say(S, "0.8239"); ok(S.board.other_root_checked === "ticked", "the other root");
+  const j = byFixed("M5"), W = ARCH.variants[j], T = CORE.newSession(ARCH, { variantIndex: j, openerIndex: W.opener_index, stamp: "m5" });
+  say(T, ACC_M); say(T, "", { pick: "eq_k" }); say(T, "", { pick: "approach:solveX" }); say(T, "0 M, 0 M, 0.500 M, 0.500 M");
+  r = say(T, "", { pick: "direction:less" }); ok(T.board.shift_predicted === "ticked", "products only: the shift is toward less hydrogen");
+  say(T, "I: 0 | 0 | 0.500 | 0.500\nC: +x | +x | -x | -x\nE: x | x | 0.500 - x | 0.500 - x"); say(T, "4 = (0.500-x)^2/x^2"); say(T, "", { pick: "method:sqrt" }); say(T, "0.1667");
+  r = say(T, "0.5"); ok(T.board.other_root_checked === "ticked", "the other root typed as its magnitude counts");
+  r = say(T, "0.3333 M"); ok(T.board.value_found === "ticked", "[H2] at equilibrium when hydrogen is consumed"); }
+
+// 6. every problem completable at Independent, clean
+{ let bad = 0; ARCH.variants.forEach((V, i) => { const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "all" + i, rung: "independent" });
+    const wgs = V.kind === "wgs_equilibrium"; say(S, wgs ? ACC_M : ACC_H); say(S, "", { pick: "eq_k" }); say(S, "", { pick: "approach:solveX" });
+    if (V.board.some(b => b.id === "conc_found")) say(S, V.expected.filter(e => e.state === "conc_found").map(e => e.value + " M").join(", "));
+    const q = V.expected.find(e => e.state === "Q_found"); if (q) say(S, String(q.value));
+    say(S, "", { pick: V.board.find(b => b.id === "shift_predicted").right[0] });
+    say(S, ["I", "C", "E"].map(r => r + ": " + V.table.rows[r].join(" | ")).join("\n"));
+    say(S, V.eq_checks[0].park_text);
+    say(S, "", { pick: V.board.find(b => b.id === "method").right[0] });
+    if (wgs) { const g = s => V.expected.find(e => e.state === s); say(S, String(g("x_found").value)); say(S, String(g("other_root_checked").value)); say(S, g("value_found").value + " M"); say(S, g("leftover_found").value + " M"); say(S, String(g("K_confirmed").value)); }
+    say(S, "The molecules keep reacting both ways at equal rates, so every species is present and the amounts hold.");
+    const r = say(S, "The table was hardest; write the change row from the coefficients.");
+    if (!(r.done && S.clean && r.credit)) { bad++; console.log("   not completed:", V.fixed_id, JSON.stringify(S.board), CORE.activeState(S, V)); } });
+  ok(bad === 0, bad + " problems could not be completed clean"); }
 
 console.log(`\n${pass} passed, ${fail} failed`); process.exit(fail ? 1 : 0);

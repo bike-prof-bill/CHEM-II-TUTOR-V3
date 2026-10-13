@@ -455,14 +455,10 @@
    "state": "account_given",
    "stage": "opening",
    "label_when_done": "Particle account given",
-   "ask": "",
    "switch_ask": "What would a pressure gauge above the liquid read as it warms and what must the molecules at the surface be doing to cause that?",
    "notebook_prompt": "I am studying why the vapor pressure of a liquid rises so steeply with temperature. Explain what the molecules at the surface are doing, using a liquid I have not named. Do not solve any problem for me. Then ask me one short question and wait for my answer.",
    "return_ask": "In your own words what did the notebook show you about the molecules at the surface?",
-   "park_text": "",
-   "status": "approved (instructor, 12 Oct)",
-   "show": "",
-   "version": ""
+   "status": "approved (instructor, 12 Oct)"
   },
   "relation_chosen": {
    "state": "relation_chosen",
@@ -473,9 +469,7 @@
    "notebook_prompt": "I need to recognise which equation links vapor pressure, temperature and heat of vaporization, in its two-point form and its straight-line form. Explain what each symbol stands for and when each form is the handy one. Do not solve any problem for me. Then ask me one short question and wait.",
    "return_ask": "What does each symbol in the relation you need stand for?",
    "park_text": "The relation is ln(P2/P1) = -(ΔHvap/R)(1/T2 - 1/T1); the straight-line form is ln P = -(ΔHvap/R)(1/T) + C.",
-   "status": "approved",
-   "show": "",
-   "version": ""
+   "status": "approved"
   },
   "rearranged": {
    "state": "rearranged",
@@ -485,10 +479,7 @@
    "switch_ask": "Which quantity is the one you are after and what is the last operation standing between it and being alone?",
    "notebook_prompt": "Show me how to rearrange an equation that has a natural log on one side and a difference of reciprocal temperatures on the other so that a chosen variable stands alone. Use symbols different from mine and do not use my numbers. Then give me one short practice rearrangement and wait for my answer.",
    "return_ask": "What inverse function removes a natural log, and what inverse operation removes a reciprocal?",
-   "park_text": "",
-   "status": "approved",
-   "show": "",
-   "version": ""
+   "status": "approved"
   },
   "T_in_K": {
    "state": "T_in_K",
@@ -499,9 +490,7 @@
    "notebook_prompt": "Explain why gas-law and vapor-pressure equations need absolute temperature, using an example I have not named. Do not solve any problem for me. Then ask me one short question and wait.",
    "return_ask": "Why does this relation need an absolute temperature?",
    "park_text": "Add 273.15 to each Celsius temperature to get kelvin.",
-   "status": "approved",
-   "show": "",
-   "version": ""
+   "status": "approved"
   },
   "dH_in_J": {
    "state": "dH_in_J",
@@ -512,9 +501,7 @@
    "notebook_prompt": "Explain how to keep energy units consistent between the gas constant R and a heat of vaporization given in kJ/mol. Do not solve any problem for me. Then ask me one short question and wait.",
    "return_ask": "What did you find about the units of R and ΔHvap?",
    "park_text": "Either multiply ΔHvap in kJ/mol by 1000 to get J/mol or use R = 0.008314 kJ/(mol K).",
-   "status": "approved",
-   "show": "",
-   "version": ""
+   "status": "approved"
   },
   "P_same_units": {
    "state": "P_same_units",
@@ -525,9 +512,7 @@
    "notebook_prompt": "Explain why two pressures in a ratio must share a unit and how atm, torr and kPa relate. Do not solve any problem for me. Then ask me one short question and wait.",
    "return_ask": "What must be true of two pressures before you divide one by the other?",
    "park_text": "1 atm = 760 torr = 101.325 kPa. Put both pressures in the same unit.",
-   "status": "approved",
-   "show": "",
-   "version": ""
+   "status": "approved"
   },
   "substituted": {
    "state": "substituted",
@@ -538,9 +523,7 @@
    "notebook_prompt": "Show me how to substitute values into the two-point vapor pressure relation and isolate an unknown, using numbers and a liquid different from mine. Then ask me one short question and wait.",
    "return_ask": "What is the first thing you will do with your numbers now?",
    "park_text": "Substitute the kelvin temperatures and the matched pressures and keep ΔHvap and R in matching units. Then isolate the unknown.",
-   "status": "approved",
-   "show": "",
-   "version": ""
+   "status": "approved"
   },
   "value_found": {
    "state": "value_found",
@@ -551,9 +534,7 @@
    "notebook_prompt": "Explain how to isolate an unknown from an equation with a natural log on one side and reciprocal temperatures on the other, using an example different from mine. Then ask me one short question and wait.",
    "return_ask": "Which step of the algebra was blocking you?",
    "park_text": "Isolate the unknown: exponentiate both sides for a pressure; solve for 1/T and take the reciprocal for a temperature.",
-   "status": "approved (instructor, 12 Oct)",
-   "show": "",
-   "version": ""
+   "status": "approved (instructor, 12 Oct)"
   },
   "rearranged_dH": {
    "state": "rearranged_dH",
@@ -563,10 +544,7 @@
    "switch_ask": "Set your straight line beside the relation you picked. Which group of symbols sits where the slope sits?",
    "notebook_prompt": "Show me how to rearrange a straight-line equation of the form ln(y) = m(1/x) + b for a chosen variable, and how a slope can stand for a physical quantity. Use symbols different from mine and no numbers of mine. Then give me one short practice rearrangement and wait for my answer.",
    "return_ask": "Which part of the relation plays the part of the slope?",
-   "park_text": "",
-   "status": "approved",
-   "show": "",
-   "version": ""
+   "status": "approved"
   },
   "dH_found": {
    "state": "dH_found",
@@ -577,9 +555,7 @@
    "notebook_prompt": "Explain how the slope of a plot of the natural logarithm of P against 1/T gives the heat of vaporization, using data different from mine. Do not solve my problem. Then ask me one short question and wait.",
    "return_ask": "How does the slope connect to the heat of vaporization?",
    "park_text": "Slope = -ΔHvap/R so ΔHvap = -(slope)(R).",
-   "status": "approved",
-   "show": "",
-   "version": ""
+   "status": "approved"
   },
   "rearranged_T": {
    "state": "rearranged_T",
@@ -589,10 +565,7 @@
    "switch_ask": "What would the gauge read at the normal boiling point and where does that reading go in your line?",
    "notebook_prompt": "Show me how to rearrange a straight-line equation of the form ln(y) = m(1/x) + b for a chosen variable, and how a slope can stand for a physical quantity. Use symbols different from mine and no numbers of mine. Then give me one short practice rearrangement and wait for my answer.",
    "return_ask": "What inverse operation removes a reciprocal, and in what order do you clear the terms around 1/T?",
-   "park_text": "",
-   "status": "approved",
-   "show": "",
-   "version": ""
+   "status": "approved"
   },
   "bp_found": {
    "state": "bp_found",
@@ -603,9 +576,7 @@
    "notebook_prompt": "Explain what the normal boiling point means in terms of vapor pressure and how to find it from a straight-line fit of the natural logarithm of P against 1/T, using data different from mine. Then ask me one short question and wait.",
    "return_ask": "What condition defines the normal boiling point?",
    "park_text": "Set P to 760 torr in your line and solve for T.",
-   "status": "approved",
-   "show": "",
-   "version": ""
+   "status": "approved"
   },
   "meaning_given": {
    "state": "meaning_given",
@@ -615,10 +586,7 @@
    "switch_ask": "What did the instrument actually measure and what did you infer from it?",
    "notebook_prompt": "Help me think about what a vapor pressure measurement lets a chemist infer about molecules in the liquid and what it cannot. Do not give me a finished answer. Ask me one short question and wait.",
    "return_ask": "What is the difference between what was measured and what was inferred?",
-   "park_text": "",
-   "status": "approved (instructor, 12 Oct)",
-   "show": "",
-   "version": ""
+   "status": "approved (instructor, 12 Oct)"
   },
   "direction_predicted": {
    "state": "direction_predicted",
@@ -629,22 +597,14 @@
    "notebook_prompt": "I need to predict how the vapor pressure of a liquid changes when its temperature changes, before I calculate anything. Explain what the molecules are doing and which way the pressure goes. Use a liquid I have not named. Do not solve any problem for me. Then ask me one short question and wait for my answer.",
    "return_ask": "What did the notebook show you about temperature and vapor pressure?",
    "park_text": "Vapor pressure goes up when temperature goes up. It goes down when temperature goes down. In a cooler liquid, fewer molecules have enough energy to escape.",
-   "status": "approved",
-   "show": "",
-   "version": ""
+   "status": "approved"
   },
   "reflection": {
    "state": "reflection",
    "stage": "close",
    "label_when_done": "Reflection written",
    "ask": "Which step was hardest for you? In one sentence, what would you tell a friend who is stuck there?",
-   "switch_ask": "",
-   "notebook_prompt": "",
-   "return_ask": "",
-   "park_text": "",
-   "status": "approved",
-   "show": "",
-   "version": ""
+   "status": "approved"
   },
   "dP_found": {
    "state": "dP_found",
@@ -655,9 +615,7 @@
    "notebook_prompt": "I need to find the difference between two vapor pressures in a sealed container that is warm at one end and cool at the other. Explain what that difference means and how to find it. Use numbers different from mine. Do not solve my problem. Then ask me one short question and wait for my answer.",
    "return_ask": "What does the difference between the two pressures tell you?",
    "park_text": "Subtract: the pressure in the body minus the pressure in the head.",
-   "status": "approved",
-   "show": "",
-   "version": ""
+   "status": "approved"
   },
   "value_found@P1;P2": {
    "state": "value_found@P1;P2",
@@ -668,9 +626,7 @@
    "notebook_prompt": "Show me how to solve an equation like ln(x/a) = b for x. Use letters and numbers different from mine. Do not solve my problem. Then give me one short practice problem and wait for my answer.",
    "return_ask": "What inverse function removes the natural logarithm? And what do you do after that to get the pressure you are finding?",
    "park_text": "Exponentiate both sides: \\(e^{\\ln(x)} = e^{y}\\), which simplifies to \\(x = e^{y}\\). Here x is the ratio of the two pressures. Then solve that ratio for the pressure you are finding.",
-   "status": "approved (instructor, 10 Oct: the scenarios' texts become the default for pressure problems)",
-   "show": "",
-   "version": ""
+   "status": "approved (instructor, 10 Oct: the scenarios' texts become the default for pressure problems)"
   },
   "direction_predicted@T1;T2": {
    "state": "direction_predicted@T1;T2",
@@ -681,9 +637,7 @@
    "notebook_prompt": "I need to predict how the boiling point of a liquid changes when the pressure on it changes, before I calculate anything. Explain what the molecules are doing and which way the boiling point goes. Use a liquid I have not named. Do not solve any problem for me. Then ask me one short question and wait for my answer.",
    "return_ask": "What did the notebook show you about pressure and boiling point?",
    "park_text": "Boiling point goes up when the pressure goes up. The molecules need more energy to push a bubble open.",
-   "status": "approved",
-   "show": "",
-   "version": ""
+   "status": "approved"
   },
   "P_from_depth": {
    "state": "P_from_depth",
@@ -694,9 +648,7 @@
    "notebook_prompt": "Explain how the pressure under water grows with depth, and why the air above the water counts too. Use a depth different from mine. Do not solve my problem. Then ask me one short question and wait for my answer.",
    "return_ask": "What did the notebook show you about pressure and depth?",
    "park_text": "Pressure = 1 atm from the air + 1 atm for every 10 m of water.",
-   "status": "approved",
-   "show": "",
-   "version": ""
+   "status": "approved"
   },
   "value_found@T1;T2": {
    "state": "value_found@T1;T2",
@@ -707,9 +659,7 @@
    "notebook_prompt": "Show me how to solve an equation like 1/x = a - b for x, and how to check that the answer makes sense. Use numbers different from mine. Do not solve my problem. Then give me one short practice problem and wait for my answer.",
    "return_ask": "What is the last step to get T from 1/T?",
    "park_text": "Solve for 1/T first. Then take the reciprocal: T = 1 ÷ (your value of 1/T). Convert to °C if the problem asks for it.",
-   "status": "approved (temperature version; archetype default for temperature problems, instructor 10 Oct)",
-   "show": "",
-   "version": ""
+   "status": "approved (temperature version; archetype default for temperature problems, instructor 10 Oct)"
   },
   "value_found@dH": {
    "state": "value_found@dH",
@@ -720,9 +670,7 @@
    "notebook_prompt": "Show me how to solve an equation like ln(a) = -(x/R)(b - c) for x. Use numbers different from mine. Do not solve my problem. Then give me one short practice problem and wait for my answer.",
    "return_ask": "Which step of the algebra was blocking you?",
    "park_text": "Divide ln(P2/P1) by (1/T2 - 1/T1). Multiply by -R. Give ΔHvap in kJ/mol.",
-   "status": "approved (ΔHvap version; archetype default for dH problems, instructor 10 Oct)",
-   "show": "",
-   "version": ""
+   "status": "approved (ΔHvap version; archetype default for dH problems, instructor 10 Oct)"
   }
  },
  "moves_by_opener": {
@@ -19037,5 +18985,5 @@
    "opener_index": 3
   }
  ],
- "content_version": "b73787b901"
+ "content_version": "3c7a971cb6"
 }

@@ -55,7 +55,7 @@ function doPost(e) {
       var rec = isGuest ? null : rungRecord_(props, student, arch.archetype_id), filters = { kind: req.kind, opener: req.opener }, rung = "faded", extra = false;
       var rolesByOpener = {}; arch.openers.forEach(function (o, i) { rolesByOpener[i] = o.role || "floater"; });
       if (req.want && req.want.extra) { filters = { kind: req.want.kind, role: req.want.role, version: req.want.version, substance: req.want.substance, rolesByOpener: rolesByOpener }; rung = "worked"; extra = true; }
-      else if (rec) { var w = CORE.nextAssignment(rec); filters = { role: w.role, version: w.version, rolesByOpener: rolesByOpener }; rung = w.rung; }
+      else if (rec) { var w = CORE.nextAssignment(rec, arch); filters = { role: w.role, version: w.version, rolesByOpener: rolesByOpener }; rung = w.rung; }
       else filters.excludeRole = "exam";                                                                  // the exam scenario is never served by chance
       var pick = CORE.chooseVariant(arch.variants, filters, served);        // never the same problem twice while others remain (step 6a/6b)
       if (!pick) return json_({ error: "no problem matches that opener and kind" });

@@ -77,7 +77,14 @@ function checkTable(rows, V, arch) {                        // -> { ok, wrong: [
     if (rows[r].length !== want.species.length || !rows[r].every(function (c, i) { return cellEqual(c, want.rows[r][i], arch); })) wrong.push(r);
   });
   if (rows.I && (rows.I.length !== want.species.length || !rows.I.every(function (c, i) { return cellEqual(c, want.rows.I[i], arch); }))) wrong.push("I");
-  return { ok: !wrong.length && !missing.length, wrong: wrong, missing: missing };
+  // named wrong tables (the archetype declares them; the errors file carries the question): a wrong row that equals a declared pattern
+  var trap = null;
+  (want.named || []).forEach(function (nm) {
+    if (trap || wrong.indexOf(nm.row) < 0 || !rows[nm.row] || rows[nm.row].length !== nm.cells.length) return;
+    if (rows[nm.row].every(function (c, i) { return cellEqual(c, nm.cells[i], arch); })) trap = nm.id;
+  });
+  if (!trap && wrong.indexOf("I") > -1 && rows.I && (want.zero_species || []).some(function (i) { var c = rows.I[i]; return c === undefined || !/^[0.]+$/.test(String(c).replace(/\s/g, "")); })) trap = "START_ZERO_MISSING";
+  return { ok: !wrong.length && !missing.length, wrong: wrong, missing: missing, trap: trap };
 }
 
 
@@ -100,6 +107,8 @@ function match(n, expected, traps, ticked, accepted) {
   var hits = [], needs = null, wrongDim = null, given = null, constant = null; accepted = accepted || {};
   for (var i = 0; i < expected.length; i++) {
     var t = expected[i], forms;
+    if (t.after && !ticked[t.after]) continue;                  // an entry that exists only once an earlier state is set (the other root after x, 13 Oct)
+    if (t.require_worked && !n.worked) continue;                // an entry that must be worked out, never restated (K put back together, 13 Oct)
     if (t.derive) {
       if (accepted[t.derive.from] === undefined) continue;
       var dv = t.derive.base - accepted[t.derive.from];

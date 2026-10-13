@@ -34,7 +34,7 @@ def one(name):
     if hasattr(A, "SUBSTANCES"):
         used = {l for o in openers for l in o["fits"]}
         print(f"[{name}] liquids with no scenario yet (never asked):", ", ".join(x[0] for x in A.SUBSTANCES if x[0] not in used) or "none")
-    drafts = [s for s, r in moves.items() if r["status"] != "approved"]
+    drafts = [s for s, r in moves.items() if not str(r.get("status", "")).strip().lower().startswith("approved")]   # "approved (instructor, …)" counts as approved
     print(f"[{name}] move rows still DRAFT: {len(drafts)} of {len(moves)}")
     for k in engine.REJECTS: engine.REJECTS[k] = 0
 

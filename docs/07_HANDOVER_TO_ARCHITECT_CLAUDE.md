@@ -21,7 +21,7 @@ rules at the top of the project instructions apply unchanged: no praise, plain s
 ## The lanes
 
 Fable/ARCHITECT_CLAUDE (this chat), Opus (constructor; unused so far), SCENARIO_CLAUDE (`docs/06_SCENARIO_CLAUDE_role_DRAFT.md`:
-drafts scenarios, step maps, moves, sources), Simulation_Claude (`docs/04_SIMULATION_CLAUDE_role_DRAFT.md`: builds simulation
+drafts scenarios, step maps, moves, sources), Simulation_Claude (`docs/04_SIMULATION_CLAUDE_role.md`: builds simulation
 pages), the analysis side (measures, never modifies). The other chats cannot see this chat or the repository; every file moves
 through the instructor. Their hand-offs arrive here as zips.
 

@@ -116,8 +116,15 @@ function choicesFor(arch, S, V) {         // the buttons the page shows when the
 // where the credit is decided. Only an Independent completion is "credit-eligible" on the tutor's side.
 var RUNGS = ["worked", "faded", "independent"];
 function newRecord(assigned) { return { rung: assigned || "faded", assigned: assigned || "faded", done: { worked: 0, faded: 0, independent: 0 }, exam_done: false, extras: 0 }; }
-function nextAssignment(rec) {                 // what the next problem should be: its rung, the scenario role it draws from, its version
-  if (rec.rung === "worked") return { rung: "worked", role: "worked", version: "one" };
+function workedVersion(arch) {                 // the version the worked scenario starts on: the one its offer row belongs to (one; equal)
+  var w = (arch.openers || []).filter(function (o) { return o.role === "worked"; })[0]; if (!w) return "";
+  var over = (arch.moves_by_opener || {})[w.title] || {}, k = Object.keys(over).filter(function (x) { return x.indexOf("offer@v:") === 0; })[0];
+  if (k) return k.slice("offer@v:".length);
+  var vs = Object.keys(over).filter(function (x) { return x.indexOf("@v:") > -1; }).map(function (x) { return x.split("@v:")[1]; }).sort();
+  return vs[0] || "";
+}
+function nextAssignment(rec, arch) {           // what the next problem should be: its rung, the scenario role it draws from, its version
+  if (rec.rung === "worked") return { rung: "worked", role: "worked", version: arch ? workedVersion(arch) : "one" };
   if (rec.rung === "faded") return { rung: "faded", role: "floater" };
   if (!rec.exam_done && rec.done.independent >= 1) return { rung: "independent", role: "exam" };
   return { rung: "independent", role: "floater" };
@@ -143,10 +150,11 @@ function showFor(arch, V, S, state) {          // the Worked rung's show text fo
 function offerFor(arch, V, S) {                // the offer after the reflection on a Worked problem, if the scenario has one for this version
   if (!S || S.rung !== "worked" || S.extra) return null;
   var over = ((arch.moves_by_opener || {})[openerTitle(arch, V)] || {}), row = over["offer"] || over["offer@v:" + (S.version || "")];
-  if (!row || !row.ask) return null;
+  var text = row && (row.ask || row.show); if (!text) return null;          // the offer's words may sit in `ask` (chapter 10) or `show` (chapter 13)
   var ver = (row.version || "").trim().toLowerCase(); if (ver && ver !== "both" && S.version && ver !== S.version) return null;
-  var other = S.version === "one" ? "two" : "one";
-  return { text: row.ask, want: { role: "worked", version: other, substance: (V.context && V.context.substance) || "", extra: true, kind: V.kind } };
+  var vs = Object.keys(over).filter(function (x) { return x.indexOf("@v:") > -1 && x.indexOf("offer") !== 0; }).map(function (x) { return x.split("@v:")[1]; });
+  var other = vs.filter(function (x) { return x !== S.version; }).sort()[0] || (S.version === "one" ? "two" : "one");   // the version the show cells name besides this one
+  return { text: text, want: { role: "worked", version: other, substance: (V.context && V.context.substance) || "", extra: true, kind: V.kind } };
 }
 function chooseVariant(variants, filters, served, rand) {
   rand = rand || Math.random; served = served || [];
@@ -163,4 +171,4 @@ function chooseVariant(variants, filters, served, rand) {
   return { index: idx, variant_id: variants[idx].variant_id, reset: reset, remaining: fresh.length - 1 };
 }
 
-if (typeof module !== "undefined") module.exports = { chooseVariant: chooseVariant, newRecord: newRecord, nextAssignment: nextAssignment, advance: advance, openerRole: openerRole, showFor: showFor, offerFor: offerFor, RUNGS: RUNGS, openerTitle: openerTitle, trapNote: trapNote, entry: entry, isSet: isSet, liveItems: liveItems, isLive: isLive, activeState: activeState, tick: tick, stateSatisfied: stateSatisfied, stageOf: stageOf, moveFor: moveFor, addPin: addPin, optionsOf: optionsOf, pickItemFor: pickItemFor, newSession: newSession, problemPayload: problemPayload, openerMedia: openerMedia, progress: progress, choicesFor: choicesFor };
+if (typeof module !== "undefined") module.exports = { chooseVariant: chooseVariant, newRecord: newRecord, nextAssignment: nextAssignment, workedVersion: workedVersion, advance: advance, openerRole: openerRole, showFor: showFor, offerFor: offerFor, RUNGS: RUNGS, openerTitle: openerTitle, trapNote: trapNote, entry: entry, isSet: isSet, liveItems: liveItems, isLive: isLive, activeState: activeState, tick: tick, stateSatisfied: stateSatisfied, stageOf: stageOf, moveFor: moveFor, addPin: addPin, optionsOf: optionsOf, pickItemFor: pickItemFor, newSession: newSession, problemPayload: problemPayload, openerMedia: openerMedia, progress: progress, choicesFor: choicesFor };

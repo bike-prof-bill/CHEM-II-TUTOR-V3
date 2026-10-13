@@ -118,7 +118,7 @@ def validate(v):
         givens = [e for e in E if e["role"] == "given"]
         keep = []
         for e in E:
-            if e["role"] == "intermediate" and any(_collide(e, g, lambda ta, tb: max(ta, tb)) for g in givens):
+            if e["role"] == "intermediate" and not e.get("require_worked") and not e.get("after") and any(_collide(e, g, lambda ta, tb: max(ta, tb)) for g in givens):   # a worked check may equal a given (K_confirmed); an `after` entry is asked for by name once its predecessor is set (13 Oct)
                 v.setdefault("dropped", []).append(e["id"]); continue
             keep.append(e)
         v["expected"] = E = keep
@@ -128,6 +128,8 @@ def validate(v):
     for a, b in itertools.combinations(E, 2):
         if a.get("state") == b.get("state"): continue
         if not CONSTANT_COLLISIONS_REJECT and "constant" in (a["role"], b["role"]) and "key" not in (a["role"], b["role"]): continue
+        if (a.get("require_worked") and b["role"] == "given") or (b.get("require_worked") and a["role"] == "given"): continue   # a worked check equal to a given: by design
+        if (a.get("after") or b.get("after")) and {a["role"], b["role"]} & {"given", "constant"}: continue   # an `after` entry is live only once its predecessor is set
         if _collide(a, b, lambda ta, tb: max(ta, tb)): reasons.append(("ambiguous", a["id"], b["id"]))
     for tr in v["traps"]:
         if "value" not in tr: continue                       # a bound ("above": x) is not a value and cannot collide
@@ -311,8 +313,9 @@ def read_moves(path):
                for k, v in r.items() if k and not k.lower().startswith("opener")}   # long headers carry their rule; the shell sees `show` and `version`
         ver = next((v.strip().lower() for k, v in r.items() if k and k.lower().startswith("version") and v), "")
         if ver and ver != "both": state = state + "@v:" + ver            # a row for one version of the worked rung (instructor, 12 Oct)
-        if opener: by_opener.setdefault(opener, {})[state] = {k: v for k, v in row.items() if v}
-        else: moves[state] = row                                      # "item@P1;P2" is an archetype row for those kinds only
+        # two rows for one key (a scenario's wording row and its show row, 13 Oct) merge: a filled cell wins, the first row's kept
+        if opener: d = by_opener.setdefault(opener, {}).setdefault(state, {}); [d.setdefault(k, v) for k, v in row.items() if v]
+        else: d = moves.setdefault(state, {}); [d.setdefault(k, v) for k, v in row.items() if v]   # "item@P1;P2" is an archetype row for those kinds only
     moves = _Moves(moves); moves.by_opener = by_opener
     return moves
 
@@ -387,7 +390,7 @@ def build(A, n_per_kind, seed0=1, openers=None, moves=None, errors=None, limits=
             if bad or not op["fits"]: raise SystemExit(f"Opener '{op['title']}': the fits column is empty or names something unknown {bad}. Known: {known}")
             if fixed_pool:
                 for fid in op["fits"]:
-                    v = make_variant(A, seed, moves=moves, fixed=fid); v["opener_index"] = oi; variants.append(v); seed += 1
+                    v = make_variant(A, seed, moves=moves, fixed=fid, opener_title=op["title"]); v["opener_index"] = oi; variants.append(v); seed += 1
             else:
                 lim = (limits or {}).get(op["title"]); tpl = (sentences or {}).get(op["title"], {})
                 for k in (op["kinds"] or A.KINDS):

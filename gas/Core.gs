@@ -66,6 +66,7 @@ var CORE = (function () {
         notes.push("The student's table is right: initial, change and equilibrium rows all check under substitution. Confirmed by the server.");
       } else {
         tableBad = true;
+        if (tr.trap) { ev.traps.push(tr.trap); notes.push("TABLE CHECK (" + tr.trap + "): " + trapNote(arch, V, tr.trap).note + " Do not correct it for them."); }
         if (tr.missing.length) notes.push("The table is missing its " + tr.missing.map(function (r) { return ({ C: "change", E: "equilibrium", I: "initial" })[r]; }).join(" and ") + " row. Ask for it; do not supply it.");
         if (tr.wrong.length) notes.push("TABLE CHECK: the " + tr.wrong.map(function (r) { return ({ C: "change", E: "equilibrium", I: "initial" })[r]; }).join(" and ") + " row does not hold under substitution. Do not correct it. Ask about one cell of THEIR row: how many of that species one reaction event makes or uses.");
       }
@@ -373,7 +374,7 @@ var CORE = (function () {
   }
 
   return { shellFingerprint: shellFingerprint, verdict: verdict, say: say, processTurn: processTurn, processBack: processBack,
-    parseNumbers: parseNumbers, hasAccount: hasAccount, openerCoverage: openerCoverage, newSession: newSession, newRecord: newRecord, nextAssignment: nextAssignment, advance: advance, openerRole: openerRole, showFor: showFor, offerFor: offerFor, match: match, units: UNITS,
+    parseNumbers: parseNumbers, hasAccount: hasAccount, openerCoverage: openerCoverage, newSession: newSession, newRecord: newRecord, nextAssignment: nextAssignment, workedVersion: workedVersion, advance: advance, openerRole: openerRole, showFor: showFor, offerFor: offerFor, match: match, units: UNITS,
     checkEquation: checkEquation, checkTable: checkTable, parseTableText: parseTableText, activeState: activeState, liveItems: liveItems,
     progress: progress, problemPayload: problemPayload, openerMedia: openerMedia, evalArithmetic: evalArithmetic, isAskingForHelp: isAskingForHelp,
     checkDraft: checkDraft, buildSystem: buildSystem, logRow: logRow, chooseVariant: chooseVariant, logqAppend: logqAppend, logqFlush: logqFlush };
