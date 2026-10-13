@@ -290,6 +290,7 @@ def read_openers(path):
             out[-1]["media"] = {"image_with_question": col(7), "image_after_account": col(8), "image_alt": col(9),
                                 "simulation": col(10), "simulation_opens": (col(11) or "meaning").lower(), "credit": col(13)}   # instructor's pictures and simulation, optional
             out[-1]["label_words"] = [x.strip() for x in col(12).replace(",", ";").split(";") if x.strip()]   # naming without mechanism (SCENARIO_CLAUDE, 9 Oct)
+            out[-1]["role"] = (col(15).lower().strip() or "floater")   # worked | exam | floater (instructor, 12 Oct); the exam scenario is never served to a student
             out[-1]["items"] = {"add": [x[1:].strip() for x in col(14).replace(",", ";").split(";") if x.strip().startswith("+")],
                                 "remove": [x[1:].strip() for x in col(14).replace(",", ";").split(";") if x.strip().startswith("-")]}   # per-scenario sub-list (instructor, 10 Oct)
     return out

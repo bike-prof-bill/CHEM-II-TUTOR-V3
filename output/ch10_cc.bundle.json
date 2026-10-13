@@ -137,10 +137,6 @@
   "WATER_DH_USED": {
    "note": "The head pressure matches what water's heat of vaporization from the substance table (40.66 kJ/mol) gives in place of the sealed liquid's.",
    "ask": "Which liquid is sealed inside the glass? Look again at the heat of vaporization you used."
-  },
-  "NEAR_MISS": {
-   "note": "A calculated number outside the grading window but within ten percent of an unmet intermediate or the answer, matching no named error: most likely a calculator slip. Not told how close. Asked which values were used.",
-   "ask": "Which values did you use to get that number?"
   }
  },
  "trap_notes_by_opener": {
@@ -229,7 +225,17 @@
     "intermolecular",
     "fraction",
     "energy",
-    "escape"
+    "escape",
+    "IMF",
+    "intermolecular forces",
+    "hydrogen bond",
+    "dispersion",
+    "London forces",
+    "recapture",
+    "overcome",
+    "attached",
+    "hold",
+    "stick"
    ],
    "liquids": [
     "methanol",
@@ -260,6 +266,7 @@
     "evaporates",
     "dries fast"
    ],
+   "role": "worked",
    "items": {
     "add": [],
     "remove": []
@@ -276,7 +283,12 @@
     "bubbles",
     "energy",
     "vapor pressure",
-    "push"
+    "push",
+    "kinetic energy",
+    "overcome",
+    "external pressure",
+    "surroundings",
+    "vaporiz"
    ],
    "liquids": [
     "diethyl ether",
@@ -319,6 +331,7 @@
     "suction",
     "boiling point"
    ],
+   "role": "floater",
    "items": {
     "add": [],
     "remove": []
@@ -336,7 +349,13 @@
     "pressure",
     "escape",
     "energy",
-    "push"
+    "push",
+    "condensation",
+    "vaporiz",
+    "rate",
+    "recapture",
+    "kinetic energy",
+    "fraction"
    ],
    "liquids": [
     "dichloromethane",
@@ -373,6 +392,7 @@
     "suction",
     "vacuum"
    ],
+   "role": "exam",
    "items": {
     "add": [
      "dP_found"
@@ -394,7 +414,11 @@
     "weight",
     "squeeze",
     "compress",
-    "restrain"
+    "restrain",
+    "external pressure",
+    "equilibrium vapor pressure",
+    "kinetic energy",
+    "overcome"
    ],
    "liquids": [
     "water"
@@ -418,6 +442,7 @@
     "boiling point",
     "superheated"
    ],
+   "role": "floater",
    "items": {
     "add": [],
     "remove": []
@@ -434,7 +459,7 @@
    "notebook_prompt": "I am studying why the vapor pressure of a liquid rises so steeply with temperature. Explain what the molecules at the surface are doing, using a liquid I have not named. Do not solve any problem for me. Then ask me one short question and wait for my answer.",
    "return_ask": "In your own words what did the notebook show you about the molecules at the surface?",
    "park_text": "",
-   "status": "DRAFT"
+   "status": "approved (instructor, 12 Oct)"
   },
   "relation_chosen": {
    "state": "relation_chosen",
@@ -511,7 +536,7 @@
    "notebook_prompt": "Explain how to isolate an unknown from an equation with a natural log on one side and reciprocal temperatures on the other, using an example different from mine. Then ask me one short question and wait.",
    "return_ask": "Which step of the algebra was blocking you?",
    "park_text": "Isolate the unknown: exponentiate both sides for a pressure; solve for 1/T and take the reciprocal for a temperature.",
-   "status": "DRAFT"
+   "status": "approved (instructor, 12 Oct)"
   },
   "rearranged_dH": {
    "state": "rearranged_dH",
@@ -566,7 +591,7 @@
    "notebook_prompt": "Help me think about what a vapor pressure measurement lets a chemist infer about molecules in the liquid and what it cannot. Do not give me a finished answer. Ask me one short question and wait.",
    "return_ask": "What is the difference between what was measured and what was inferred?",
    "park_text": "",
-   "status": "DRAFT"
+   "status": "approved (instructor, 12 Oct)"
   },
   "direction_predicted": {
    "state": "direction_predicted",
@@ -17082,5 +17107,5 @@
    "opener_index": 3
   }
  ],
- "content_version": "86900adb03"
+ "content_version": "e69e209819"
 }

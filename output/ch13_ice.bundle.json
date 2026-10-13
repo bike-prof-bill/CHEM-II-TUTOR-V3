@@ -136,6 +136,7 @@
     "credit": ""
    },
    "label_words": [],
+   "role": "floater",
    "items": {
     "add": [],
     "remove": []
@@ -172,6 +173,7 @@
     "credit": ""
    },
    "label_words": [],
+   "role": "floater",
    "items": {
     "add": [],
     "remove": []
@@ -206,6 +208,7 @@
     "credit": ""
    },
    "label_words": [],
+   "role": "floater",
    "items": {
     "add": [],
     "remove": []
@@ -240,6 +243,7 @@
     "credit": ""
    },
    "label_words": [],
+   "role": "floater",
    "items": {
     "add": [],
     "remove": []
@@ -274,6 +278,7 @@
     "credit": ""
    },
    "label_words": [],
+   "role": "floater",
    "items": {
     "add": [],
     "remove": []
@@ -310,6 +315,7 @@
     "credit": ""
    },
    "label_words": [],
+   "role": "floater",
    "items": {
     "add": [],
     "remove": []
@@ -3945,5 +3951,5 @@
    "opener_index": 5
   }
  ],
- "content_version": "4f3865b37b"
+ "content_version": "85b5ca52dc"
 }

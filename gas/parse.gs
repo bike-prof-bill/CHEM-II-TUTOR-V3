@@ -67,7 +67,8 @@ function openerCoverage(text, opener, arch) {
   var MECHANISM = (arch && arch.mechanism_words && arch.mechanism_words.length) ? arch.mechanism_words : GENERIC_MECHANISM;
   var low = String(text || "").toLowerCase(), hits = 0;
   (opener.keywords || []).forEach(function (k) {
-    var ok = k.toLowerCase().split(/\s+/).every(function (w) { return w.length < 4 || low.indexOf(w.slice(0, Math.min(6, w.length - 1))) > -1; });
+    // a short keyword (IMF, Q, pH) must appear as a whole word; a longer one matches on its stem (12 Oct: "IMF" had matched everything)
+    var ok = k.toLowerCase().split(/\s+/).every(function (w) { return w.length < 4 ? new RegExp("(^|[^a-z0-9])" + w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "($|[^a-z0-9])").test(low) : low.indexOf(w.slice(0, Math.min(6, w.length - 1))) > -1; });
     if (ok) hits++;
   });
   // label words are removed before the mechanism count, so "evaporates" does not count as the mechanism word "vapor"

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build report (rebuild spec, Definition of done). Measures the shipped bundles; changes nothing.
 Per archetype and overall: opinion-only share three ways, generation share, gate mix by face, every opinion-judged item.
-Definitions (Fable, 11 Oct 2026, for the instructor's approval):
+Definitions (Fable, 11 Oct 2026; accepted by the instructor 12 Oct as the first version):
   gate of an item: text -> G2 (computer keyword gate + model + second reader), pick/direction -> G1, number/equation/table -> G0,
                    reflection -> none (never graded). The same table as gas/log.gs.
   opinion-only item: one whose acceptance rests on the model's judgement (G2). G3 (model alone, no computer gate) is not used.

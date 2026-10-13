@@ -40,16 +40,16 @@ function secondReaderMsg(arch, S, msg) { var o = arch.openers[S.openerIndex]; re
 // Plus the plain hint when words arrived at a checkable item (instructor, 9 Oct).
 var HINT_OF_KIND = { number: "This step is checked on the value: type it, with its unit.", equation: "This step is checked on the equation: type it on one line, the unknown by itself on one side.",
                      pick: "This step is a choice: open the Equations list.", direction: "This step is a choice: pick one of the options.", table: "This step is checked on the table: type the three rows I:, C:, E:.", text: "", reflection: "" };
-// The near-miss question: the archetype's errors file may give it (row NEAR_MISS); otherwise the instructor's default wording (11 Oct).
+// The near-miss question (instructor's wording, 11 Oct; the single source since 12 Oct, the archetype row removed) and the repeat sentence (approved 12 Oct).
 var NEAR_MISS_ASK = "Which values did you use to get that number?", REPEAT_SENTENCE = "That is the same number as before.";
-// Units verdicts (instructor, 11 Oct): the setup typed in full. Right units, wrong value: "check your calculation", a known error named if
+// Units verdicts (instructor, 11 Oct; all three sentences approved 12 Oct): the setup typed in full. Right units, wrong value: "check your calculation", a known error named if
 // one matched. Units that do not cancel: the unit produced is named, and the question tutors toward the setup. Archetype rows
 // UNITS_OK_VALUE_WRONG and UNITS_DONT_CANCEL may replace the words; {produced} and {target} are filled in.
 var UNITS_OK_ASK = "Your units come out as {produced}, as they should, so the setup is sound. Check your calculation for errors.";
 var UNITS_DONT_CANCEL_ASK = "Your units come out as {produced}, which is not the unit of anything in this problem. Which quantity is in the wrong place, or in the wrong unit?";
 var UNITS_IN_LOG_ASK = "Inside {fn}, your units come out as {produced}; a logarithm takes a pure number. Which quantity is in the wrong place, or in the wrong unit?";
 var UNITS_MIXED_ASK = "You are adding or subtracting {produced}, which cannot be combined. Which quantity is in the wrong place, or in the wrong unit?";
-// DRAFT (Fable, 11 Oct): a true equation solved for the wrong symbol. The instructor's syringe and vent runs stalled on this with no clue.
+// Approved by the instructor, 12 Oct: a true equation solved for the wrong symbol. The instructor's syringe and vent runs stalled on this with no clue.
 var WRONG_UNKNOWN_ASK = "Your equation is solved for {isolated}, but that is not the quantity this problem asks for. Read the problem again: which quantity is the unknown?";
 function nearMissAsk(arch, V, ev) {
   var a;

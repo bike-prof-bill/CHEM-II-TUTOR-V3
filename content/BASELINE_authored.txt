@@ -15,7 +15,7 @@ csv	content_ch10_cc_moves.csv	T_in_K	switch_ask	What would it mean for the molec
 csv	content_ch10_cc_moves.csv	account_given	notebook_prompt	I am studying why the vapor pressure of a liquid rises so steeply with temperature. Explain what the molecules at the surface are doing, using a liquid I have not named. Do not solve any problem for me. Then ask me one short question and wait for my answer.
 csv	content_ch10_cc_moves.csv	account_given	return_ask	In your own words what did the notebook show you about the molecules at the surface?
 csv	content_ch10_cc_moves.csv	account_given	state	account_given
-csv	content_ch10_cc_moves.csv	account_given	status	DRAFT
+csv	content_ch10_cc_moves.csv	account_given	status	approved (instructor, 12 Oct)
 csv	content_ch10_cc_moves.csv	account_given	switch_ask	What would a pressure gauge above the liquid read as it warms and what must the molecules at the surface be doing to cause that?
 csv	content_ch10_cc_moves.csv	bp_found	ask	What defines the normal boiling point and where is that on your line? Type the temperature with its unit.
 csv	content_ch10_cc_moves.csv	bp_found	notebook_prompt	Explain what the normal boiling point means in terms of vapor pressure and how to find it from a straight-line fit of ln P against 1/T, using data different from mine. Then ask me one short question and wait.
@@ -42,7 +42,7 @@ csv	content_ch10_cc_moves.csv	meaning_given	ask	Look back at your result. What d
 csv	content_ch10_cc_moves.csv	meaning_given	notebook_prompt	Help me think about what a vapor pressure measurement lets a chemist infer about molecules in the liquid and what it cannot. Do not give me a finished answer. Ask me one short question and wait.
 csv	content_ch10_cc_moves.csv	meaning_given	return_ask	What is the difference between what was measured and what was inferred?
 csv	content_ch10_cc_moves.csv	meaning_given	state	meaning_given
-csv	content_ch10_cc_moves.csv	meaning_given	status	DRAFT
+csv	content_ch10_cc_moves.csv	meaning_given	status	approved (instructor, 12 Oct)
 csv	content_ch10_cc_moves.csv	meaning_given	switch_ask	What did the instrument actually measure and what did you infer from it?
 csv	content_ch10_cc_moves.csv	rearranged	ask	Before any numbers go in: rearrange your relation so the quantity you are after stands by itself on one side. Type it out.
 csv	content_ch10_cc_moves.csv	rearranged	notebook_prompt	Show me how to rearrange an equation that has a natural log on one side and a difference of reciprocal temperatures on the other so that a chosen variable stands alone. Use symbols different from mine and do not use my numbers. Then give me one short practice rearrangement and wait for my answer.
@@ -81,11 +81,11 @@ csv	content_ch10_cc_moves.csv	value_found	notebook_prompt	Explain how to isolate
 csv	content_ch10_cc_moves.csv	value_found	park_text	Isolate the unknown: exponentiate both sides for a pressure; solve for 1/T and take the reciprocal for a temperature.
 csv	content_ch10_cc_moves.csv	value_found	return_ask	Which step of the algebra was blocking you?
 csv	content_ch10_cc_moves.csv	value_found	state	value_found
-csv	content_ch10_cc_moves.csv	value_found	status	DRAFT
+csv	content_ch10_cc_moves.csv	value_found	status	approved (instructor, 12 Oct)
 csv	content_ch10_cc_moves.csv	value_found	switch_ask	Before you calculate should the answer be larger or smaller than the value you were given and why?
 csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Answer	Alcohol molecules have weaker intermolecular attractions than water, so a larger fraction of particles can overcome cohesive forces at room temperature to evaporate.
 csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	CHAPTER 10	The Rubbing Alcohol Chill
-csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Deterministic Keyword Check:	weaker, attractions, intermolecular, fraction, energy, escape
+csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Deterministic Keyword Check:	weaker, attractions, intermolecular, fraction, energy, escape, IMF, intermolecular forces, hydrogen bond, dispersion, London forces, recapture, overcome, attached, hold, stick
 csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Liquids this scenario fits (names as in ch10_cc.py; separate with ;)	methanol;ethanol;2-propanol
 csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Question	Dab rubbing alcohol on one arm and water on the other. The alcohol feels colder and dries much faster. A vapor monitor reads far higher over the alcohol. What are the alcohol molecules doing, compared with water molecules, that lets them escape into vapor so easily?
 csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Target concept	Intermolecular force strength dictating relative vapor pressure and volatility
