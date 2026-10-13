@@ -26,7 +26,11 @@ const REFLECT = "The rearrangement was hardest; I would tell a friend to undo th
   ok(r.sim && r.sim.measured_degC_torr.length === 6, "sim released on value");
   r = say(S, "The measurement only gives pressure; the energy distribution of molecules is inferred from how steeply it rises.");
   ok(!r.done && S.board.meaning_given === "ticked", "meaning accepted; the reflection still stands between the student and done");
-  r = say(S, REFLECT); ok(r.done && r.credit, "clean finish earns credit"); }
+  r = say(S, REFLECT); ok(r.done && !r.credit, "clean finish on the default (Faded) rung is done but not credit-eligible");
+  const Si = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "t1i", rung: "independent" });
+  say(Si, "A greater fraction of molecules has the kinetic energy to escape the liquid surface."); predict(Si, V); say(Si, "", null, { pick: "eq_a" }); say(Si, V.eq_checks[0].park_text);
+  say(Si, k.value + " " + fmtU(k.unit)); say(Si, "The measurement only gives pressure; the energy distribution of molecules is inferred from how steeply it rises.");
+  r = say(Si, REFLECT); ok(r.done && r.credit, "clean finish at Independent is credit-eligible (instructor, 11 Oct)"); }
 
 // 2. weak student: trap, then stray -> notebook card without a model call; return; two more -> park
 { const i = find("P2") > -1 ? find("P2") : find("T2"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 1, stamp: "t2" });
@@ -273,7 +277,7 @@ const REFLECT = "The rearrangement was hardest; I would tell a friend to undo th
   const S5 = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "un5" });
   say(S5, "More molecules have enough energy to escape the liquid surface as it warms."); predict(S5, V); say(S5, "", null, { pick: "eq_a" }); say(S5, V.eq_checks[0].park_text);
   r = say(S5, `1/(1/${T1K.toFixed(2)} K - ${R} J/(mol K) * ln(${P2c}/${P1}/${dHJ} J/mol))`);         // the ln bracket swallowed the denominator (instructor's run, 11 Oct)
-  ok(r.log.units_check === "dont_cancel:mol/J" && /Inside ln, your units come out as mol\/J/.test(r.reply), "units left inside ln: named as such: " + r.reply);
+  ok(r.log.units_check === "dont_cancel:mol/J" && /Inside the natural logarithm, your units come out as mol\/J/.test(r.reply), "units left inside ln: named as such: " + r.reply);
   const S6 = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 0, stamp: "un6" });
   say(S6, "More molecules have enough energy to escape the liquid surface as it warms."); predict(S6, V); say(S6, "", null, { pick: "eq_a" }); say(S6, V.eq_checks[0].park_text);
   const tk = V.expected.find(e => e.state === "T_in_K");
@@ -310,8 +314,50 @@ const REFLECT = "The rearrangement was hardest; I would tell a friend to undo th
   r = say(S, "The molecules hold each other more weakly than I thought, so they escape at a lower temperature.", m);
   ok(S.board.meaning_given === "ticked" && /Which step was hardest/.test(r.reply) && !/Model question/.test(r.reply), "the authored reflection prompt follows the meaning: " + r.reply.slice(0, 80)); }
 
+// 6t. rungs (instructor, 11-13 Oct): the policy, the Worked rung's show cells, the offer, roles, credit, demotion
+{ const ARCH = require("./Archetype_ch10_cc.gs")["ch10_cc"];   // the shipped bundle: roles and versions live in the content openers, not the retired fixture
+  const say = (S, m, model, extra) => CORE.processTurn(ARCH, S, Object.assign({ message: m, now: Date.now() }, extra || {}), model || null);
+  const roles = {}; ARCH.openers.forEach((o, i) => { roles[i] = o.role || "floater"; });
+  const rec = CORE.newRecord("worked");
+  ok(JSON.stringify(CORE.nextAssignment(rec)) === JSON.stringify({ rung: "worked", role: "worked", version: "one" }), "a helped student starts on the worked scenario, version one");
+  CORE.advance(rec, { rung: "worked", role: "worked", clean: true, finished: true });
+  ok(rec.rung === "faded" && CORE.nextAssignment(rec).role === "floater", "a clean worked problem moves the student to Faded, floaters");
+  CORE.advance(rec, { rung: "faded", role: "floater", clean: true, finished: true });
+  ok(rec.rung === "independent" && CORE.nextAssignment(rec).role === "floater", "then to Independent, first a floater");
+  CORE.advance(rec, { rung: "independent", role: "floater", clean: true, finished: true });
+  ok(CORE.nextAssignment(rec).role === "exam", "the second Independent problem is the exam scenario, unannounced");
+  CORE.advance(rec, { rung: "independent", role: "exam", clean: true, finished: true });
+  ok(rec.exam_done && CORE.nextAssignment(rec).role === "floater" && rec.done.worked + rec.done.faded + rec.done.independent === 4, "four required problems; after the exam scenario, floaters for practice");
+  const rec2 = CORE.newRecord("faded"); CORE.advance(rec2, { rung: "faded", role: "floater", clean: true, finished: true }); CORE.advance(rec2, { rung: "independent", role: "floater", bailed: true });
+  ok(rec2.rung === "faded", "a notebook card at Independent demotes to Faded for the next problem");
+  CORE.advance(rec2, { rung: "worked", role: "worked", extra: true, finished: true, clean: true });
+  ok(rec2.extras === 1 && rec2.rung === "faded" && rec2.done.worked === 0, "the offered problem is logged as extra and counts for nothing");
+  const pickW = CORE.chooseVariant(ARCH.variants, { role: "worked", version: "one", rolesByOpener: roles }, []); const VW = ARCH.variants[pickW.index];
+  ok(ARCH.openers[VW.opener_index].role === "worked" && VW.version === "one", "the Worked rung draws the worked scenario in version one");
+  ok(CORE.chooseVariant(ARCH.variants, { excludeRole: "exam", rolesByOpener: roles }, []) && ARCH.variants.filter(v => roles[v.opener_index] === "exam").every(v => { for (let n = 0; n < 40; n++) { const p = CORE.chooseVariant(ARCH.variants, { excludeRole: "exam", rolesByOpener: roles }, []); if (p.variant_id === v.variant_id) return false; } return true; }), "an unassigned student is never served the exam scenario");
+  const S = CORE.newSession(ARCH, { variantIndex: pickW.index, rung: "worked", stamp: "rg1" });
+  ok(CORE.showFor(ARCH, VW, S, "account_given").indexOf("intermolecular forces between alcohol molecules are weaker") > -1, "the account show cell is found for the worked scenario");
+  let r = say(S, "weaker intermolecular forces in alcohols means they require less energy to escape into the vapor.");
+  ok(/This problem links two vapor pressures and two temperatures/.test(r.reply) && /normal boiling point is one of your two points/.test(r.reply), "after the account, the version-one show cell for the relation, as the whole prompt: " + r.reply.slice(0, 60));
+  say(S, "", null, { pick: "eq_a" }); r = say(S, "ΔHvap = R*ln(P2/P1)/(1/T1 - 1/T2)");
+  ok(/The equation needs kelvin/.test(r.reply) && !/What must be true of a temperature/.test(r.reply), "the show cell replaces the ask on the Worked rung");
+  r = say(S, "12345 K"); r = say(S, "12346 K");
+  ok(!r.card && !S.bailed.setup && r.log.counted_fail, "no notebook card on the Worked rung, wrong tries still logged");
+  say(S, VW.expected.filter(e => e.state === "T_in_K").map(e => e.value + " K").join(" & "));
+  const ps = VW.expected.filter(e => e.state === "P_same_units"); if (ps.length) say(S, ps.map(e => e.value + " " + fmtU(e.unit)).join(" & "));
+  const kw = key(VW); say(S, kw.value + " " + fmtU(kw.unit));
+  say(S, "It takes a lot of energy to pull the molecules apart, so the attractions between them are strong.");
+  r = say(S, REFLECT);
+  ok(r.done && !r.credit && r.offer && /both points are measured/.test(r.offer.text) && r.offer.want.version === "two" && r.offer.want.extra && r.offer.want.substance === VW.context.substance, "done, not credit-eligible, the offer for version two on the same liquid");
+  const pick2 = CORE.chooseVariant(ARCH.variants, Object.assign({ rolesByOpener: roles }, r.offer.want), []);
+  ok(pick2 && ARCH.variants[pick2.index].version === "two" && ARCH.variants[pick2.index].context.substance === VW.context.substance, "the offered problem exists: version two, same liquid");
+  const Si = CORE.newSession(ARCH, { variantIndex: pickW.index, rung: "independent", stamp: "rg2" });
+  say(Si, "weaker intermolecular forces in alcohols means they require less energy to escape into the vapor."); say(Si, "", null, { pick: "eq_a" });
+  r = say(Si, "12345 K"); r = say(Si, "12346 K");
+  ok(!r.card && r.log.demote === true, "two wrong tries on one stage at Independent: no card, a demotion flag for the record"); }
+
 // 7. every variant of every kind can be completed by a student who types only the key(s)
-{ let bad = 0; ARCH.variants.forEach((V, i) => { const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "v" + i });
+{ let bad = 0; ARCH.variants.forEach((V, i) => { const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "v" + i, rung: "independent" });
     say(S, "A greater fraction of molecules has the kinetic energy to escape the liquid surface.");
     predict(S, V); say(S, "", null, { pick: V.kind === "slope" ? "eq_b" : "eq_a" });
     V.eq_checks.forEach(k => { say(S, k.park_text); if (S.board[k.state] !== "ticked") { bad++; console.log("   canonical form rejected:", k.park_text); } });

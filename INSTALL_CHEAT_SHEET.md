@@ -26,6 +26,8 @@ Plain mode asks only the authored questions. It is the right mode for testing th
 
 **Which files to paste after a change:** the report names them. Rule of thumb: a change to `gas/*.gs` means that file; any change to a `content_*` file or to `archetypes/` means `Archetype_<archetype>` (the content is compiled into it) and usually `Shell_version`; `Shell_version` whenever `Core` or `Code` changed. The alive reply (`/exec` in a browser) shows `shell_ok` and each archetype's `content_version`; compare them with the report.
 
+**Rungs (13 Oct).** Project Settings → Script properties → `DEFAULT_RUNG`: `worked` (every student is stepped from the worked problem), `faded` (every student starts at Faded), or unset/`none` (no stepping; the tutor serves as before, never the exam scenario). The `Rungs` tab in the Sheet overrides per student: `student_id`, `archetype_id`, `assigned`. Rows for students met under the default are written there automatically, so the tab becomes the roster.
+
 **After any code change:** Deploy → **Manage deployments** → pencil → Version: **New version** → Deploy. The URL stays the same. Forgetting this is the usual reason "my change did nothing."
 
 ## Changing content

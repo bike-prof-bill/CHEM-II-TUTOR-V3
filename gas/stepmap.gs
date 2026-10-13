@@ -81,7 +81,8 @@ function newSession(arch, pick) {
   var V = arch.variants[pick.variantIndex];
   return { attemptId: "A" + pick.stamp, archetypeId: arch.archetype_id, variantId: V.variant_id, variantIndex: pick.variantIndex,
     openerIndex: (V.opener_index !== undefined ? V.opener_index : pick.openerIndex), board: {}, matched: {}, pendingUnit: null, tries: {}, bailed: {}, away: null,
-    awaitingReturn: null, pinned: {}, pins: [], picks: {}, clean: true, turns: 0, produced: [], done: false, credit: false, simOpen: false, mediaSimOpen: false, lastReply: null };
+    awaitingReturn: null, pinned: {}, pins: [], picks: {}, clean: true, turns: 0, produced: [], done: false, credit: false, simOpen: false, mediaSimOpen: false, lastReply: null,
+    rung: pick.rung || "faded", role: openerRole(arch, V), version: V.version || "", extra: !!pick.extra };   // rungs (11-13 Oct)
 }
 function problemPayload(arch, V, S) {     // what the browser is allowed to have once the account is given
   var med = (S && arch.openers[S.openerIndex] && arch.openers[S.openerIndex].media) || {};
@@ -109,9 +110,51 @@ function choicesFor(arch, S, V) {         // the buttons the page shows when the
 // A student never draws the same problem twice while others remain (proposed step 6b). Pure: callers keep `served` per student
 // and archetype. filters = { kind, opener } as the page sends them. When every matching variant has been served, the list is
 // reset and `reset` is true so the caller can log it. Returns null when nothing matches the filters at all.
+// ---------- Rungs (instructor, 11-13 Oct 2026): Worked -> Faded -> Independent, per student per archetype ----------
+// A record per student and archetype: { rung, assigned, done: {worked, faded, independent}, exam_done, extras }.
+// The exam scenario is served to everyone once, at Independent, unannounced; the same problem is then on the in-class exam,
+// where the credit is decided. Only an Independent completion is "credit-eligible" on the tutor's side.
+var RUNGS = ["worked", "faded", "independent"];
+function newRecord(assigned) { return { rung: assigned || "faded", assigned: assigned || "faded", done: { worked: 0, faded: 0, independent: 0 }, exam_done: false, extras: 0 }; }
+function nextAssignment(rec) {                 // what the next problem should be: its rung, the scenario role it draws from, its version
+  if (rec.rung === "worked") return { rung: "worked", role: "worked", version: "one" };
+  if (rec.rung === "faded") return { rung: "faded", role: "floater" };
+  if (!rec.exam_done && rec.done.independent >= 1) return { rung: "independent", role: "exam" };
+  return { rung: "independent", role: "floater" };
+}
+function advance(rec, outcome) {               // outcome: { rung, role, clean, bailed, extra, finished }
+  if (outcome.extra) { if (outcome.finished) rec.extras = (rec.extras || 0) + 1; return rec; }   // the offered problem: logged, counts for nothing
+  if (outcome.finished && outcome.clean) {
+    rec.done[outcome.rung] = (rec.done[outcome.rung] || 0) + 1;
+    if (outcome.rung === "worked") rec.rung = "faded"; else if (outcome.rung === "faded") rec.rung = "independent";
+    if (outcome.rung === "independent" && outcome.role === "exam") rec.exam_done = true;
+  } else if (outcome.bailed && outcome.rung === "independent") rec.rung = "faded";   // a notebook card at Independent: back to Faded for the next problem
+  return rec;
+}
+function openerRole(arch, v) { var o = arch.openers[v.opener_index]; return (o && o.role) || "floater"; }
+function showFor(arch, V, S, state) {          // the Worked rung's show text for an item, by the problem's version
+  if (!S || S.rung !== "worked") return "";
+  var over = ((arch.moves_by_opener || {})[openerTitle(arch, V)] || {}), alt = S.version ? over[state + "@v:" + S.version] : null;
+  if (alt && alt.show) return alt.show;        // the row for this problem's version (one | two)
+  var m = moveFor(arch, V, state), ver = (m.version || "").trim().toLowerCase();
+  if (!m.show || (ver && ver !== "both" && S.version && ver !== S.version)) return "";
+  return m.show;
+}
+function offerFor(arch, V, S) {                // the offer after the reflection on a Worked problem, if the scenario has one for this version
+  if (!S || S.rung !== "worked" || S.extra) return null;
+  var over = ((arch.moves_by_opener || {})[openerTitle(arch, V)] || {}), row = over["offer"] || over["offer@v:" + (S.version || "")];
+  if (!row || !row.ask) return null;
+  var ver = (row.version || "").trim().toLowerCase(); if (ver && ver !== "both" && S.version && ver !== S.version) return null;
+  var other = S.version === "one" ? "two" : "one";
+  return { text: row.ask, want: { role: "worked", version: other, substance: (V.context && V.context.substance) || "", extra: true, kind: V.kind } };
+}
 function chooseVariant(variants, filters, served, rand) {
   rand = rand || Math.random; served = served || [];
-  var match = function (v) { return (!filters.kind || v.kind === filters.kind) && (filters.opener === undefined || filters.opener === "" || filters.opener === null || v.opener_index === Number(filters.opener)); };
+  var match = function (v) { return (!filters.kind || v.kind === filters.kind) && (filters.opener === undefined || filters.opener === "" || filters.opener === null || v.opener_index === Number(filters.opener))
+    && (!filters.role || !filters.rolesByOpener || (filters.rolesByOpener[v.opener_index] || "floater") === filters.role)
+    && (!filters.excludeRole || !filters.rolesByOpener || (filters.rolesByOpener[v.opener_index] || "floater") !== filters.excludeRole)
+    && (!filters.version || v.version === filters.version)
+    && (!filters.substance || ((v.context && v.context.substance) || "") === filters.substance); };
   var pool = []; variants.forEach(function (v, i) { if (match(v)) pool.push(i); });
   if (!pool.length) return null;
   var fresh = pool.filter(function (i) { return served.indexOf(variants[i].variant_id) < 0; }), reset = false;
@@ -120,4 +163,4 @@ function chooseVariant(variants, filters, served, rand) {
   return { index: idx, variant_id: variants[idx].variant_id, reset: reset, remaining: fresh.length - 1 };
 }
 
-if (typeof module !== "undefined") module.exports = { chooseVariant: chooseVariant, openerTitle: openerTitle, trapNote: trapNote, entry: entry, isSet: isSet, liveItems: liveItems, isLive: isLive, activeState: activeState, tick: tick, stateSatisfied: stateSatisfied, stageOf: stageOf, moveFor: moveFor, addPin: addPin, optionsOf: optionsOf, pickItemFor: pickItemFor, newSession: newSession, problemPayload: problemPayload, openerMedia: openerMedia, progress: progress, choicesFor: choicesFor };
+if (typeof module !== "undefined") module.exports = { chooseVariant: chooseVariant, newRecord: newRecord, nextAssignment: nextAssignment, advance: advance, openerRole: openerRole, showFor: showFor, offerFor: offerFor, RUNGS: RUNGS, openerTitle: openerTitle, trapNote: trapNote, entry: entry, isSet: isSet, liveItems: liveItems, isLive: isLive, activeState: activeState, tick: tick, stateSatisfied: stateSatisfied, stageOf: stageOf, moveFor: moveFor, addPin: addPin, optionsOf: optionsOf, pickItemFor: pickItemFor, newSession: newSession, problemPayload: problemPayload, openerMedia: openerMedia, progress: progress, choicesFor: choicesFor };

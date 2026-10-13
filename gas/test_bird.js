@@ -37,7 +37,7 @@ ok(/Think about the bird/.test(SM.trapNote(ARCH, BIRD[0], "SIGN_FLIPPED").ask) &
   { const g = V.givens, c = n => (n.unit === "degC" ? n.value : n.value - 273.15).toFixed(1), kT = V.kind === "P2" ? "T1" : "T2", uT = V.kind === "P2" ? "T2" : "T1";
     ok(new RegExp("T=" + c(g[uT]).replace(".", "\\.") + "&T_known=" + c(g[kT]).replace(".", "\\.") + "&unit=").test(simUrl), "the simulation address carries the head temperature as T and the body temperature as T_known: " + simUrl); }
   say(S, "The warm body's vapor pushes liquid up the neck like a straw, until the head is heavy enough to tip the bird.");
-  r = say(S, "The sign was hardest; predicting first helped."); ok(r.done && r.credit, "meaning and reflection close the problem with credit"); }
+  r = say(S, "The sign was hardest; predicting first helped."); ok(r.done && S.clean, "meaning and reflection close the problem; clean (credit-eligibility is the Independent rung's, 13 Oct)"); }
 // the difference typed with the opposite sign is also accepted (either sign, as approved)
 { const V = BIRD[1]; const i = ARCH.variants.indexOf(V), S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: oi, stamp: "b2" });
   say(S, "Fewer molecules escape from the cooler head, so its vapor pressure is lower and the body pushes liquid up the neck."); say(S, "", null, { pick: "direction:lower" }); say(S, "", null, { pick: "eq_a" }); say(S, V.eq_checks[0].park_text);

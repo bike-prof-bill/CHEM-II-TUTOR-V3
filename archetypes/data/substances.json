@@ -7,7 +7,8 @@
   "dHvap_at_Tb_kJ_mol": "enthalpy of vaporization AT THE NORMAL BOILING POINT, kJ/mol",
   "class": "functional-group class, used only for wording (e.g. 'an unidentified alcohol')",
   "density_g_mL": "density, g/mL, at density_temperature_C",
-  "density_temperature_C": "temperature of the density value, °C"
+  "density_temperature_C": "temperature of the density value, °C",
+  "dHvap_at_25C_kJ_mol": "enthalpy of vaporization at 25 °C, kJ/mol (textbook figure students may copy)"
  },
  "substances": {
   "water": {
@@ -22,11 +23,13 @@
     "formula": "standard",
     "class": "standard classification",
     "density_g_mL": "NIST reference data, supplied by the instructor 2026-10-10",
-    "density_temperature_C": "NIST reference data, supplied by the instructor 2026-10-10"
+    "density_temperature_C": "NIST reference data, supplied by the instructor 2026-10-10",
+    "dHvap_at_25C_kJ_mol": "OpenStax Chemistry 2e, Chapter 10 (water's enthalpy of vaporization at 25 °C); approved by the instructor 2026-10-12 as a second trigger for the WATER_DH_USED named error"
    },
    "class": "water",
    "density_g_mL": 0.998,
-   "density_temperature_C": 20.0
+   "density_temperature_C": 20.0,
+   "dHvap_at_25C_kJ_mol": 44.01
   },
   "methanol": {
    "formula": "CH₃OH",

@@ -175,7 +175,7 @@ def declare(v, A):
         if "for_state" in tr: tr["state"] = tr.pop("for_state")
     return v
 
-def make_variant(A, seed, kind=None, tries=60, liquids=None, moves=None, fixed=None, limits=None, opener_title=None, template=None, items=None):
+def make_variant(A, seed, kind=None, tries=60, liquids=None, moves=None, fixed=None, limits=None, opener_title=None, template=None, items=None, version=None):
     rng = random.Random(seed)
     for _ in range(tries):
         if fixed is not None:                                    # a fixed problem (no random state): one shot
@@ -183,7 +183,8 @@ def make_variant(A, seed, kind=None, tries=60, liquids=None, moves=None, fixed=N
             if v is None: break
             k = v["kind"]
         else:
-            state, context = A.draw_state(rng, liquids, limits=limits, kind=kind) if limits else A.draw_state(rng, liquids)
+            state, context = A.draw_state(rng, liquids, limits=limits, kind=kind, version=version) if limits else A.draw_state(rng, liquids, version=version)
+            if version: context["version"] = version                  # the worked rung's versions of one problem kind (instructor, 12 Oct)
             k = kind or rng.choice(A.KINDS)
             if opener_title: context["opener"] = opener_title      # a trap or a sentence may belong to one scenario
             if template: context["template"] = template            # the scenario's own problem sentence
@@ -195,6 +196,7 @@ def make_variant(A, seed, kind=None, tries=60, liquids=None, moves=None, fixed=N
         if v is None: continue
         declare(v, A)                                            # steps 5-6 -> one table
         v["_kind"] = k
+        if version: v["version"] = version
         stamp_board(v, A, moves, opener_title)                   # the step map as a schema
         v.pop("_kind", None)
         reasons = validate(v)                                    # step 7
@@ -305,7 +307,10 @@ def read_moves(path):
         state = r.get("state", "").strip()
         if not state: continue
         opener = next((v.strip() for k, v in r.items() if k and k.lower().startswith("opener") and v), "")
-        row = {k: v for k, v in r.items() if k and not k.lower().startswith("opener")}
+        row = {("show" if k.lower().startswith("show") else "version" if k.lower().startswith("version") else k): v
+               for k, v in r.items() if k and not k.lower().startswith("opener")}   # long headers carry their rule; the shell sees `show` and `version`
+        ver = next((v.strip().lower() for k, v in r.items() if k and k.lower().startswith("version") and v), "")
+        if ver and ver != "both": state = state + "@v:" + ver            # a row for one version of the worked rung (instructor, 12 Oct)
         if opener: by_opener.setdefault(opener, {})[state] = {k: v for k, v in row.items() if v}
         else: moves[state] = row                                      # "item@P1;P2" is an archetype row for those kinds only
     moves = _Moves(moves); moves.by_opener = by_opener
@@ -361,7 +366,8 @@ def read_sentences(path):
         op = r.get("opener", "").strip(); t = r.get("template (placeholders in braces)", "").strip()
         if not op or not t: continue
         kinds = [k.strip() for k in r.get("problem kinds", "").replace(",", ";").split(";") if k.strip()] or ["*"]
-        for k in kinds: out.setdefault(op, {})[k] = t
+        ver = next((v.strip().lower() for k, v in r.items() if k and k.lower().startswith("version") and v), "")   # worked-rung versions (instructor, 12 Oct)
+        for k in kinds: out.setdefault(op, {})[k + ("@" + ver if ver else "")] = t
     return out
 
 def _merge_trap_notes(notes, errors):
@@ -385,8 +391,11 @@ def build(A, n_per_kind, seed0=1, openers=None, moves=None, errors=None, limits=
             else:
                 lim = (limits or {}).get(op["title"]); tpl = (sentences or {}).get(op["title"], {})
                 for k in (op["kinds"] or A.KINDS):
-                    for _ in range(n_per_kind):
-                        v = make_variant(A, seed, k, liquids=op["fits"], moves=moves, limits=lim, opener_title=op["title"], template=tpl.get(k) or tpl.get("*"), items=op.get("items")); v["opener_index"] = oi; variants.append(v); seed += 1
+                    versions = sorted({key.split("@", 1)[1] for key in tpl if key.startswith(k + "@")})   # a kind with versioned sentences is made in every version
+                    for ver in (versions or [None]):
+                        for _ in range(n_per_kind):
+                            t = (tpl.get(k + "@" + ver) if ver else None) or tpl.get(k) or tpl.get("*")
+                            v = make_variant(A, seed, k, liquids=op["fits"], moves=moves, limits=lim, opener_title=op["title"], template=t, items=op.get("items"), version=ver); v["opener_index"] = oi; variants.append(v); seed += 1
     elif fixed_pool:
         for f in fixed_pool: variants.append(make_variant(A, seed, moves=moves, fixed=f["id"])); seed += 1
     else:

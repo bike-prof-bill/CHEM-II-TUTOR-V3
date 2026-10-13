@@ -9,8 +9,8 @@ ok(new Set(served).size === N && resets === 0, `${N} draws by one student cover 
 const p = CORE.chooseVariant(ARCH.variants, {}, served, R); ok(p.reset === true && served.indexOf(p.variant_id) > -1, "draw N+1 is a repeat and is flagged as a reset");
 // filters are honoured inside the history: the dH problems of one scenario, exhausted in three draws
 const oi = ARCH.openers.findIndex(o => /Rubbing/.test(o.title)), s2 = []; let q;
-for (let i = 0; i < 3; i++) { q = CORE.chooseVariant(ARCH.variants, { kind: "dH", opener: String(oi) }, s2, R); s2.push(q.variant_id); }
-ok(new Set(s2).size === 3 && !q.reset && ARCH.variants.filter(v => v.kind === "dH" && v.opener_index === oi).length === 3, "three dH draws from the scenario are the three distinct problems");
-q = CORE.chooseVariant(ARCH.variants, { kind: "dH", opener: String(oi) }, s2, R); ok(q.reset, "the fourth resets");
+for (let i = 0; i < 6; i++) { q = CORE.chooseVariant(ARCH.variants, { kind: "dH", opener: String(oi) }, s2, R); s2.push(q.variant_id); }   // six since 13 Oct: three per version
+ok(new Set(s2).size === 6 && !q.reset && ARCH.variants.filter(v => v.kind === "dH" && v.opener_index === oi).length === 6, "six dH draws from the scenario are the six distinct problems (two versions, 13 Oct)");
+q = CORE.chooseVariant(ARCH.variants, { kind: "dH", opener: String(oi) }, s2, R); ok(q.reset, "the seventh resets");
 ok(CORE.chooseVariant(ARCH.variants, { kind: "T2", opener: String(oi) }, [], R) === null, "a kind the scenario does not draw returns null, not a wrong problem");
 console.log(`no_repeated_problem: ${pass} passed, ${fail} failed`); process.exit(fail ? 1 : 0);

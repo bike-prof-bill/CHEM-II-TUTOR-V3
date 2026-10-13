@@ -39,5 +39,5 @@ ok(/Does your answer make sense\? More water presses down/.test(SM.trapNote(ARCH
   ok(new RegExp("deep_sea_vent_simulator\\.html\\?depth=" + depth + "&unit=(C|K)&theme=\\{theme\\}$").test(r.simulation_url || ""), "the simulation opens at the problem's depth and unit: " + r.simulation_url);
   ok(V.sim_params.T === String((key.unit === "degC" ? key.value : key.value - 273.15).toFixed(1)) && V.sim_params.T_known === "100.0", "sim_params: T is the vent temperature, T_known the boiling point at 1 atm");
   say(S, "At that depth the water must be far hotter before its vapor pressure can open a bubble, and the rule of thumb for pressure makes the number rough.");
-  r = say(S, "Remembering the minus sign in front of 1/T was hardest."); ok(r.done && r.credit, "meaning and reflection close the problem with credit"); }
+  r = say(S, "Remembering the minus sign in front of 1/T was hardest."); ok(r.done && S.clean, "meaning and reflection close the problem; clean (credit-eligibility is the Independent rung's, 13 Oct)"); }
 console.log(`\n${pass} passed, ${fail} failed`); process.exit(fail ? 1 : 0);

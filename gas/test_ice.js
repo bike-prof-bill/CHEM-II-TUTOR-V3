@@ -28,7 +28,7 @@ const tableText = V => "I: " + V.table.rows.I.join(" | ") + "\nC: " + V.table.ro
   ok(S.board.meaning_given === "ticked" && !r.done, "meaning accepted; the reflection still stands between the student and done");
   r = say(S, "ok"); ok(S.board.reflection !== "ticked" && !r.log.counted_fail, "a one-word reflection is asked again, never counted");
   r = say(S, "The change row was hardest because I kept forgetting the coefficient on HI.");
-  ok(r.done && r.credit && S.board.reflection === "ticked", "reflection closes the problem; clean run earns credit"); }
+  ok(r.done && S.clean && S.board.reflection === "ticked", "reflection closes the problem; clean run (credit-eligibility is the Independent rung's)"); }
 
 // 2. solve-for-x, perfect square: method branch; "49 = (2x)^2/(0.2-x)^2" read as K = ...; coefficient trap in the algebra and in the number
 { const i = byFixed("hi_ps"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: 4, stamp: "i2" });
@@ -66,7 +66,7 @@ const tableText = V => "I: " + V.table.rows.I.join(" | ") + "\nC: " + V.table.ro
     V.expected.filter(e => e.role === "key").forEach(e => say(S, e.value + (e.unit ? " " + e.unit : "")));
     say(S, "Most of the reactant is still there, so the reaction did not go far before the rates matched.");
     const r = say(S, "Setting up the change row was the hardest step because the coefficients decide the multiples of x.");
-    if (!(r.done && r.credit)) { bad++; console.log("   not completed:", V.fixed_id, JSON.stringify(S.board), CORE.activeState(S, V)); } });
+    if (!(r.done && S.clean)) { bad++; console.log("   not completed:", V.fixed_id, JSON.stringify(S.board), CORE.activeState(S, V)); } });
   ok(bad === 0, bad + " fixed problems could not be completed"); }
 
 // 5. the table reader

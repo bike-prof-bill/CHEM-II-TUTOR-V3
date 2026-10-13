@@ -47,6 +47,7 @@ var NEAR_MISS_ASK = "Which values did you use to get that number?", REPEAT_SENTE
 // UNITS_OK_VALUE_WRONG and UNITS_DONT_CANCEL may replace the words; {produced} and {target} are filled in.
 var UNITS_OK_ASK = "Your units come out as {produced}, as they should, so the setup is sound. Check your calculation for errors.";
 var UNITS_DONT_CANCEL_ASK = "Your units come out as {produced}, which is not the unit of anything in this problem. Which quantity is in the wrong place, or in the wrong unit?";
+var FN_WORDS = { ln: "the natural logarithm", log: "the base-ten logarithm", exp: "the exponential", sqrt: "the square root" };
 var UNITS_IN_LOG_ASK = "Inside {fn}, your units come out as {produced}; a logarithm takes a pure number. Which quantity is in the wrong place, or in the wrong unit?";
 var UNITS_MIXED_ASK = "You are adding or subtracting {produced}, which cannot be combined. Which quantity is in the wrong place, or in the wrong unit?";
 // Approved by the instructor, 12 Oct: a true equation solved for the wrong symbol. The instructor's syringe and vent runs stalled on this with no clue.
@@ -57,14 +58,15 @@ function nearMissAsk(arch, V, ev) {
   if (ev.units_check === "ok_value_wrong") a = (ev.traps.length ? trapNote(arch, V, ev.traps[0]).ask + " " : "") + (trapNote(arch, V, "UNITS_OK_VALUE_WRONG").ask || UNITS_OK_ASK);
   else if (ev.units_check) a = trapNote(arch, V, "UNITS_DONT_CANCEL").ask || (ev.units_fail === "function" ? UNITS_IN_LOG_ASK : ev.units_fail === "mixed" ? UNITS_MIXED_ASK : UNITS_DONT_CANCEL_ASK);
   else a = trapNote(arch, V, "NEAR_MISS").ask || NEAR_MISS_ASK;
-  a = a.replace(/\{produced\}/g, ev.units_produced || "no unit").replace(/\{target\}/g, ev.units_target || "the unit asked for").replace(/\{fn\}/g, ev.units_fn || "the logarithm");
+  a = a.replace(/\{produced\}/g, ev.units_produced || "no unit").replace(/\{target\}/g, ev.units_target || "the unit asked for").replace(/\{fn\}/g, FN_WORDS[ev.units_fn] || "the logarithm");   // instructor's rule, 12 Oct: "ln" is never a word in prose
   return (ev.repeat ? REPEAT_SENTENCE + " " : "") + a;
 }
 function fallbackReply(arch, S, V, ev, p) {
   var nowActive = activeState(S, V), nowMove = nowActive ? moveFor(arch, V, nowActive) : {};
   var ack = ev.newly.length ? "Checked: " + ev.newly.map(function (st) { var e = entry(V, st.replace(/\(parked\)$/, "")); return (e && e.label_when_done) || st.replace(/_/g, " "); }).join(", ") + ". " : "";
   var trapAsk = (ev.units_check || ev.near_miss || ev.repeat || ev.wrong_unknown) && !ev.newly.length ? nearMissAsk(arch, V, ev) : (ev.traps.length ? trapNote(arch, V, ev.traps[0]).ask : "");
-  var reply = nowActive ? ack + (trapAsk || (p.switchAsk && !ev.traps.length ? p.switchAsk : (S.pendingUnit !== null ? "What are the units of that value?" : (nowMove.ask || arch.openers[S.openerIndex].question))))
+  var showTxt = (nowActive && !trapAsk && !p.switchAsk && (ev.newly.length || !S.turns)) ? showFor(arch, V, S, nowActive) : "";   // Worked rung: the step is shown before it is asked
+  var reply = nowActive ? ack + (trapAsk || (p.switchAsk && !ev.traps.length ? p.switchAsk : (S.pendingUnit !== null ? "What are the units of that value?" : (showTxt || nowMove.ask || arch.openers[S.openerIndex].question))))   // Worked rung: the show cell is the whole prompt
                         : ack + "That completes this problem.";
   var nb = nowActive ? entry(V, nowActive) : null;
   if (nb && !ev.newly.length && !trapAsk && (p.wordsOnly || reply === S.lastReply)) { var hint = HINT_OF_KIND[nb.kind] || ""; if (hint) reply = reply + " " + hint; }

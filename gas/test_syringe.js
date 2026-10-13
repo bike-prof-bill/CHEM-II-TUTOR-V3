@@ -23,7 +23,7 @@ SYR.forEach(V => {
 { const V = SYR[0];
   const mv = (st) => require("./stepmap.gs").moveFor(ARCH, V, st);
   ok(/pressure gauge inside the syringe/.test(mv("account_given").switch_ask), "account_given switch question is the scenario's");
-  ok(/undoes ln/.test(mv("value_found").ask) && /prediction pinned/.test(mv("value_found").switch_ask), "value_found ask and switch question are the scenario's");
+  ok(/inverse function removes it/.test(mv("value_found").ask) && /prediction pinned/.test(mv("value_found").switch_ask), "value_found ask and switch question are the scenario's");
   ok(/inside the syringe/.test(mv("meaning_given").ask) && mv("meaning_given").notebook_prompt === ARCH.moves.meaning_given.notebook_prompt && !/syringe/.test(mv("meaning_given").notebook_prompt), "meaning_given: ask overridden, notebook prompt shared");
   ok(mv("rearranged").ask === ARCH.moves.rearranged.ask, "rearranged is the shared archetype row");
   const V2 = ARCH.variants.find(v => v.opener_index !== oi && v.kind === "P2");
@@ -49,5 +49,5 @@ SYR.forEach(V => {
   if (S.awaitingReturn || S.away) { CORE.processBack(ARCH, S, 2); say(S, "The notebook showed me that undoing the ln gives the ratio and the known pressure scales it."); }
   r = say(S, key.value + " " + key.unit); ok(S.board.value_found === "ticked" && /syringe_boiling_simulator\.html\?substance=[^&]+&T=[-\d.]+&unit=(atm|torr)&theme=\{theme\}$/.test(r.simulation_url || ""), "right answer; the simulation opens with the problem's liquid, temperature and unit: " + r.simulation_url);
   say(S, "The pressure I found is where the water starts to boil in the syringe; it says the molecules already had the energy, and I trust it as far as a constant heat of vaporization holds.");
-  r = say(S, "The sign was hardest; I would tell a friend to predict the direction first."); ok(r.done && r.credit, "meaning and reflection close the problem with credit"); }
+  r = say(S, "The sign was hardest; I would tell a friend to predict the direction first."); ok(r.done && S.clean, "meaning and reflection close the problem; clean (credit-eligibility is the Independent rung's, 13 Oct)"); }
 console.log(`\n${pass} passed, ${fail} failed`); process.exit(fail ? 1 : 0);

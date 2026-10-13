@@ -2,7 +2,7 @@
 
 **12 Oct 2026, for the instructor and SCENARIO_CLAUDE.** Everything here is V2's (the tool that ran this term), copied from `reference/v2/Code_V2-6.txt` and `index_V2.html`. In V3, `ch13_ice` carries these six openers and six problems as placeholders (status DRAFT, never approved); `ch13_q_vs_k` is not in V3 yet. None of it reaches a student under V3 until the instructor approves it or replaces it. His plan (12 Oct): four scenarios for equilibrium (two held by SCENARIO_CLAUDE, two more), one reserved worked, one reserved exam, two floaters.
 
-The V2 scenarios were written to a different brief (one sentence, a sensor in every scene, every opener a 'sealed' something). The V3 brief (`docs/06_SCENARIO_CLAUDE_role_DRAFT.md`) asks for a scene a student has seen or felt, in short plain sentences, with the problem hidden until the particle account is given. Treat the lists below as the inventory to replace, not the model to copy.
+The V2 scenarios were written to a different brief (one sentence, a sensor in every scene, every opener a 'sealed' something). The V3 brief (`docs/06_SCENARIO_CLAUDE_role_DRAFT.md`) asks for a scene a student has seen or felt, in short plain sentences, with the problem hidden until the particle account is given. The instructor (12–13 Oct): the V2 scenarios are kept as they are, and the sensor in every scene (the bridge from the macroscopic to the submicroscopic) continues in every new scenario.
 
 ## ICE tables (`ch13_ice`)
 

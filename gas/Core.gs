@@ -20,7 +20,7 @@ var CORE = (function () {
     var t0 = Date.now();
     var V = arch.variants[S.variantIndex], msg = String(input.message || "");
     var ev = { event_type: "TURN", entering: progress(S, V).done, active: activeState(S, V), newly: [], traps: [], guards: [],
-      counted_fail: false, after_bailout: false, model_accept: "", second_reader: "", fallback_used: false, structured: "", near_miss: "", repeat: false, second_reader_quote: "", units_check: "", units_fail: "", units_fn: "", wrong_unknown: null };
+      counted_fail: false, after_bailout: false, model_accept: "", second_reader: "", fallback_used: false, structured: "", near_miss: "", repeat: false, second_reader_quote: "", units_check: "", units_fail: "", units_fn: "", wrong_unknown: null, demote: false };
     var notes = [];
     S.turns++;
     var active = ev.active, b = active ? entry(V, active) : null;
@@ -309,7 +309,8 @@ var CORE = (function () {
     var refusedText = nowB && nowB.kind === "text" && nowA === ev.active && !ev.newly.length;
     if (reply && !card && !ev.fallback_used && nowB && !refusedText && !p.switchAsk && (!ev.traps.length || ev.units_check === "ok_value_wrong")) {
       var nowAsk = (ev.units_check || ev.near_miss || ev.repeat || ev.wrong_unknown) ? nearMissAsk(arch, V, ev) : moveFor(arch, V, nowA).ask;
-      if (nowAsk) { var ackOnly = cutQuestions(reply); reply = (ackOnly ? ackOnly + " " : "") + nowAsk; }
+      var showB = (ev.newly.length && !ev.units_check && !ev.near_miss && !ev.repeat && !ev.wrong_unknown) ? showFor(arch, V, S, nowA) : "";
+      if (nowAsk) { var ackOnly = cutQuestions(reply); reply = (ackOnly ? ackOnly + " " : "") + (showB || nowAsk); }   // Worked rung: the show cell is the whole prompt
     }
     S.lastReply = reply; S.pending = null;
     var res = assemble(arch, S, V, ev, reply, card, false);
@@ -354,22 +355,25 @@ var CORE = (function () {
       var params = Object.assign({ substance: subst }, V.sim_params || {});      // the archetype's own placeholders ({T}, {unit}, ...)
       res.simulation_url = med.simulation.replace(/\{(\w+)\}/g, function (m, k) { return k === "theme" ? m : (params[k] !== undefined ? encodeURIComponent(String(params[k])) : m); });
     }
-    if (!provisional && !S.done && activeState(S, V) === null) { S.done = true; S.credit = S.clean && S.board["meaning_given"] === "ticked"; ev.completed = true; }
-    res.done = S.done; res.credit = S.credit;
+    if (!provisional && !S.done && activeState(S, V) === null) {
+      S.done = true; S.credit = S.rung === "independent" && S.clean && S.board["meaning_given"] === "ticked"; ev.completed = true;   // credit-eligible only at Independent (instructor, 11 Oct)
+      var offer = offerFor(arch, V, S); if (offer) { S.offer = offer; res.offer = offer; }   // the offered second worked problem (instructor, 12 Oct)
+    }
+    res.done = S.done; res.credit = S.credit; res.rung = S.rung;
     return res;
   }
 
   // A fingerprint of the code that is actually running: the source text of one function per module, hashed. Compared with the
   // value run.py computed from the repository (SHELL_VERSION), it shows a stale paste in Apps Script, which a pasted constant cannot.
   function shellFingerprint() {
-    var parts = [verdict, say, parseNumbers, evalArithmetic, match, checkEquation, liveItems, moveFor, applyLadder, checkDraft, buildSystem, fallbackReply, nearMissAsk, symbolShown, logRow, logqAppend];
+    var parts = [verdict, say, parseNumbers, evalArithmetic, match, checkEquation, liveItems, moveFor, applyLadder, checkDraft, buildSystem, fallbackReply, nearMissAsk, symbolShown, showFor, offerFor, logRow, logqAppend];
     var text = parts.map(function (f) { return String(f).replace(/\s+/g, " "); }).join("|"), h = 5381;
     for (var i = 0; i < text.length; i++) h = ((h * 33) ^ text.charCodeAt(i)) >>> 0;
     return h.toString(16);
   }
 
   return { shellFingerprint: shellFingerprint, verdict: verdict, say: say, processTurn: processTurn, processBack: processBack,
-    parseNumbers: parseNumbers, hasAccount: hasAccount, openerCoverage: openerCoverage, newSession: newSession, match: match, units: UNITS,
+    parseNumbers: parseNumbers, hasAccount: hasAccount, openerCoverage: openerCoverage, newSession: newSession, newRecord: newRecord, nextAssignment: nextAssignment, advance: advance, openerRole: openerRole, showFor: showFor, offerFor: offerFor, match: match, units: UNITS,
     checkEquation: checkEquation, checkTable: checkTable, parseTableText: parseTableText, activeState: activeState, liveItems: liveItems,
     progress: progress, problemPayload: problemPayload, openerMedia: openerMedia, evalArithmetic: evalArithmetic, isAskingForHelp: isAskingForHelp,
     checkDraft: checkDraft, buildSystem: buildSystem, logRow: logRow, chooseVariant: chooseVariant, logqAppend: logqAppend, logqFlush: logqFlush };

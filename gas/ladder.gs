@@ -5,6 +5,10 @@
 function applyLadder(arch, S, V, ev, input) {
   var out = { card: null, reply: null, switchAsk: null }, failState = ev.active;
   if (!(ev.counted_fail && failState && !isSet(S, failState))) return out;
+  // rungs (instructor, 11 Oct): no ladder on the Worked rung (the tutor is showing the way) or the Independent rung (no help);
+  // the try is still counted and logged, and an Independent student who fails twice on one stage is demoted by the record
+  if (S.rung === "worked") return out;
+  if (S.rung === "independent") { var stg0 = stageOf(V, failState); S.tries[stg0] = (S.tries[stg0] || 0) + 1; if (S.tries[stg0] >= 2 && !S.bailed[stg0]) { S.bailed[stg0] = true; S.clean = false; ev.demote = true; } return out; }
   var stg = stageOf(V, failState);
   S.tries[stg] = (S.tries[stg] || 0) + 1;
   var fm = moveFor(arch, V, failState);

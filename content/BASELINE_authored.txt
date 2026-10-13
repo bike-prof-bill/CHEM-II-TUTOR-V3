@@ -18,14 +18,14 @@ csv	content_ch10_cc_moves.csv	account_given	state	account_given
 csv	content_ch10_cc_moves.csv	account_given	status	approved (instructor, 12 Oct)
 csv	content_ch10_cc_moves.csv	account_given	switch_ask	What would a pressure gauge above the liquid read as it warms and what must the molecules at the surface be doing to cause that?
 csv	content_ch10_cc_moves.csv	bp_found	ask	What defines the normal boiling point and where is that on your line? Type the temperature with its unit.
-csv	content_ch10_cc_moves.csv	bp_found	notebook_prompt	Explain what the normal boiling point means in terms of vapor pressure and how to find it from a straight-line fit of ln P against 1/T, using data different from mine. Then ask me one short question and wait.
+csv	content_ch10_cc_moves.csv	bp_found	notebook_prompt	Explain what the normal boiling point means in terms of vapor pressure and how to find it from a straight-line fit of the natural logarithm of P against 1/T, using data different from mine. Then ask me one short question and wait.
 csv	content_ch10_cc_moves.csv	bp_found	park_text	Set P to 760 torr in your line and solve for T.
 csv	content_ch10_cc_moves.csv	bp_found	return_ask	What condition defines the normal boiling point?
 csv	content_ch10_cc_moves.csv	bp_found	state	bp_found
 csv	content_ch10_cc_moves.csv	bp_found	status	approved
 csv	content_ch10_cc_moves.csv	bp_found	switch_ask	What would a pressure gauge read above the liquid at the moment it boils in an open beaker at sea level?
 csv	content_ch10_cc_moves.csv	dH_found	ask	What does the slope of your line stand for and what heat of vaporization does it give? Type the value with its unit.
-csv	content_ch10_cc_moves.csv	dH_found	notebook_prompt	Explain how the slope of a plot of ln P against 1/T gives the heat of vaporization, using data different from mine. Do not solve my problem. Then ask me one short question and wait.
+csv	content_ch10_cc_moves.csv	dH_found	notebook_prompt	Explain how the slope of a plot of the natural logarithm of P against 1/T gives the heat of vaporization, using data different from mine. Do not solve my problem. Then ask me one short question and wait.
 csv	content_ch10_cc_moves.csv	dH_found	park_text	Slope = -ΔHvap/R so ΔHvap = -(slope)(R).
 csv	content_ch10_cc_moves.csv	dH_found	return_ask	How does the slope connect to the heat of vaporization?
 csv	content_ch10_cc_moves.csv	dH_found	state	dH_found
@@ -46,13 +46,13 @@ csv	content_ch10_cc_moves.csv	meaning_given	status	approved (instructor, 12 Oct)
 csv	content_ch10_cc_moves.csv	meaning_given	switch_ask	What did the instrument actually measure and what did you infer from it?
 csv	content_ch10_cc_moves.csv	rearranged	ask	Before any numbers go in: rearrange your relation so the quantity you are after stands by itself on one side. Type it out.
 csv	content_ch10_cc_moves.csv	rearranged	notebook_prompt	Show me how to rearrange an equation that has a natural log on one side and a difference of reciprocal temperatures on the other so that a chosen variable stands alone. Use symbols different from mine and do not use my numbers. Then give me one short practice rearrangement and wait for my answer.
-csv	content_ch10_cc_moves.csv	rearranged	return_ask	What operation undoes a natural log and what undoes a reciprocal?
+csv	content_ch10_cc_moves.csv	rearranged	return_ask	What inverse function removes a natural log, and what inverse operation removes a reciprocal?
 csv	content_ch10_cc_moves.csv	rearranged	state	rearranged
 csv	content_ch10_cc_moves.csv	rearranged	status	approved
 csv	content_ch10_cc_moves.csv	rearranged	switch_ask	Which quantity is the one you are after and what is the last operation standing between it and being alone?
 csv	content_ch10_cc_moves.csv	rearranged_T	ask	Now rearrange your line so that T stands by itself on one side. Type it.
 csv	content_ch10_cc_moves.csv	rearranged_T	notebook_prompt	Show me how to rearrange a straight-line equation of the form ln(y) = m(1/x) + b for a chosen variable, and how a slope can stand for a physical quantity. Use symbols different from mine and no numbers of mine. Then give me one short practice rearrangement and wait for my answer.
-csv	content_ch10_cc_moves.csv	rearranged_T	return_ask	What undoes a reciprocal and in what order do you clear the terms around 1/T?
+csv	content_ch10_cc_moves.csv	rearranged_T	return_ask	What inverse operation removes a reciprocal, and in what order do you clear the terms around 1/T?
 csv	content_ch10_cc_moves.csv	rearranged_T	state	rearranged_T
 csv	content_ch10_cc_moves.csv	rearranged_T	status	approved
 csv	content_ch10_cc_moves.csv	rearranged_T	switch_ask	What would the gauge read at the normal boiling point and where does that reading go in your line?
@@ -85,7 +85,7 @@ csv	content_ch10_cc_moves.csv	value_found	status	approved (instructor, 12 Oct)
 csv	content_ch10_cc_moves.csv	value_found	switch_ask	Before you calculate should the answer be larger or smaller than the value you were given and why?
 csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Answer	Alcohol molecules have weaker intermolecular attractions than water, so a larger fraction of particles can overcome cohesive forces at room temperature to evaporate.
 csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	CHAPTER 10	The Rubbing Alcohol Chill
-csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Deterministic Keyword Check:	weaker, attractions, intermolecular, fraction, energy, escape, IMF, intermolecular forces, hydrogen bond, dispersion, London forces, recapture, overcome, attached, hold, stick
+csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Deterministic Keyword Check:	weaker, attractions, intermolecular, fraction, energy, escape, IMF, intermolecular forces, hydrogen bonding, dispersion, London forces, recapture, overcome, attached, hold, stick
 csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Liquids this scenario fits (names as in ch10_cc.py; separate with ;)	methanol;ethanol;2-propanol
 csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Question	Dab rubbing alcohol on one arm and water on the other. The alcohol feels colder and dries much faster. A vapor monitor reads far higher over the alcohol. What are the alcohol molecules doing, compared with water molecules, that lets them escape into vapor so easily?
 csv	content_ch10_cc_openers.csv	The Rubbing Alcohol Chill	Target concept	Intermolecular force strength dictating relative vapor pressure and volatility

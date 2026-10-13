@@ -33,6 +33,18 @@ from. The openers file gains a `role` column (worked | exam | floater; blank = f
 3. For **equilibrium**: the two scenarios you hold, with roles proposed (which is worked, which exam) and the `show` cells for the
    worked one, plus keyword candidates from the equilibrium chapter when the instructor sends it.
 
+## Sensors (instructor, 13 Oct)
+
+The V2 scenarios' instrument in every scene (a gauge, a probe, a vapor monitor) is the bridge from the macroscopic to the
+submicroscopic and stays part of the brief: a new scenario carries a reading a student could have seen on an instrument,
+and the particle account explains the reading. The V2 scenarios themselves are kept as they are.
+
+## The offer after the reflection (instructor, 12 Oct)
+
+A worked problem may end with an offer of a second worked problem on the same scenario that changes one thing (one point to
+two for the alcohol; equal starts to unequal for the Martian fuel). It is one row in the moves file, state `offer`, per scenario,
+with a `version` column saying which version the offer belongs to; the shell serves the other version with its own show cells.
+
 ## What you do not do
 
 Write problem numbers (the generator makes them); edit code, generated files or tests; change an approved cell. If something

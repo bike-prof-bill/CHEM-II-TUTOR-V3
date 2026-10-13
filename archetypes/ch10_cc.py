@@ -64,7 +64,7 @@ def residual(v, flags):
     sign = +1.0 if flags.get("sign_flipped") else -1.0
     return log(v["P2"] / v["P1"]) - sign * (v["dH"] / R) * (1.0 / v["T2"] - 1.0 / v["T1"])
 
-def draw_state(rng, liquids=None, limits=None, kind=None):
+def draw_state(rng, liquids=None, limits=None, kind=None, version=None):
     """limits (per opener, from content_ch10_cc_limits.csv): the known point is the normal boiling point at 1 atm and the
     other temperature lies in [lo_C, hi_C] for that liquid; the unknown pressure is the one at the other temperature."""
     pool = [x for x in SUBSTANCES if not liquids or x[0] in liquids]
@@ -95,7 +95,8 @@ def draw_state(rng, liquids=None, limits=None, kind=None):
                         "fixed_units": {"T1" if other == "P2" else "T2": "degC", "P1": "atm", "P2": "atm"}})
         return s, ctx
     lo, hi = max(cold_C + 273.15, bp - SPAN_BELOW_BP), bp + SPAN_ABOVE_BP
-    one_atm = rng.random() < ONE_ATM_POINT
+    # the worked rung's versions (instructor, 12 Oct): "one" = the normal boiling point is one of the two points; "two" = both measured
+    one_atm = (version == "one") if version in ("one", "two") else (rng.random() < ONE_ATM_POINT)
     T1 = bp if one_atm else rng.uniform(lo, hi)
     while True:
         T2 = rng.uniform(lo, hi)
@@ -271,8 +272,12 @@ TRAPS = [
    "value": lambda A, s, k, u, au, key: 1.0 / (key + (273.15 if au == "degC" else 0.0))},
   {"id": "WATER_DH_USED", "openers": ["The Drinking Bird"], "applies": lambda s, u: u in ("P1", "P2") and abs(_dH_kJ(s) - _WATER_DH_KJ) > 0.10 * _WATER_DH_KJ,
    "value": lambda A, s, k, u, au, key: _as_student(k, u, au, swap={"dH": _WATER_DH_KJ * 1000.0})},
+  # the textbook's figure for water (44.01 kJ/mol at 25 °C, OpenStax Ch. 10), which a student is likely to copy; instructor, 12 Oct
+  {"id": "WATER_DH_USED", "openers": ["The Drinking Bird"], "applies": lambda s, u: u in ("P1", "P2") and abs(_dH_kJ(s) - _WATER_DH_25C_KJ) > 0.10 * _WATER_DH_25C_KJ,
+   "value": lambda A, s, k, u, au, key: _as_student(k, u, au, swap={"dH": _WATER_DH_25C_KJ * 1000.0})},
 ]
 _WATER_DH_KJ = _subs.get("water", "dHvap_at_Tb_kJ_mol")
+_WATER_DH_25C_KJ = _subs.get("water", "dHvap_at_25C_kJ_mol")
 def _dH_kJ(shown): v = shown["dH"]; return v["value"] if v["unit"] == "kJ/mol" else v["value"] / 1000.0
 def _known_P(shown, unknown):
     other = "P1" if unknown == "P2" else "P2"; return shown[other]["value"]           # in its own unit, as the student sees it
@@ -447,8 +452,13 @@ def render_text(shown, unknown, ans_unit, ctx):
     f = {n: _fmt(s) for n, s in shown.items()}
     if ctx.get("hidden"): f.update({h: "(not shown)" for h in ctx["hidden"] if h not in f})   # a scenario that hides a variable must supply its own sentence
     if ctx.get("template") and unknown == "dH":                       # the scenario's own sentence for a ΔHvap problem: the liquid stays unnamed
-        return ctx["template"].format(liquid="a related " + _class_word(ctx).split(" ", 1)[1] if _class_word(ctx) != "water" else "water",
-                                      P1=f.get("P1", ""), T1=f.get("T1", ""), P2=f.get("P2", ""), T2=f.get("T2", ""), unit=ans_unit)
+        liquid = "a related " + _class_word(ctx).split(" ", 1)[1] if _class_word(ctx) != "water" else "water"
+        fill = dict(liquid=liquid, P1=f.get("P1", ""), T1=f.get("T1", ""), P2=f.get("P2", ""), T2=f.get("T2", ""), unit=ans_unit)
+        if ctx.get("version") == "one":                               # the normal boiling point named as a point: {T_b}, and the measured point {T}, {P}
+            def K(s): return s["value"] + (273.15 if s["unit"] == "degC" else 0.0)
+            bp_is_1 = abs(K(shown["T1"]) - ctx["bp_K"]) < abs(K(shown["T2"]) - ctx["bp_K"])
+            fill.update(T_b=f["T1"] if bp_is_1 else f["T2"], T=f["T2"] if bp_is_1 else f["T1"], P=f["P2"] if bp_is_1 else f["P1"])
+        return ctx["template"].format(**fill)
     if ctx.get("template") and unknown in ("P1", "P2", "T1", "T2"):   # the scenario's own sentence (SCENARIO_CLAUDE, 10 Oct)
         known, other = ("P1", "T1") if unknown in ("P2", "T2") else ("P2", "T2")
         t_unknown = "T2" if unknown in ("P2", "T2") else "T1"
