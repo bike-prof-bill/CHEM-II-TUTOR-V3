@@ -115,5 +115,5 @@ runs the tests and the reading-level report, and walks the scenario end to end w
 
 **Decided and built (11–13 Oct):** the rungs (Worked → Faded → Independent, per student per archetype, the instructor assigns
 the start or `DEFAULT_RUNG` does; one clean completion advances; a notebook card at Independent demotes); scenario roles; show
-cells and the offer; the exam scenario served once at Independent. See `docs/08_SCENARIO_CLAUDE_brief_rungs_and_show_cells_DRAFT.md`
+cells and the offer; the exam scenario served once at Independent. See `docs/08_SCENARIO_CLAUDE_brief_rungs_and_show_cells.md`
 and `docs/12_SCENARIO_CLAUDE_HANDOVER_FROM_FABLE.md`.
