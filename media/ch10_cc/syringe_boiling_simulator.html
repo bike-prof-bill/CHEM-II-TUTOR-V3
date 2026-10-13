@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The syringe boiling trick</title>
 <!--
-  Approved by the instructor, 10 Oct 2026 (the DRAFT mark removed by Fable, no other change).
+  Approved by the instructor, 13 Oct 2026 (DRAFT marks removed by SCENARIO_CLAUDE, no other change).
   Date: 10 Oct 2026. Built by Simulation_Claude.
   Brief (one line): ch10_cc opener "The Syringe Boiling Trick": a liquid in a capped,
     air-free 60 mL syringe boils when the plunger is pulled; the gauge settles at the
@@ -24,8 +24,8 @@
     T          °C, the problem's temperature. Default 40 °C (clamped to the liquid's range).
     unit       torr | atm. Default torr.
     theme      light | dark. Default: the system setting (Fable's contract).
-    T and unit are new placeholders requested of Fable; not yet confirmed.
-  Numbers not from the table or the request are marked UNVERIFIED below.
+    Link settings confirmed by Fable, 13 Oct 2026: substance, T, unit, theme.
+  Numbers not from the table or the request are illustrative; accepted by the instructor, 13 Oct 2026.
   Nothing is fetched, stored, or sent. Nothing moves until the student pulls or presses Play.
 -->
 <style>
@@ -201,13 +201,13 @@
   var COMPARE_T = 25.0;
   var DEFAULT_SUBSTANCE = 'water', DEFAULT_T = 40.0, DEFAULT_UNIT = 'torr';
 
-  var KELVIN = 273.15;          // UNVERIFIED – instructor to confirm (°C to K; must match the problems)
-  var V_LIQ_ML = 10;            // UNVERIFIED – instructor to confirm (liquid drawn into the syringe)
-  var SPEED_BASE = 0.5;         // UNVERIFIED – illustrative, not data (mL/s while boiling at the threshold)
-  var SPEED_PER_N = 0.6;        // UNVERIFIED – illustrative, not data (extra mL/s per newton above the threshold)
-  var SNAP_ML_PER_S = 400;      // UNVERIFIED – illustrative (vapor collapse on release: "at once")
-  var AIR_APPEARS_AT_N = 3;     // UNVERIFIED – illustrative (air bubbles appear early in the pull)
-  var IDLE_STOP_S = 60;         // UNVERIFIED – design choice (motion stops after a minute without input)
+  var KELVIN = 273.15;          // exact, by definition (0 °C = 273.15 K); accepted by the instructor, 13 Oct 2026
+  var V_LIQ_ML = 10;            // illustrative; accepted by the instructor, 13 Oct 2026 (liquid drawn into the syringe)
+  var SPEED_BASE = 0.5;         // illustrative; accepted by the instructor, 13 Oct 2026 (mL/s while boiling at the threshold)
+  var SPEED_PER_N = 0.6;        // illustrative; accepted by the instructor, 13 Oct 2026 (extra mL/s per newton above the threshold)
+  var SNAP_ML_PER_S = 400;      // illustrative; accepted by the instructor, 13 Oct 2026 (vapor collapse on release: "at once")
+  var AIR_APPEARS_AT_N = 3;     // illustrative; accepted by the instructor, 13 Oct 2026 (air bubbles appear early in the pull)
+  var IDLE_STOP_S = 60;         // illustrative; accepted by the instructor, 13 Oct 2026 (motion stops after a minute without input)
   var MAX_TRAVEL = CAPACITY_ML - V_LIQ_ML;
 
   // ===========================================================================

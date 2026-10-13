@@ -245,3 +245,5 @@ Built and tested (`test_core.js` 6t, 122 checks; scenario suites now assert done
 - `no_repeated_problem` regression updated: six dH problems per scenario now (two versions).
 Shell `bb174cdf`, `CODE_VERSION 9d1709f9`; content per the generate line.
 - 13 Oct: `DEFAULT_RUNG` script property (worked | faded | none): a student with no `Rungs` row is stepped from that rung, the row written automatically; unset = served as before. The sheet holds exceptions and becomes the roster. Cheat sheet updated.
+- 13 Oct: `docs/10_CHAPTER_10_BUILD_CHECKLIST.md` for SCENARIO_CLAUDE: every hand-off item, where it is built and which test covers it; the three simulation addresses and their media rows.
+- 13 Oct: `docs/MEDIA_SOURCES.csv`: SCENARIO_CLAUDE's check of the four chapter 10 simulation pages merged into the four rows (chemistry-check column: data check, UNVERIFIED marks, approval date, SHA-256, address as the tutor calls it). The files stay in `media/`, placed by the instructor.
