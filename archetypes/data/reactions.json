@@ -1,52 +1,34 @@
 {
- "_about": "Reactions used by fixed equilibrium problems (like substances.json): one record per reaction, each value with its source. The shell never reads it; the archetype does.",
+ "_about": "Reactions used by fixed equilibrium problems: one record per reaction, each value with its source. GROUND OF TRUTH (instructor, 13 Oct 2026): OpenStax Chemistry 2e first; NIST only where the text has no value. The shell never reads this file; the archetype does.",
  "reactions": {
   "haber_ammonia": {
    "equation": "N2(g) + 3H2(g) <=> 2NH3(g)",
    "Kc": 0.06,
    "T_C": 500.0,
    "source": {
-    "Kc": "instructor, 10 Oct 2026: derived from NIST ΔG values; the course's rule-of-thumb (zeroth-order) value."
-   }
+    "Kc": "instructor, 10 Oct 2026: derived from NIST ΔG values; the course's rule-of-thumb value. Under the 13 Oct rule (OpenStax first), check Chapter 13 for a stated Kc at this temperature before any new problem uses it.",
+    "dH_sign": "exothermic forward (OpenStax Chapter 13, the Haber process ΔH° = −92.2 kJ/mol); instructor confirms the citation"
+   },
+   "dH_sign": -1
   },
   "wgs": {
    "equation": "CO(g) + H2O(g) <=> CO2(g) + H2(g)",
    "Kc": 4.0,
    "T_K": 800,
    "source": {
-    "Kc": "based on NIST thermodynamic values (instructor, 11 Oct 2026)"
-   }
+    "Kc": "based on NIST thermodynamic values (instructor, 11 Oct 2026). Under the 13 Oct rule (OpenStax first), check the text before any new problem uses it.",
+    "dH_sign": "exothermic forward; OpenStax first (check the text), else NIST (ΔH° ≈ −41 kJ/mol); instructor confirms"
+   },
+   "dH_sign": -1
   },
-  "hi_formation": {
-   "equation": "H2(g) + I2(g) <=> 2HI(g)",
-   "Kc": 54.3,
-   "T_C": 430.0,
+  "agcl_dissolution": {
+   "equation": "AgCl(s) <=> Ag+(aq) + Cl-(aq)",
+   "Kc": 1.8e-10,
+   "T_C": 25.0,
+   "dH_sign": 1,
    "source": {
-    "Kc": "source needed: V2's value (reference/v2/Code_V2-6.txt); the instructor confirms or replaces before any problem using it is approved."
-   }
-  },
-  "n2o4_dissociation": {
-   "equation": "N2O4(g) <=> 2NO2(g)",
-   "Kc": 0.211,
-   "T_C": 100.0,
-   "source": {
-    "Kc": "source needed: V2's value (reference/v2/Code_V2-6.txt); the instructor confirms or replaces before any problem using it is approved."
-   }
-  },
-  "so3_formation": {
-   "equation": "2SO2(g) + O2(g) <=> 2SO3(g)",
-   "Kc": 280.0,
-   "T_C": null,
-   "source": {
-    "Kc": "source needed: V2 used 280 in one problem and 250 in another at an unstated temperature; the instructor sets the value and the temperature."
-   }
-  },
-  "methanol_synthesis": {
-   "equation": "CO(g) + 2H2(g) <=> CH3OH(g)",
-   "Kc": 50.0,
-   "T_C": null,
-   "source": {
-    "Kc": "source needed: V2's value at an unstated temperature; the instructor confirms or replaces."
+    "Kc": "OpenStax Chemistry 2e, Chapter 13 (the instructor's sketch of exercise 13.48 and its solution): 1.8e-10 at 25 °C, two significant figures. Written Kc as the chapter does.",
+    "dH_sign": "endothermic dissolution (solubility rises with temperature): the sketch, from the text; instructor confirms"
    }
   }
  }
