@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Silent Beaker</title>
+<!--
+  DRAFT: not for students until the instructor approves it.
+  Date: 13 Oct 2026. Built by Simulation_Claude to 00_README_BRIEF_silent_beaker.md (approved by the instructor,
+    13 Oct 2026), on the pattern of haber_simulator.html (e6d73535) and martian_fuel_simulator.html (f45c029c).
+  Brief (one line): ch13_eq opener "The Silent Beaker" (a floater), opens at the meaning question: a sealed beaker
+    at 25 °C, water over solid AgX (X = Cl, Br, I); a radioactive tracer shows dissolving and settling going on at
+    equal rates; adding the salt's own anion makes settling win for a while. No sentence compares Q with K or says
+    which way the reaction goes.
+  Data source: the brief's table (instructor, 13 Oct 2026). Ksp at 25 °C from OpenStax Chemistry 2e, Appendix J,
+    Table J1: AgCl 1.6 × 10^-10, AgBr 5.0 × 10^-13, AgI 1.5 × 10^-16. Starting states and the amounts the sodium
+    salt adds are problem 1 of each salt. The level radiation count (about 1000 counts per minute in the starting
+    state) is a display value, not a measurement.
+  Model (cartoon, the textbook's simple model: no activities, no dissolved complexes):
+    breaking-away rate = kd while solid is present (it depends on the solid's surface, not on the water);
+    settling rate      = ks [Ag+][X-], while solid is present or [Ag+][X-] > Ksp; kd/ks = Ksp.
+    With no solid and [Ag+][X-] <= Ksp, nothing happens. Q = [Ag+][X-]; the solid is never in Q.
+    Tracer: radioactive silver leaves the solid in proportion to its share of the solid and settles in proportion
+    to its share of the dissolved silver; the count is proportional to radioactive silver in the water.
+    Time is not to scale: the clock runs slower during an approach and at full speed near the end.
+  URL parameters (new; Fable to add salt, Ag, X, solid to the tutor's list):
+    salt    AgCl | AgBr | AgI, read case-insensitively. Default AgCl; unknown values fall back with a notice.
+    Ag, X   mol/L, 0 to 1. Default: that salt's starting state.
+    solid   1 (solid present) or 0. Default 1.
+    theme   light | dark. Default: the system setting.
+  Cartoon choices (not data; listed under Needs your decision when first sent): dots per mol/L (the starting
+    [Ag+] draws as 20 dots), the solid drawn as 60 cells, the pellet as 20 cells, about 6 break-away events a
+    second at the end, the 60-dot cap per ion, the 5 s approach, the 2-minute idle stop.
+  Nothing is fetched, stored, or sent. Nothing moves until the student presses Play or uses a control.
+-->
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #faf9f6; --fg: #1d1e1c; --muted: #4b4d49; --rule: #7f8378; --grid: #e2e3dd; --control-bg: #ffffff; --focus: #7a3a10;
+    --win-bg: #f0f1ec; --ag: #c9ccd2; --ag-edge: #2f3237; --tracer: #1d1e1c;
+    --cl: #2f8a3c; --cl-edge: #123d18; --br: #8b3a1a; --br-edge: #3e160a; --i: #6b2a8f; --i-edge: #2c0f3d; --sign: #ffffff;
+    --cell-edge: #4b4f55; --break: #3b3f45; --settle: #8a5a00; --accent: #7a3a10;
+    --notice-bg: #fff3d1; --notice-fg: #3d2c00; --notice-rule: #8a6a00;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #18191b; --fg: #e9eaec; --muted: #b6bac0; --rule: #8d949d; --grid: #303338; --control-bg: #222428; --focus: #ffb38a;
+    --win-bg: #202226; --ag: #c9ccd2; --ag-edge: #f2f3f5; --tracer: #f2f3f5;
+    --cl: #5cc46a; --cl-edge: #d9f5dd; --br: #e0875a; --br-edge: #fde0d0; --i: #c58ae0; --i-edge: #f1defa; --sign: #18191b;
+    --cell-edge: #9aa1aa; --break: #c3c8cf; --settle: #f0b25a; --accent: #ffb38a;
+    --notice-bg: #3a3010; --notice-fg: #ffe9a8; --notice-rule: #c9a63a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--fg); }
+  body { font: 14px/1.35 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; padding: 8px 12px; max-width: 640px; }
+  h1 { font-size: 1rem; font-weight: 600; margin: 0 0 4px; }
+  .notice { margin: 0 0 6px; padding: 5px 9px; background: var(--notice-bg); color: var(--notice-fg); border-left: 4px solid var(--notice-rule); font-size: 0.85rem; }
+  .top { display: flex; gap: 10px; align-items: stretch; }
+  canvas { display: block; }
+  #scene { width: 232px; height: 138px; flex: 0 0 232px; border-radius: 4px; }
+  .readings { flex: 1 1 auto; min-width: 0; }
+  .readings h2 { font-size: 0.8rem; font-weight: 600; margin: 0 0 2px; color: var(--muted); }
+  .readings table { border-collapse: collapse; width: 100%; }
+  .readings td { padding: 0; line-height: 1.24; font-size: 0.84rem; }
+  .readings td.v { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .status { margin: 3px 0; font-size: 0.86rem; font-weight: 600; min-height: 2.4em; }
+  .row { display: flex; align-items: center; gap: 4px 5px; flex-wrap: wrap; margin: 4px 0; }
+  button { font: inherit; font-size: 0.82rem; color: var(--fg); background: var(--control-bg); border: 1px solid var(--rule); border-radius: 4px; padding: 3px 6px; cursor: pointer; }
+  button:disabled { opacity: 0.55; cursor: default; }
+  #panel { width: 100%; height: 218px; border: 1px solid var(--grid); margin-top: 2px; }
+  .small { margin: 2px 0 0; font-size: 0.76rem; color: var(--muted); }
+  [hidden] { display: none !important; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+</style>
+</head>
+<body>
+  <h1 id="title"></h1>
+  <p class="notice" id="notice" role="status" hidden></p>
+
+  <div class="top">
+    <canvas id="scene" role="img" aria-label="The sealed beaker and its two probes. A text description follows." aria-describedby="descScene"></canvas>
+    <div class="readings">
+      <h2>Readings</h2>
+      <table>
+        <tr><td>[Ag⁺]</td><td class="v" id="rAg"></td></tr>
+        <tr><td id="lX"></td><td class="v" id="rX"></td></tr>
+        <tr><td>Radiation</td><td class="v" id="rCount"></td></tr>
+        <tr><td>Q</td><td class="v" id="rQ"></td></tr>
+        <tr><td>K</td><td class="v" id="rK"></td></tr>
+        <tr><td>Temperature</td><td class="v">25 °C</td></tr>
+      </table>
+    </div>
+  </div>
+  <p class="status" id="status" aria-live="off"></p>
+
+  <div class="row">
+    <button type="button" id="play">Play</button>
+    <button type="button" id="reset">Reset</button>
+    <button type="button" id="pellet">Drop the radioactive pellet</button>
+    <button type="button" id="add"></button>
+  </div>
+  <canvas id="panel" role="img" aria-label="Inside the beaker, and the two rates. A text description follows." aria-describedby="descPanel"></canvas>
+  <p class="small" id="caption"></p>
+  <p class="small">Time is not to scale; the rates are a simple model and their speed means nothing.</p>
+
+  <div class="sr-only" id="descScene"></div>
+  <div class="sr-only" id="descPanel"></div>
+  <div class="sr-only" id="live" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ===========================================================================
+  // DATA: the brief's table (instructor, 13 Oct 2026). Ksp at 25 °C, OpenStax Chemistry 2e, Appendix J, Table J1.
+  // ===========================================================================
+  var SALTS = {
+    AgCl: { name: 'silver chloride', X: 'Cl⁻', Xword: 'chloride', sodium: 'sodium chloride', K: 1.6e-10, Kshow: '1.6 × 10⁻¹⁰',
+            Ag0: 2.0e-5, X0: 8.0e-6, add: 1.0e-3, addShow: '1.0 × 10⁻³', solid: '#ffffff', solidWord: 'white', ion: 'cl' },
+    AgBr: { name: 'silver bromide', X: 'Br⁻', Xword: 'bromide', sodium: 'sodium bromide', K: 5.0e-13, Kshow: '5.0 × 10⁻¹³',
+            Ag0: 1.0e-6, X0: 5.0e-7, add: 1.0e-3, addShow: '1.0 × 10⁻³', solid: '#f3e6c0', solidWord: 'pale cream', ion: 'br' },
+    AgI:  { name: 'silver iodide', X: 'I⁻', Xword: 'iodide', sodium: 'sodium iodide', K: 1.5e-16, Kshow: '1.5 × 10⁻¹⁶',
+            Ag0: 3.0e-8, X0: 5.0e-9, add: 1.0e-5, addShow: '1.0 × 10⁻⁵', solid: '#f2e07a', solidWord: 'pale yellow', ion: 'i' }
+  };
+  var PLATEAU_CPM = 1000;   // display value for the starting state, not a measurement (instructor, 13 Oct)
+
+  // Cartoon choices:
+  var DOTS_AT_START = 20, SOLID_CELLS = 60, PELLET_CELLS = 20, EXCHANGE_PER_S = 6, CAP = 60, MAX_ROWS = 7;
+  var SETTLE_S = 5, IDLE_STOP_S = 120;
+  var CPM_PER_DOT = PLATEAU_CPM / (PELLET_CELLS * DOTS_AT_START / (DOTS_AT_START + SOLID_CELLS + PELLET_CELLS));
+
+  // ===========================================================================
+  // URL parameters
+  // ===========================================================================
+  var params = new URLSearchParams(window.location.search), notices = [];
+  var saltKey = 'AgCl', rawSalt = (params.get('salt') || '').trim();
+  if (rawSalt) {
+    var hit = Object.keys(SALTS).filter(function (k) { return k.toLowerCase() === rawSalt.toLowerCase(); })[0];
+    if (hit) saltKey = hit; else notices.push('No data for “' + rawSalt.slice(0, 40) + '” here; showing silver chloride.');
+  }
+  var S = SALTS[saltKey];
+  function rd(name) { var r = params.get(name); if (r === null || r.trim() === '') return null; var v = Number(r); return (isFinite(v) && v >= 0 && v <= 1) ? v : NaN; }
+  var gAg = rd('Ag'), gX = rd('X'), start0 = { Ag: S.Ag0, X: S.X0, solid: true };
+  if ((gAg !== null && isNaN(gAg)) || (gX !== null && isNaN(gX))) notices.push('A concentration could not be read; showing the starting state.');
+  else { if (gAg !== null) start0.Ag = gAg; if (gX !== null) start0.X = gX; }
+  var rs = (params.get('solid') || '').trim();
+  if (rs === '0') start0.solid = false; else if (rs !== '' && rs !== '1') notices.push('The solid setting could not be read; showing solid present.');
+  var notice = document.getElementById('notice');
+  if (notices.length) { notice.textContent = notices.join(' '); notice.hidden = false; }
+
+  var UNIT = S.Ag0 / DOTS_AT_START;   // mol/L drawn as one dot (cartoon)
+  var RD = EXCHANGE_PER_S * UNIT;     // breaking-away rate, mol/L per model second
+  var KS = RD / S.K;                  // settling constant, so that RD/KS = Ksp
+  var EPS = 1e-6 * UNIT;
+
+  var themeParam = (params.get('theme') || '').trim().toLowerCase();
+  var darkQ = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  var reduceQ = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var colours = null;
+  function applyTheme() { var t = (themeParam === 'light' || themeParam === 'dark') ? themeParam : (darkQ && darkQ.matches ? 'dark' : 'light'); document.documentElement.setAttribute('data-theme', t); colours = null; }
+  function isReduced() { return !!(reduceQ && reduceQ.matches); }
+
+  // ===========================================================================
+  // Model. Origin: [Ag+] = A0, [X-] = X0, solid N0 (mol/L of salt), radioactive silver P in all.
+  // x = amount dissolved since the origin (negative when solid forms); y = radioactive silver in the water.
+  // ===========================================================================
+  var m;   // model state
+  function at(x) { return { A: Math.max(0, m.A0 + x), X: Math.max(0, m.X0 + x), N: Math.max(0, m.N0 - x) }; }
+  function active(c) { return c.N > EPS || c.A * c.X > S.K; }
+  function rates(c) {
+    if (!active(c)) return { d: 0, s: 0 };
+    return { d: c.N > EPS ? RD : 0, s: KS * c.A * c.X };
+  }
+  function deriv(x, y) {
+    var c = at(x), r = rates(c), dx = r.d - r.s;
+    if (c.N <= EPS && dx > 0) dx = 0;
+    var ts = Math.max(0, m.P - y), dy = 0;
+    if (r.d > 0 && c.N > EPS) dy += r.d * Math.min(1, ts / c.N);
+    if (r.s > 0) dy -= KS * c.X * y;   // settling of radioactive silver: rate × (y / [Ag+])
+    return [dx, dy];
+  }
+  function stiffness(x) { var c = at(x); return KS * (c.A + c.X) + RD / Math.max(c.N, UNIT) + 1e-9; }
+  function step(h) {   // RK4, split so each piece is small against the fastest change
+    var need = Math.ceil(h * stiffness(m.x) / 0.3);
+    if (need > 4000 && m.near) { m.x = m.xe; m.y = endState().y; m.done = true; return; }   // far faster than the screen can show
+    var n = Math.min(4000, Math.max(1, need)), k = h / n;
+    for (var i = 0; i < n; i++) {
+      var x = m.x, y = m.y;
+      var a = deriv(x, y), b = deriv(x + k * a[0] / 2, y + k * a[1] / 2), c = deriv(x + k * b[0] / 2, y + k * b[1] / 2), d = deriv(x + k * c[0], y + k * c[1]);
+      m.x = x + k * (a[0] + 2 * b[0] + 2 * c[0] + d[0]) / 6; m.y = Math.max(0, y + k * (a[1] + 2 * b[1] + 2 * c[1] + d[1]) / 6);
+    }
+  }
+  function xEnd(A0, X0, N0) {   // where [Ag+][X-] = Ksp, written to avoid losing digits
+    var r = 2 * (S.K - A0 * X0) / ((A0 + X0) + Math.sqrt((A0 - X0) * (A0 - X0) + 4 * S.K));
+    return Math.min(r, N0);
+  }
+  function setOrigin(A, X, N) {
+    var keepY = m ? m.y : 0, keepP = m ? m.P : 0;
+    m = { A0: A, X0: X, N0: N, x: 0, y: keepY, P: keepP, near: false, w0: 0 };
+    var c = at(0);
+    m.live = active(c);
+    m.xe = m.live ? xEnd(A, X, N) : 0;
+    if (!m.live || Math.abs(m.xe) < 1e-9 * (A + X + UNIT)) { m.g0 = 1; m.near = true; return; }
+    // time for 90% of the change at full speed, so the approach can be stretched to about SETTLE_S on screen
+    var x = 0, t = 0, guard = 0;
+    while (Math.abs(x - m.xe) > 0.1 * Math.abs(m.xe) && guard < 200000) {
+      var dx = deriv(x, 0)[0], h = Math.min(0.002 * Math.abs(m.xe) / (Math.abs(dx) + 1e-30), 0.3 / stiffness(x));
+      var k1 = dx, k2 = deriv(x + h * k1 / 2, 0)[0], k3 = deriv(x + h * k2 / 2, 0)[0], k4 = deriv(x + h * k3, 0)[0];
+      x += h * (k1 + 2 * k2 + 2 * k3 + k4) / 6; t += h; guard++;
+    }
+    m.g0 = t / SETTLE_S;
+  }
+  function now() { return at(m.x); }
+  function endState() { var c = at(m.xe); return { A: c.A, X: c.X, N: c.N, y: c.N + c.A > 0 ? m.P * c.A / (c.A + c.N) : 0 }; }
+  function countOf(y) { return CPM_PER_DOT * y / UNIT; }
+  function clockRate() {
+    if (!m.near && Math.abs(m.x - m.xe) <= 0.1 * Math.abs(m.xe)) { m.near = true; m.nearW = st.w; }
+    if (!m.near) return m.g0;
+    return m.g0 + (1 - m.g0) * Math.min(1, (st.w - (m.nearW || 0)) / 1.0);
+  }
+
+  // ===========================================================================
+  // Formatting (3 significant figures, rounded half up; no carets)
+  // ===========================================================================
+  var SUP = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+  function sci(v) {
+    if (!(v > 0)) return null;
+    var e = Math.floor(Math.log10(v)), mant = v / Math.pow(10, e), r = Math.round(mant * 100 + 1e-7) / 100;
+    if (r >= 10) { r = r / 10; e += 1; }
+    return { m: r.toFixed(2), e: e };
+  }
+  function fmtSci(v) { var s = sci(v); if (!s) return '0'; return s.m + ' × 10' + String(s.e).split('').map(function (ch) { return SUP[ch]; }).join(''); }
+  function sayNum(v) { var s = sci(v); if (!s) return 'zero'; return s.m + ' times 10 to the ' + (s.e < 0 ? 'minus ' + (-s.e) : s.e); }
+  function fmtM(v) { return fmtSci(v) + ' M'; }
+  function fmtCount(v) { if (v < 0.5) return '0'; var s = sci(v); return String(Math.round(Number(s.m) * Math.pow(10, s.e))); }
+  function sayK() { return S.Kshow.split(' ×')[0] + ' times 10 to the minus ' + (-Math.floor(Math.log10(S.K))); }
+
+  // ===========================================================================
+  // State
+  // ===========================================================================
+  var st;
+  function initState() {
+    m = null;
+    st = { nStart: 0, running: false, w: 0, lastInput: 0, pellet: false, added: false, started: false, steady: null, dropT: 0, pourT: 0,
+           dots: [], sprites: [], cols: null, accD: 0, accS: 0 };
+    setOrigin(start0.Ag, start0.X, start0.solid ? SOLID_CELLS * UNIT : 0);
+    st.nStart = m.N0 / UNIT;
+    layoutDirty = true;
+  }
+
+  // ===========================================================================
+  // The drawing inside the beaker: dots in the water, cells in the solid.
+  // Counts follow the model: dots = concentration / UNIT (capped), cells = solid / UNIT.
+  // ===========================================================================
+  var layoutDirty = true, PW = { x: 0, y: 0, w: 0, h: 0 }, CELL = 9;
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function nCols() { return Math.max(8, Math.floor(PW.w / CELL)); }
+  function cellCount() { var n = 0; st.cols.forEach(function (c) { n += c.length; }); return n; }
+  function markedCells() { var n = 0; st.cols.forEach(function (c) { c.forEach(function (k) { if (k) n++; }); }); return n; }
+  function maxCells() { return nCols() * MAX_ROWS; }
+  function topY(col) { return PW.h - st.cols[col].length * CELL; }
+  function waterBottom() { var hi = 0; st.cols.forEach(function (c) { hi = Math.max(hi, c.length); }); return PW.h - hi * CELL - 6; }
+  function addDot(kind, marked, x, y, up) { st.dots.push({ k: kind, mk: !!marked, x: x, y: y, vx: rnd(-24, 24), vy: up ? rnd(-40, -20) : rnd(-24, 24) }); }
+  function countDots(kind, mk) { var n = 0; st.dots.forEach(function (d) { if (d.k === kind && (mk === undefined || d.mk === mk)) n++; }); return n; }
+  function targets() {
+    var c = now(), ts = Math.max(0, m.P - m.y);
+    var ag = Math.round(c.A / UNIT), xx = Math.round(c.X / UNIT), cells = Math.round(c.N / UNIT);
+    return { ag: Math.min(CAP, ag), agTrue: ag, x: Math.min(CAP, xx), xTrue: xx, mk: Math.round(m.y / UNIT),
+             cells: Math.min(maxCells(), cells), cellsTrue: cells, mkCells: Math.round(ts / UNIT) };
+  }
+  function seed() {
+    st.dots = []; st.sprites = [];
+    var n = nCols(), t = targets(); st.cols = []; for (var i = 0; i < n; i++) st.cols.push([]);
+    var full = Math.floor(t.cells / n), order = []; for (i = 0; i < n; i++) { for (var j = 0; j < full; j++) st.cols[i].push(false); order.push(i); }
+    order.sort(function () { return Math.random() - 0.5; }); for (i = 0; i < t.cells - full * n; i++) st.cols[order[i]].push(false);
+    var wb = waterBottom();
+    for (i = 0; i < t.ag; i++) addDot('Ag', i < Math.min(t.mk, t.ag), rnd(8, PW.w - 8), rnd(8, Math.max(10, wb)));
+    for (i = 0; i < t.x; i++) addDot('X', false, rnd(8, PW.w - 8), rnd(8, Math.max(10, wb)));
+    reconcile(true);
+    layoutDirty = false;
+  }
+  // a site on the surface: the lower (or higher) of three random columns, so the surface stays rough but level
+  function lowestCol() { var n = st.cols.length, best = Math.floor(Math.random() * n); for (var k = 0; k < 2; k++) { var c = Math.floor(Math.random() * n); if (st.cols[c].length < st.cols[best].length) best = c; } return best; }
+  function highestCol() { var n = st.cols.length, best = -1; for (var k = 0; k < 6; k++) { var c = Math.floor(Math.random() * n); if (st.cols[c].length && (best < 0 || st.cols[c].length > st.cols[best].length || k < 3 && best >= 0 && st.cols[best].length === st.cols[c].length)) best = c; if (k >= 2 && best >= 0) break; } if (best < 0) { st.cols.forEach(function (c, i) { if (c.length && (best < 0 || c.length > st.cols[best].length)) best = i; }); } return Math.max(0, best); }
+  function reconcile(exact) {
+    var t = targets(), tol = exact ? 0 : 1, wb = waterBottom();
+    // cells: exact
+    var guard = 0;
+    while (cellCount() < t.cells && guard++ < 500) st.cols[lowestCol()].push(false);
+    while (cellCount() > t.cells && guard++ < 1000) { var hc = highestCol(); var col = st.cols[hc]; var j = col.lastIndexOf(false); if (j < 0) j = col.length - 1; col.splice(j, 1); }
+    var mc = markedCells(); guard = 0;
+    while (mc < Math.min(t.mkCells, cellCount()) && guard++ < 500) { var ci = Math.floor(Math.random() * st.cols.length), cc = st.cols[ci], u = cc.lastIndexOf(false); if (u >= 0) { cc[u] = true; mc++; } }
+    while (mc > t.mkCells && guard++ < 1000) { var cj = Math.floor(Math.random() * st.cols.length), cd = st.cols[cj], v = cd.indexOf(true); if (v >= 0) { cd[v] = false; mc--; } }
+    // dots: within one of the target, so the events stay visible
+    ['Ag', 'X'].forEach(function (kind) {
+      var want = kind === 'Ag' ? t.ag : t.x, g2 = 0;
+      while (countDots(kind) < want - tol && g2++ < 200) {
+        var fromTop = kind === 'X' && st.pourT > 0;
+        addDot(kind, false, rnd(8, PW.w - 8), fromTop ? rnd(4, 18) : rnd(8, Math.max(10, wb)));
+      }
+      while (countDots(kind) > want + tol && g2++ < 400) {
+        var mkNow = countDots('Ag', true), pickMarked = kind === 'Ag' && mkNow > t.mk;
+        var idx = -1; for (var i = st.dots.length - 1; i >= 0; i--) if (st.dots[i].k === kind && (kind === 'X' || st.dots[i].mk === pickMarked)) { idx = i; break; }
+        if (idx < 0) for (i = st.dots.length - 1; i >= 0; i--) if (st.dots[i].k === kind) { idx = i; break; }
+        st.dots.splice(idx, 1);
+      }
+    });
+    var mk = countDots('Ag', true), wantMk = Math.min(t.mk, countDots('Ag'));
+    if (exact || Math.abs(mk - wantMk) >= 2) {
+      st.dots.forEach(function (d) { if (d.k !== 'Ag') return; if (mk < wantMk && !d.mk) { d.mk = true; mk++; } else if (mk > wantMk && d.mk) { d.mk = false; mk--; } });
+    }
+  }
+  function breakAway() {   // one Ag+ and one X- leave the top of the solid
+    var ci = highestCol(), col = st.cols[ci]; if (!col.length) return;
+    var x = ci * CELL + CELL / 2 + (PW.w - nCols() * CELL) / 2, t = targets();
+    var mk = countDots('Ag', true) < Math.min(t.mk, countDots('Ag') + 1);
+    col.pop(); var y = topY(ci) - 6;
+    addDot('Ag', mk, x - 4, y, true); addDot('X', false, x + 4, y, true);
+  }
+  function settle() {   // one Ag+ and one X- that meet go back onto the solid
+    var ags = st.dots.filter(function (d) { return d.k === 'Ag'; }); if (!ags.length) return;
+    var t = targets(), wantMarked = countDots('Ag', true) > t.mk;
+    var pool = ags.filter(function (d) { return d.mk === wantMarked; }); if (!pool.length) pool = ags;
+    var a = pool[Math.floor(Math.random() * pool.length)], best = null, bd = 1e9;
+    st.dots.forEach(function (d) { if (d.k !== 'X') return; var dd = (d.x - a.x) * (d.x - a.x) + (d.y - a.y) * (d.y - a.y); if (dd < bd) { bd = dd; best = d; } });
+    if (!best) return;
+    var ci = lowestCol(), tx = ci * CELL + CELL / 2 + (PW.w - nCols() * CELL) / 2, ty = topY(ci) - 3;
+    st.cols[ci].push(a.mk);
+    [a, best].forEach(function (d) { st.dots.splice(st.dots.indexOf(d), 1); st.sprites.push({ k: d.k, mk: d.mk, x: d.x, y: d.y, tx: tx + (d.k === 'Ag' ? -2 : 2), ty: ty, life: 0.6 }); });
+  }
+  function moveDots(dt) {
+    var wb = waterBottom();
+    st.dots.forEach(function (d) {
+      d.vx += rnd(-30, 30) * dt; d.vy += rnd(-30, 30) * dt;
+      var sp = Math.sqrt(d.vx * d.vx + d.vy * d.vy); if (sp > 40) { d.vx *= 40 / sp; d.vy *= 40 / sp; }
+      d.x += d.vx * dt; d.y += d.vy * dt;
+      if (d.x < 7) { d.x = 7; d.vx = Math.abs(d.vx); } if (d.x > PW.w - 7) { d.x = PW.w - 7; d.vx = -Math.abs(d.vx); }
+      if (d.y < 7) { d.y = 7; d.vy = Math.abs(d.vy); } if (d.y > wb) { d.y = wb; d.vy = -Math.abs(d.vy); }
+    });
+    st.sprites.forEach(function (s) { var f = Math.min(1, dt / Math.max(0.05, s.life)); s.x += (s.tx - s.x) * f; s.y += (s.ty - s.y) * f; s.life -= dt; });
+    st.sprites = st.sprites.filter(function (s) { return s.life > 0; });
+  }
+
+  // ===========================================================================
+  // Time step
+  // ===========================================================================
+  function advance(dt) {
+    var n = Math.max(1, Math.ceil(dt / 0.01)), hw = dt / n;
+    for (var i = 0; i < n; i++) {
+      var h = hw * clockRate(), r = rates(now());
+      st.accD += r.d * h / UNIT; st.accS += r.s * h / UNIT;
+      step(h); st.w += hw;
+      snapToEnd();
+      if (st.cols && !layoutDirty) {
+        var e = 0; while (st.accD >= 1 && e++ < 6) { st.accD -= 1; breakAway(); } if (st.accD > 1) st.accD = 1;
+        e = 0; while (st.accS >= 1 && e++ < 6) { st.accS -= 1; settle(); } if (st.accS > 1) st.accS = 1;
+      } else { st.accD %= 1; st.accS %= 1; }
+    }
+    if (st.cols && !layoutDirty) reconcile(false);
+  }
+  // Within 0.1% of the end, finish the step, so the last digit does not creep for many seconds
+  // when the end value sits on a rounding boundary (1.2649 × 10^-5 shows as 1.26).
+  function snapToEnd() {
+    if (!m.near) return;
+    var c = now(), e = endState(), close = function (v, w) { return Math.abs(v - w) <= 1e-3 * Math.max(w, 1e-300) || (v === 0 && w === 0); };
+    if (!m.done && close(c.A, e.A) && close(c.X, e.X)) { m.x = m.xe; m.done = true; }
+    if (m.done && m.P > 0 && close(m.y, e.y)) m.y = e.y;
+  }
+  function jumpToEnd() {   // reduced motion: show the end state of the change
+    var e = endState(); m.x = m.xe; m.y = e.y; m.near = true; m.nearW = st.w; st.w += SETTLE_S;
+    layoutDirty = true;
+  }
+
+  // ===========================================================================
+  // Drawing helpers
+  // ===========================================================================
+  var FONT = 'system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif';
+  function C(n) { if (!colours) colours = {}; if (!(n in colours)) colours[n] = getComputedStyle(document.documentElement).getPropertyValue('--' + n).trim(); return colours[n]; }
+  function sizeCanvas(cv, bg) {
+    var w = cv.clientWidth, h = cv.clientHeight, dpr = window.devicePixelRatio || 1;
+    if (!w || !h) return null;
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    var ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = bg || C('bg'); ctx.fillRect(0, 0, w, h);
+    return { ctx: ctx, W: w, H: h };
+  }
+  // the bench picture is the same in both themes, so its words are always dark on a light halo
+  function sceneText(ctx, text, x, y) { ctx.lineWidth = 3; ctx.strokeStyle = '#f4f2ec'; ctx.strokeText(text, x, y); ctx.fillStyle = '#1d1e1c'; ctx.fillText(text, x, y); }
+  function drawAg(ctx, x, y, mk) {   // silver ion: circle with a plus; radioactive: a dark ring around it (a marker, not a glow)
+    ctx.beginPath(); ctx.arc(x, y, 4.6, 0, 2 * Math.PI); ctx.fillStyle = C('ag'); ctx.fill(); ctx.lineWidth = 1; ctx.strokeStyle = C('ag-edge'); ctx.stroke();
+    ctx.strokeStyle = '#1d1e1c'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(x - 2.4, y); ctx.lineTo(x + 2.4, y); ctx.moveTo(x, y - 2.4); ctx.lineTo(x, y + 2.4); ctx.stroke();
+    if (mk) { ctx.strokeStyle = C('tracer'); ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(x, y, 7.6, 0, 2 * Math.PI); ctx.stroke(); }
+  }
+  function drawX(ctx, x, y) {   // anion: diamond with a minus
+    var r = 5.6; ctx.beginPath(); ctx.moveTo(x, y - r); ctx.lineTo(x + r, y); ctx.lineTo(x, y + r); ctx.lineTo(x - r, y); ctx.closePath();
+    ctx.fillStyle = C(S.ion); ctx.fill(); ctx.lineWidth = 1; ctx.strokeStyle = C(S.ion + '-edge'); ctx.stroke();
+    ctx.strokeStyle = C('sign'); ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(x - 2.4, y); ctx.lineTo(x + 2.4, y); ctx.stroke();
+  }
+  function drawCell(ctx, x, y, mk) {
+    ctx.fillStyle = S.solid; ctx.fillRect(x + 0.5, y + 0.5, CELL - 1, CELL - 1); ctx.strokeStyle = C('cell-edge'); ctx.lineWidth = 1; ctx.strokeRect(x + 0.5, y + 0.5, CELL - 1, CELL - 1);
+    if (mk) { ctx.fillStyle = '#1d1e1c'; ctx.beginPath(); ctx.arc(x + CELL / 2, y + CELL / 2, 1.9, 0, 2 * Math.PI); ctx.fill(); }
+  }
+
+  // ---------------------------------------------------------------------------
+  // The beaker on the bench
+  // ---------------------------------------------------------------------------
+  var sceneCv = document.getElementById('scene');
+  function drawScene() {
+    var c = sizeCanvas(sceneCv, '#ebe8df'); if (!c) return;
+    var ctx = c.ctx, W = c.W, H = c.H;
+    ctx.fillStyle = '#f4f2ec'; ctx.fillRect(0, 0, W, H * 0.8);
+    ctx.fillStyle = '#b9b2a2'; ctx.fillRect(0, H * 0.86, W, H * 0.14);
+    var bx = W * 0.30, bw = W * 0.40, top = 26, bot = H * 0.86, wl = top + 22;
+    // water (clear: a faint neutral tint only)
+    ctx.fillStyle = '#e3e6df'; ctx.fillRect(bx, wl, bw, bot - wl);
+    ctx.strokeStyle = '#9ea39a'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(bx, wl); ctx.lineTo(bx + bw, wl); ctx.stroke();
+    // the solid layer
+    var cn = now(), cells = cn.N / UNIT, th = cells > 0.5 ? Math.min(26, 3 + 9 * cells / SOLID_CELLS) : 0;
+    if (th > 0) { ctx.fillStyle = S.solid; ctx.fillRect(bx + 1, bot - th, bw - 2, th); ctx.strokeStyle = '#6d7178'; ctx.strokeRect(bx + 1.5, bot - th + 0.5, bw - 3, th - 1);
+      ctx.fillStyle = '#9a9c94'; for (var i = 0; i < 14; i++) ctx.fillRect(bx + 4 + (i * 37) % (bw - 8), bot - th + 2 + (i * 13) % Math.max(1, th - 3), 1.5, 1.5); }
+    // the pellet: falls, then rests on the solid, marked (it does not glow)
+    if (st.pellet) {
+      var py = bot - th - 4, f = Math.min(1, st.dropT / 0.8); if (!isReduced()) py = wl - 14 + (py - wl + 14) * f;
+      var px = bx + bw * 0.62;
+      ctx.fillStyle = S.solid; ctx.strokeStyle = '#1d1e1c'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.ellipse(px, py, 7, 4, 0, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#1d1e1c'; [[-3, 0], [0, -1], [3, 1]].forEach(function (p) { ctx.beginPath(); ctx.arc(px + p[0], py + p[1], 1.1, 0, 2 * Math.PI); ctx.fill(); });
+    }
+    // glass and lid
+    ctx.strokeStyle = '#3f434a'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(bx, top + 4); ctx.lineTo(bx, bot); ctx.lineTo(bx + bw, bot); ctx.lineTo(bx + bw, top + 4); ctx.stroke();
+    ctx.fillStyle = '#5c6068'; ctx.fillRect(bx - 4, top, bw + 8, 6);
+    // silver-ion probe: a rod through the lid, tip in the water
+    var p1 = bx + bw * 0.24; ctx.fillStyle = '#2f3237'; ctx.fillRect(p1 - 2, 8, 4, bot - 50 - 8); ctx.fillStyle = '#7d8187'; ctx.fillRect(p1 - 3.5, bot - 52, 7, 10);
+    // radiation probe: a short cylinder just under the surface, with its cable
+    var p2 = bx + bw * 0.72; ctx.fillStyle = '#2f3237'; ctx.fillRect(p2 - 1, 8, 2, wl - 6); ctx.fillStyle = '#4a4e55'; ctx.fillRect(p2 - 6, wl + 2, 12, 14); ctx.fillStyle = '#c9ccd2'; ctx.fillRect(p2 - 6, wl + 14, 12, 3);
+    ctx.font = '600 11px ' + FONT; ctx.textBaseline = 'top';
+    ctx.textAlign = 'right'; sceneText(ctx, 'Ag⁺ probe', p1 - 6, 6);
+    ctx.textAlign = 'left'; sceneText(ctx, 'radiation', p2 + 6, 4); sceneText(ctx, 'probe', p2 + 6, 17);
+    ctx.textAlign = 'left'; sceneText(ctx, 'sealed', 4, H * 0.42); sceneText(ctx, 'beaker', 4, H * 0.42 + 13);
+    ctx.fillStyle = '#1d1e1c'; ctx.fillRect(W - 50, bot - 22, 44, 16); ctx.fillStyle = '#f4f2ec'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('25 °C', W - 28, bot - 14);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top'; if (th > 0) { sceneText(ctx, 'solid', 4, bot - 16); }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Panel: the drawing inside the beaker (left) and the two rate bars (right)
+  // ---------------------------------------------------------------------------
+  var panelCv = document.getElementById('panel'), BARS_W = 104;
+  function drawPanel() {
+    var c = sizeCanvas(panelCv); if (!c) return;
+    var ctx = c.ctx, W = c.W, H = c.H;
+    var nw = { x: 6, y: 18, w: W - BARS_W - 14, h: H - 18 - 26 };
+    if (PW.w !== nw.w || PW.h !== nw.h) { layoutDirty = true; }
+    PW = nw;
+    if (layoutDirty || !st.cols) seed();
+    ctx.font = '600 11px ' + FONT; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = C('fg');
+    ctx.fillText('Inside the beaker (a drawing)', PW.x, 3);
+    ctx.save(); ctx.translate(PW.x, PW.y);
+    ctx.fillStyle = C('win-bg'); ctx.fillRect(0, 0, PW.w, PW.h); ctx.strokeStyle = C('rule'); ctx.lineWidth = 1; ctx.strokeRect(0.5, 0.5, PW.w - 1, PW.h - 1);
+    ctx.beginPath(); ctx.rect(0, 0, PW.w, PW.h); ctx.clip();
+    var off = (PW.w - nCols() * CELL) / 2;
+    st.cols.forEach(function (col, i) { col.forEach(function (mk, j) { drawCell(ctx, off + i * CELL, PW.h - (j + 1) * CELL, mk); }); });
+    st.dots.forEach(function (d) { if (d.k === 'X') drawX(ctx, d.x, d.y); });
+    st.dots.forEach(function (d) { if (d.k === 'Ag') drawAg(ctx, d.x, d.y, d.mk); });
+    st.sprites.forEach(function (s) { if (s.k === 'X') drawX(ctx, s.x, s.y); else drawAg(ctx, s.x, s.y, s.mk); });
+    ctx.restore();
+    drawBars(ctx, W - BARS_W, 0, BARS_W, H - 26);
+    // legend
+    var ly = H - 11, x = 12; ctx.font = '11px ' + FONT; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+    drawAg(ctx, x, ly, false); ctx.fillStyle = C('fg'); ctx.fillText('Ag⁺', x + 9, ly); x += 42;
+    drawX(ctx, x, ly); ctx.fillStyle = C('fg'); ctx.fillText(S.X, x + 9, ly); x += 42;
+    drawAg(ctx, x + 3, ly, true); ctx.fillStyle = C('fg'); ctx.fillText('radioactive Ag⁺', x + 14, ly); x += 116;
+    drawCell(ctx, x - 4, ly - CELL / 2, false); ctx.fillStyle = C('fg'); ctx.fillText('solid ' + saltKey, x + 8, ly); x += 78;
+    drawCell(ctx, x - 4, ly - CELL / 2, true); ctx.fillStyle = C('fg'); ctx.fillText('radioactive', x + 8, ly);
+  }
+  function drawBars(ctx, x0, y0, w, h) {
+    var r = rates(now()), top = y0 + 52, bot = y0 + h - 28, ph = bot - top, cap = 4 * RD;
+    ctx.font = '600 11px ' + FONT; ctx.fillStyle = C('fg'); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('Rates', x0 + w / 2, y0 + 3);
+    ctx.font = '10px ' + FONT; ctx.fillStyle = C('muted'); ctx.fillText('(no units)', x0 + w / 2, y0 + 16);
+    ctx.strokeStyle = C('rule'); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0 + 6, bot + 0.5); ctx.lineTo(x0 + w - 4, bot + 0.5); ctx.stroke();
+    [[r.d, 'break', 'breaking', 'away', false], [r.s, 'settle', 'settling', '', true]].forEach(function (b, i) {
+      var bx = x0 + 14 + i * 46, bw = 30, v = Math.min(b[0], cap), bh = v / cap * ph;
+      if (bh > 0) {
+        ctx.fillStyle = C(b[1]);
+        if (!b[4]) ctx.fillRect(bx, bot - bh, bw, bh);
+        else { ctx.save(); ctx.beginPath(); ctx.rect(bx, bot - bh, bw, bh); ctx.clip(); ctx.strokeStyle = C(b[1]); ctx.lineWidth = 2.5;
+          for (var k = -bh; k < bw + bh; k += 6) { ctx.beginPath(); ctx.moveTo(bx + k, bot); ctx.lineTo(bx + k + bh, bot - bh); ctx.stroke(); } ctx.restore();
+          ctx.strokeStyle = C(b[1]); ctx.lineWidth = 2; ctx.strokeRect(bx + 1, bot - bh + 1, bw - 2, bh - 2); }
+      }
+      if (b[0] > cap) {   // off the top: an arrow
+        ctx.fillStyle = C(b[1]); ctx.beginPath(); ctx.moveTo(bx + bw / 2, top - 11); ctx.lineTo(bx + bw / 2 + 8, top - 2); ctx.lineTo(bx + bw / 2 - 8, top - 2); ctx.closePath(); ctx.fill();
+      }
+      ctx.fillStyle = C('fg'); ctx.font = '10px ' + FONT; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillText(b[2], bx + bw / 2, bot + 3); if (b[3]) ctx.fillText(b[3], bx + bw / 2, bot + 14);
+    });
+    if (r.d > cap || r.s > cap) { ctx.font = '10px ' + FONT; ctx.fillStyle = C('muted'); ctx.textAlign = 'center'; ctx.fillText('▲ off the top', x0 + w / 2, y0 + 28); }
+  }
+
+  // ===========================================================================
+  // Text
+  // ===========================================================================
+  var el = function (id) { return document.getElementById(id); };
+  function shown() {
+    var c = now(), e = endState(), cnt = countOf(m.y), ce = countOf(e.y);
+    return { c: c, e: e, cnt: cnt, concSteady: fmtM(c.A) === fmtM(e.A) && fmtM(c.X) === fmtM(e.X), cntSteady: fmtCount(cnt) === fmtCount(ce), cntUp: ce > cnt };
+  }
+  function statusText() {
+    var s = shown(), out;
+    if (!st.started) out = 'Paused at the start. Press Play to watch the beaker.';
+    else {
+      out = '[Ag⁺] and [' + S.X + ']: ' + (s.concSteady ? 'steady' : 'changing') + '. Radiation count: ' + (s.cntSteady ? 'steady' : s.cntUp ? 'rising' : 'falling') + '.';
+      if (!st.running && !isReduced()) out += ' Paused.';
+    }
+    var ev = [];
+    if (st.pellet) ev.push('Pellet dropped.');
+    if (st.added) ev.push(cap1(S.sodium) + ' added (' + S.X + ' up by ' + S.addShow + ' M).');
+    return out + (ev.length ? ' ' + ev.join(' ') : '');
+  }
+  function cap1(t) { return t.charAt(0).toUpperCase() + t.slice(1); }
+  function captionText() {
+    var t = targets(), parts = ['Each dot stands for a great many ions.'];
+    var capped = [];
+    if (t.agTrue > CAP) capped.push('Ag⁺'); if (t.xTrue > CAP) capped.push(S.X);
+    if (capped.length) parts.push('Drawing capped at ' + CAP + ' ' + capped.join(' and ') + ' dots; the readings are true.');
+    if (t.cellsTrue > maxCells()) parts.push('Solid drawing capped; the readings are true.');
+    parts.push('The ring only marks radioactive silver; it gives off no light. The radiation probe counts only radioactive silver that has dissolved.');
+    if (st.added) parts.push('Sodium ions are not drawn.');
+    return parts.join(' ');
+  }
+  function readoutWords() {
+    var s = shown();
+    return 'Silver ion ' + sayNum(s.c.A) + ' molar; ' + S.Xword + ' ' + sayNum(s.c.X) + ' molar; radiation ' + fmtCount(s.cnt) + (fmtCount(s.cnt) === '1' ? ' count' : ' counts') + ' per minute; Q ' + sayNum(s.c.A * s.c.X) + '; K ' + sayK() + '.';
+  }
+  function describeScene() {
+    var c = now(), cells = c.N / UNIT;
+    var solid = cells > 0.5 ? 'water over a layer of ' + S.solidWord + ' solid ' + S.name + (st.started && st.nStart > 0.5 ? ', now ' + (cells > st.nStart + (st.pellet ? PELLET_CELLS : 0) + 0.5 ? 'thicker than' : cells < st.nStart + (st.pellet ? PELLET_CELLS : 0) - 0.5 ? 'thinner than' : 'as thick as') + ' at the start' : '') : 'clear water with no solid at the bottom';
+    return 'A sealed beaker at 25 °C: ' + solid + '.' + (st.pellet ? ' A radioactive pellet of the same salt lies on the solid.' : '') +
+      ' A silver-ion probe dips into the water, and a radiation probe sits near the top of the water. ' + readoutWords() + ' ' + statusText();
+  }
+  function barWords() {
+    var r = rates(now()), cap = 4 * RD;
+    if (r.d === 0 && r.s === 0) return 'Both rate bars are empty.';
+    if (Math.abs(r.d - r.s) <= 0.02 * Math.max(r.d, r.s)) return 'The breaking-away bar and the settling bar are the same height.';
+    var big = r.s > r.d ? 'settling' : 'breaking-away', small = r.s > r.d ? 'breaking-away' : 'settling';
+    return 'The ' + big + ' bar is taller than the ' + small + ' bar' + (Math.max(r.d, r.s) > cap ? ' and runs off the top' : '') + '.';
+  }
+  function describePanel() {
+    var t = targets(), ag = countDots('Ag'), mk = countDots('Ag', true), xx = countDots('X'), cells = cellCount(), mc = markedCells();
+    var r = rates(now()), moving = r.d > 0 || r.s > 0;
+    return 'A drawing of the inside of the beaker. In the water: ' + ag + ' silver-ion dots (circles with a plus)' + (mk ? ', ' + mk + ' of them ringed as radioactive' : '') +
+      ', and ' + xx + ' ' + S.Xword + ' dots (diamonds with a minus)' + (t.xTrue > CAP || t.agTrue > CAP ? '; the drawing is capped' : '') + '. ' +
+      (cells ? 'The solid is drawn as ' + cells + ' cells' + (mc ? ', ' + mc + ' marked radioactive' : '') + '. ' : 'There is no solid. ') +
+      (cells && moving ? 'Ions break away from the solid, and ions that meet settle back onto it. ' : '') + barWords();
+  }
+  var live = el('live'), restTimer = null;
+  function say(msg) { live.textContent = ''; setTimeout(function () { live.textContent = msg; }, 30); }
+  function announceAtRest(prefix) { if (restTimer) clearTimeout(restTimer); restTimer = setTimeout(function () { restTimer = null; say((prefix || '') + readoutWords()); }, 700); }
+  function checkSteady() {
+    if (!st.started) return;
+    var s = shown(), steady = s.concSteady && s.cntSteady;
+    if (steady && st.steady === false) say('Readings steady. ' + readoutWords() + ' ' + barWords());
+    st.steady = steady;
+  }
+  function updateText() {
+    var c = now();
+    el('rAg').textContent = fmtM(c.A); el('rX').textContent = fmtM(c.X); el('rCount').textContent = fmtCount(countOf(m.y)) + ' counts/min';
+    el('rQ').textContent = fmtSci(c.A * c.X); el('rK').textContent = S.Kshow;
+    el('status').textContent = statusText();
+    el('descScene').textContent = describeScene(); el('descPanel').textContent = describePanel(); el('caption').textContent = captionText();
+    el('play').textContent = isReduced() ? 'Show the end' : st.running ? 'Pause' : 'Play';
+    var hasSolid = c.N > EPS;
+    el('pellet').disabled = st.pellet || !hasSolid;
+    el('pellet').setAttribute('aria-label', st.pellet ? 'Drop the radioactive pellet (already dropped; Reset to drop again)' : hasSolid ? 'Drop the radioactive pellet' : 'Drop the radioactive pellet (available when there is solid in the beaker)');
+    el('add').disabled = st.added;
+    el('add').setAttribute('aria-label', st.added ? 'Add ' + S.sodium + ' (already added; Reset to add again)' : 'Add ' + S.sodium);
+  }
+
+  // ===========================================================================
+  // Loop
+  // ===========================================================================
+  var rafId = null, lastT = 0;
+  function tick(dt) {
+    advance(dt);
+    if (st.dropT < 1) st.dropT += dt; if (st.pourT > 0) st.pourT -= dt;
+    if (st.cols && !layoutDirty) moveDots(dt);
+    checkSteady();
+    if ((performance.now() - st.lastInput) / 1000 > IDLE_STOP_S) { stop(); say('Paused after two minutes without input.'); }
+  }
+  function render() { drawScene(); drawPanel(); updateText(); }
+  function frame(t) { rafId = null; var dt = Math.min(0.05, Math.max(0, (t - lastT) / 1000)); lastT = t; tick(dt); render(); schedule(); }
+  function schedule() { if (st.running && !isReduced() && !rafId) rafId = requestAnimationFrame(frame); }
+  function start() {
+    st.lastInput = performance.now(); st.started = true;
+    if (isReduced()) { jumpToEnd(); st.running = false; st.steady = true; render(); return; }
+    if (st.steady === null) st.steady = shown().concSteady && shown().cntSteady;
+    if (!st.running) { st.running = true; lastT = performance.now(); }
+    schedule(); render();
+  }
+  function stop() { st.running = false; if (rafId) { cancelAnimationFrame(rafId); rafId = null; } render(); }
+
+  // ===========================================================================
+  // Controls
+  // ===========================================================================
+  el('play').addEventListener('click', function () { if (st.running) stop(); else start(); });
+  el('reset').addEventListener('click', function () { stop(); initState(); render(); say('Reset to the starting state, paused. ' + readoutWords()); });
+  el('pellet').addEventListener('click', function () {
+    if (st.pellet || now().N <= EPS) return;
+    st.pellet = true; st.dropT = 0; m.P = PELLET_CELLS * UNIT; m.N0 += PELLET_CELLS * UNIT; st.steady = false;
+    if (st.cols && !layoutDirty) {   // the pellet lands on the solid as a lump of marked cells
+      var n = nCols(), mid = Math.floor(n * 0.62);
+      for (var i = 0; i < PELLET_CELLS; i++) st.cols[Math.min(n - 1, Math.max(0, mid - 5 + (i % 10)))].push(true);
+    }
+    start(); say('The radioactive pellet dropped onto the solid. ' + readoutWords());
+  });
+  el('add').addEventListener('click', function () {
+    if (st.added) return;
+    var c = now(); st.added = true; st.pourT = 1.5; st.steady = false;
+    setOrigin(c.A, c.X + S.add, c.N);
+    start(); say(cap1(S.sodium) + ' added: ' + S.Xword + ' up by ' + sayNum(S.add) + ' molar. ' + readoutWords());
+  });
+
+  // ===========================================================================
+  // Start: the problem's own beaker, paused at time zero.
+  // ===========================================================================
+  applyTheme();
+  if (darkQ && themeParam !== 'light' && themeParam !== 'dark') { var cw = function () { applyTheme(); render(); }; if (darkQ.addEventListener) darkQ.addEventListener('change', cw); else if (darkQ.addListener) darkQ.addListener(cw); }
+  el('title').textContent = cap1(S.name) + ': ' + saltKey + '(s) ⇌ Ag⁺(aq) + ' + S.X + '(aq), 25 °C';
+  el('lX').textContent = '[' + S.X + ']';
+  el('add').textContent = 'Add ' + S.sodium;
+  initState();
+  if (window.ResizeObserver) new ResizeObserver(function () { render(); }).observe(document.body); else window.addEventListener('resize', render);
+  if (reduceQ) { var rc = function () { if (st.running && isReduced()) { stop(); jumpToEnd(); } render(); }; if (reduceQ.addEventListener) reduceQ.addEventListener('change', rc); else if (reduceQ.addListener) reduceQ.addListener(rc); }
+  render();
+})();
+</script>
+</body>
+</html>
