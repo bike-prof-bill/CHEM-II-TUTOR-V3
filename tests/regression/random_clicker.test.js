@@ -2,7 +2,7 @@
 // "equations". 200 runs per archetype. It must never earn credit and never pass the credit gate while the attempt is
 // still clean. Parks (by design) can carry a stuck student to the final item without credit; that path is counted here.
 const CORE = require("../../gas/Core.gs");
-const ARCHS = [require("../../gas/Archetype_ch10_cc.gs")["ch10_cc"], require("../../gas/Archetype_ch13_ice.gs")["ch13_ice"]];
+const ARCHS = [require("../../gas/Archetype_ch10_cc.gs")["ch10_cc"], require("../../gas/Archetype_ch13_eq.gs")["ch13_eq"]];
 let pass = 0, fail = 0; const ok = (c, m) => { c ? pass++ : (fail++, console.log("  FAIL:", m)); };
 function rng(seed) { let s = seed >>> 0; return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296; }
 const FILLER = ["the", "thing", "is", "maybe", "later", "okay", "sure", "yes", "no", "fine", "done", "next", "please", "um", "so", "then", "right", "hmm", "what", "this"];

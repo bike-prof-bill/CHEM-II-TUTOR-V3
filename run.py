@@ -1,6 +1,6 @@
 """python run.py ch10_cc --per-kind 3 --seed 1
 Writes output/<id>.bundle.json, gas/Archetype_<id>.gs and gas/Units.gs (paste both .gs files into Apps Script)."""
-import sys, json, argparse, importlib, collections, os
+import csv, sys, json, argparse, importlib, collections, os
 sys.path.insert(0, "archetypes"); import engine
 ap = argparse.ArgumentParser(); ap.add_argument("archetype", help="archetype id, or 'all'"); ap.add_argument("--per-kind", type=int, default=3)
 ap.add_argument("--seed", type=int, default=1); a = ap.parse_args()
@@ -14,8 +14,20 @@ def one(name):
     out = engine.build(A, a.per_kind, a.seed, openers, moves, errors, limits, sentences)
     os.makedirs("output", exist_ok=True); os.makedirs("gas", exist_ok=True)
     shipped = bool(out["variants"])                               # a fixed archetype with no scenario row ships nothing (Q versus K until approved)
+    # Rule 4: a DRAFT row must not reach a student. A moves or errors row marked DRAFT that applies to a shipped scenario (the
+    # opener column blank, or naming that scenario) stops the build of the shipped bundle; rows for scenarios not yet shipped may stay DRAFT.
+    drafts = []
+    for path, keycol in ((f"content_{name}_moves.csv", "state"), (f"content_{name}_errors.csv", "error id")):
+        if not os.path.exists(path): continue
+        for r in csv.DictReader(open(path, encoding="utf-8-sig")):
+            st = (r.get("status") or "").strip(); key = (r.get(keycol) or "").strip()
+            op = next((v.strip() for k, v in r.items() if k and k.lower().startswith("opener") and v), "")
+            if key and st.upper().startswith("DRAFT") and (not op or any(o["title"] == op for o in openers)): drafts.append(f"{os.path.basename(path)}: {key}" + (f" ({op})" if op else ""))
+    if shipped and drafts:
+        print(f"[{name}] NOT SHIPPED: {len(drafts)} DRAFT row(s) apply to a shipped scenario: " + "; ".join(drafts[:8]) + (" ..." if len(drafts) > 8 else ""))
+        shipped = False
     if not shipped:
-        print(f"[{name}] NOT SHIPPED: no scenario in content_{name}_openers.csv, so no gas/Archetype_{name}.gs and no bundle; the test fixture below is the only build.")
+        print(f"[{name}] NOT SHIPPED: " + ("a DRAFT row applies to a shipped scenario" if drafts else f"no scenario in content_{name}_openers.csv") + f", so no gas/Archetype_{name}.gs and no bundle; the test fixture below is the only build.")
         for f in (f"output/{name}.bundle.json", f"gas/Archetype_{name}.gs"):
             if os.path.exists(f): os.remove(f)
     if shipped: json.dump(out, open(f"output/{name}.bundle.json", "w"), indent=1, ensure_ascii=False)

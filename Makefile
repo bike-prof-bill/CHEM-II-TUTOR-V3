@@ -8,12 +8,10 @@ test: test-gen test-verify test-modules test-regression gen-check content-check 
 
 test-gen:
 	$(PY) test_ch10_cc.py
-	$(PY) test_ch13_ice.py
 	$(PY) test_ch13_eq.py
 
 test-verify:
 	$(NODE) gas/test_core.js
-	$(NODE) gas/test_ice.js
 	$(NODE) gas/test_syringe.js
 	$(NODE) gas/test_bird.js
 	$(NODE) gas/test_vent.js
@@ -35,6 +33,7 @@ test-regression:
 	$(PY) tests/regression/collision_rejected_by_generator.py
 	$(NODE) tests/regression/one_stage_one_notebook_card.test.js
 	$(NODE) tests/regression/random_clicker.test.js
+	$(NODE) tests/regression/no_exam_by_chance.test.js
 	$(NODE) tests/regression/log_row_never_dropped.test.js
 	$(NODE) tests/regression/no_repeated_problem.test.js
 

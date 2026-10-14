@@ -165,7 +165,7 @@ def declare(v, A):
         e = {"id": eid, "role": role, "dim": dim_of(t.get("unit", ""))}; e.update(t); exp.append(e)
     for name, s in v["givens"].items():
         exp.append({"id": "g_" + name, "state": None, "role": "given", "label": name, "value": s["value"], "unit": s["unit"],
-                    "dim": dim_of(s["unit"]), "abs_tol": round_sig(1e-6 * abs(s["value"]) + 1e-9, 3)})
+                    "dim": dim_of(s["unit"]), "abs_tol": round_sig(1e-6 * abs(s["value"]) + min(1e-9, 1e-3 * abs(s["value"])) if s["value"] else 1e-12, 3)})   # the absolute floor shrinks with tiny givens (Ksp-sized, 14 Oct): a 1e-9 floor swallowed every number near 1e-10
     for c in getattr(A, "CONSTANTS", []):
         exp.append({"id": "c_" + _slug(c["label"]), "state": None, "role": "constant", "label": c["label"], "value": c["value"],
                     "unit": c.get("unit", ""), "dim": dim_of(c.get("unit", "")), "abs_tol": c.get("abs_tol", round_sig(1e-3 * abs(c["value"]), 3))})

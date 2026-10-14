@@ -64,6 +64,11 @@
 </style>
 </head>
 <body>
+<div id="previewBar" style="display:none;background:#fff4d6;color:#4a3a00;padding:8px 14px;font-size:14px;border-bottom:1px solid #e6cf7a">
+  <span id="previewLabel"></span> <a id="previewMail" href="#" style="margin-left:12px;color:#1b5e6e">Email the instructor</a>
+  <div style="margin-top:6px;display:flex;gap:6px;align-items:flex-start"><textarea id="cmtBox" rows="2" style="flex:1;font:inherit" placeholder="Comment on what the tutor just did (goes to the log, with the problem and the step)"></textarea><button id="cmtSend" type="button">Log comment</button></div>
+  <div id="cmtAbout" style="font-size:12px;color:#6b5a1a;margin-top:3px"></div>
+</div>
 <header>
   <h1>Gen Chem II Tutor<small id="build">V3</small></h1>
   <span id="meter" aria-live="polite"></span>
@@ -71,6 +76,7 @@
   <select id="arch" aria-label="Archetype (testing)"></select>
   <select id="kind" aria-label="Problem kind (testing)"><option value="">any kind</option></select>
   <select id="opener" aria-label="Scenario (testing)"><option value="">any scenario</option></select>
+  <select id="rung" aria-label="Rung (preview)" style="display:none"><option value="faded">Faded</option><option value="worked">Worked</option><option value="independent">Independent</option></select>
   <button id="newBtn">New problem</button>
   <a id="nbLink" class="quiet" target="_blank" rel="noopener" style="color:var(--teal);font-size:14px">Notebook</a>
   <button class="quiet" id="setBtn" aria-label="Connection settings">Settings</button>
@@ -137,16 +143,19 @@
   <p id="cfgMsg" style="font-size:13px;color:var(--soft);min-height:1.5em"></p>
   <div style="display:flex;gap:8px;justify-content:flex-end"><button class="quiet" id="cfgTest">Test</button><button id="cfgSave">Save</button></div></dialog>
 
+<script src="config.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 const store = { get:k=>{try{return localStorage.getItem(k)||""}catch(e){return ""}}, set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}} };
 const DEBUG = /[?&]debug=1/.test(location.search);
-let cfg = { url: store.get("v3_url"), token: store.get("v3_token") };
+const PRESET = (typeof V3_CONFIG === "object" && V3_CONFIG) || {};   // a hosted copy may ship config.js with the web app URL and token, so a student never sees the settings box (15 Oct)
+let cfg = { url: store.get("v3_url") || PRESET.url || "", token: store.get("v3_token") || PRESET.token || "" };
 let sessionId = "", history = [], busy = false, away = false, simEvents = [], fit = null, charts = {}, probeUse = null;
 
 // ---------- talking to the server ----------
 async function call(payload) {
-  const body = JSON.stringify(Object.assign({ authToken: cfg.token, sessionId, studentId: $("studentId").value.trim(), archetypeId: $("arch").value || undefined,
+  const body = JSON.stringify(Object.assign({ authToken: cfg.token, sessionId, studentId: $("studentId").value.trim(), archetypeId: $("arch").value || undefined, preview: !!PRESET.preview || undefined, rung: PRESET.preview ? $("rung").value : undefined,
+    client: PRESET.preview ? { ua: navigator.userAgent, screen: screen.width + "x" + screen.height, viewport: innerWidth + "x" + innerHeight, page: location.href, theme: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light" } : undefined,
     turnId: (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2)) }, payload));
   for (let attempt = 0; attempt < 2; attempt++) {            // Apps Script's redirect hop sometimes drops a reply; same turnId makes a retry safe
     try {
@@ -174,9 +183,10 @@ let lastNext = null;   // the next item the server reported, so the page can sha
 function handle(res, echo) {
   if (res && "next" in res) lastNext = res.next;
   if (!res || res.error) { add("note err", (res && res.error) || "No reply."); return; }
+  if (res.log && res.log.variant_id) { window.__lastProblem = res.log.variant_id + (res.log.problem_kind ? " (" + res.log.problem_kind + ")" : ""); window.__sessionId = sessionId; }   // for the preview's comment link
   if (echo) history.push({ role: "user", text: echo });
   if (res.problem) showProblem(res.problem);                                 // instructor, 11 Oct: "The problem is now on the left" before the question that refers to it
-  if (res.reply) { add("tutor", res.reply); history.push({ role: "model", text: res.reply }); history = history.slice(-12); }
+  if (res.reply) { add("tutor", res.reply); history.push({ role: "model", text: res.reply }); history = history.slice(-12); if (PRESET.preview) window.__lastReply = res.reply; }
   if (res.offer) showOffer(res.offer);
   if (res.notebook_url) $("nbLink").href = res.notebook_url;
   if (res.title) $("build").textContent = "V3 · " + res.title;
@@ -324,6 +334,15 @@ async function fillMenus() {
       $("opener").innerHTML = '<option value="">any scenario</option>'; (a.openers || []).forEach((t, i) => { const o = document.createElement("option"); o.value = i; o.textContent = t; $("opener").appendChild(o); });
       if (a.content_version) $("build").title = "content " + a.content_version; };
     $("arch").onchange = kinds; kinds(); } catch (e) { }
+}
+if (PRESET.preview) {   // a faculty preview (15 Oct): a banner, the rung menu, and a comment link that carries the build, the problem and the session
+  const p = PRESET.preview; $("previewBar").style.display = "block"; $("previewLabel").textContent = p.label || "Preview build for faculty review. Not for students."; $("rung").style.display = "";
+  $("studentId").placeholder = "Your name";
+  $("cmtSend").onclick = async () => { const txt = $("cmtBox").value.trim(); if (!txt) return; $("cmtSend").disabled = true;
+    try { const r = await call({ action: "comment", message: txt, about: { last_reply: (window.__lastReply || "").slice(0, 300), problem: window.__lastProblem || "", rung: $("rung").value, page: location.href } });
+      $("cmtAbout").textContent = (r && r.ok) ? "Logged. Thank you." : "Not logged: " + ((r && r.error) || "no reply"); if (r && r.ok) $("cmtBox").value = ""; }
+    catch (e) { $("cmtAbout").textContent = "Not logged: " + e; } $("cmtSend").disabled = false; };
+  $("previewMail").onclick = (e) => { e.preventDefault(); const subj = "Tutor preview comment: " + ($("arch").value || "") + " " + (window.__lastProblem || ""), bodyTxt = "Build: " + ($("build").textContent || "") + "\nProblem: " + (window.__lastProblem || "(none yet)") + "\nSession: " + (window.__sessionId || "") + "\n\nWhat I saw:\n\nWhat I expected:\n"; location.href = "mailto:" + (p.contact || "") + "?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(bodyTxt); };
 }
 if (!cfg.url || !cfg.token) openSettings(); else fillMenus();
 // instructor, 11 Oct: a copy of this page opened from inside the gas folder cannot find media/; say so at once (the 11 Oct detour)

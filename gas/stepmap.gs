@@ -51,6 +51,7 @@ function moveFor(arch, V, state) {
   var byKind = {}; for (var key in arch.moves) { var at = key.indexOf("@"); if (at > -1 && key.slice(0, at) === state && key.slice(at + 1).split(/[;,]/).map(function (x) { return x.trim(); }).indexOf(V.kind) > -1) byKind = arch.moves[key]; }
   var item = arch.moves[state] || {}, st = arch.moves["stage:" + stageOf(V, state)] || {}, out = {};
   [over, byKind, item, st].forEach(function (src) { for (var k in src) if (src[k] && !out[k]) out[k] = src[k]; });
+  if (V.words) for (var f in out) if (typeof out[f] === "string") out[f] = out[f].replace(/\{(\w+)\}/g, function (m, w) { return V.words[w] !== undefined ? V.words[w] : m; });   // the problem's own words fill {salt}-style slots in a row (14 Oct)
   return out;
 }
 // A named error's note and question, with the scenario's own wording first.
@@ -64,7 +65,7 @@ function addPin(S, id, label, text) {
 // Options of a pick or direction item: the archetype's Equations list, or the item's own list.
 function optionsOf(arch, V, b) {
   if (b.options_from === "equation_picks") return arch.equation_picks.map(function (e) { return { id: e.id, text: e.text, right: e.fits.indexOf(V.kind) > -1 }; });
-  return (b.options || []).map(function (o) { return { id: o.id, text: o.text, right: (b.right || []).indexOf(o.id) > -1 }; });
+  return (b.options || []).map(function (o) { return { id: o.id, text: o.text, right: (b.right || []).indexOf(o.id) > -1, names: o.names || null }; });
 }
 function pickItemFor(arch, S, V, optionId) {              // which live, unmet pick/direction item owns this option
   var live = liveItems(S, V);

@@ -15,13 +15,17 @@ http.createServer((req, res) => {
       else if (q.turnId && turns[q.turnId]) out = turns[q.turnId];
       else {
         let S = sessions[q.sessionId], r;
+        if (q.action === "comment") { console.log("COMMENT |", q.studentId, "|", S ? S.variantId : "", "|", JSON.stringify(q.about || {}), "|", q.message); return res.end(JSON.stringify({ ok: true })); }
         if (q.action === "start" || q.action === "reset") {
           const student = q.studentId || "Guest", hk = arch.archetype_id + "|" + student; history[hk] = history[hk] || [];
-          const pick = CORE.chooseVariant(arch.variants, { kind: q.kind, opener: q.opener }, /^Guest/.test(student) ? [] : history[hk]);   // never the same problem twice while others remain
+          const roles = {}; arch.openers.forEach((o, i) => { roles[i] = o.role || "floater"; });
+          const filters = q.preview ? { kind: q.kind, opener: q.opener } : { kind: q.kind, opener: q.opener, rolesByOpener: roles, excludeRole: "exam" };   // as Code.gs: no exam by chance; a preview may ask for it
+          const pick = CORE.chooseVariant(arch.variants, filters, /^Guest/.test(student) ? [] : history[hk]);   // never the same problem twice while others remain
           if (!pick) return res.end(JSON.stringify({ error: "no problem matches that opener and kind" }));
           if (!/^Guest/.test(student)) { if (pick.reset) history[hk] = []; history[hk].push(pick.variant_id); if (pick.reset) console.log("HISTORY_RESET |", hk); }
-          S = sessions[q.sessionId] = CORE.newSession(arch, { variantIndex: pick.index, openerIndex: Math.floor(Math.random() * arch.openers.length), stamp: Date.now().toString(36) });
-          r = { reply: arch.openers[S.openerIndex].question, progress: CORE.progress(S, arch.variants[S.variantIndex]), notebook_url: arch.notebook_url, title: arch.title, media: CORE.openerMedia(arch, S), log: { event_type: "PROBLEM_OPEN", variant_id: S.variantId } };
+          S = sessions[q.sessionId] = CORE.newSession(arch, { variantIndex: pick.index, openerIndex: Math.floor(Math.random() * arch.openers.length), stamp: Date.now().toString(36),
+            rung: q.preview && /^(worked|faded|independent)$/.test(String(q.rung)) ? q.rung : "faded" });
+          r = { reply: arch.openers[S.openerIndex].question, progress: CORE.progress(S, arch.variants[S.variantIndex]), notebook_url: arch.notebook_url, title: arch.title, media: CORE.openerMedia(arch, S), log: { event_type: "PROBLEM_OPEN", problem_kind: arch.variants[S.variantIndex].kind, variant_id: S.variantId } };
         } else if (!S) r = { error: "no session; press New problem", log: {} };
         else if (q.action === "back") r = CORE.processBack(arch, S, Date.now());
         else { const input = { message: q.message || "", pick: q.pick || null, table: q.table || null, history: q.history || [], now: Date.now() };

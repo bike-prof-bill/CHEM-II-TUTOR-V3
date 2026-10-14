@@ -43,12 +43,20 @@ function doPost(e) {
     if (req.authToken !== props.getProperty("APP_TOKEN")) return json_({ error: "unauthorized" });
     if (req.turnId) { var seen = cache.get("v3turn_" + req.turnId); if (seen) return text_(seen); }    // a retry replays, never regrades
     var sid = String(req.sessionId || ""), student = req.studentId || "Guest (No Extra Credit)";
+    var preview = !!req.preview; if (preview) student = "preview:" + (req.studentId || "faculty");   // a faculty preview (15 Oct): logged under preview:<name>, never on the roster
     var arch = ARCHETYPES[req.archetypeId] || ARCHETYPES[Object.keys(ARCHETYPES)[0]]; if (!arch) return json_({ error: "unknown archetype" });
     var S = sid ? JSON.parse(cache.get("v3s_" + sid) || "null") : null, res, meta = { model: "", ms: 0 };
 
+    if (req.action === "comment") {                     // a reviewer's comment (15 Oct): one log row, tied to the session, the problem and the step it was made on
+      var CV = S ? arch.variants[S.variantIndex] : null;
+      log_(props, { event_type: "COMMENT", attempt_id: S ? S.attemptId : "", archetype_id: arch.archetype_id, variant_id: S ? S.variantId : "", problem_kind: CV ? CV.kind : "",
+                    state: (S && CV) ? CORE.activeState(S, CV) : "", rung: S ? S.rung : "", content_version: arch.content_version,
+                    structured: JSON.stringify(req.about || {}) }, sid, student, String(req.message || "").slice(0, 4000), "", meta, 0);
+      return json_({ ok: true });
+    }
     if (req.action === "start" || req.action === "reset") {
       if (S && !S.done && S.turns > 0) mastery_(props, student, arch, S, "abandoned");
-      var isGuest = /^Guest/.test(student), histKey = "v3hist_" + arch.archetype_id + "_" + student.replace(/[^A-Za-z0-9_@.\-]/g, "_");
+      var isGuest = /^Guest/.test(student) || preview, histKey = "v3hist_" + arch.archetype_id + "_" + student.replace(/[^A-Za-z0-9_@.\-]/g, "_");
       var served = isGuest ? [] : JSON.parse(props.getProperty(histKey) || "[]");
       // rungs (instructor, 11-13 Oct): a student with a row in the Rungs sheet is stepped Worked -> Faded -> Independent and the
       // tutor picks the scenario by role; the offered second worked problem (req.want) rides the same path. Without a row: as before.
@@ -56,13 +64,16 @@ function doPost(e) {
       var rolesByOpener = {}; arch.openers.forEach(function (o, i) { rolesByOpener[i] = o.role || "floater"; });
       if (req.want && req.want.extra) { filters = { kind: req.want.kind, role: req.want.role, version: req.want.version, substance: req.want.substance, rolesByOpener: rolesByOpener }; rung = "worked"; extra = true; }
       else if (rec) { var w = CORE.nextAssignment(rec, arch); filters = { role: w.role, version: w.version, rolesByOpener: rolesByOpener }; rung = w.rung; }
-      else filters.excludeRole = "exam";                                                                  // an unstepped student is never served the exam scenario by chance
+      else if (preview) rung = /^(worked|faded|independent)$/.test(String(req.rung)) ? req.rung : "faded";   // a preview may ask for any scenario at any rung
+      else { filters.rolesByOpener = rolesByOpener; filters.excludeRole = "exam"; }                     // an unstepped student is never served the exam scenario by chance (rolesByOpener was missing here until 15 Oct, so the exclusion never applied)
       var pick = CORE.chooseVariant(arch.variants, filters, served);        // never the same problem twice while others remain (step 6a/6b)
       if (!pick) return json_({ error: "no problem matches that opener and kind" });
       if (!isGuest) { if (pick.reset) served = []; served.push(pick.variant_id); props.setProperty(histKey, JSON.stringify(served.slice(-500))); }
       if (pick.reset) log_(props, { event_type: "HISTORY_RESET", archetype_id: arch.archetype_id, content_version: arch.content_version, structured: "all " + served.length + " matching problems served; list reset" }, sid, student, "", "", meta, 0);
       S = CORE.newSession(arch, { variantIndex: pick.index, rung: rung, extra: extra,
         openerIndex: Math.floor(Math.random() * arch.openers.length), stamp: Date.now().toString(36) + Math.floor(Math.random() * 1296).toString(36) });
+      if (preview) log_(props, { event_type: "PREVIEW_CLIENT", attempt_id: S.attemptId, archetype_id: arch.archetype_id, variant_id: S.variantId, content_version: arch.content_version, rung: S.rung,
+                                 structured: JSON.stringify(req.client || {}) }, sid, student, "", "", meta, 0);   // browser, screen, page address: once per problem in a preview
       res = { reply: CORE.showFor(arch, arch.variants[S.variantIndex], S, "account_given") || arch.openers[S.openerIndex].question, rung: S.rung, progress: CORE.progress(S, arch.variants[S.variantIndex]), notebook_url: arch.notebook_url, title: arch.title, media: CORE.openerMedia(arch, S),
         log: { event_type: "PROBLEM_OPEN", attempt_id: S.attemptId, archetype_id: S.archetypeId, variant_id: S.variantId,
                problem_kind: arch.variants[S.variantIndex].kind, content_version: arch.content_version } };

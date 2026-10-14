@@ -7,9 +7,12 @@
    "T_C": 500.0,
    "source": {
     "Kc": "instructor, 10 Oct 2026: derived from NIST ΔG values; the course's rule-of-thumb value. Under the 13 Oct rule (OpenStax first), check Chapter 13 for a stated Kc at this temperature before any new problem uses it.",
-    "dH_sign": "exothermic forward (OpenStax Chapter 13, the Haber process ΔH° = −92.2 kJ/mol); instructor confirms the citation"
+    "dH_sign": "exothermic forward: dH_kJ_mol = −91.8 (SCENARIO_CLAUDE's kit, approved 14 Oct 2026)",
+    "dH_kJ_mol": "NIST ΔHf° of NH3(g), −45.9 kJ/mol, times 2 (instructor, 13 Oct 2026) (approved with the ch13_eq kit, 14 Oct). OpenStax-first rule: the text's value, if Chapter 13 states one, replaces this on the instructor's word."
    },
-   "dH_sign": -1
+   "dH_sign": -1,
+   "dH_kJ_mol": -91.8,
+   "Kc_at_other_T": "van 't Hoff from Kc = 0.060 at 773.15 K with ΔH° held constant (rule of thumb); 450 °C 0.161, 550 °C 0.0252, 600 °C 0.0117"
   },
   "wgs": {
    "equation": "CO(g) + H2O(g) <=> CO2(g) + H2(g)",
@@ -23,12 +26,52 @@
   },
   "agcl_dissolution": {
    "equation": "AgCl(s) <=> Ag+(aq) + Cl-(aq)",
-   "Kc": 1.8e-10,
+   "Kc": 1.6e-10,
    "T_C": 25.0,
    "dH_sign": 1,
    "source": {
-    "Kc": "OpenStax Chemistry 2e, Chapter 13 (the instructor's sketch of exercise 13.48 and its solution): 1.8e-10 at 25 °C, two significant figures. Written Kc as the chapter does.",
-    "dH_sign": "endothermic dissolution (solubility rises with temperature): the sketch, from the text; instructor confirms"
+    "Kc": "OpenStax Chemistry 2e, Appendix J, Table J1: Ksp at 25 °C, two significant figures (instructor, 13 Oct 2026). Written Kc as the chapter does.",
+    "dH_sign": "instructor, 13 Oct 2026: dissolving takes in heat (rule of thumb; no value used)."
+   }
+  },
+  "agbr_dissolution": {
+   "equation": "AgBr(s) <=> Ag+(aq) + Br-(aq)",
+   "Kc": 5e-13,
+   "T_C": 25.0,
+   "dH_sign": 1,
+   "source": {
+    "Kc": "OpenStax Chemistry 2e, Appendix J, Table J1: Ksp at 25 °C, two significant figures (instructor, 13 Oct 2026). Written Kc as the chapter does.",
+    "dH_sign": "instructor, 13 Oct 2026: dissolving takes in heat (rule of thumb; no value used)."
+   }
+  },
+  "agi_dissolution": {
+   "equation": "AgI(s) <=> Ag+(aq) + I-(aq)",
+   "Kc": 1.5e-16,
+   "T_C": 25.0,
+   "dH_sign": 1,
+   "source": {
+    "Kc": "OpenStax Chemistry 2e, Appendix J, Table J1: Ksp at 25 °C, two significant figures (instructor, 13 Oct 2026). Written Kc as the chapter does.",
+    "dH_sign": "instructor, 13 Oct 2026: dissolving takes in heat (rule of thumb; no value used)."
+   }
+  },
+  "hi_formation": {
+   "equation": "H2(g) + I2(g) <=> 2HI(g)",
+   "Kc": 50.0,
+   "T_C": 400.0,
+   "dH_sign": -1,
+   "source": {
+    "Kc": "OpenStax Chemistry 2e, section 13.3 (Effect of a Change in Concentration): Kc = 50.0 at 400 °C (instructor, 14 Oct 2026). The sketch's 450 °C is replaced by the text's 400 °C.",
+    "dH_sign": "instructor, 14 Oct 2026: forming hydrogen iodide gives off a little heat (rule of thumb; no value used)."
+   }
+  },
+  "no2_dimerization": {
+   "equation": "2NO2(g) <=> N2O4(g)",
+   "Kc": 160.0,
+   "T_C": 25.0,
+   "dH_sign": -1,
+   "source": {
+    "Kc": "OpenStax Chemistry 2e, Example 13.2: Kc = 1.6 × 10² at 25 °C (instructor, 14 Oct 2026).",
+    "dH_sign": "OpenStax Chemistry 2e, section 13.3: N2O4(g) ⇌ 2NO2(g), ΔH = +57.20 kJ, so the dimerization written here gives off heat."
    }
   }
  }

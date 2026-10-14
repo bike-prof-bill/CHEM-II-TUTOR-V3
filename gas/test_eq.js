@@ -10,25 +10,79 @@ const ACC_M = "Carbon monoxide and steam molecules collide and swap atoms to mak
 const ACC_A = "Silver and chloride ions leave the solid crystal into the water while ions in the water collide and settle back onto the solid; the two rates are equal, so the ions keep trading places.";
 const WHY = "The added change makes one set of collisions outrun the other until the ratio of products to reactants is back at K.";
 
-ok(ARCH.variants.length === 13 && ARCH.openers.length === 3, "thirteen problems, three harness openers");
-ok(!fs.existsSync(__dirname + "/Archetype_ch13_eq.gs"), "no shipped bundle while no scenario is approved");
+ok(ARCH.variants.length === 66 && ARCH.openers.length === 5, "sixty-six problems, five scenarios");
+const SHIP = require("./Archetype_ch13_eq.gs")["ch13_eq"];
+ok(SHIP.variants.length === 66 && SHIP.openers.length === 5 && SHIP.variants.filter(v => /_tracer$/.test(v.kind)).length === 18, "the shipped bundle: five scenarios, sixty-six problems");
+ok(["The Purple Piston", "The Fading Brown"].every(t => SHIP.openers.find(o => o.title === t).role === "floater"), "the Purple Piston and the Fading Brown are floaters");
+ok(SHIP.openers.find(o => o.title === "The Silent Beaker").role === "floater", "the Silent Beaker is a floater");
+ok(SHIP.openers.find(o => o.title === "The Martian Fuel Factory").role === "worked" && SHIP.openers.find(o => o.title === "The Haber-Bosch Harvest").role === "exam", "roles kept");
 ok(ARCH.variants.every(v => v.board.slice(-6).map(b => b.id).join(">") === "perturb_1>perturb_1_why>perturb_2>perturb_2_why>meaning_given>reflection"), "every problem ends with two perturbations, the meaning, the reflection");
 
 // 1. the tracer A1 at Independent: Q = K, no shift, the common ion, heat
 { const i = byFixed("A1"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "a1", rung: "independent" });
   let r = say(S, ACC_A); ok(S.board.account_given === "ticked" && r.problem, "account accepted, problem revealed");
   r = say(S, "", { pick: "eq_q" }); ok(S.board.relation_chosen === "ticked", "the Q expression counts as the pick");
-  r = say(S, "1.8e-10"); ok(S.board.Q_found !== "ticked", "K restated as Q (1.8e-10) does not tick: Q from the data is 1.7e-10");
-  r = say(S, "1.7e-10"); ok(S.board.Q_found === "ticked", "Q = 1.7e-10, two figures, ticks; the direction item then reads it as equal to K");
+  r = say(S, "6.2e9"); ok(r.log.trap_ids === "Q_INVERTED" && /top of Q or the bottom/.test(r.reply), "1/Q is named with the Silent Beaker's own ask: " + r.reply.slice(0, 50));
+  r = say(S, "1.6e-10"); ok(S.board.Q_found === "ticked" && /more of the solid dissolve/.test(r.reply), "Q = 1.6e-10 ticks (equal to K: 2.0e-5 × 8.0e-6); the approved direction ask follows");
   r = say(S, "", { pick: "direction:forward" }); ok(S.board.shift_predicted !== "ticked" && r.log.counted_fail, "forward at Q = K: a wrong try");
+  ok(r.log.trap_ids === "FORWARD_AT_EQUILIBRIUM" && /Is the solid in Q/.test(r.reply), "forward at Q = K is a named wrong turn; the approved ask is used: " + r.reply.slice(0, 60));
   r = say(S, "neither"); ok(S.board.shift_predicted === "ticked", "typed 'neither': ticked");
   r = say(S, "", { pick: "p1:forward" }); ok(S.board.perturb_1 !== "ticked" && r.log.counted_fail, "common ion added, forward: wrong");
-  r = say(S, "", { pick: "p1:reverse" }); ok(S.board.perturb_1 === "ticked", "common ion added, reverse: ticked");
+  ok(r.log.trap_ids === "FORWARD_ON_COMMON_ION", "forward on the common ion is a named wrong turn");
+  r = say(S, "", { pick: "p1:neither" }); ok(!r.log.trap_ids && r.log.counted_fail, "an unnamed wrong pick stays a plain wrong try");
+  r = say(S, "", { pick: "p1:reverse" }); ok(S.board.perturb_1 === "ticked" && /extra chloride ions/.test(r.reply), "common ion added, reverse: ticked; {anion} filled in the why-ask: " + r.reply.slice(0, 60));
   r = say(S, WHY); ok(S.board.perturb_1_why === "ticked", "the explanation in words ticks the why item");
-  r = say(S, "forward"); ok(S.board.perturb_2 === "ticked", "warming an endothermic dissolution, typed forward: ticked");
+  r = say(S, "forward"); ok(S.board.perturb_2 === "ticked", "warming an endothermic dissolution, typed forward: ticked (the option reads 'forward: more of the solid dissolves')");
   say(S, WHY);
   say(S, "Adding solid changed nothing because the solid is not in the expression; the tracer shows ions still trading places.");
-  r = say(S, "Leaving the solid out was hardest."); ok(r.done && S.clean === true && r.credit, "done at Independent; one wrong try per stage keeps the run clean (two in one stage would not)"); }
+  r = say(S, "Leaving the solid out was hardest."); ok(r.done && S.clean === false && !r.credit, "done at Independent; two wrong tries in one stage (the common ion) make the run not clean, so no credit"); }
+
+// 1b. Bromide B6: moles in 0.500 L over solid; the words {salt}/{sodium_salt} filled; moles straight into Q named
+{ const i = byFixed("B6"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "b6", rung: "independent" });
+  say(S, "Silver and bromide ions leave the solid into the water while ions in the water collide and settle back; the two rates are equal, so the ions keep trading places.");
+  say(S, "", { pick: "eq_q" });
+  let r = say(S, "2.0e-7 M, 2.0e-7 M"); ok(S.board.conc_found === "ticked", "the two concentrations from moles in 0.500 L");
+  r = say(S, "1.0e-14"); ok(r.log.trap_ids === "MOLES_NOT_CONCENTRATION", "moles straight into Q: named on the Q step");
+  r = say(S, "4.0e-14"); ok(S.board.Q_found === "ticked", "Q = 4.0e-14 ticks (a tiny given no longer swallows it)");
+  r = say(S, "forward"); ok(S.board.shift_predicted === "ticked" && /sodium bromide/.test(r.reply), "forward typed; the perturbation ask names sodium bromide from the problem's words");
+  ok(V.sim_params.salt === "AgBr" && V.sim_params.solid === 1 && V.sim_params.Ag === 2e-7, "the page's settings: salt, Ag, X, solid"); }
+
+// 1c. Purple Piston P1a: the volume halves at equilibrium; old-volume concentrations named; any shift named; then hydrogen added, then heat
+{ const i = byFixed("P1a"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "p1a", rung: "independent" });
+  say(S, "Hydrogen and iodine molecules collide and make hydrogen iodide while hydrogen iodide molecules collide and break apart; the two rates are equal.");
+  say(S, "", { pick: "eq_q" });
+  let r = say(S, "0.02 M"); ok(r.log.trap_ids === "OLD_VOLUME_USED", "a concentration from the old volume: named (" + r.reply.slice(0, 40) + ")");
+  r = say(S, "0.04 M, 0.08 M, 0.4 M"); ok(S.board.conc_found === "ticked", "the three new concentrations tick");
+  r = say(S, "50"); ok(S.board.Q_found === "ticked", "Q = 50 ticks");
+  r = say(S, "", { pick: "direction:forward" }); ok(r.log.trap_ids === "SHIFT_ON_EQUAL_MOLES" && /molecules of gas/i.test(r.reply), "a shift after a volume change with equal gas moles: named with the approved ask");
+  r = say(S, "neither"); ok(S.board.shift_predicted === "ticked", "neither: ticked");
+  r = say(S, "forward"); ok(S.board.perturb_1 === "ticked", "hydrogen added: forward");
+  say(S, WHY); r = say(S, "reverse"); ok(S.board.perturb_2 === "ticked", "warmed, exothermic: reverse"); }
+
+// 1d. Purple Piston P3a: unequal start, the quadratic, [HI] then the iodine left
+{ const i = byFixed("P3a"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "p3a", rung: "independent" });
+  say(S, "Hydrogen and iodine molecules collide and make hydrogen iodide while hydrogen iodide molecules collide and break apart; the two rates become equal.");
+  say(S, "", { pick: "eq_k" }); say(S, "0.1 M, 0.2 M, 0 M"); say(S, "0"); say(S, "", { pick: "direction:forward" });
+  say(S, "I: 0.100 | 0.200 | 0\nC: -x | -x | +2x\nE: 0.100 - x | 0.200 - x | 2x");
+  let r = say(S, "50 = (2x)^2 / ((0.100 - x)(0.200 - x))"); ok(S.board.expression_set === "ticked", "the expression with (2x)^2 ticks");
+  r = say(S, "", { pick: "method:sqrt" }); ok(r.log.counted_fail, "square root on an unequal start: a wrong try");
+  r = say(S, "", { pick: "method:quadratic" }); ok(S.board.method === "ticked", "the quadratic formula");
+  r = say(S, "0.078"); ok(r.log.trap_ids === "SQRT_ON_NONSQUARE", "a square-rooted x: named");
+  r = say(S, "0.0934"); ok(S.board.x_found === "ticked", "x ticks"); say(S, "0.233");
+  r = say(S, "0.187 M"); ok(S.board.value_found === "ticked", "[HI] = 0.187 M is the answer");
+  r = say(S, "0.107 M"); ok(S.board.leftover_found === "ticked", "the iodine left: 0.107 M"); }
+
+// 1e. Fading Brown F1a: the change row written -x for NO2 is named on x; squeezing goes forward; heat reverse
+{ const i = byFixed("F1a"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "f1a", rung: "independent" });
+  say(S, "Two nitrogen dioxide molecules collide and join into dinitrogen tetroxide while tetroxide molecules break apart; the rates become equal.");
+  say(S, "", { pick: "eq_k" }); say(S, "0"); say(S, "", { pick: "direction:forward" });
+  let r = say(S, "I: 0.100 | 0\nC: -x | +x\nE: 0.100 - x | x"); ok(r.log.trap_ids === "CHANGE_COEFF_IGNORED", "a change row of -x for NO2: named on the table");
+  say(S, "I: 0.100 | 0\nC: -2x | +x\nE: 0.100 - 2x | x"); say(S, "160 = x / (0.100 - 2x)^2"); say(S, "", { pick: "method:quadratic" });
+  r = say(S, "0.0779"); ok(r.log.trap_ids === "CHANGE_COEFF_IGNORED", "the x that -x would give: named on x too");
+  r = say(S, "0.0419"); ok(S.board.x_found === "ticked", "x ticks"); say(S, "0.0597"); say(S, "0.0419 M"); say(S, "0.0162 M"); say(S, "160");
+  r = say(S, "", { pick: "p1:neither" }); ok(r.log.counted_fail, "squeezing with fewer gas moles on the right: no shift is wrong");
+  r = say(S, "forward"); ok(S.board.perturb_1 === "ticked", "squeezed: forward"); say(S, WHY);
+  r = say(S, "reverse"); ok(S.board.perturb_2 === "ticked", "warmed, exothermic: reverse"); }
 
 // 2. Haber H3 at Independent: the ICE work unchanged, then the perturbations
 { const i = byFixed("H3"), V = ARCH.variants[i], S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "h3", rung: "independent" });
@@ -40,9 +94,10 @@ ok(ARCH.variants.every(v => v.board.slice(-6).map(b => b.id).join(">") === "pert
   r = say(S, "I: 0 | 0 | 0.500\nC: +x | +3x | -2x\nE: x | 3x | 0.500 - 2x"); ok(S.board.table === "ticked", "the right table ticks");
   r = say(S, "0.060 = (0.500 - 2x)^2 / ((x)(3x)^3)"); ok(S.board.expression_set === "ticked", "the right expression ticks");
   r = say(S, "", { pick: "method:solver" }); ok(S.board.method === "ticked", "a solver for the quartic");
-  r = say(S, "", { pick: "p1:forward" }); ok(S.board.perturb_1 === "ticked", "ammonia drawn off: forward");
+  r = say(S, "", { pick: "p1:forward" }); ok(S.board.perturb_1 === "ticked" && /ammonia is gone/.test(r.reply), "ammonia drawn off: forward; the approved why-ask follows: " + r.reply.slice(0, 60));
   say(S, WHY);
   r = say(S, "", { pick: "p2:forward" }); ok(r.log.counted_fail && S.board.perturb_2 !== "ticked", "heating an exothermic reaction, forward: wrong");
+  ok(r.log.trap_ids === "EXO_HEATED_FORWARD" && /gives off heat/.test(r.reply), "named with the approved ask: " + r.reply.slice(0, 70));
   r = say(S, "", { pick: "p2:reverse" }); ok(S.board.perturb_2 === "ticked", "reverse: ticked");
   say(S, WHY); say(S, "No species runs out: both directions keep running at equal rates.");
   r = say(S, "Predict the shift before the table."); ok(r.done, "done"); }
@@ -58,6 +113,7 @@ ok(ARCH.variants.every(v => v.board.slice(-6).map(b => b.id).join(">") === "pert
   r = say(S, "4.00"); ok(S.board.K_confirmed === "ticked", "K put back together");
   r = say(S, "", { pick: "p1:forward" }); ok(S.board.perturb_1 === "ticked", "more steam: forward");
   say(S, WHY);
+  r = say(S, "", { pick: "p2:reverse" }); ok(r.log.trap_ids === "SQUEEZE_SHIFT_EQUAL_MOLES" && /Count the gas molecules/.test(r.reply), "a shift predicted on squeezing is named with the approved ask");
   r = say(S, "", { pick: "p2:neither" }); ok(S.board.perturb_2 === "ticked", "squeezing the chamber with equal gas moles each side: no shift");
   say(S, WHY); say(S, "The amounts hold because the swaps run both ways at the same rate.");
   r = say(S, "The roots were hardest."); ok(r.done, "done on the worked rung"); }
@@ -65,7 +121,7 @@ ok(ARCH.variants.every(v => v.board.slice(-6).map(b => b.id).join(">") === "pert
 // 4. every problem completable clean at Independent
 ARCH.variants.forEach((V, i) => {
   const S = CORE.newSession(ARCH, { variantIndex: i, openerIndex: V.opener_index, stamp: "c" + i, rung: "independent" });
-  const acc = V.kind === "haber_setup" ? ACC_H : (V.kind === "wgs_equilibrium" ? ACC_M : ACC_A);
+  const acc = V.kind === "haber_setup" ? ACC_H : (V.kind === "wgs_equilibrium" ? ACC_M : (/_tracer$/.test(V.kind) ? ACC_A : "The molecules collide and react both ways; the forward and reverse rates become equal, so the amounts hold."));
   say(S, acc); say(S, "", { pick: "eq_k" });
   const ex = (st) => V.expected.filter(e => e.state === st);
   if (V.board.some(b => b.id === "conc_found")) say(S, ex("conc_found").map(e => e.value + " M").join(", "));

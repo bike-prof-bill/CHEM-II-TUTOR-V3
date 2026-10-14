@@ -37,7 +37,7 @@ var CORE = (function () {
     if (!pickId && b && b.kind === "direction" && msg) {
       var esc = function (t) { return t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); };
       var hitsDir = optionsOf(arch, V, b).filter(function (o) { return new RegExp("\\b" + esc(o.text) + "\\b", "i").test(msg); });
-      if (!hitsDir.length) hitsDir = optionsOf(arch, V, b).filter(function (o) { var w = o.text.split(/\s+/).filter(function (x) { return x.toLowerCase() !== "the"; })[0]; return w && new RegExp("\\b" + esc(w) + "\\b", "i").test(msg); });   // the direction word alone ("the head pressure is lower", 11 Oct)
+      if (!hitsDir.length) hitsDir = optionsOf(arch, V, b).filter(function (o) { var w = o.text.split(/\s+/).filter(function (x) { return x.toLowerCase() !== "the"; })[0]; w = w && w.replace(/[:,.;!?]+$/, ""); return w && new RegExp("\\b" + esc(w) + "\\b", "i").test(msg); });   // the direction word alone ("the head pressure is lower", 11 Oct); a colon or comma after it is not part of the word (14 Oct)
       if (hitsDir.length === 1) pickId = hitsDir[0].id;
     }
     if (pickId) {
@@ -52,6 +52,7 @@ var CORE = (function () {
       } else {
         notes.push(pb.kind === "direction" ? "The student's prediction is wrong. Do not give the right one. Ask what must be true of the amounts for their prediction to hold."
                                            : "The student picked an option that does not fit this problem. Do not name the right one.");
+        if (opt.names) { ev.traps.push(opt.names); notes.push("KNOWN WRONG TURN (" + opt.names + "): " + trapNote(arch, V, opt.names).note + " Do not name the fix. Ask one question aimed at it."); }   // a wrong option the archetype names (errors file carries the ask)
         if (active === pb.id) ev.counted_fail = true;
       }
     }
@@ -367,7 +368,7 @@ var CORE = (function () {
   // A fingerprint of the code that is actually running: the source text of one function per module, hashed. Compared with the
   // value run.py computed from the repository (SHELL_VERSION), it shows a stale paste in Apps Script, which a pasted constant cannot.
   function shellFingerprint() {
-    var parts = [verdict, say, parseNumbers, evalArithmetic, match, checkEquation, liveItems, moveFor, applyLadder, checkDraft, buildSystem, fallbackReply, nearMissAsk, symbolShown, showFor, offerFor, logRow, logqAppend];
+    var parts = [verdict, say, parseNumbers, evalArithmetic, match, checkEquation, liveItems, optionsOf, moveFor, applyLadder, checkDraft, buildSystem, fallbackReply, nearMissAsk, symbolShown, showFor, offerFor, logRow, logqAppend];
     var text = parts.map(function (f) { return String(f).replace(/\s+/g, " "); }).join("|"), h = 5381;
     for (var i = 0; i < text.length; i++) h = ((h * 33) ^ text.charCodeAt(i)) >>> 0;
     return h.toString(16);

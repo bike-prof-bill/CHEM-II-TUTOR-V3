@@ -39,7 +39,35 @@ A change that needs a number (a second ICE table after the perturbation) is not 
   completable clean).
 - Ships nothing until an approved scenario row exists; `ch13_ice` stays as the tutor the students see.
 
-## Retirement plan
+## State on 14 Oct 2026
+The retired SCENARIO_CLAUDE's kit is installed: both rebuilt scenarios approved, every row re-approved, two new named wrong
+picks (`EXO_HEATED_FORWARD`, `SQUEEZE_SHIFT_EQUAL_MOLES`), both simulation pages revised with the two changes each. `ch13_eq`
+now ships twelve problems under two scenarios; the tracer waits for the new SCENARIO_CLAUDE's kit. The factory refuses to ship a
+bundle while any DRAFT row applies to a shipped scenario (rule 4, now mechanical). The Q-step named errors (1/Q, coefficients as
+multipliers, exponents dropped) attach only to the tracer until the retired SCENARIO_CLAUDE writes asks for the other two.
+
+## State on 14 Oct 2026, night: the Silent Beaker installed
+Three of five scenarios are in. The Silent Beaker (floater): eighteen problems over three silver halides (AgCl, AgBr, AgI; Ksp from
+OpenStax Appendix J), mode `none`, Q = K exactly on the 1s, moles in 0.500 L on the 6s (moles straight into Q named on the Q step),
+the common ion then warming, forward named on both where it is wrong. Three shell additions it needed, all generic: an option on
+a pick or direction item may name its wrong turn; a problem's `words` fill `{salt}`-style slots in its scenario's moves rows; a
+colon after the direction word does not break the typed-word match ("forward: more of the solid dissolves" is approved wording).
+One engine fix: the absolute floor on a given's tolerance (1e-9) shrank for tiny givens, since it swallowed every number near a
+Ksp. Chapter 10 and the old chapter 13 bundles are unchanged by it. `ch13_eq` ships 30 problems; release still waits for the
+fourth and fifth scenarios.
+
+## 15 Oct 2026: chapter 13 complete; `ch13_ice` retired
+Five scenarios, sixty-six problems: the Haber-Bosch Harvest (exam, 6), the Martian Fuel Factory (worked, 6), the Silent Beaker
+(floater, 18 over three silver halides), the Purple Piston (floater, 18: hydrogen iodide, a volume change at equilibrium, then
+the solve chain with [HI] as the answer and the leftover the problem names), the Fading Brown (floater, 18: NO2 dimerisation,
+every problem quadratic, the change row's -x named on x as well as on the table). The archetype now takes the answer and the
+leftover species from the problem, the method from the sheet, the square-root errors for any product coefficient, a volume
+change (OLD_VOLUME_USED on the new concentrations), and the volume-change named pick SHIFT_ON_EQUAL_MOLES. `ch13_ice` is
+retired: its archetype, content and tests are under `docs/retired/ch13_ice/`; its approved bundle is frozen in
+`tests/fixtures/ch13_ice.bundle.frozen.json` and `test_ch13_eq.py` still proves the twelve problems unchanged against it. The
+media rows now say `media/ch13_eq/`; the baseline was re-snapshotted (1380 strings) on the instructor's word.
+
+## Retirement plan (done 15 Oct, kept for the record)
 When the four scenarios are approved: `ch13_eq` ships; `ch13_ice` is removed from `archetypes/`, its content files and tests
 retired (the log keeps their record); the two Claudes' rebuilt rows replace the DRAFT copies. The analysis lane should expect a
 new archetype id in the log from that day.

@@ -1,5 +1,4 @@
-"""Equilibrium arithmetic shared by chapter 13 (used by ch13_eq; ch13_ice keeps its own copy until it retires, so its shipped
-content does not move). Every function takes a reaction record:
+"""Equilibrium arithmetic shared by chapter 13 (used by ch13_eq; ch13_ice, retired 15 Oct 2026, kept its own copy). Every function takes a reaction record:
   species  symbols in reaction order        coef   stoichiometric coefficients
   side     -1 reactant, +1 product          active True for a species that appears in the expression (gas or solute), False for a
                                             pure solid or liquid (activity 1, left out: OpenStax 13.2)

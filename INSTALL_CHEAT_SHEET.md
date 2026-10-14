@@ -14,7 +14,7 @@ Plain mode asks only the authored questions. It is the right mode for testing th
 ## B. On Google (with Gemini)
 1. script.google.com → **New project** → rename to `V3 Tutor`.
 2. Make one script file per file in the `gas` folder except the test files (`test_*.js`, `Archetype_*_test.gs`) and `local_server.js`, named the same, and paste each in:
-   `Units` · `Shell_version` · `Archetype_ch10_cc` · `Archetype_ch13_ice` · `parse` · `match` · `stepmap` · `ladder` · `guards` · `prompt` · `log` · `logqueue` · `Core` · `Code`
+   `Units` · `Shell_version` · `Archetype_ch10_cc` · `Archetype_ch13_eq` · `parse` · `match` · `stepmap` · `ladder` · `guards` · `prompt` · `log` · `logqueue` · `Core` · `Code`
    (delete the empty `myFunction` stub). Order does not matter; Apps Script sees them as one program.
 3. Pick `setupV3` in the function menu → **Run** → approve permissions.
    **Execution log** shows: the new Sheet's address, and `APP_TOKEN`. Copy the token.
@@ -29,6 +29,9 @@ Plain mode asks only the authored questions. It is the right mode for testing th
 **Rungs (13 Oct).** Project Settings → Script properties → `DEFAULT_RUNG`: `worked` (every student is stepped from the worked problem), `faded` (every student starts at Faded), or unset/`none` (no stepping; the tutor serves as before, never the exam scenario). The `Rungs` tab in the Sheet overrides per student: `student_id`, `archetype_id`, `assigned`. Rows for students met under the default are written there automatically, so the tab becomes the roster.
 
 **After any code change:** Deploy → **Manage deployments** → pencil → Version: **New version** → Deploy. The URL stays the same. Forgetting this is the usual reason "my change did nothing."
+
+## On Netlify (the page only)
+See `deploy/README_NETLIFY.md`: `deploy/config.js` with the /exec URL and token, `sh scripts/make_netlify_site.sh`, drag `deploy/netlify_site` onto app.netlify.com/drop. The brain stays on Apps Script; pastes there are unchanged.
 
 ## Changing content
 1. Edit `content_ch10_cc_moves.csv` (your narrative), `content_ch10_cc_openers.csv`, or `archetypes/ch10_cc.py` (liquids, equations, traps). Units live in `units.json`.
