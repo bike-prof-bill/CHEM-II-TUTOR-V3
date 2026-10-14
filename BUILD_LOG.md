@@ -292,3 +292,5 @@ Shell `bb174cdf`, `CODE_VERSION 9d1709f9`; content per the generate line.
 - Confirmed: no table step for the tracer; perturbation pairs as drafted for the Claudes to confirm; both expression forms count; no number after a perturbation. Kc is written Kc, as the chapter does. `test_ch13_eq.py` and `gas/test_eq.js` (44 checks) updated; `make test` green; nothing shipped changes.
 
 - Handoffs 15 and 16 approved by the instructor (13 Oct, night); status lines changed from DRAFT to approved. The rows the two Claudes return stay DRAFT until he approves them.
+
+- `docs/04_SIMULATION_CLAUDE_role.md`: the three v2 link-settings rules restored at Simulation_Claude's request (no-data fallback with a visible and a screen-reader notice; `{substance}` case-insensitive; no invented placeholders). The v2 text is not in the repository (one commit of the file; `reference/` is outside the zips), so the wording is Simulation_Claude's as quoted. Simulation_Claude confirms all six approved pages already follow the three rules. Self-check 2 extended to test the fallback notice and the case-insensitive name.
