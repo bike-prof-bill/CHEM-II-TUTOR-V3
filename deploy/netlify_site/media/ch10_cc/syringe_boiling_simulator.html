@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The syringe boiling trick</title>
+<!--
+  Approved by the instructor, 13 Oct 2026 (DRAFT marks removed by SCENARIO_CLAUDE, no other change).
+  Date: 10 Oct 2026. Built by Simulation_Claude.
+  Brief (one line): ch10_cc opener "The Syringe Boiling Trick": a liquid in a capped,
+    air-free 60 mL syringe boils when the plunger is pulled; the gauge settles at the
+    liquid's vapor pressure (the student's answer, shown by the instructor's request).
+  Data source: docs/ch10_cc_DATA_TABLE_for_simulations.md (instructor, NIST Chemistry
+    WebBook, 9 Oct 2026) and the dichloromethane record supplied 10 Oct 2026
+    (substances_add_dichloromethane.json): heat of vaporization at the normal boiling
+    point, normal boiling point, normal melting point, coldest temperature a problem uses.
+  Model (the tutor's): Pvap = 760 torr × exp[−(ΔHvap/R)(1/T − 1/Tb)];
+    pressure on the liquid = max(760 − F/A, Pvap), F ≤ 53.3 N (the 40 torr pull limit).
+    Constants from the approved request: 760 torr, R = 8.314, 1 torr = 133.322 Pa,
+    bore 26.6 mm, pull limit 40 torr.
+  URL parameters:
+    substance  one of the ten liquids below, named as in substances.json (case-insensitive;
+               common synonyms accepted). Default: water. Unrecognised: water, with a notice.
+    T          °C, the problem's temperature. Default 40 °C (clamped to the liquid's range).
+    unit       torr | atm. Default torr.
+    theme      light | dark. Default: the system setting (Fable's contract).
+    Link settings confirmed by Fable, 13 Oct 2026: substance, T, unit, theme.
+  Numbers not from the table or the request are illustrative; accepted by the instructor, 13 Oct 2026.
+  Nothing is fetched, stored, or sent. Nothing moves until the student pulls or presses Play.
+-->
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #fbfbf9; --fg: #1c1d1f; --muted: #4b4f55; --rule: #7d838c;
+    --grid: #e2e4e7; --control-bg: #ffffff;
+    --curve: #17508f; --curve2: #6a3d8f; --marker: #9c2a1f; --focus: #17508f;
+    --barrel: rgba(214, 222, 230, 0.35); --barrel-edge: #66707b; --grad: #2b2f35;
+    --liquid: #cfe3f2; --liquid-edge: #4f7ea3; --vapor-dot: #6a8aa6;
+    --bubble: #ffffff; --bubble-edge: #3f6f96;
+    --air: #6b4f9a; --rubber: #3a3e44; --rubber-rib: #62676f;
+    --rod: #eef1f4; --rod-edge: #7a848f;
+    --glove: #b4acdf; --glove-edge: #4f4790;
+    --mol: #5d8fb8; --mol-edge: #1f4766; --mol-bg: #e4eff8;
+    --notice-bg: #fff3d1; --notice-fg: #3d2c00; --notice-rule: #8a6a00;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #17191c; --fg: #e9eaec; --muted: #b6bac0; --rule: #8d949d;
+    --grid: #30343a; --control-bg: #202328;
+    --curve: #7db3ff; --curve2: #c9a2f0; --marker: #ff9d8f; --focus: #9cc5ff;
+    --barrel: rgba(120, 132, 146, 0.18); --barrel-edge: #9aa4af; --grad: #d9dde2;
+    --liquid: #22405a; --liquid-edge: #7fb0d8; --vapor-dot: #8fb3d1;
+    --bubble: #17191c; --bubble-edge: #9cc8ee;
+    --air: #c9b0f2; --rubber: #0d0e10; --rubber-rib: #4a4f57;
+    --rod: #2a2e34; --rod-edge: #9aa4af;
+    --glove: #6e64aa; --glove-edge: #c9c2f2;
+    --mol: #6fa4d0; --mol-edge: #cfe5f7; --mol-bg: #1d2a36;
+    --notice-bg: #3a3010; --notice-fg: #ffe9a8; --notice-rule: #c9a63a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--fg); }
+  body {
+    font: 14px/1.35 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    padding: 8px 12px 8px; max-width: 640px;
+  }
+  h1 { font-size: 1rem; font-weight: 600; margin: 0 0 4px; }
+  .notice { margin: 0 0 6px; padding: 5px 9px; background: var(--notice-bg); color: var(--notice-fg);
+    border-left: 4px solid var(--notice-rule); font-size: 0.85rem; }
+  canvas { display: block; width: 100%; }
+  #syr { height: 124px; touch-action: none; }
+  #syr.compare { height: 168px; }
+  .readings { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; gap: 4px 8px; margin: 2px 0 0; }
+  .readings.compare { grid-template-columns: 1fr 1fr; }
+  .reading .k { font-size: 0.74rem; color: var(--muted); }
+  .reading .v { font-size: 1rem; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .reading.p .v { font-size: 1.15rem; }
+  .status { margin: 2px 0 4px; font-size: 0.88rem; font-weight: 600; min-height: 1.2em; }
+  .row { display: flex; align-items: center; gap: 4px 8px; flex-wrap: wrap; margin: 3px 0; }
+  .slab { width: 84px; font-size: 0.88rem; }
+  .row input[type="range"] { flex: 1 1 150px; min-width: 120px; margin: 0; accent-color: var(--curve); }
+  .val { font-variant-numeric: tabular-nums; font-size: 0.88rem; min-width: 56px; text-align: right; }
+  button { font: inherit; font-size: 0.85rem; padding: 3px 10px; border: 1px solid var(--rule); border-radius: 4px;
+    background: var(--control-bg); color: var(--fg); cursor: pointer; }
+  fieldset { border: 0; margin: 0; padding: 0; display: inline-flex; align-items: center; gap: 2px 10px; flex-wrap: wrap; }
+  legend { float: left; padding: 0; margin-right: 4px; font-size: 0.88rem; }
+  .row label, fieldset label { font-size: 0.88rem; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+  input[type="radio"], input[type="checkbox"] { margin: 0; accent-color: var(--curve); }
+  .panelbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2px 10px; margin-top: 4px; }
+  #panel { height: 196px; border: 1px solid var(--grid); }
+  .small { margin: 2px 0 0; font-size: 0.78rem; color: var(--muted); }
+  [hidden] { display: none !important; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  input[type="range"]:disabled { opacity: 0.55; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+</style>
+</head>
+<body>
+  <h1>The syringe boiling trick</h1>
+  <p class="notice" id="notice" role="status" hidden></p>
+
+  <canvas id="syr" role="img" aria-label="The syringe. A text description follows." aria-describedby="descSyr"></canvas>
+
+  <div class="readings" id="readings">
+    <div class="reading p" id="rP"><div class="k">Pressure on the liquid</div><div class="v" id="vP"></div></div>
+    <div class="reading" id="rT"><div class="k">Temperature</div><div class="v" id="vT"></div></div>
+    <div class="reading" id="rF"><div class="k">Pull force</div><div class="v" id="vF"></div></div>
+    <div class="reading" id="rV"><div class="k">Plunger travel</div><div class="v" id="vV"></div></div>
+  </div>
+  <p class="status" id="status"></p>
+
+  <div class="row">
+    <label class="slab" for="force">Pull</label>
+    <input type="range" id="force" min="0" step="any" aria-describedby="forceKeys">
+    <button type="button" id="letgo">Let go</button>
+    <button type="button" id="play">Play</button>
+    <button type="button" id="reset">Reset</button>
+  </div>
+  <p class="sr-only" id="forceKeys">Arrow keys change the pull by 1 newton, Shift with an arrow by 0.1 newton, Page Up and Page Down by 10. Home lets go. End pulls as hard as a hand can.</p>
+
+  <div class="row">
+    <label class="slab" for="temp">Temperature</label>
+    <input type="range" id="temp" step="any" aria-describedby="tempNote">
+    <span class="small" id="tempNote"></span>
+  </div>
+
+  <div class="row">
+    <fieldset>
+      <legend>Units</legend>
+      <label><input type="radio" name="unit" value="torr"> torr</label>
+      <label><input type="radio" name="unit" value="atm"> atm</label>
+    </fieldset>
+    <label><input type="checkbox" id="air"> Dissolved air</label>
+    <label><input type="checkbox" id="compare"> Compare four liquids</label>
+  </div>
+
+  <div class="panelbar">
+    <fieldset>
+      <legend>Show</legend>
+      <label><input type="radio" name="view" value="mol"> Molecules</label>
+      <label><input type="radio" name="view" value="curve"> Curve</label>
+    </fieldset>
+    <fieldset id="curveSwitch">
+      <legend class="sr-only">Curve view</legend>
+      <label><input type="radio" name="curve" value="pt"> P against T</label>
+      <label><input type="radio" name="curve" value="ln"> ln P against 1/T</label>
+    </fieldset>
+  </div>
+  <canvas id="panel" role="img" aria-label="Magnified view or curve. A text description follows." aria-describedby="descPanel"></canvas>
+  <p class="small" id="caption"></p>
+  <p class="small">Not shown: the liquid cooling itself as it boils.</p>
+
+  <div class="sr-only" id="descSyr"></div>
+  <div class="sr-only" id="descPanel"></div>
+  <div class="sr-only" id="live" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ===========================================================================
+  // DATA. Copied row by row from docs/ch10_cc_DATA_TABLE_for_simulations.md
+  // (instructor, NIST Chemistry WebBook, 9 Oct 2026); dichloromethane from the
+  // record supplied 10 Oct 2026 (coldest -30.0 °C, instructor approved).
+  // h: ΔHvap at the normal boiling point, kJ/mol. tb, tm: normal boiling and
+  // melting points, °C. cold: coldest temperature a problem uses, °C.
+  // ===========================================================================
+  var DATA = {
+    'diethyl ether':   { h: 26.5,  tb: 34.6,  tm: -116.3, cold: -30.0 },
+    'pentane':         { h: 25.8,  tb: 36.1,  tm: -129.8, cold: -30.0 },
+    'dichloromethane': { h: 28.06, tb: 39.9,  tm: -96.5,  cold: -30.0 },
+    'acetone':         { h: 29.1,  tb: 56.2,  tm: -95.4,  cold: -20.0 },
+    'hexane':          { h: 28.9,  tb: 68.8,  tm: -95.4,  cold: -10.0 },
+    'methanol':        { h: 35.2,  tb: 64.6,  tm: -97.2,  cold: -10.0 },
+    'ethyl acetate':   { h: 31.0,  tb: 77.1,  tm: -83.6,  cold: 0.0 },
+    'ethanol':         { h: 38.6,  tb: 78.4,  tm: -114.2, cold: -10.0 },
+    'water':           { h: 40.66, tb: 100.0, tm: 0.0,    cold: 5.0 },
+    '2-propanol':      { h: 40.0,  tb: 82.4,  tm: -89.5,  cold: -10.0 }
+  };
+  // Other spellings the tutor might send. Names only; no chemistry.
+  var ALIASES = {
+    'ether': 'diethyl ether', 'ethyl ether': 'diethyl ether', 'diethylether': 'diethyl ether',
+    'n-pentane': 'pentane', 'methylene chloride': 'dichloromethane', 'dcm': 'dichloromethane',
+    'propanone': 'acetone', 'n-hexane': 'hexane', 'methyl alcohol': 'methanol',
+    'ethyl ethanoate': 'ethyl acetate', 'ethyl alcohol': 'ethanol',
+    'isopropanol': '2-propanol', 'isopropyl alcohol': '2-propanol', 'propan-2-ol': '2-propanol'
+  };
+
+  // Constants from the approved request.
+  var P_ATM = 760;                  // torr
+  var R = 8.314;                    // J/(mol·K)
+  var PA_PER_TORR = 133.322;
+  var BORE_M = 0.0266;              // 26.6 mm
+  var AREA = Math.PI * (BORE_M / 2) * (BORE_M / 2);   // 5.557e-4 m²
+  var TORR_PER_N = 1 / (PA_PER_TORR * AREA);          // pressure drop per newton of pull
+  var P_LIMIT = 40;                 // torr, the instructor's pull limit
+  var F_MAX = (P_ATM - P_LIMIT) / TORR_PER_N;         // 53.3 N
+  var CAPACITY_ML = 60;
+  var T_TOP_GAP = 10, T_TOP_CAP = 60;  // slider top: 10 °C below Tb, never above 60 °C
+  var COMPARE_SET = ['water', 'ethanol', 'acetone', 'diethyl ether'];
+  var COMPARE_T = 25.0;
+  var DEFAULT_SUBSTANCE = 'water', DEFAULT_T = 40.0, DEFAULT_UNIT = 'torr';
+
+  var KELVIN = 273.15;          // exact, by definition (0 °C = 273.15 K); accepted by the instructor, 13 Oct 2026
+  var V_LIQ_ML = 10;            // illustrative; accepted by the instructor, 13 Oct 2026 (liquid drawn into the syringe)
+  var SPEED_BASE = 0.5;         // illustrative; accepted by the instructor, 13 Oct 2026 (mL/s while boiling at the threshold)
+  var SPEED_PER_N = 0.6;        // illustrative; accepted by the instructor, 13 Oct 2026 (extra mL/s per newton above the threshold)
+  var SNAP_ML_PER_S = 400;      // illustrative; accepted by the instructor, 13 Oct 2026 (vapor collapse on release: "at once")
+  var AIR_APPEARS_AT_N = 3;     // illustrative; accepted by the instructor, 13 Oct 2026 (air bubbles appear early in the pull)
+  var IDLE_STOP_S = 60;         // illustrative; accepted by the instructor, 13 Oct 2026 (motion stops after a minute without input)
+  var MAX_TRAVEL = CAPACITY_ML - V_LIQ_ML;
+
+  // ===========================================================================
+  // Model
+  // ===========================================================================
+  function pvap(key, tc) {
+    var d = DATA[key];
+    return P_ATM * Math.exp(-(d.h * 1000 / R) * (1 / (tc + KELVIN) - 1 / (d.tb + KELVIN)));
+  }
+  function sliderRange(key) {
+    var d = DATA[key];
+    return [d.cold, Math.min(d.tb - T_TOP_GAP, T_TOP_CAP)];
+  }
+  function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
+  function round1(v) { return Math.round(v * 10) / 10; }
+
+  // ===========================================================================
+  // URL parameters
+  // ===========================================================================
+  var params = new URLSearchParams(window.location.search);
+  var notices = [];
+  function resolve(raw) {
+    var k = raw.trim().toLowerCase().replace(/\s+/g, ' ');
+    if (DATA[k]) return k;
+    if (ALIASES[k]) return ALIASES[k];
+    return null;
+  }
+  var yourKey = null, mainKey = DEFAULT_SUBSTANCE;
+  var rawS = (params.get('substance') || '').trim();
+  if (rawS) {
+    var found = resolve(rawS);
+    if (found) { yourKey = found; mainKey = found; }
+    else notices.push('This page has no data for your liquid; showing water instead.');
+  }
+  var range = sliderRange(mainKey);
+  var startT = null;
+  var rawT = params.get('T'); if (rawT === null) rawT = params.get('t');
+  if (rawT !== null && rawT.trim() !== '') {
+    var tv = parseFloat(rawT);
+    var dd = DATA[mainKey];
+    if (isFinite(tv) && tv > dd.tm && tv < dd.tb) {
+      startT = tv;
+      range = [Math.min(range[0], tv), Math.max(range[1], tv)];   // always reach the student's own temperature
+    } else {
+      notices.push('The temperature from the tutor could not be used here; showing ' +
+        fmtT(clamp(DEFAULT_T, range[0], range[1])) + '.');
+    }
+  }
+  if (startT === null) startT = round1(clamp(DEFAULT_T, range[0], range[1]));
+  var startUnit = DEFAULT_UNIT;
+  var rawU = (params.get('unit') || '').trim().toLowerCase();
+  if (rawU) {
+    if (rawU === 'atm') startUnit = 'atm';
+    else if (rawU === 'torr' || rawU === 'mmhg' || rawU === 'mm hg') startUnit = 'torr';
+    else notices.push('Pressure unit not recognised; showing torr.');
+  }
+  var notice = document.getElementById('notice');
+  if (notices.length) { notice.textContent = notices.join(' '); notice.hidden = false; }
+
+  // Theme: ?theme= wins; otherwise follow the system setting.
+  var themeParam = (params.get('theme') || '').trim().toLowerCase();
+  var darkQ = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  var reduceQ = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  function applyTheme() {
+    var t = (themeParam === 'light' || themeParam === 'dark') ? themeParam : (darkQ && darkQ.matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', t);
+    colours = null;
+  }
+
+  // ===========================================================================
+  // Formatting
+  // ===========================================================================
+  var MINUS = '\u2212';
+  function fmtSigned(v, dp) { var t = Math.abs(v).toFixed(dp); return (v < 0 && Number(t) !== 0 ? MINUS : '') + t; }
+  function fmtT(tc) { return fmtSigned(tc, 1) + ' °C'; }
+  function pNum(torr) { return st.unit === 'atm' ? (torr / P_ATM).toPrecision(3) : torr.toFixed(1); }
+  function fmtP(torr) { return pNum(torr) + ' ' + st.unit; }
+  function fmtF(f) { return f.toFixed(1) + ' N'; }
+  function fmtV(v) { return v.toFixed(1) + ' mL'; }
+  function nameOf(s) { return s.label; }   // "your liquid" for the problem's liquid; otherwise its name
+
+  // ===========================================================================
+  // State
+  // ===========================================================================
+  function makeSyringe(key, label, tc) {
+    return { key: key, label: label, T: tc, travel: 0, boiling: false, atEnd: false, speed: 0,
+             gauge: P_ATM, bubbles: [], air: [], spawn: 0 };
+  }
+  function buildCompare() {
+    var set = COMPARE_SET.slice(), slot = -1;
+    if (yourKey) {
+      slot = set.indexOf(yourKey);
+      if (slot < 0) {               // the student's liquid replaces the one nearest to it in vapor pressure at 25 °C
+        var pv = pvap(yourKey, COMPARE_T), best = 0, bd = Infinity;
+        set.forEach(function (k, j) { var d = Math.abs(pvap(k, COMPARE_T) - pv); if (d < bd) { bd = d; best = j; } });
+        set[best] = yourKey; slot = best;
+      }
+    }
+    return { list: set.map(function (k, j) { return makeSyringe(k, j === slot ? 'your liquid' : k, COMPARE_T); }), slot: slot };
+  }
+
+  var st, main, comp;
+  function initState() {
+    st = { F: 0, unit: startUnit, airOn: false, compare: false, view: 'curve', curve: 'pt',
+           running: false, lastInput: 0 };
+    main = makeSyringe(mainKey, yourKey ? 'your liquid' : mainKey, startT);
+    comp = buildCompare();
+  }
+  initState();
+  function allSyringes() { return [main].concat(comp.list); }
+  function focusSyringe() { return st.compare ? comp.list[comp.slot >= 0 ? comp.slot : 0] : main; }
+
+  // ===========================================================================
+  // Physics
+  // ===========================================================================
+  var events = [];
+  function step(s, dt) {
+    var pv = pvap(s.key, s.T);
+    var papp = P_ATM - st.F * TORR_PER_N;
+    var was = s.boiling, wasEnd = s.atEnd;
+    if (papp <= pv) {
+      s.boiling = true;
+      s.gauge = pv;                                  // the gauge holds at the vapor pressure
+      var fBoil = (P_ATM - pv) / TORR_PER_N;
+      s.speed = SPEED_BASE + SPEED_PER_N * Math.max(0, st.F - fBoil);   // harder pull, faster plunger
+      s.travel = Math.min(MAX_TRAVEL, s.travel + s.speed * dt);
+      s.atEnd = s.travel >= MAX_TRAVEL - 1e-9;
+      if (!was) { s.bubbles = []; addBubble(s, true); }
+    } else {
+      s.boiling = false; s.atEnd = false; s.speed = 0;
+      s.gauge = papp;
+      s.bubbles = [];                                // vapor bubbles collapse at once
+      if (s.travel > 0) s.travel = dt > 0 ? Math.max(0, s.travel - SNAP_ML_PER_S * dt) : s.travel;
+    }
+    // air bubbles: appear early in the pull, stay after release
+    if (st.airOn && s.air.length === 0 && st.F >= AIR_APPEARS_AT_N) {
+      for (var i = 0; i < 4; i++) s.air.push({ u: 0.12 + 0.22 * i + Math.random() * 0.08, y: 0.86 - Math.random() * 0.06, r: 0.05 + Math.random() * 0.02 });
+    }
+    // rising vapor bubbles
+    if (s.boiling && !s.atEnd && dt > 0) {
+      s.spawn += (3 + 2.5 * s.speed) * dt;
+      while (s.spawn >= 1 && s.bubbles.length < 40) { s.spawn -= 1; addBubble(s, false); }
+    }
+    var top = liquidTopFraction(s);
+    s.bubbles = s.bubbles.filter(function (b) {
+      b.r = Math.min(b.rmax, b.r + 0.12 * dt);
+      b.y -= b.vy * dt;
+      return b.y - b.r > top;
+    });
+    if (s.boiling !== was) events.push({ s: s, kind: s.boiling ? 'start' : 'stop' });
+    if (s.atEnd && !wasEnd) events.push({ s: s, kind: 'end' });
+  }
+  function addBubble(s, first) {
+    s.bubbles.push({ u: first ? 0.5 : 0.08 + Math.random() * 0.84, y: first ? 0.6 : 0.62 + Math.random() * 0.32,
+                     r: 0.02, rmax: 0.05 + Math.random() * 0.07, vy: 0.35 + Math.random() * 0.4 });
+  }
+  // Liquid level in the lying syringe, as a fraction of the bore from the top (0 = full).
+  function segFrac(h) {           // filled fraction of a circle of radius 1 filled to height h (0..2)
+    var r = 1, a = r * r * Math.acos((r - h) / r) - (r - h) * Math.sqrt(Math.max(0, 2 * r * h - h * h));
+    return a / (Math.PI * r * r);
+  }
+  function liquidTopFraction(s) {
+    if (s.travel <= 1e-6) return 0;
+    var f = V_LIQ_ML / (V_LIQ_ML + s.travel), lo = 0, hi = 2;
+    for (var i = 0; i < 30; i++) { var m = (lo + hi) / 2; if (segFrac(m) < f) lo = m; else hi = m; }
+    return 1 - lo / 2;
+  }
+  function anyMoving() {
+    return allSyringes().some(function (s) {
+      return (s.boiling && !s.atEnd) || (!s.boiling && s.travel > 0) || s.bubbles.length > 0;
+    }) || mol.R > 0.5 && !focusSyringe().boiling;
+  }
+
+  // ===========================================================================
+  // Molecules (magnified window inside the liquid)
+  // ===========================================================================
+  var RR = 7, SPACING = 15;
+  var mol = { W: 0, H: 0, liq: [], vap: [], airm: [], R: 0, cx: 0, cy: 0, Rmax: 0, air: null, settledFor: null };
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function particle(x, y) { return { x: x, y: y, vx: 0, vy: 0, a: Math.random() * Math.PI, va: 0 }; }
+  function molInit(W, H) {
+    mol.W = W; mol.H = H; mol.liq = []; mol.vap = []; mol.airm = []; mol.R = 0; mol.air = null;
+    mol.cx = W * 0.42; mol.cy = H * 0.56; mol.Rmax = Math.min(H * 0.4, 70);
+    var dy = SPACING * 0.866, row = 0;
+    for (var y = RR; y < H - RR / 2; y += dy, row++)
+      for (var x = RR + (row % 2 ? SPACING / 2 : 0); x < W - RR / 2; x += SPACING)
+        mol.liq.push(particle(x + rnd(-2, 2), y + rnd(-2, 2)));
+    mol.settledFor = null;
+  }
+  function liqTarget() {
+    var free = mol.W * mol.H - Math.PI * mol.R * mol.R - (mol.air ? Math.PI * mol.air.r * mol.air.r : 0);
+    return Math.round(free / (SPACING * SPACING * 0.866));
+  }
+  function vapTarget() { return mol.R < 10 ? 1 : Math.max(2, Math.round(6 * (mol.R * mol.R) / (mol.Rmax * mol.Rmax))); }
+  function syncAirBubble(s) {
+    if (s.air.length && !mol.air) {
+      mol.air = { x: mol.W * 0.84, y: mol.H * 0.3, r: Math.min(20, mol.H * 0.13) };
+      mol.airm = [];
+      for (var i = 0; i < 3; i++) mol.airm.push({ x: mol.air.x + rnd(-6, 6), y: mol.air.y + rnd(-6, 6), vx: rnd(-60, 60), vy: rnd(-60, 60), a: rnd(0, 3) });
+    }
+    if (!s.air.length && mol.air) { mol.air = null; mol.airm = []; }
+  }
+  function relax(iter, noise, dt) {
+    var L = mol.liq, cell = 16, grid = {}, i, j, p;
+    for (var it = 0; it < iter; it++) {
+      grid = {};
+      for (i = 0; i < L.length; i++) {
+        p = L[i];
+        if (noise) {
+          p.vx += (Math.random() - 0.5) * noise; p.vy += (Math.random() - 0.5) * noise;
+          p.vx *= 0.86; p.vy *= 0.86; p.x += p.vx * dt; p.y += p.vy * dt;
+          p.va += (Math.random() - 0.5) * 3; p.va *= 0.9; p.a += p.va * dt;
+        }
+        var key = Math.floor(p.x / cell) + ',' + Math.floor(p.y / cell);
+        (grid[key] || (grid[key] = [])).push(i);
+      }
+      for (i = 0; i < L.length; i++) {
+        p = L[i];
+        var gx = Math.floor(p.x / cell), gy = Math.floor(p.y / cell);
+        for (var ox = -1; ox <= 1; ox++) for (var oy = -1; oy <= 1; oy++) {
+          var c = grid[(gx + ox) + ',' + (gy + oy)]; if (!c) continue;
+          for (j = 0; j < c.length; j++) {
+            if (c[j] <= i) continue;
+            var q = L[c[j]], dx = q.x - p.x, dy = q.y - p.y, d2 = dx * dx + dy * dy, min = 2 * RR - 1;
+            if (d2 < min * min && d2 > 1e-6) {
+              var d = Math.sqrt(d2), push = (min - d) * 0.5 / d;
+              p.x -= dx * push; p.y -= dy * push; q.x += dx * push; q.y += dy * push;
+            }
+          }
+        }
+      }
+      for (i = 0; i < L.length; i++) {
+        p = L[i];
+        exclude(p, mol.cx, mol.cy, mol.R);
+        if (mol.air) exclude(p, mol.air.x, mol.air.y, mol.air.r);
+        p.x = clamp(p.x, RR * 0.6, mol.W - RR * 0.6); p.y = clamp(p.y, RR * 0.6, mol.H - RR * 0.6);
+      }
+    }
+  }
+  function exclude(p, cx, cy, r) {
+    if (r <= 0) return;
+    var dx = p.x - cx, dy = p.y - cy, d = Math.sqrt(dx * dx + dy * dy), m = r + RR * 0.7;
+    if (d < m) { if (d < 1e-6) { dx = 1; dy = 0; d = 1; } p.x = cx + dx / d * m; p.y = cy + dy / d * m; }
+  }
+  function balanceCount() {
+    var tgt = liqTarget(), L = mol.liq;
+    while (L.length > tgt + 1) {          // displaced liquid leaves the window at its edges
+      var bi = 0, bd = Infinity;
+      for (var i = 0; i < L.length; i++) { var p = L[i], e = Math.min(p.x, mol.W - p.x, p.y, mol.H - p.y); if (e < bd) { bd = e; bi = i; } }
+      L.splice(bi, 1);
+    }
+    while (L.length < tgt - 1) {          // and flows back in when the bubble collapses
+      var side = Math.floor(Math.random() * 4), x = rnd(RR, mol.W - RR), y = rnd(RR, mol.H - RR);
+      if (side === 0) x = RR; else if (side === 1) x = mol.W - RR; else if (side === 2) y = RR; else y = mol.H - RR;
+      L.push(particle(x, y));
+    }
+  }
+  function molStep(dt, s) {
+    syncAirBubble(s);
+    if (s.boiling) { if (mol.R < 6) mol.R = 6; mol.R += (mol.Rmax - mol.R) * Math.min(1, dt * 1.4); }
+    else if (mol.R > 0) mol.R = Math.max(0, mol.R - mol.Rmax * 10 * dt);
+    if (!s.boiling && mol.vap.length) { mol.vap.forEach(function (v) { mol.liq.push(particle(v.x, v.y)); }); mol.vap = []; }
+    balanceCount();
+    relax(1, 160, dt);
+    // vapor molecules: whole molecules of the same liquid, far apart, moving fast
+    if (mol.R > 10) {
+      var nt = vapTarget();
+      if (mol.vap.length < nt || Math.random() < 1.2 * dt) escapeOne();
+      mol.vap = mol.vap.filter(function (v) {
+        v.x += v.vx * dt; v.y += v.vy * dt; v.a += 2 * dt;
+        var dx = v.x - mol.cx, dy = v.y - mol.cy, d = Math.sqrt(dx * dx + dy * dy), lim = mol.R - RR * 0.7;
+        if (d > lim) {
+          if (Math.random() < 0.3 || mol.vap.length > nt + 2) {           // returns to the liquid
+            var p = particle(mol.cx + dx / d * (mol.R + RR * 0.8), mol.cy + dy / d * (mol.R + RR * 0.8));
+            mol.liq.push(p); return false;
+          }
+          var nx = dx / d, ny = dy / d, dot = v.vx * nx + v.vy * ny;
+          v.vx -= 2 * dot * nx; v.vy -= 2 * dot * ny;
+          v.x = mol.cx + nx * lim; v.y = mol.cy + ny * lim;
+        }
+        return true;
+      });
+    }
+    if (mol.air) mol.airm.forEach(function (m) { bounceIn(m, mol.air, dt); });
+  }
+  function escapeOne() {
+    var L = mol.liq, bi = -1, bd = Infinity;
+    for (var i = 0; i < L.length; i++) {
+      var dx = L[i].x - mol.cx, dy = L[i].y - mol.cy, e = Math.abs(Math.sqrt(dx * dx + dy * dy) - mol.R - RR);
+      if (e < bd && Math.random() < 0.6) { bd = e; bi = i; }
+    }
+    if (bi < 0 || bd > RR * 2) return;
+    var p = L.splice(bi, 1)[0], ddx = p.x - mol.cx, ddy = p.y - mol.cy, d = Math.sqrt(ddx * ddx + ddy * ddy) || 1;
+    var ang = Math.atan2(-ddy, -ddx) + rnd(-0.8, 0.8), sp = rnd(90, 140);
+    mol.vap.push({ x: mol.cx + ddx / d * (mol.R - RR), y: mol.cy + ddy / d * (mol.R - RR), vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, a: p.a });
+  }
+  function bounceIn(m, c, dt) {
+    m.x += m.vx * dt; m.y += m.vy * dt; m.a += 1.5 * dt;
+    var dx = m.x - c.x, dy = m.y - c.y, d = Math.sqrt(dx * dx + dy * dy), lim = c.r - 4;
+    if (d > lim) { var nx = dx / d, ny = dy / d, dot = m.vx * nx + m.vy * ny; m.vx -= 2 * dot * nx; m.vy -= 2 * dot * ny; m.x = c.x + nx * lim; m.y = c.y + ny * lim; }
+  }
+  // Reduced motion: jump to the settled picture for the present state.
+  function molSettle(s) {
+    var sig = s.boiling + '|' + (s.air.length > 0);
+    if (mol.settledFor === sig) return;
+    syncAirBubble(s);
+    mol.R = s.boiling ? mol.Rmax : 0;
+    mol.vap = [];
+    if (s.boiling) {
+      var n = vapTarget();
+      for (var i = 0; i < n; i++) { var a = i / n * 2 * Math.PI + 0.4, rr = mol.R * (0.35 + 0.35 * (i % 2)); mol.vap.push({ x: mol.cx + Math.cos(a) * rr, y: mol.cy + Math.sin(a) * rr, vx: 0, vy: 0, a: a }); }
+    }
+    balanceCount(); relax(25, 0, 0);
+    mol.settledFor = sig;
+  }
+
+  // ===========================================================================
+  // Drawing helpers
+  // ===========================================================================
+  var colours = null;
+  function C(name) {
+    if (!colours) colours = {};
+    if (!(name in colours)) colours[name] = getComputedStyle(document.documentElement).getPropertyValue('--' + name).trim();
+    return colours[name];
+  }
+  var FONT = 'system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif';
+  function sizeCanvas(cv) {
+    var w = cv.clientWidth, h = cv.clientHeight, dpr = window.devicePixelRatio || 1;
+    if (!w || !h) return null;
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    var ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = C('bg'); ctx.fillRect(0, 0, w, h);
+    return { ctx: ctx, W: w, H: h };
+  }
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r); ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h); ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+  }
+  function capsule(ctx, x, y, a, r, off, fill, edge) {
+    var c = Math.cos(a) * off, s = Math.sin(a) * off;
+    ctx.beginPath(); ctx.arc(x - c, y - s, r, 0, 2 * Math.PI); ctx.arc(x + c, y + s, r, 0, 2 * Math.PI);
+    ctx.fillStyle = fill; ctx.fill();
+    ctx.lineWidth = 1; ctx.strokeStyle = edge;
+    ctx.beginPath(); ctx.arc(x - c, y - s, r, 0, 2 * Math.PI); ctx.stroke();
+    ctx.beginPath(); ctx.arc(x + c, y + s, r, 0, 2 * Math.PI); ctx.stroke();
+  }
+  function haloText(ctx, text, x, y) {
+    ctx.lineWidth = 3; ctx.strokeStyle = C('bg'); ctx.strokeText(text, x, y); ctx.fillStyle = C('fg'); ctx.fillText(text, x, y);
+  }
+
+  // One syringe lying on its side. x0: inside face of the tip; Lb: barrel length; D: bore in px.
+  function drawSyringe(ctx, s, x0, cy, Lb, D, opt) {
+    var Lg = Lb - (opt.full ? 10 : 6);                // graduated length (0 to 60 mL)
+    var xs = x0 + (V_LIQ_ML + s.travel) / CAPACITY_ML * Lg;   // stopper face
+    var stopW = opt.full ? 9 : 5, top = cy - D / 2, wall = opt.full ? 3 : 2;
+    // tip, cap
+    ctx.fillStyle = C('barrel'); ctx.strokeStyle = C('barrel-edge'); ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.rect(x0 - 9, cy - D * 0.14, 9, D * 0.28); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = C('rubber'); ctx.fillRect(x0 - 18, cy - D * 0.22, 9, D * 0.44);
+    // barrel body
+    roundRect(ctx, x0, top - wall, Lb + 2, D + 2 * wall, 3);
+    ctx.fillStyle = C('barrel'); ctx.fill();
+    // liquid and vapor space
+    ctx.save();
+    ctx.beginPath(); ctx.rect(x0, top, xs - x0, D); ctx.clip();
+    var lt = liquidTopFraction(s), ly = top + lt * D;
+    ctx.fillStyle = C('liquid'); ctx.fillRect(x0, ly, xs - x0, top + D - ly);
+    if (lt > 0) {
+      ctx.strokeStyle = C('liquid-edge'); ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(x0, ly); ctx.lineTo(xs, ly); ctx.stroke();
+      ctx.fillStyle = C('vapor-dot');                   // vapor: sparse dots
+      for (var vx = x0 + 4; vx < xs - 2; vx += 9) for (var vy = top + 3; vy < ly - 2; vy += 8)
+        if (((vx * 7 + vy * 3) | 0) % 5 === 0) { ctx.beginPath(); ctx.arc(vx, vy, 0.9, 0, 2 * Math.PI); ctx.fill(); }
+    }
+    var reduced = isReduced();
+    var bubs = s.bubbles;
+    if (reduced && s.boiling && !s.atEnd) bubs = [{ u: 0.3, y: 0.7, r: 0.09 }, { u: 0.55, y: 0.5, r: 0.06 }, { u: 0.75, y: 0.78, r: 0.07 }, { u: 0.45, y: 0.86, r: 0.04 }];
+    bubs.forEach(function (b) {
+      var bx = x0 + b.u * (xs - x0), by = top + b.y * D, br = Math.max(1.2, b.r * D);
+      if (by - br < ly) return;
+      ctx.beginPath(); ctx.arc(bx, by, br, 0, 2 * Math.PI);
+      ctx.fillStyle = C('bubble'); ctx.fill(); ctx.strokeStyle = C('bubble-edge'); ctx.lineWidth = 1.2; ctx.stroke();
+      if (br > 3) { ctx.beginPath(); ctx.arc(bx - br * 0.35, by - br * 0.35, br * 0.28, 0, 2 * Math.PI); ctx.fillStyle = C('bubble-edge'); ctx.globalAlpha = 0.35; ctx.fill(); ctx.globalAlpha = 1; }
+    });
+    s.air.forEach(function (b) {                       // air: open rings stuck to the wall
+      var bx = x0 + b.u * (V_LIQ_ML / CAPACITY_ML * Lg), by = top + b.y * D, br = Math.max(1.8, b.r * D);
+      ctx.beginPath(); ctx.arc(bx, by, br, 0, 2 * Math.PI); ctx.strokeStyle = C('air'); ctx.lineWidth = 1.6; ctx.stroke();
+    });
+    ctx.restore();
+    // barrel outline over the contents
+    roundRect(ctx, x0, top - wall, Lb + 2, D + 2 * wall, 3);
+    ctx.strokeStyle = C('barrel-edge'); ctx.lineWidth = 1.4; ctx.stroke();
+    // flange
+    ctx.fillStyle = C('barrel'); ctx.strokeStyle = C('barrel-edge');
+    roundRect(ctx, x0 + Lb + 2, cy - D * 0.95, opt.full ? 5 : 3, D * 1.9, 1.5); ctx.fill(); ctx.stroke();
+    // graduations
+    if (opt.full) {
+      ctx.strokeStyle = C('grad'); ctx.fillStyle = C('fg'); ctx.lineWidth = 1;
+      ctx.font = '10px ' + FONT; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+      for (var v = 0; v <= CAPACITY_ML; v += 2) {
+        var gx = Math.round(x0 + v / CAPACITY_ML * Lg) + 0.5, len = v % 10 === 0 ? 9 : 5;
+        ctx.beginPath(); ctx.moveTo(gx, top); ctx.lineTo(gx, top + len); ctx.stroke();
+        if (v % 10 === 0 && v > 0) ctx.fillText(String(v), gx, top - wall - 2);
+      }
+      ctx.textAlign = 'left'; ctx.fillText('mL', x0 + 2, top - wall - 2);
+    }
+    // stopper
+    ctx.fillStyle = C('rubber'); ctx.fillRect(xs, top + 0.5, stopW, D - 1);
+    ctx.strokeStyle = C('rubber-rib'); ctx.lineWidth = 1;
+    if (opt.full) { ctx.beginPath(); ctx.moveTo(xs + 3, top + 1); ctx.lineTo(xs + 3, top + D - 1); ctx.moveTo(xs + 6, top + 1); ctx.lineTo(xs + 6, top + D - 1); ctx.stroke(); }
+    // rod and thumb rest
+    var rodH = D * 0.42, xh = xs + stopW + Lb;
+    ctx.fillStyle = C('rod'); ctx.strokeStyle = C('rod-edge'); ctx.lineWidth = 1.1;
+    ctx.beginPath(); ctx.rect(xs + stopW, cy - rodH / 2, xh - xs - stopW, rodH); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(xs + stopW, cy + 0.5); ctx.lineTo(xh, cy + 0.5); ctx.stroke();
+    roundRect(ctx, xh, cy - D * 0.66, opt.full ? 6 : 4, D * 1.32, 2); ctx.fill(); ctx.stroke();
+    if (opt.full) drawHand(ctx, xh, cy, D);
+    return { xh: xh, xs: xs };
+  }
+  // A gloved hand gripping the thumb rest.
+  function drawHand(ctx, xh, cy, D) {
+    ctx.fillStyle = C('glove'); ctx.strokeStyle = C('glove-edge'); ctx.lineWidth = 1.3;
+    roundRect(ctx, xh + 8, cy - D * 0.62, 26, D * 1.24, 9); ctx.fill(); ctx.stroke();      // palm
+    for (var i = 0; i < 4; i++) {                                                           // fingers round the rest
+      var fy = cy - D * 0.5 + i * D * 0.33;
+      roundRect(ctx, xh - 7, fy - 5, 20, 10, 5); ctx.fill(); ctx.stroke();
+    }
+    roundRect(ctx, xh + 2, cy - D * 0.74, 22, 9, 4.5); ctx.fill(); ctx.stroke();           // thumb
+  }
+  function drawGauge(ctx, gx, gy, r, torr) {
+    ctx.fillStyle = C('barrel'); ctx.strokeStyle = C('barrel-edge'); ctx.lineWidth = 1.2;
+    ctx.fillRect(gx + r - 1, gy - 3, 12, 6); ctx.strokeRect(gx + r - 1, gy - 3, 12, 6);
+    ctx.beginPath(); ctx.arc(gx, gy, r, 0, 2 * Math.PI); ctx.fillStyle = C('control-bg'); ctx.fill();
+    ctx.lineWidth = 2; ctx.strokeStyle = C('barrel-edge'); ctx.stroke();
+    function ang(p) { return (135 + p / 800 * 270) * Math.PI / 180; }
+    ctx.strokeStyle = C('grad'); ctx.lineWidth = 1;
+    for (var p = 0; p <= 800; p += 100) {
+      var a = ang(p), r1 = r - 2, r2 = p % 400 === 0 ? r - 7 : r - 5;
+      ctx.beginPath(); ctx.moveTo(gx + Math.cos(a) * r1, gy + Math.sin(a) * r1); ctx.lineTo(gx + Math.cos(a) * r2, gy + Math.sin(a) * r2); ctx.stroke();
+    }
+    var a7 = ang(760); ctx.strokeStyle = C('marker'); ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(gx + Math.cos(a7) * (r - 2), gy + Math.sin(a7) * (r - 2)); ctx.lineTo(gx + Math.cos(a7) * (r - 8), gy + Math.sin(a7) * (r - 8)); ctx.stroke();
+    var an = ang(clamp(torr, 0, 800)); ctx.strokeStyle = C('fg'); ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx + Math.cos(an) * (r - 6), gy + Math.sin(an) * (r - 6)); ctx.stroke();
+    ctx.beginPath(); ctx.arc(gx, gy, 2.5, 0, 2 * Math.PI); ctx.fillStyle = C('fg'); ctx.fill();
+  }
+
+  // ===========================================================================
+  // Syringe canvas
+  // ===========================================================================
+  var syrCv = document.getElementById('syr');
+  var handleX = 0, gripGeom = null;
+  function drawSyringeCanvas() {
+    var c = sizeCanvas(syrCv); if (!c) return;
+    var ctx = c.ctx, W = c.W, H = c.H;
+    if (!st.compare) {
+      var x0 = 70, Lb = Math.max(90, (W - x0 - 46) / 2), D = 26.6 * (Lb / 108), cy = H / 2 + 8;
+      drawGauge(ctx, 25, cy, 21, main.gauge);
+      var g = drawSyringe(ctx, main, x0, cy, Lb, D, { full: true });
+      handleX = g.xh; gripGeom = { cy: cy, D: D };
+      ctx.font = '11px ' + FONT; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      haloText(ctx, 'gauge', 25, cy + 24);
+      ctx.textAlign = 'left'; haloText(ctx, nameOf(main), x0 + 2, cy + D / 2 + 6);
+    } else {
+      var rows = comp.list.length, rowH = (H - 6) / rows, lx = 4, sx0 = 112, right = 92;
+      var Lbc = Math.max(70, (W - sx0 - right - 24) / 2), Dc = Math.min(18, rowH * 0.48);
+      comp.list.forEach(function (s, i) {
+        var cyr = 3 + rowH * i + rowH / 2;
+        ctx.font = (s.label === 'your liquid' ? '600 ' : '') + '12px ' + FONT; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        ctx.fillStyle = C('fg'); ctx.fillText(s.label, lx, cyr);
+        drawSyringe(ctx, s, sx0, cyr, Lbc, Dc, { full: false });
+        ctx.textAlign = 'right'; ctx.font = '600 12px ' + FONT; ctx.fillStyle = C('fg');
+        ctx.fillText(fmtP(s.gauge), W - 4, cyr - 7);
+        ctx.font = '11px ' + FONT; ctx.fillStyle = C('muted');
+        ctx.fillText(rowStatus(s), W - 4, cyr + 8);
+      });
+      handleX = -1; gripGeom = null;
+    }
+  }
+  function rowStatus(s) {
+    if (s.boiling) return s.atEnd ? 'plunger at end' : 'boiling';
+    return 'not boiling';
+  }
+
+  // ===========================================================================
+  // Panel canvas: molecules or curve
+  // ===========================================================================
+  var panelCv = document.getElementById('panel');
+  function drawPanel() {
+    var c = sizeCanvas(panelCv); if (!c) return;
+    if (st.view === 'mol') drawMolecules(c); else drawCurve(c);
+  }
+  function drawMolecules(c) {
+    var ctx = c.ctx, W = c.W, H = c.H, s = focusSyringe();
+    if (mol.W !== W || mol.H !== H) molInit(W, H);
+    if (isReduced() || !st.running) molSettleIfNeeded(s);
+    ctx.fillStyle = C('mol-bg'); ctx.fillRect(0, 0, W, H);
+    if (mol.R > 0.5) {
+      ctx.beginPath(); ctx.arc(mol.cx, mol.cy, mol.R, 0, 2 * Math.PI); ctx.fillStyle = C('bg'); ctx.fill();
+      ctx.strokeStyle = C('bubble-edge'); ctx.lineWidth = 1.5; ctx.stroke();
+    }
+    if (mol.air) {
+      ctx.beginPath(); ctx.arc(mol.air.x, mol.air.y, mol.air.r, 0, 2 * Math.PI); ctx.fillStyle = C('bg'); ctx.fill();
+      ctx.setLineDash([3, 3]); ctx.strokeStyle = C('air'); ctx.lineWidth = 1.5; ctx.stroke(); ctx.setLineDash([]);
+    }
+    var fill = C('mol'), edge = C('mol-edge');
+    mol.liq.forEach(function (p) { capsule(ctx, p.x, p.y, p.a, 4.2, 2.6, fill, edge); });
+    mol.vap.forEach(function (p) { capsule(ctx, p.x, p.y, p.a, 4.2, 2.6, fill, edge); });
+    var air = C('air');
+    mol.airm.forEach(function (m) {
+      ctx.strokeStyle = air; ctx.lineWidth = 1.6;
+      var cc = Math.cos(m.a) * 2.6, ss = Math.sin(m.a) * 2.6;
+      ctx.beginPath(); ctx.arc(m.x - cc, m.y - ss, 2.6, 0, 2 * Math.PI); ctx.stroke();
+      ctx.beginPath(); ctx.arc(m.x + cc, m.y + ss, 2.6, 0, 2 * Math.PI); ctx.stroke();
+    });
+    ctx.font = '11px ' + FONT; ctx.textBaseline = 'middle'; ctx.textAlign = 'center';
+    if (mol.R > 30) haloText(ctx, 'vapor bubble', mol.cx, mol.cy - mol.R + 12);
+    if (mol.air) haloText(ctx, 'air', mol.air.x, mol.air.y - mol.air.r - 7);
+  }
+  function molSettleIfNeeded(s) { molSettle(s); }
+
+  function drawCurve(c) {
+    var ctx = c.ctx, W = c.W, H = c.H;
+    var list = st.compare ? comp.list : [main];
+    var pad = { l: 48, r: 10, t: 8, b: 30 }, pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
+    var atm = st.unit === 'atm', k = atm ? 1 / P_ATM : 1;
+    var tLo, tHi;
+    if (st.compare) { tLo = 0; tHi = 110; }
+    else { tLo = Math.floor(range[0] / 10) * 10; tHi = Math.ceil((DATA[main.key].tb + 5) / 10) * 10; }
+    var ln = st.curve === 'ln', xMin, xMax, yMin, yMax;
+    if (!ln) { xMin = tLo; xMax = tHi; yMin = 0; yMax = 860 * k; }
+    else {
+      xMin = 1 / (tHi + KELVIN); xMax = 1 / (tLo + KELVIN);
+      var lows = list.map(function (s) { return Math.log(pvap(s.key, Math.max(tLo, DATA[s.key].tm)) * k); });
+      yMin = Math.floor(Math.min(Math.log(30 * k), Math.min.apply(null, lows))); yMax = Math.ceil(Math.log(900 * k));
+    }
+    function X(v) { return pad.l + (v - xMin) / (xMax - xMin) * pw; }
+    function Y(v) { return pad.t + (1 - (v - yMin) / (yMax - yMin)) * ph; }
+    function px(tc) { return X(ln ? 1 / (tc + KELVIN) : tc); }
+    function py(torr) { return Y(ln ? Math.log(torr * k) : torr * k); }
+    // grid and ticks
+    ctx.font = '11px ' + FONT; ctx.lineWidth = 1;
+    var xt = ln ? niceTicks(xMin, xMax, 4) : niceTicks(xMin, xMax, 6);
+    var yt = niceTicks(yMin, yMax, 5);
+    ctx.strokeStyle = C('grid');
+    xt.forEach(function (v) { ctx.beginPath(); ctx.moveTo(Math.round(X(v)) + 0.5, pad.t); ctx.lineTo(Math.round(X(v)) + 0.5, pad.t + ph); ctx.stroke(); });
+    yt.forEach(function (v) { ctx.beginPath(); ctx.moveTo(pad.l, Math.round(Y(v)) + 0.5); ctx.lineTo(pad.l + pw, Math.round(Y(v)) + 0.5); ctx.stroke(); });
+    ctx.strokeStyle = C('rule'); ctx.beginPath(); ctx.moveTo(pad.l + 0.5, pad.t); ctx.lineTo(pad.l + 0.5, pad.t + ph + 0.5); ctx.lineTo(pad.l + pw, pad.t + ph + 0.5); ctx.stroke();
+    ctx.fillStyle = C('fg'); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    xt.forEach(function (v) { var lw = ctx.measureText(fmtTick(v, ln ? 4 : 0)).width / 2; ctx.fillText(fmtTick(v, ln ? 4 : 0), clamp(X(v), pad.l + lw, W - lw - 1), pad.t + ph + 3); });
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    yt.forEach(function (v) { ctx.fillText(fmtTick(v, ln ? 0 : (atm ? 1 : 0)), pad.l - 4, Y(v)); });
+    ctx.font = '600 11px ' + FONT; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText(ln ? '1/T (K⁻¹)' : 'Temperature (°C)', pad.l + pw / 2, H - 1);
+    ctx.save(); ctx.translate(11, pad.t + ph / 2); ctx.rotate(-Math.PI / 2); ctx.textBaseline = 'middle';
+    ctx.fillText(ln ? 'ln (P / ' + st.unit + ')' : 'Vapor pressure (' + st.unit + ')', 0, 0); ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.rect(pad.l, pad.t, pw, ph); ctx.clip();
+    // reference lines: 760 torr and the 40 torr pull limit
+    ctx.font = '11px ' + FONT; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.strokeStyle = C('rule'); ctx.lineWidth = 1.2;
+    ctx.setLineDash([6, 4]); ctx.beginPath(); ctx.moveTo(pad.l, py(P_ATM)); ctx.lineTo(pad.l + pw, py(P_ATM)); ctx.stroke();
+    ctx.setLineDash([2, 3]); ctx.beginPath(); ctx.moveTo(pad.l, py(P_LIMIT)); ctx.lineTo(pad.l + pw, py(P_LIMIT)); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.textBaseline = 'top'; haloText(ctx, atm ? '1 atm' : '760 torr', pad.l + 4, py(P_ATM) + 2); ctx.textBaseline = 'bottom';
+    haloText(ctx, 'pull limit', pad.l + 4, py(P_LIMIT) - 1);
+    // curves
+    var dashes = [[], [7, 4], [2, 3], [9, 3, 2, 3]], shapes = ['diamond', 'circle', 'square', 'triangle'];
+    list.forEach(function (s, i) {
+      var d = DATA[s.key], a = Math.max(tLo, d.tm), b = Math.min(tHi, d.tb + 5);
+      ctx.strokeStyle = i % 2 ? C('curve2') : C('curve'); ctx.lineWidth = 2.2; ctx.setLineDash(st.compare ? dashes[i] : []);
+      ctx.beginPath();
+      for (var j = 0; j <= 240; j++) { var tc = a + (b - a) * j / 240, x = px(tc), y = py(pvap(s.key, tc)); if (j) ctx.lineTo(x, y); else ctx.moveTo(x, y); }
+      ctx.stroke(); ctx.setLineDash([]);
+      if (st.compare) {                                       // label each curve where it crosses 600 torr
+        var tl = d.tb - 1, lo = a, hi2 = b;
+        for (var it = 0; it < 30; it++) { var m = (lo + hi2) / 2; if (pvap(s.key, m) < 600) lo = m; else hi2 = m; } tl = lo;
+        ctx.font = (s.label === 'your liquid' ? '600 ' : '') + '11px ' + FONT; ctx.textAlign = ln ? 'left' : 'right'; ctx.textBaseline = 'middle';
+        haloText(ctx, s.label, px(tl) + (ln ? 6 : -6), py(600));
+      }
+    });
+    // dots: present temperature and pressure on the liquid
+    list.forEach(function (s, i) { marker(ctx, px(s.T), py(s.gauge), st.compare ? shapes[i] : 'diamond'); });
+    ctx.restore();
+  }
+  function marker(ctx, x, y, shape) {
+    ctx.fillStyle = C('marker'); ctx.strokeStyle = C('bg'); ctx.lineWidth = 2;
+    ctx.beginPath();
+    if (shape === 'circle') ctx.arc(x, y, 5.5, 0, 2 * Math.PI);
+    else if (shape === 'square') ctx.rect(x - 5, y - 5, 10, 10);
+    else if (shape === 'triangle') { ctx.moveTo(x, y - 7); ctx.lineTo(x + 6.5, y + 5); ctx.lineTo(x - 6.5, y + 5); ctx.closePath(); }
+    else { ctx.moveTo(x, y - 7); ctx.lineTo(x + 7, y); ctx.lineTo(x, y + 7); ctx.lineTo(x - 7, y); ctx.closePath(); }
+    ctx.fill(); ctx.stroke();
+  }
+  function niceTicks(a, b, n) {
+    var span = b - a, raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / mag;
+    var step = (f < 1.5 ? 1 : f < 3 ? 2 : f < 7 ? 5 : 10) * mag, out = [];
+    for (var v = Math.ceil(a / step - 1e-9) * step; v <= b + 1e-9; v += step) out.push(Math.round(v / step) * step);
+    return out;
+  }
+  function fmtTick(v, dp) {
+    if (dp === 4) return v.toFixed(4);
+    var t = Math.abs(v) < 1e-9 ? 0 : v;
+    var s = Math.abs(t) < 1 && t !== 0 ? String(Number(t.toPrecision(2))) : t.toFixed(dp);
+    return t < 0 ? MINUS + s.replace('-', '') : s;
+  }
+
+  // ===========================================================================
+  // Text: readings, status, descriptions, announcements
+  // ===========================================================================
+  var el = function (id) { return document.getElementById(id); };
+  function statusText() {
+    if (st.compare) {
+      var n = comp.list.filter(function (s) { return s.boiling; }).length;
+      return 'Same pull on all four syringes, all at 25.0 °C. ' + (n === 0 ? 'None boiling.' : n === 1 ? 'One boiling.' : (['', '', 'Two', 'Three', 'All four'][n]) + ' boiling.');
+    }
+    var s = main;
+    if (s.boiling) return s.atEnd ? 'Plunger at the end of the barrel. No new bubbles: liquid and vapor in balance.' : 'Boiling. Vapor bubbles form; the plunger slides out.';
+    if (s.travel > 0) return 'Let go. The vapor bubbles collapse.';
+    if (st.F <= 0) return s.air.length ? 'At rest. Not boiling. The air bubbles stay.' : 'At rest. Not boiling.';
+    if (st.F >= F_MAX - 1e-6) return 'Pull at its limit. Not boiling.';
+    return 'Pulling. Not boiling yet.';
+  }
+  function describeSyringe() {
+    if (st.compare) {
+      return 'Four syringes, each holding ' + V_LIQ_ML + ' mL of a liquid at 25.0 °C, are pulled with the same force, ' + fmtF(st.F) + '. ' +
+        comp.list.map(function (s) {
+          return (s.label === 'your liquid' ? 'Your liquid' : s.label.charAt(0).toUpperCase() + s.label.slice(1)) + ': pressure on the liquid ' + fmtP(s.gauge) + ', ' + rowStatus(s) + ', plunger travel ' + fmtV(s.travel) + '.';
+        }).join(' ');
+    }
+    var s = main, who = s.label === 'your liquid' ? 'your liquid' : s.label;
+    var t = 'A 60 mL syringe lies on its side. Its tip is capped, with a pressure gauge on the cap. It holds ' + V_LIQ_ML + ' mL of ' + who +
+      ' at ' + fmtT(s.T) + ', with no air. A gloved hand holds the plunger and pulls with ' + fmtF(st.F) + '. The gauge reads ' + fmtP(s.gauge) +
+      '. Plunger travel ' + fmtV(s.travel) + '. ';
+    if (s.boiling && !s.atEnd) t += 'The liquid is boiling: vapor bubbles form inside it and rise into a vapor space above it, and the plunger slides out.';
+    else if (s.boiling) t += 'The plunger has reached the end of the barrel. Vapor fills the space above the liquid; no new bubbles form.';
+    else t += 'The liquid is not boiling; the plunger has not moved.';
+    if (s.air.length) t += ' A few small air bubbles cling to the barrel wall.';
+    return t;
+  }
+  function describePanel() {
+    var s = focusSyringe();
+    if (st.view === 'mol') {
+      var t = 'Magnified view inside ' + (s.label === 'your liquid' ? 'your liquid' : s.label) + '. Closely packed whole molecules jostle. ';
+      if (s.boiling) t += 'A vapor bubble has formed inside the liquid. Inside it are a few molecules of the same liquid, whole and far apart. At the bubble wall some molecules escape into the bubble and some return. ';
+      else t += 'There is no surface and no bubble: the liquid fills the syringe. ';
+      if (s.air.length) t += 'A small air bubble holds a few air molecules, drawn as open pairs.';
+      return t;
+    }
+    var list = st.compare ? comp.list : [main];
+    var t2 = (st.curve === 'ln' ? 'Straight lines of ln P against 1/T' : 'Curves of vapor pressure against temperature') +
+      ', from the equation you used, for ' + list.map(function (x) { return x.label; }).join(', ') + '. Dashed line at ' + (st.unit === 'atm' ? '1 atm' : '760 torr') +
+      '; dotted line at the 40 torr pull limit. ';
+    t2 += list.map(function (x) {
+      var pv = pvap(x.key, x.T), pos = x.boiling ? 'on the curve' : (pv < P_LIMIT && st.F >= F_MAX - 1e-6 ? 'at the pull limit, above the curve' : 'above the curve');
+      return 'The dot for ' + x.label + ' is at ' + fmtT(x.T) + ' and ' + fmtP(x.gauge) + ', ' + pos + '.';
+    }).join(' ');
+    return t2;
+  }
+  function captionText() {
+    if (st.view === 'mol') {
+      var s = focusSyringe(), who = st.compare ? ' Shown: ' + s.label + '.' : '';
+      return 'Inside the liquid, magnified. Each filled shape is one whole molecule of the liquid.' + (s.air.length ? ' Open pairs are air.' : '') + who;
+    }
+    return 'From the equation you used. ' + (st.compare ? 'Each dot (its own shape) is one syringe' : 'The dot is the present temperature and the pressure on the liquid') + '.';
+  }
+
+  var live = el('live'), restTimer = null;
+  function say(msg) { live.textContent = ''; setTimeout(function () { live.textContent = msg; }, 30); }
+  function flushEvents() {
+    if (!events.length) return;
+    var msgs = events.map(function (e) {
+      var who = st.compare ? (e.s.label === 'your liquid' ? 'Your liquid' : e.s.label.charAt(0).toUpperCase() + e.s.label.slice(1)) + ': ' : '';
+      if (e.kind === 'start') return who + 'boiling started. Pressure on the liquid holds at ' + fmtP(e.s.gauge) + '.';
+      if (e.kind === 'stop') return who + 'boiling stopped; the vapor bubbles collapsed. Pressure on the liquid ' + fmtP(e.s.gauge) + '.';
+      return who + 'plunger at the end of the barrel.';
+    }).filter(function (m, i, a) { return a.indexOf(m) === i; });
+    events = [];
+    say(msgs.join(' '));
+  }
+  function announceAtRest() {
+    if (restTimer) clearTimeout(restTimer);
+    restTimer = setTimeout(function () {
+      restTimer = null;
+      if (st.compare) say('Pull ' + fmtF(st.F) + '. ' + comp.list.map(function (s) { return s.label + ' ' + fmtP(s.gauge) + ', ' + rowStatus(s); }).join('; ') + '.');
+      else say('Pull ' + fmtF(st.F) + '. Pressure on the liquid ' + fmtP(main.gauge) + '. ' + (main.boiling ? 'Boiling.' : 'Not boiling.'));
+    }, 700);
+  }
+
+  function updateText() {
+    var s = main;
+    el('vP').textContent = fmtP(s.gauge);
+    el('vT').textContent = fmtT(st.compare ? COMPARE_T : s.T);
+    el('vF').textContent = fmtF(st.F);
+    el('vV').textContent = fmtV(s.travel);
+    el('status').textContent = statusText();
+    el('descSyr').textContent = describeSyringe();
+    el('descPanel').textContent = describePanel();
+    el('caption').textContent = captionText();
+    forceIn.setAttribute('aria-valuetext', fmtF(st.F) + (st.F >= F_MAX - 1e-6 ? ', the most a hand can pull' : ''));
+    tempIn.setAttribute('aria-valuetext', fmtT(st.compare ? COMPARE_T : main.T));
+  }
+
+  // ===========================================================================
+  // Loop: runs only while something moves; stops itself
+  // ===========================================================================
+  var rafId = null, timerId = null, lastT = 0;
+  function isReduced() { return !!(reduceQ && reduceQ.matches); }
+  function tick(dt) {
+    allSyringes().forEach(function (s) { step(s, dt); });
+    if (st.view === 'mol' && !isReduced() && mol.W) molStep(dt, focusSyringe());
+    else if (mol.W) { mol.R = focusSyringe().boiling ? mol.Rmax : 0; mol.settledFor = null; }
+    flushEvents();
+    var idle = (performance.now() - st.lastInput) / 1000 > IDLE_STOP_S;
+    if (idle && !anyMoving()) stop();
+  }
+  function render() { drawSyringeCanvas(); drawPanel(); updateText(); playBtn.textContent = st.running ? 'Pause' : 'Play'; }
+  function frame(now) {
+    rafId = null;
+    var dt = Math.min(0.05, Math.max(0, (now - lastT) / 1000)); lastT = now;
+    tick(dt); render(); schedule();
+  }
+  function schedule() {
+    if (!st.running) return;
+    if (isReduced()) {
+      if (!timerId) timerId = setTimeout(function () {         // still frames, one a second
+        timerId = null; var now = performance.now(), dt = Math.min(1, (now - lastT) / 1000); lastT = now;
+        tick(dt); render(); schedule();
+      }, 1000);
+    } else if (!rafId) rafId = requestAnimationFrame(frame);
+  }
+  function start() {
+    st.lastInput = performance.now();
+    if (!st.running) { st.running = true; lastT = performance.now(); mol.settledFor = null; }
+    schedule();
+  }
+  function stop() {
+    st.running = false;
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    if (timerId) { clearTimeout(timerId); timerId = null; }
+  }
+  function instant() {          // apply a change at once (gauge, boiling, collapse), then draw
+    allSyringes().forEach(function (s) { step(s, 0); if (!s.boiling && isReduced()) s.travel = 0; });
+    flushEvents(); render();
+  }
+
+  // ===========================================================================
+  // Controls
+  // ===========================================================================
+  var forceIn = el('force'), tempIn = el('temp'), playBtn = el('play');
+  forceIn.max = String(F_MAX);
+  function setForce(f) {
+    st.F = clamp(Math.round(f * 1000) / 1000, 0, F_MAX);
+    if (st.F > F_MAX - 0.0006) st.F = F_MAX;
+    forceIn.value = String(st.F);
+    start(); instant(); announceAtRest();
+  }
+  forceIn.addEventListener('input', function () { setForce(Number(forceIn.value)); });
+  forceIn.addEventListener('keydown', function (e) {
+    var k = e.key, d = null;
+    if (k === 'ArrowRight' || k === 'ArrowUp') d = e.shiftKey ? 0.1 : 1;
+    else if (k === 'ArrowLeft' || k === 'ArrowDown') d = e.shiftKey ? -0.1 : -1;
+    else if (k === 'PageUp') d = 10; else if (k === 'PageDown') d = -10;
+    else if (k === 'Home') { e.preventDefault(); setForce(0); return; }
+    else if (k === 'End') { e.preventDefault(); setForce(F_MAX); return; }
+    if (d !== null) { e.preventDefault(); setForce(Math.round((st.F + d) * 10) / 10); }
+  });
+  el('letgo').addEventListener('click', function () { setForce(0); });
+  playBtn.addEventListener('click', function () { if (st.running) { stop(); render(); } else { start(); render(); } });
+  el('reset').addEventListener('click', function () { stop(); initState(); syncControls(); if (mol.W) molInit(mol.W, mol.H); applyLayout(); render(); say('Reset to the opening state.'); });
+
+  function syncControls() {
+    forceIn.value = String(st.F);
+    tempIn.min = String(range[0]); tempIn.max = String(range[1]); tempIn.value = String(main.T);
+    document.querySelector('input[name="unit"][value="' + st.unit + '"]').checked = true;
+    document.querySelector('input[name="view"][value="' + st.view + '"]').checked = true;
+    document.querySelector('input[name="curve"][value="' + st.curve + '"]').checked = true;
+    el('air').checked = st.airOn; el('compare').checked = st.compare;
+  }
+  function setTemp(v) { main.T = round1(clamp(v, range[0], range[1])); tempIn.value = String(main.T); start(); instant(); announceAtRest(); }
+  tempIn.addEventListener('input', function () { setTemp(Number(tempIn.value)); });
+  tempIn.addEventListener('keydown', function (e) {
+    var k = e.key, d = null;
+    if (k === 'ArrowRight' || k === 'ArrowUp') d = e.shiftKey ? 0.1 : 1;
+    else if (k === 'ArrowLeft' || k === 'ArrowDown') d = e.shiftKey ? -0.1 : -1;
+    else if (k === 'PageUp') d = 10; else if (k === 'PageDown') d = -10;
+    else if (k === 'Home') { e.preventDefault(); setTemp(range[0]); return; }
+    else if (k === 'End') { e.preventDefault(); setTemp(range[1]); return; }
+    if (d !== null) { e.preventDefault(); setTemp(main.T + d); }
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="unit"]'), function (r) {
+    r.addEventListener('change', function () { if (r.checked) { st.unit = r.value; render(); announceAtRest(); } });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="view"]'), function (r) {
+    r.addEventListener('change', function () { if (r.checked) { st.view = r.value; mol.settledFor = null; applyLayout(); render(); } });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="curve"]'), function (r) {
+    r.addEventListener('change', function () { if (r.checked) { st.curve = r.value; render(); } });
+  });
+  el('air').addEventListener('change', function () {
+    st.airOn = el('air').checked;
+    if (!st.airOn) allSyringes().forEach(function (s) { s.air = []; });
+    mol.settledFor = null; instant();
+  });
+  el('compare').addEventListener('change', function () {
+    st.compare = el('compare').checked; mol.settledFor = null; applyLayout(); instant(); announceAtRest();
+  });
+  function applyLayout() {
+    syrCv.classList.toggle('compare', st.compare);
+    el('readings').classList.toggle('compare', st.compare);
+    el('rP').hidden = st.compare; el('rV').hidden = st.compare;
+    tempIn.disabled = st.compare;
+    el('tempNote').textContent = st.compare ? 'All four at 25.0 °C' : '';
+    el('curveSwitch').hidden = st.view !== 'curve';
+  }
+
+  // Drag the plunger handle: the farther the drag, the harder the pull. Release lets go.
+  var dragging = null;
+  syrCv.addEventListener('pointerdown', function (e) {
+    if (st.compare || !gripGeom) return;
+    var r = syrCv.getBoundingClientRect(), x = e.clientX - r.left;
+    if (x < handleX - 20 || x > handleX + 50) return;
+    dragging = { x0: x, f0: st.F }; syrCv.setPointerCapture(e.pointerId); e.preventDefault();
+  });
+  syrCv.addEventListener('pointermove', function (e) {
+    if (!dragging) return;
+    var r = syrCv.getBoundingClientRect(), dx = e.clientX - r.left - dragging.x0;
+    setForce(dragging.f0 + dx / 90 * F_MAX);
+  });
+  function endDrag() { if (dragging) { dragging = null; setForce(0); } }
+  syrCv.addEventListener('pointerup', endDrag);
+  syrCv.addEventListener('pointercancel', endDrag);
+
+  // ===========================================================================
+  // Start: the student's own problem, plunger at rest, gauge at 760 torr.
+  // ===========================================================================
+  var colourWatch = function () { applyTheme(); render(); };
+  applyTheme();
+  if (darkQ && themeParam !== 'light' && themeParam !== 'dark') {
+    if (darkQ.addEventListener) darkQ.addEventListener('change', colourWatch); else if (darkQ.addListener) darkQ.addListener(colourWatch);
+  }
+  if (reduceQ) { var rm = function () { mol.settledFor = null; render(); }; if (reduceQ.addEventListener) reduceQ.addEventListener('change', rm); else if (reduceQ.addListener) reduceQ.addListener(rm); }
+  syncControls(); applyLayout();
+  if (window.ResizeObserver) new ResizeObserver(function () { render(); }).observe(document.body);
+  else window.addEventListener('resize', render);
+  instant();
+})();
+</script>
+</body>
+</html>

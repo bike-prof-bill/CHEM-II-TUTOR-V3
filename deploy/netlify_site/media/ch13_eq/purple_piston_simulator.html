@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Purple Piston</title>
+<!--
+  DRAFT: not for students until the instructor approves it.
+  Date: 14 Oct 2026. Built by Simulation_Claude to 00_README_BRIEF_purple_piston.md (SCENARIO_CLAUDE, 14 Oct 2026),
+    on the pattern of martian_fuel_simulator.html (f45c029c), haber_simulator.html (e6d73535) and
+    silent_beaker_simulator.html (e33ed9ec).
+  Brief (one line): ch13_eq opener "The Purple Piston" (a floater), opens at the meaning question: a sealed cylinder
+    at 400 °C holding H2 + I2 <=> 2HI; a piston squeezes or expands it and nothing shifts, because every
+    concentration changes by the same factor; opening a hydrogen valve does shift it. No sentence compares Q with K
+    or says which way the reaction goes.
+  Data source: the brief's table (instructor, 14 Oct 2026): Kc = 50.0 at 400 °C (673 K), OpenStax Chemistry 2e,
+    section 13.3; R = 0.08206 L·atm/(mol·K); default 0.0400 mol H2, 0.0800 mol I2, 0.400 mol HI in 2.00 L
+    (problem P1a); the hydrogen valve adds 0.0400 mol H2, once; the detector reads 1.00 when [I2] = 0.0400 M
+    (display choices).
+  Model (cartoon): forward rate kf [H2][I2], reverse rate kr [HI]^2, kf/kr = Kc. The speed means nothing.
+    Pressure = (total moles / V) × 0.08206 × 673 atm, the ideal-gas rule of thumb. Moles of gas are the same on
+    both sides, so the reaction never changes the total pressure.
+    Time is not to scale: the clock runs slower during an approach and at full speed near the end.
+  URL parameters (same pattern as the Haber and Martian pages):
+    nH2, nI2, nHI   mol put in, 0 to 10. Default 0.0400, 0.0800, 0.400.
+    V               starting volume, L, 0.1 to 10. Default 2.00.
+    theme           light | dark. Default: the system setting.
+  Cartoon choices (not data; listed under Needs your decision): about 44 molecules drawn at the start, about
+    3 reaction events a second each way at the start, the 5 s approach, the rate bars' top at 10 times the
+    starting equilibrium rate, the 0.6 s piston stroke, the purple tint's strength, the 2-minute idle stop.
+  Nothing is fetched, stored, or sent. Nothing moves until the student presses Play or uses a control.
+-->
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #faf8fb; --fg: #1e1c20; --muted: #4c4950; --rule: #807a86; --grid: #e4e0e8; --control-bg: #ffffff; --focus: #6b2a8f;
+    --win-bg: #f1eef3; --h: #ffffff; --h-edge: #4a4f57; --i: #6b2a8f; --i-edge: #2c0f3d;
+    --fwd: #3b3f45; --rev: #8a5a00; --flash: #9a5b00; --piston: #5c6068;
+    --notice-bg: #fff3d1; --notice-fg: #3d2c00; --notice-rule: #8a6a00;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #19171c; --fg: #ece9ef; --muted: #bdb7c4; --rule: #938c9b; --grid: #322e37; --control-bg: #232027; --focus: #d9a8f0;
+    --win-bg: #221f26; --h: #ece9ef; --h-edge: #a49aa8; --i: #c58ae0; --i-edge: #f1defa;
+    --fwd: #c3c8cf; --rev: #f0b25a; --flash: #ffc24d; --piston: #a7adb5;
+    --notice-bg: #3a3010; --notice-fg: #ffe9a8; --notice-rule: #c9a63a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--fg); }
+  body { font: 14px/1.35 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; padding: 8px 12px; max-width: 640px; }
+  h1 { font-size: 1rem; font-weight: 600; margin: 0 0 4px; }
+  .notice { margin: 0 0 6px; padding: 5px 9px; background: var(--notice-bg); color: var(--notice-fg); border-left: 4px solid var(--notice-rule); font-size: 0.85rem; }
+  .top { display: flex; gap: 10px; align-items: stretch; }
+  canvas { display: block; }
+  #scene { width: 220px; height: 172px; flex: 0 0 220px; border-radius: 4px; }
+  .readings { flex: 1 1 auto; min-width: 0; }
+  .readings h2 { font-size: 0.8rem; font-weight: 600; margin: 0 0 2px; color: var(--muted); }
+  .readings table { border-collapse: collapse; width: 100%; }
+  .readings td { padding: 0; line-height: 1.2; font-size: 0.84rem; }
+  .readings td.v { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  sub { line-height: 0; }
+  .status { margin: 3px 0; font-size: 0.86rem; font-weight: 600; min-height: 2.4em; }
+  .row { display: flex; align-items: center; gap: 4px 5px; flex-wrap: wrap; margin: 4px 0; }
+  .row .lab { font-size: 0.86rem; margin-right: 2px; }
+  button { font: inherit; font-size: 0.82rem; color: var(--fg); background: var(--control-bg); border: 1px solid var(--rule); border-radius: 4px; padding: 3px 7px; cursor: pointer; }
+  button:disabled { opacity: 0.55; cursor: default; }
+  #panel { width: 100%; height: 214px; border: 1px solid var(--grid); margin-top: 2px; }
+  .small { margin: 2px 0 0; font-size: 0.76rem; color: var(--muted); }
+  [hidden] { display: none !important; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+</style>
+</head>
+<body>
+  <h1>The Purple Piston: H<sub>2</sub> + I<sub>2</sub> ⇌ 2HI, 400 °C</h1>
+  <p class="notice" id="notice" role="status" hidden></p>
+
+  <div class="top">
+    <canvas id="scene" role="img" aria-label="The sealed cylinder with its piston, and the green-light detector. A text description follows." aria-describedby="descScene"></canvas>
+    <div class="readings">
+      <h2>Readings</h2>
+      <table>
+        <tr><td>Volume</td><td class="v" id="rV"></td></tr>
+        <tr><td>Pressure</td><td class="v" id="rP"></td></tr>
+        <tr><td>[H₂]</td><td class="v" id="rH2"></td></tr>
+        <tr><td>[I₂]</td><td class="v" id="rI2"></td></tr>
+        <tr><td>[HI]</td><td class="v" id="rHI"></td></tr>
+        <tr><td>Detector</td><td class="v" id="rD"></td></tr>
+        <tr><td>Q</td><td class="v" id="rQ"></td></tr>
+        <tr><td>K</td><td class="v">50.0</td></tr>
+        <tr><td>Temperature</td><td class="v">400 °C</td></tr>
+      </table>
+    </div>
+  </div>
+  <p class="status" id="status"></p>
+
+  <div class="row" role="group" aria-labelledby="pistonLab">
+    <span class="lab" id="pistonLab">Piston:</span>
+    <button type="button" id="vHalf" data-f="0.5" aria-label="Piston to half the starting volume">Half</button>
+    <button type="button" id="vThird" data-f="0.3333333333333333" aria-label="Piston to a third of the starting volume">Third</button>
+    <button type="button" id="vDouble" data-f="2" aria-label="Piston out to double the starting volume">Double</button>
+    <button type="button" id="vStart" data-f="1" aria-label="Piston back to the starting volume">Start</button>
+  </div>
+  <div class="row">
+    <button type="button" id="play">Play</button>
+    <button type="button" id="reset">Reset</button>
+    <button type="button" id="valve">Open the hydrogen valve</button>
+  </div>
+  <canvas id="panel" role="img" aria-label="Inside the cylinder, and the two reaction rates. A text description follows." aria-describedby="descPanel"></canvas>
+  <p class="small" id="caption"></p>
+  <p class="small">Time is not to scale; the rates are a simple model and their speed means nothing.</p>
+
+  <div class="sr-only" id="descScene"></div>
+  <div class="sr-only" id="descPanel"></div>
+  <div class="sr-only" id="live" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ===========================================================================
+  // DATA: the brief's table (instructor, 14 Oct 2026).
+  // ===========================================================================
+  var KC = 50.0;                 // H2 + I2 <=> 2HI at 400 °C, OpenStax Chemistry 2e, section 13.3
+  var RT = 0.08206 * 673;        // L·atm/mol at 400 °C (673 K)
+  var DEFAULT = { H2: 0.0400, I2: 0.0800, HI: 0.400, V: 2.00 };
+  var VALVE_MOL = 0.0400;        // display choice, SCENARIO_CLAUDE
+  var DETECTOR_ONE = 0.0400;     // the detector reads 1.00 at this [I2] (display choice, not a measurement)
+  var SP = ['H2', 'I2', 'HI'], NAME = { H2: 'hydrogen', I2: 'iodine', HI: 'hydrogen iodide' };
+
+  // Cartoon choices:
+  var MOLECULES_AT_START = 44, EXCHANGE_PER_S = 3, SETTLE_S = 5, BAR_TOP = 10, STROKE_S = 0.6, IDLE_STOP_S = 120;
+
+  // ===========================================================================
+  // URL parameters
+  // ===========================================================================
+  var params = new URLSearchParams(window.location.search), notices = [];
+  function rd(name, lo, hi) { var r = params.get(name); if (r === null || r.trim() === '') return null; var v = Number(r); return (isFinite(v) && v >= lo && v <= hi) ? v : NaN; }
+  var g = { H2: rd('nH2', 0, 10), I2: rd('nI2', 0, 10), HI: rd('nHI', 0, 10), V: rd('V', 0.1, 10) };
+  var start0 = { H2: DEFAULT.H2, I2: DEFAULT.I2, HI: DEFAULT.HI, V: DEFAULT.V };
+  if (['H2', 'I2', 'HI', 'V'].some(function (k) { return g[k] !== null && isNaN(g[k]); })) notices.push('Some numbers could not be read; showing the sample mixture.');
+  else {
+    if (SP.some(function (k) { return g[k] !== null; })) {
+      var n = { H2: g.H2 || 0, I2: g.I2 || 0, HI: g.HI || 0 };
+      if (n.H2 + n.I2 + n.HI > 0) SP.forEach(function (k) { start0[k] = n[k]; });
+      else notices.push('The cylinder would be empty; showing the sample mixture.');
+    }
+    if (g.V !== null) start0.V = g.V;
+  }
+  var notice = document.getElementById('notice');
+  if (notices.length) { notice.textContent = notices.join(' '); notice.hidden = false; }
+
+  var themeParam = (params.get('theme') || '').trim().toLowerCase();
+  var darkQ = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  var reduceQ = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var colours = null;
+  function applyTheme() { var t = (themeParam === 'light' || themeParam === 'dark') ? themeParam : (darkQ && darkQ.matches ? 'dark' : 'light'); document.documentElement.setAttribute('data-theme', t); colours = null; }
+  function isReduced() { return !!(reduceQ && reduceQ.matches); }
+
+  // ===========================================================================
+  // Model, in moles. Extent e (mol): H2 = a − e, I2 = b − e, HI = c + 2e. V is the cylinder's volume.
+  // Rates per litre: forward kf [H2][I2], reverse kr [HI]^2; de/dt = V (forward − reverse).
+  // The end point does not depend on V: the V's cancel in [HI]^2 / ([H2][I2]).
+  // ===========================================================================
+  var m, st;
+  function moles(e) { return { H2: Math.max(0, m.a - e), I2: Math.max(0, m.b - e), HI: Math.max(0, m.c + 2 * e) }; }
+  function concAt(e, V) { var n = moles(e); return { H2: n.H2 / V, I2: n.I2 / V, HI: n.HI / V }; }
+  function rates(e, V) { var c = concAt(e, V); return { f: m.kf * c.H2 * c.I2, r: m.kr * c.HI * c.HI }; }
+  function dedt(e, V) { var r = rates(e, V); return V * (r.f - r.r); }
+  function stiff(e, V) { var n = moles(e); return (m.kf * (n.H2 + n.I2) + 4 * m.kr * n.HI) / (V * V) * V + 1e-12; }
+  function eEnd(a, b, c) {   // where Q = Kc, by halving the interval
+    var lo = -c / 2, hi = Math.min(a, b);
+    for (var i = 0; i < 200; i++) { var mid = (lo + hi) / 2; if (KC * (a - mid) * (b - mid) - (c + 2 * mid) * (c + 2 * mid) > 0) lo = mid; else hi = mid; }
+    return (lo + hi) / 2;
+  }
+  function canReact(a, b, c) { return (a > 0 && b > 0) || c > 0; }
+  function setOrigin(n, V) {
+    var kf = m ? m.kf : undefined, kr = m ? m.kr : undefined;
+    m = { a: n.H2, b: n.I2, c: n.HI, e: 0, kf: kf, kr: kr, near: false, done: false };
+    m.live = canReact(m.a, m.b, m.c);
+    m.ee = m.live ? eEnd(m.a, m.b, m.c) : 0;
+    if (m.kr === undefined) {   // fixed for the run: about EXCHANGE_PER_S events a second each way at the starting volume's end point
+      var ne = moles(m.ee), hiC = ne.HI / V, perMol = st.perMol;
+      m.kr = hiC > 0 ? EXCHANGE_PER_S / (hiC * hiC * V * perMol) : 1; m.kf = KC * m.kr;
+      var re = rates(m.ee, V); st.refRate = Math.max(re.r, 1e-30);
+    }
+    if (!m.live || Math.abs(m.ee) < 1e-12 * (m.a + m.b + m.c + 1e-30)) { m.g0 = 1; m.near = true; m.done = true; return; }
+    var e = 0, t = 0, guard = 0;   // model seconds to get 90% of the way, shown over SETTLE_S
+    while (Math.abs(e - m.ee) > 0.1 * Math.abs(m.ee) && guard < 200000) {
+      var d = dedt(e, V), h = Math.min(0.002 * Math.abs(m.ee) / (Math.abs(d) + 1e-30), 0.3 / stiff(e, V));
+      var k1 = d, k2 = dedt(e + h * k1 / 2, V), k3 = dedt(e + h * k2 / 2, V), k4 = dedt(e + h * k3, V);
+      e += h * (k1 + 2 * k2 + 2 * k3 + k4) / 6; t += h; guard++;
+    }
+    m.g0 = t / SETTLE_S;
+  }
+  function stepModel(h, V) {
+    var need = Math.ceil(h * stiff(m.e, V) / 0.3);
+    if (need > 4000 && m.near) { m.e = m.ee; m.done = true; return; }
+    var n = Math.min(4000, Math.max(1, need)), k = h / n;
+    for (var i = 0; i < n; i++) {
+      var e = m.e, k1 = dedt(e, V), k2 = dedt(e + k * k1 / 2, V), k3 = dedt(e + k * k2 / 2, V), k4 = dedt(e + k * k3, V);
+      m.e = e + k * (k1 + 2 * k2 + 2 * k3 + k4) / 6;
+    }
+  }
+  function clockRate() {
+    if (!m.near && Math.abs(m.e - m.ee) <= 0.1 * Math.abs(m.ee)) { m.near = true; m.nearW = st.w; }
+    if (!m.near) return m.g0;
+    return m.g0 + (1 - m.g0) * Math.min(1, (st.w - (m.nearW || 0)) / 1.0);
+  }
+  function snapToEnd() {   // within 0.1% of the end, finish, so the last digit does not creep
+    if (!m.near || m.done) return;
+    var c = concAt(m.e, st.V), e = concAt(m.ee, st.V);
+    var close = SP.every(function (k) { return Math.abs(c[k] - e[k]) <= 1e-3 * e[k] || (c[k] === 0 && e[k] === 0); });
+    if (close) { m.e = m.ee; m.done = true; }
+  }
+  function now() { return concAt(m.e, st.V); }
+  function Q(c) { if (c.H2 <= 0 || c.I2 <= 0) return null; return c.HI * c.HI / (c.H2 * c.I2); }
+  function pressure(c) { return (c.H2 + c.I2 + c.HI) * RT; }
+
+  // ===========================================================================
+  // Formatting: 3 significant figures, rounded half up; no carets
+  // ===========================================================================
+  var SUP = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+  function sig(v) { var e = Math.floor(Math.log10(v)), r = Math.round(v / Math.pow(10, e) * 100 + 1e-7) / 100; if (r >= 10) { r /= 10; e++; } return { m: r, e: e }; }
+  function fmt(v) {
+    if (!(v > 0)) return '0';
+    var s = sig(v);
+    if (s.e < -3 || s.e > 3) return s.m.toFixed(2) + ' × 10' + String(s.e).split('').map(function (ch) { return SUP[ch]; }).join('');
+    return (s.m * Math.pow(10, s.e)).toFixed(Math.max(0, 2 - s.e));
+  }
+  function fmtQ(c) { var q = Q(c); return q === null ? 'none' : fmt(q); }
+  function spoken(t) { return t.replace(/ × 10⁻(\S+)/g, function (a, d) { return ' times 10 to the minus ' + d.split('').map(function (ch) { return '⁰¹²³⁴⁵⁶⁷⁸⁹'.indexOf(ch); }).join(''); }); }
+
+  // ===========================================================================
+  // Molecules: counts follow moles (one factor for the whole run), so a volume change never changes them.
+  // ===========================================================================
+  var BOX = { w: 0, hMax: 0 }, layoutDirty = true;
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function gasTop() { return BOX.hMax * (1 - st.V / (2 * st.V0)); }   // the box's full height is twice the starting volume
+  function targets() {
+    var n = moles(m.e), t = {}, trace = [];
+    SP.forEach(function (k) { var v = n[k] * st.perMol, r = Math.round(v); if (n[k] > 0 && r < 1) { r = 1; trace.push(k); } t[k] = r; });
+    t.trace = trace; return t;
+  }
+  function addMol(kind, x, y) { st.mols.push({ k: kind, x: x, y: y, vx: rnd(-28, 28), vy: rnd(-28, 28), a: rnd(0, 6.3), va: rnd(-1, 1) }); }
+  function count(kind) { var n = 0; st.mols.forEach(function (q) { if (q.k === kind) n++; }); return n; }
+  function seed() {
+    st.mols = []; st.flashes = [];
+    var t = targets(), top = gasTop();
+    SP.forEach(function (k) { for (var j = 0; j < t[k]; j++) addMol(k, rnd(10, BOX.w - 10), rnd(top + 8, BOX.hMax - 8)); });
+    layoutDirty = false;
+  }
+  function reconcile() {
+    var t = targets(), top = gasTop();
+    SP.forEach(function (k) {
+      var guard = 0;
+      while (count(k) < t[k] - 1 && guard++ < 50) addMol(k, rnd(10, BOX.w - 10), k === 'H2' && st.valveT > 0 ? rnd(top + 6, top + 20) : rnd(top + 8, BOX.hMax - 8));
+      while (count(k) > t[k] + 1 && guard++ < 100) { for (var i = st.mols.length - 1; i >= 0; i--) if (st.mols[i].k === k) { st.mols.splice(i, 1); break; } }
+    });
+  }
+  function nearest(kind, x, y, skip) { var best = null, bd = Infinity; st.mols.forEach(function (q) { if (q.k !== kind || q === skip) return; var d = (q.x - x) * (q.x - x) + (q.y - y) * (q.y - y); if (d < bd) { bd = d; best = q; } }); return best; }
+  function forward() {   // one H2 and one I2 become two HI
+    var hs = st.mols.filter(function (q) { return q.k === 'H2'; }); if (!hs.length || !count('I2')) return;
+    var p = hs[Math.floor(Math.random() * hs.length)], q = nearest('I2', p.x, p.y), mx = (p.x + q.x) / 2, my = (p.y + q.y) / 2;
+    st.flashes.push({ x: mx, y: my, life: 0.6 });
+    p.k = 'HI'; q.k = 'HI'; p.x = mx - 7; p.y = my; q.x = mx + 7; q.y = my; p.vx = -Math.abs(p.vx); q.vx = Math.abs(q.vx);
+  }
+  function reverse() {   // two HI become one H2 and one I2
+    var hs = st.mols.filter(function (q) { return q.k === 'HI'; }); if (hs.length < 2) return;
+    var p = hs[Math.floor(Math.random() * hs.length)], q = nearest('HI', p.x, p.y, p), mx = (p.x + q.x) / 2, my = (p.y + q.y) / 2;
+    st.flashes.push({ x: mx, y: my, life: 0.6 });
+    p.k = 'H2'; q.k = 'I2'; p.x = mx - 7; p.y = my; q.x = mx + 7; q.y = my; p.vx = -Math.abs(p.vx); q.vx = Math.abs(q.vx);
+  }
+  function moveMols(dt) {
+    var top = gasTop();
+    st.mols.forEach(function (q) {
+      q.vx += rnd(-30, 30) * dt; q.vy += rnd(-30, 30) * dt;
+      var sp = Math.sqrt(q.vx * q.vx + q.vy * q.vy); if (sp > 40) { q.vx *= 40 / sp; q.vy *= 40 / sp; }
+      q.x += q.vx * dt; q.y += q.vy * dt; q.a += q.va * dt;
+      if (q.x < 9) { q.x = 9; q.vx = Math.abs(q.vx); } if (q.x > BOX.w - 9) { q.x = BOX.w - 9; q.vx = -Math.abs(q.vx); }
+      if (q.y < top + 8) { q.y = top + 8; q.vy = Math.abs(q.vy); } if (q.y > BOX.hMax - 8) { q.y = BOX.hMax - 8; q.vy = -Math.abs(q.vy); }
+    });
+    st.flashes.forEach(function (f) { f.life -= dt; }); st.flashes = st.flashes.filter(function (f) { return f.life > 0; });
+  }
+
+  // ===========================================================================
+  // State and time step
+  // ===========================================================================
+  function initState() {
+    m = null;
+    var tot = start0.H2 + start0.I2 + start0.HI;
+    st = { V: start0.V, V0: start0.V, perMol: tot > 0 ? MOLECULES_AT_START / tot : 1, refRate: 1, running: false, started: false, w: 0, lastInput: 0,
+           valve: false, valveT: 0, stroke: null, lastMove: '', mols: [], flashes: [], accF: 0, accR: 0, steady: null };
+    setOrigin(start0, st.V);
+    layoutDirty = true;
+  }
+  function advance(dt) {
+    if (st.stroke) {   // the piston moves smoothly; moles stay put, concentrations follow 1/V
+      st.stroke.t += dt; var f = Math.min(1, st.stroke.t / STROKE_S), s = f * f * (3 - 2 * f);
+      st.V = st.stroke.from + (st.stroke.to - st.stroke.from) * s; if (f >= 1) { st.V = st.stroke.to; st.stroke = null; }
+    }
+    var n = Math.max(1, Math.ceil(dt / 0.01)), hw = dt / n;
+    for (var i = 0; i < n; i++) {
+      if (!m.live) { st.w += hw; continue; }
+      var h = hw * clockRate(), r = rates(m.e, st.V);
+      st.accF += r.f * st.V * st.perMol * h; st.accR += r.r * st.V * st.perMol * h;
+      if (!m.done) stepModel(h, st.V);
+      st.w += hw; snapToEnd();
+      if (!layoutDirty) {
+        var k = 0; while (st.accF >= 1 && k++ < 6) { st.accF -= 1; forward(); } if (st.accF > 1) st.accF = 1;
+        k = 0; while (st.accR >= 1 && k++ < 6) { st.accR -= 1; reverse(); } if (st.accR > 1) st.accR = 1;
+      }
+    }
+    if (!layoutDirty) reconcile();
+  }
+  function jumpToEnd() { if (st.stroke) { st.V = st.stroke.to; st.stroke = null; } m.e = m.ee; m.near = true; m.done = true; layoutDirty = true; }
+
+  // ===========================================================================
+  // Drawing
+  // ===========================================================================
+  var FONT = 'system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif';
+  function C(n) { if (!colours) colours = {}; if (!(n in colours)) colours[n] = getComputedStyle(document.documentElement).getPropertyValue('--' + n).trim(); return colours[n]; }
+  function sizeCanvas(cv, bg) {
+    var w = cv.clientWidth, h = cv.clientHeight, dpr = window.devicePixelRatio || 1;
+    if (!w || !h) return null;
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    var ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = bg || C('bg'); ctx.fillRect(0, 0, w, h);
+    return { ctx: ctx, W: w, H: h };
+  }
+  function atom(ctx, x, y, r, f, e) { ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fillStyle = C(f); ctx.fill(); ctx.lineWidth = 1; ctx.strokeStyle = C(e); ctx.stroke(); }
+  function drawMol(ctx, q) {   // hydrogen white and small (3.2), iodine purple and large (5.6)
+    var c = Math.cos(q.a), s = Math.sin(q.a);
+    if (q.k === 'H2') { atom(ctx, q.x - c * 2.5, q.y - s * 2.5, 3.2, 'h', 'h-edge'); atom(ctx, q.x + c * 2.5, q.y + s * 2.5, 3.2, 'h', 'h-edge'); }
+    else if (q.k === 'I2') { atom(ctx, q.x - c * 4.6, q.y - s * 4.6, 5.6, 'i', 'i-edge'); atom(ctx, q.x + c * 4.6, q.y + s * 4.6, 5.6, 'i', 'i-edge'); }
+    else { atom(ctx, q.x + c * 3.2, q.y + s * 3.2, 5.6, 'i', 'i-edge'); atom(ctx, q.x - c * 4.6, q.y - s * 4.6, 3.2, 'h', 'h-edge'); }
+  }
+  // the bench picture is the same in both themes, so its words are always dark on a light halo
+  function sceneText(ctx, text, x, y) { ctx.lineWidth = 3; ctx.strokeStyle = '#f4f2ef'; ctx.strokeText(text, x, y); ctx.fillStyle = '#1e1c20'; ctx.fillText(text, x, y); }
+
+  var sceneCv = document.getElementById('scene');
+  function drawScene() {
+    var cv = sizeCanvas(sceneCv, '#ebe8e2'); if (!cv) return;
+    var ctx = cv.ctx, W = cv.W, H = cv.H, c = now();
+    ctx.fillStyle = '#f4f2ef'; ctx.fillRect(0, 0, W, H * 0.86); ctx.fillStyle = '#b9b2a2'; ctx.fillRect(0, H * 0.9, W, H * 0.1);
+    var cx = W * 0.5, cw = 72, bot = H * 0.9, full = bot - 22;   // the cylinder holds twice the starting volume
+    var top = bot - full * st.V / (2 * st.V0), cl = cx - cw / 2;
+    // gas: purple tint follows [I2] (cartoon strength); hydrogen and hydrogen iodide are colorless
+    var alpha = Math.min(0.8, 0.26 * c.I2 / DETECTOR_ONE);
+    ctx.fillStyle = '#fbfafc'; ctx.fillRect(cl, top, cw, bot - top);
+    ctx.fillStyle = 'rgba(107, 42, 143, ' + alpha.toFixed(3) + ')'; ctx.fillRect(cl, top, cw, bot - top);
+    // piston and rod
+    ctx.fillStyle = '#5c6068'; ctx.fillRect(cl + 1, top - 7, cw - 2, 7); ctx.fillRect(cx - 3, 2, 6, top - 7 - 2);
+    ctx.fillStyle = '#3f434a'; ctx.fillRect(cx - 12, 0, 24, 4);
+    // glass
+    ctx.strokeStyle = '#3f434a'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(cl, 22); ctx.lineTo(cl, bot); ctx.lineTo(cl + cw, bot); ctx.lineTo(cl + cw, 22); ctx.stroke();
+    // green beam below the piston's lowest position, lamp on the left, detector on the right
+    var by = bot - 10;
+    ctx.fillStyle = '#3f434a'; ctx.fillRect(cl - 30, by - 7, 16, 14); ctx.fillRect(cl + cw + 14, by - 8, 18, 16);
+    ctx.strokeStyle = '#1f8a35'; ctx.lineWidth = 3; ctx.setLineDash([]); ctx.beginPath(); ctx.moveTo(cl - 14, by); ctx.lineTo(cl + cw + 14, by); ctx.stroke();
+    ctx.font = '600 11px ' + FONT; ctx.textBaseline = 'top';
+    ctx.textAlign = 'left'; sceneText(ctx, 'lamp', 2, by - 24);
+    ctx.textAlign = 'right'; sceneText(ctx, 'detector', W - 2, by - 26);
+    ctx.textAlign = 'left'; sceneText(ctx, 'piston', cx + 6, Math.max(6, top - 22));
+    ctx.fillStyle = '#1e1c20'; ctx.fillRect(4, 6, 46, 16); ctx.fillStyle = '#f4f2ef'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('400 °C', 27, 14);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'top'; sceneText(ctx, 'green light', W - 2, by + 2 > H - 14 ? H - 14 : by + 2);
+  }
+
+  var panelCv = document.getElementById('panel'), BARS_W = 110;
+  function drawPanel() {
+    var cv = sizeCanvas(panelCv); if (!cv) return;
+    var ctx = cv.ctx, W = cv.W, H = cv.H, x0 = 6, y0 = 16, w = W - BARS_W - 14, hMax = H - y0 - 24;
+    if (BOX.w !== w || BOX.hMax !== hMax) { if (BOX.w) { var sx = w / BOX.w, sy = hMax / BOX.hMax; st.mols.forEach(function (q) { q.x *= sx; q.y *= sy; }); } BOX.w = w; BOX.hMax = hMax; }
+    if (layoutDirty) seed();
+    ctx.font = '600 11px ' + FONT; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = C('fg');
+    ctx.fillText('Inside the cylinder (a drawing)', x0, 2);
+    ctx.save(); ctx.translate(x0, y0);
+    var top = gasTop();
+    ctx.strokeStyle = C('grid'); ctx.lineWidth = 1; ctx.strokeRect(0.5, 0.5, w - 1, hMax - 1);
+    ctx.fillStyle = C('win-bg'); ctx.fillRect(0, top, w, hMax - top);
+    ctx.strokeStyle = C('rule'); ctx.strokeRect(0.5, top + 0.5, w - 1, hMax - top - 1);
+    ctx.fillStyle = C('piston'); ctx.fillRect(0, Math.max(0, top - 5), w, 5);
+    ctx.beginPath(); ctx.rect(0, top, w, hMax - top); ctx.clip();
+    st.mols.forEach(function (q) { drawMol(ctx, q); });
+    st.flashes.forEach(function (f) {
+      var a = Math.max(0, f.life / 0.6); ctx.globalAlpha = a; ctx.strokeStyle = C('flash'); ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(f.x, f.y, 9 + (1 - a) * 4, 0, 2 * Math.PI); ctx.stroke(); ctx.globalAlpha = 1;
+    });
+    ctx.restore();
+    drawBars(ctx, W - BARS_W, 0, BARS_W, H - 22);
+    var ly = H - 10, x = 14; ctx.font = '11px ' + FONT; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+    [['H2', 'H₂', 10, 46], ['I2', 'I₂', 14, 50], ['HI', 'HI', 14, 46]].forEach(function (it) { drawMol(ctx, { k: it[0], x: x, y: ly, a: 0 }); ctx.fillStyle = C('fg'); ctx.fillText(it[1], x + it[2], ly); x += it[3]; });
+    ctx.strokeStyle = C('flash'); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x + 4, ly, 5.5, 0, 2 * Math.PI); ctx.stroke();
+    ctx.fillStyle = C('fg'); ctx.fillText('a reaction event', x + 13, ly);
+  }
+  function drawBars(ctx, x0, y0, w, h) {
+    var r = m.live ? rates(m.e, st.V) : { f: 0, r: 0 }, top = y0 + 52, bot = y0 + h - 24, ph = bot - top, cap = BAR_TOP * st.refRate;
+    ctx.font = '600 11px ' + FONT; ctx.fillStyle = C('fg'); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('Rates', x0 + w / 2, y0 + 2);
+    ctx.font = '10px ' + FONT; ctx.fillStyle = C('muted'); ctx.fillText('(no units)', x0 + w / 2, y0 + 15);
+    if (r.f > cap || r.r > cap) ctx.fillText('▲ off the top', x0 + w / 2, y0 + 27);
+    ctx.strokeStyle = C('rule'); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0 + 6, bot + 0.5); ctx.lineTo(x0 + w - 4, bot + 0.5); ctx.stroke();
+    // dashed line: the rate at the end point at the starting volume
+    var ry = bot - st.refRate / cap * ph; ctx.setLineDash([3, 3]); ctx.strokeStyle = C('muted'); ctx.beginPath(); ctx.moveTo(x0 + 8, ry + 0.5); ctx.lineTo(x0 + w - 6, ry + 0.5); ctx.stroke(); ctx.setLineDash([]);
+    [[r.f, 'fwd', 'forward', false], [r.r, 'rev', 'reverse', true]].forEach(function (b, i) {
+      var bx = x0 + 16 + i * 46, bw = 30, v = Math.min(b[0], cap), bh = v / cap * ph;
+      if (bh > 0) {
+        ctx.fillStyle = C(b[1]);
+        if (!b[3]) ctx.fillRect(bx, bot - bh, bw, bh);
+        else { ctx.save(); ctx.beginPath(); ctx.rect(bx, bot - bh, bw, bh); ctx.clip(); ctx.strokeStyle = C(b[1]); ctx.lineWidth = 2.5;
+          for (var k = -bh; k < bw + bh; k += 6) { ctx.beginPath(); ctx.moveTo(bx + k, bot); ctx.lineTo(bx + k + bh, bot - bh); ctx.stroke(); } ctx.restore();
+          ctx.strokeStyle = C(b[1]); ctx.lineWidth = 2; ctx.strokeRect(bx + 1, bot - bh + 1, bw - 2, Math.max(0, bh - 2)); }
+      }
+      if (b[0] > cap) { ctx.fillStyle = C(b[1]); ctx.beginPath(); ctx.moveTo(bx + bw / 2, top - 11); ctx.lineTo(bx + bw / 2 + 8, top - 2); ctx.lineTo(bx + bw / 2 - 8, top - 2); ctx.closePath(); ctx.fill(); }
+      ctx.fillStyle = C('fg'); ctx.font = '10px ' + FONT; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(b[2], bx + bw / 2, bot + 3);
+    });
+  }
+
+  // ===========================================================================
+  // Text
+  // ===========================================================================
+  var el = function (id) { return document.getElementById(id); };
+  var MOVE_WORDS = { '0.5': 'Piston at half the starting volume.', '0.3333333333333333': 'Piston at a third of the starting volume.', '2': 'Piston out at double the starting volume.', '1': 'Piston back at the starting volume.' };
+  function steadyNow() { var c = now(), e = concAt(m.ee, st.V); return !st.stroke && SP.every(function (k) { return fmt(c[k]) === fmt(e[k]); }); }
+  function statusText() {
+    var out;
+    if (!st.started) out = 'Paused at the start. Press Play or move the piston.';
+    else { out = 'Concentrations: ' + (steadyNow() ? 'steady' : 'changing') + '.'; if (!st.running && !isReduced()) out += ' Paused.'; }
+    if (st.lastMove) out += ' ' + MOVE_WORDS[st.lastMove];
+    if (st.valve) out += ' Valve opened: 0.0400 mol H₂ added.';
+    return out;
+  }
+  function readout() {
+    var c = now();
+    return 'Volume ' + fmt(st.V) + ' L; pressure ' + fmt(pressure(c)) + ' atm; H₂ ' + fmt(c.H2) + ' M, I₂ ' + fmt(c.I2) + ' M, HI ' + fmt(c.HI) + ' M; detector ' + fmt(c.I2 / DETECTOR_ONE) + '; Q ' + fmtQ(c) + '; K 50.0.';
+  }
+  function say2(t) { return spoken(t).replace(/H₂/g, 'hydrogen').replace(/I₂/g, 'iodine').replace(/ HI /g, ' hydrogen iodide ').replace(/ M([,;])/g, ' molar$1'); }
+  function barWords() {
+    if (!m.live) return 'Both rate bars are empty.';
+    var r = rates(m.e, st.V), cap = BAR_TOP * st.refRate, big = Math.max(r.f, r.r), ratio = big / st.refRate;
+    var lvl = ratio >= 10 ? ' The taller bar reaches the top.' : ' The taller bar stands at about ' + ratio.toFixed(1) + ' times the dashed starting level.';
+    if (Math.abs(r.f - r.r) <= 0.02 * big) return 'The forward bar and the reverse bar are the same height.' + lvl;
+    var tall = r.f > r.r ? 'forward' : 'reverse', short = r.f > r.r ? 'reverse' : 'forward';
+    return 'The ' + tall + ' bar is taller than the ' + short + ' bar' + (big > cap ? ' and runs off the top' : '') + '.' + lvl;
+  }
+  function describeScene() {
+    var c = now(), tint = c.I2 <= 0 ? 'colorless' : c.I2 / DETECTOR_ONE < 0.5 ? 'faintly purple' : c.I2 / DETECTOR_ONE < 1.5 ? 'purple' : 'deep purple';
+    return say2('A sealed glass cylinder at 400 °C with a piston, now at ' + fmt(st.V) + ' L (the starting volume was ' + fmt(st.V0) + ' L). The gas looks ' + tint +
+      '. A green beam crosses the bottom of the cylinder to a detector. ' + readout() + ' ' + statusText());
+  }
+  function describePanel() {
+    var t = targets();
+    return 'A drawing of the inside of the cylinder, its height following the piston. It shows ' + plural(count('H2'), 'hydrogen molecule') + ' (two small spheres), ' + plural(count('I2'), 'iodine molecule') +
+      ' (two large purple spheres) and ' + plural(count('HI'), 'hydrogen iodide molecule') + ' (one small, one large sphere)' + (t.trace.length ? '; a trace is drawn as one molecule' : '') +
+      '. A ring marks each reaction event. ' + barWords();
+  }
+  function plural(n, w) { return n + ' ' + w + (n === 1 ? '' : 's'); }
+  function captionText() {
+    var t = targets(), parts = ['Each drawn molecule stands for a great many. Moving the piston changes the space, not the number of molecules.'];
+    if (t.trace.length) parts.push('Drawing capped: a trace of ' + t.trace.map(function (k) { return k === 'H2' ? 'H₂' : k === 'I2' ? 'I₂' : 'HI'; }).join(' and ') + ' is drawn as one molecule.');
+    parts.push('Dashed line: the rates at the start.');
+    return parts.join(' ');
+  }
+  var live = el('live');
+  function say(msg) { live.textContent = ''; setTimeout(function () { live.textContent = msg; }, 30); }
+  function checkSteady() {
+    if (!st.started) return;
+    var s = steadyNow();
+    if (s && st.steady === false) say(say2('Concentrations steady. ' + readout() + ' ') + barWords());
+    st.steady = s;
+  }
+  function updateText() {
+    var c = now();
+    el('rV').textContent = fmt(st.V) + ' L'; el('rP').textContent = fmt(pressure(c)) + ' atm';
+    el('rH2').textContent = fmt(c.H2) + ' M'; el('rI2').textContent = fmt(c.I2) + ' M'; el('rHI').textContent = fmt(c.HI) + ' M';
+    el('rD').textContent = fmt(c.I2 / DETECTOR_ONE); el('rQ').textContent = fmtQ(c);
+    el('status').textContent = statusText();
+    el('descScene').textContent = describeScene(); el('descPanel').textContent = describePanel(); el('caption').textContent = captionText();
+    el('play').textContent = isReduced() ? 'Show the end' : st.running ? 'Pause' : 'Play';
+    el('valve').disabled = st.valve;
+    el('valve').setAttribute('aria-label', st.valve ? 'Open the hydrogen valve (already opened; Reset to open again)' : 'Open the hydrogen valve');
+    ['vHalf', 'vThird', 'vDouble', 'vStart'].forEach(function (id) { var b = el(id), target = st.V0 * Number(b.getAttribute('data-f')); b.setAttribute('aria-pressed', String(!st.stroke && Math.abs(st.V - target) < 1e-9)); });
+  }
+
+  // ===========================================================================
+  // Loop
+  // ===========================================================================
+  var rafId = null, lastT = 0;
+  function tick(dt) {
+    advance(dt);
+    if (st.valveT > 0) st.valveT -= dt;
+    if (!layoutDirty) moveMols(dt);
+    checkSteady();
+    if ((performance.now() - st.lastInput) / 1000 > IDLE_STOP_S) { stop(); say('Paused after two minutes without input.'); }
+  }
+  function render() { drawScene(); drawPanel(); updateText(); }
+  function frame(t) { rafId = null; var dt = Math.min(0.05, Math.max(0, (t - lastT) / 1000)); lastT = t; tick(dt); render(); schedule(); }
+  function schedule() { if (st.running && !isReduced() && !rafId) rafId = requestAnimationFrame(frame); }
+  function start() {
+    st.lastInput = performance.now(); st.started = true;
+    if (isReduced()) { jumpToEnd(); st.running = false; st.steady = true; render(); return; }
+    if (st.steady === null) st.steady = steadyNow();
+    if (!st.running) { st.running = true; lastT = performance.now(); }
+    schedule(); render();
+  }
+  function stop() { st.running = false; if (rafId) { cancelAnimationFrame(rafId); rafId = null; } render(); }
+
+  // ===========================================================================
+  // Controls
+  // ===========================================================================
+  el('play').addEventListener('click', function () { if (st.running) stop(); else start(); });
+  el('reset').addEventListener('click', function () { stop(); initState(); render(); say(say2('Reset to the starting mixture, paused. ' + readout())); });
+  ['vHalf', 'vThird', 'vDouble', 'vStart'].forEach(function (id) {
+    el(id).addEventListener('click', function () {
+      var f = el(id).getAttribute('data-f'), target = st.V0 * Number(f);
+      st.lastMove = f; st.steady = false;
+      if (isReduced()) st.V = target; else st.stroke = { from: st.V, to: target, t: 0 };
+      start();
+      setTimeout(function () { say(say2(MOVE_WORDS[f] + ' ' + readout())); }, isReduced() ? 0 : STROKE_S * 1000 + 100);
+    });
+  });
+  el('valve').addEventListener('click', function () {
+    if (st.valve) return;
+    var n = moles(m.e); n.H2 += VALVE_MOL; st.valve = true; st.valveT = 1.2; st.steady = false;
+    setOrigin(n, st.V);
+    start(); say(say2('Hydrogen valve opened: 0.0400 mol of hydrogen added. ' + readout()));
+  });
+
+  // ===========================================================================
+  // Start: the problem's own mixture, paused at time zero.
+  // ===========================================================================
+  applyTheme();
+  if (darkQ && themeParam !== 'light' && themeParam !== 'dark') { var cw = function () { applyTheme(); render(); }; if (darkQ.addEventListener) darkQ.addEventListener('change', cw); else if (darkQ.addListener) darkQ.addListener(cw); }
+  if (reduceQ) { var rc = function () { if (st.running && isReduced()) { stop(); jumpToEnd(); } render(); }; if (reduceQ.addEventListener) reduceQ.addEventListener('change', rc); else if (reduceQ.addListener) reduceQ.addListener(rc); }
+  initState();
+  if (window.ResizeObserver) new ResizeObserver(function () { render(); }).observe(document.body); else window.addEventListener('resize', render);
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The deep-sea vent</title>
+<!--
+  Approved by the instructor, 13 Oct 2026 (DRAFT marks removed by SCENARIO_CLAUDE, no other change).
+  Date: 10 Oct 2026. Built by Simulation_Claude.
+  Brief (one line): ch10_cc opener "The Deep-Sea Vent": a hot-water vent at a chosen depth; gauges for
+    depth, pressure and water's boiling point there (the student's answer, shown by the instructor's
+    request); bubbles only when the vent water is at or above that boiling point.
+  Data source: archetypes/data/substances.json via the ch10_cc data table (instructor, NIST Chemistry
+    WebBook, 9 Oct 2026): water, Tb 100.0 °C, ΔHvap 40.66 kJ/mol at Tb; R = 8.314 J/(mol·K).
+    Measured boiling points (overlay only): water_measured_boiling_points.csv, supplied by the instructor
+    10 Oct 2026; IAPWS steam-table values (via My Engineering Tools).
+  Model (the tutor's): P = 1 atm + depth/10 m × 1 atm;  1/Tbp = 1/Tb − (R/ΔHvap) ln(P / 1 atm).
+    The water boils when its temperature is at or above Tbp.
+  URL parameters:
+    depth   m, 0 to 2000. Default 500.        unit  C | K (also °C, celsius, kelvin). Default C.
+    theme   light | dark. Default: the system setting (Fable's contract).
+    Link settings confirmed by Fable, 13 Oct 2026: depth, unit, theme.
+  Numbers not from the data or the request: none.
+  Nothing is fetched, stored, or sent. Nothing moves until the student presses Play or changes a control.
+-->
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #fbfbf9; --fg: #1c1d1f; --muted: #4b4f55; --rule: #7d838c; --grid: #e2e4e7; --control-bg: #ffffff;
+    --curve: #17508f; --marker: #9c2a1f; --meas: #6a3d8f; --focus: #17508f;
+    --notice-bg: #fff3d1; --notice-fg: #3d2c00; --notice-rule: #8a6a00;
+    --win-bg: #e4eff8; --h2o-o: #b33a2c; --h2o-h: #ffffff; --h2o-edge: #3a1a14; --press: #2b4f73; --bubble-edge: #1f5f8f;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #17191c; --fg: #e9eaec; --muted: #b6bac0; --rule: #8d949d; --grid: #30343a; --control-bg: #202328;
+    --curve: #7db3ff; --marker: #ff9d8f; --meas: #d2a8ff; --focus: #9cc5ff;
+    --notice-bg: #3a3010; --notice-fg: #ffe9a8; --notice-rule: #c9a63a;
+    --win-bg: #1d2a36; --h2o-o: #ff7b6b; --h2o-h: #e9eaec; --h2o-edge: #ffe1dc; --press: #9cc5ff; --bubble-edge: #9cc8ee;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--fg); }
+  body { font: 14px/1.35 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; padding: 8px 12px; max-width: 640px; }
+  h1 { font-size: 1rem; font-weight: 600; margin: 0 0 4px; }
+  .notice { margin: 0 0 6px; padding: 5px 9px; background: var(--notice-bg); color: var(--notice-fg); border-left: 4px solid var(--notice-rule); font-size: 0.85rem; }
+  .top { display: flex; gap: 10px; align-items: stretch; }
+  canvas { display: block; }
+  #vent { width: 290px; height: 214px; flex: 0 0 290px; border-radius: 4px; }
+  .top.compare #vent { width: 100%; flex: 1 1 auto; }
+  .readings { flex: 1 1 auto; display: grid; grid-template-columns: 1fr; gap: 5px; align-content: center; }
+  .top.compare .readings { display: none; }
+  .reading .k { font-size: 0.74rem; color: var(--muted); }
+  .reading .v { font-size: 1rem; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .reading.big .v { font-size: 1.15rem; }
+  .status { margin: 4px 0; font-size: 0.86rem; font-weight: 600; min-height: 1.2em; }
+  .row { display: flex; align-items: center; gap: 4px 8px; flex-wrap: wrap; margin: 3px 0; }
+  .slab { width: 132px; font-size: 0.86rem; }
+  .row input[type="range"] { flex: 1 1 140px; min-width: 110px; margin: 0; accent-color: var(--curve); }
+  .val { font-variant-numeric: tabular-nums; font-size: 0.86rem; min-width: 70px; text-align: right; }
+  button { font: inherit; font-size: 0.85rem; padding: 3px 10px; border: 1px solid var(--rule); border-radius: 4px; background: var(--control-bg); color: var(--fg); cursor: pointer; }
+  fieldset { border: 0; margin: 0; padding: 0; display: inline-flex; align-items: center; gap: 2px 8px; flex-wrap: wrap; }
+  legend { float: left; padding: 0; margin-right: 4px; font-size: 0.86rem; }
+  .row label, fieldset label { font-size: 0.86rem; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+  input[type="radio"], input[type="checkbox"] { margin: 0; accent-color: var(--curve); }
+  input[type="range"]:disabled { opacity: 0.55; }
+  #panel { width: 100%; height: 168px; border: 1px solid var(--grid); margin-top: 3px; }
+  .small { margin: 2px 0 0; font-size: 0.76rem; color: var(--muted); }
+  [hidden] { display: none !important; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+</style>
+</head>
+<body>
+  <h1>The deep-sea vent</h1>
+  <p class="notice" id="notice" role="status" hidden></p>
+
+  <div class="top" id="top">
+    <canvas id="vent" role="img" aria-label="The vent on the sea floor. A text description follows." aria-describedby="descVent"></canvas>
+    <div class="readings">
+      <div class="reading"><div class="k">Depth</div><div class="v" id="vDepth"></div></div>
+      <div class="reading"><div class="k">Pressure at the vent</div><div class="v" id="vP"></div></div>
+      <div class="reading"><div class="k">Vent water temperature</div><div class="v" id="vT"></div></div>
+      <div class="reading big"><div class="k">Boiling point here</div><div class="v" id="vBp"></div></div>
+    </div>
+  </div>
+  <p class="status" id="status"></p>
+
+  <div class="row">
+    <label class="slab" for="depth">Depth</label>
+    <input type="range" id="depth" min="0" max="2000" step="any">
+    <span class="val" id="depthVal" aria-hidden="true"></span>
+  </div>
+  <div class="row">
+    <label class="slab" for="temp">Water temperature</label>
+    <input type="range" id="temp" min="20" max="370" step="any">
+    <span class="val" id="tempVal" aria-hidden="true"></span>
+  </div>
+  <div class="row">
+    <button type="button" id="play">Play</button>
+    <button type="button" id="reset">Reset</button>
+    <label><input type="checkbox" id="compare"> Compare</label>
+    <label><input type="checkbox" id="meas"> Measured</label>
+    <fieldset>
+      <legend>Units</legend>
+      <label><input type="radio" name="unit" value="C"> °C</label>
+      <label><input type="radio" name="unit" value="K"> K</label>
+    </fieldset>
+  </div>
+  <div class="row">
+    <fieldset>
+      <legend>Show</legend>
+      <label><input type="radio" name="view" value="mol"> Molecules</label>
+      <label><input type="radio" name="view" value="curve"> Curve</label>
+    </fieldset>
+    <fieldset id="curveSwitch">
+      <legend class="sr-only">Curve view</legend>
+      <label><input type="radio" name="curve" value="pt"> Boiling point–P</label>
+      <label><input type="radio" name="curve" value="ln"> ln P–1/T</label>
+    </fieldset>
+  </div>
+  <canvas id="panel" role="img" aria-label="Molecules at the vent opening, or the curve. A text description follows." aria-describedby="descPanel"></canvas>
+  <p class="small" id="caption"></p>
+  <p class="small">Not shown: water's critical point and beyond, and what the black smoke of real vents is.</p>
+
+  <div class="sr-only" id="descVent"></div>
+  <div class="sr-only" id="descPanel"></div>
+  <div class="sr-only" id="live" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ===========================================================================
+  // DATA. Water from substances.json (ch10_cc data table, 9 Oct 2026).
+  // ===========================================================================
+  var TB_C = 100.0;            // normal boiling point, °C
+  var DH = 40.66;              // kJ/mol, at the normal boiling point
+  var R = 8.314;               // J/(mol·K)
+  // Measured boiling points: water_measured_boiling_points.csv (instructor, 10 Oct 2026),
+  // "My Engineering Tools steam tables (IAPWS-aligned), at atm". Overlay only.
+  var MEASURED = [[1, 100.0], [2, 120.6], [10, 180.5], [20, 213.0], [50, 265.0], [100, 312.4], [150, 343.3], [200, 366.8]];
+
+  // Limits from the request.
+  var DEPTH_MAX = 2000, DEPTH_STEP = 10, T_MIN = 20, T_MAX = 370;
+  var DEFAULT_DEPTH = 500;
+  var COMPARE_SHALLOW = 100, COMPARE_DEEP = 1500;   // compare mode; approved by the instructor 10 Oct 2026
+  var KELVIN = 273.15;         // exact, by definition (0 °C = 273.15 K)
+  var IDLE_STOP_S = 120;       // design (accepted for the bird): motion pauses after two minutes without input
+
+  function pressureAtm(depth) { return 1 + depth / 10; }                       // the instructor's rule of thumb
+  function bpC(P) { return 1 / (1 / (TB_C + KELVIN) - (R / (DH * 1000)) * Math.log(P)) - KELVIN; }
+  // Boiling is decided at the 0.1 °C the gauges show, so the words always agree with the two readings.
+  function boils(depth, tC) { var off = (st && st.unit === 'K') ? KELVIN : 0; return Math.round((tC + off) * 10 + 1e-7) >= Math.round((bpC(pressureAtm(depth)) + off) * 10 + 1e-7); }
+  function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
+
+  // ===========================================================================
+  // URL parameters
+  // ===========================================================================
+  var params = new URLSearchParams(window.location.search);
+  var notices = [];
+  var startDepth = DEFAULT_DEPTH;
+  var rd = params.get('depth');
+  if (rd !== null && rd.trim() !== '') {
+    var dv = parseFloat(rd);
+    if (isFinite(dv) && dv >= 0 && dv <= DEPTH_MAX) startDepth = dv;
+    else notices.push('The depth from the tutor is outside this page (0 to 2,000 m); showing 500 m.');
+  }
+  var startUnit = 'C', ru = (params.get('unit') || '').trim().toLowerCase().replace('°', '');
+  if (ru) { if (ru === 'k' || ru === 'kelvin') startUnit = 'K'; else if (ru === 'c' || ru === 'celsius') startUnit = 'C'; else notices.push('Temperature unit not recognised; showing °C.'); }
+  var startT = clamp(bpC(pressureAtm(startDepth)), T_MIN, T_MAX);   // the water exactly at the boiling point found (shown to 0.1)
+  var notice = document.getElementById('notice');
+  if (notices.length) { notice.textContent = notices.join(' '); notice.hidden = false; }
+
+  var themeParam = (params.get('theme') || '').trim().toLowerCase();
+  var darkQ = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  var reduceQ = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var colours = null;
+  function applyTheme() { var t = (themeParam === 'light' || themeParam === 'dark') ? themeParam : (darkQ && darkQ.matches ? 'dark' : 'light'); document.documentElement.setAttribute('data-theme', t); colours = null; }
+  function isReduced() { return !!(reduceQ && reduceQ.matches); }
+
+  // ===========================================================================
+  // Formatting
+  // ===========================================================================
+  function r1(x) { return (Math.round(x * 10 + 1e-7) / 10).toFixed(1); }   // round half up, to 0.1
+  function fmtTemp(tC) { return st.unit === 'K' ? r1(tC + KELVIN) + ' K' : r1(tC) + ' °C'; }
+  function fmtTempWords(tC) { return st.unit === 'K' ? r1(tC + KELVIN) + ' kelvin' : r1(tC) + ' degrees Celsius'; }
+  function fmtDepth(d) { return Math.round(d).toLocaleString('en-US') + ' m'; }
+  function fmtP(P) { return String(Number(P.toFixed(1))) + ' atm'; }
+
+  // ===========================================================================
+  // State
+  // ===========================================================================
+  var st;
+  function initState() {
+    st = { depth: startDepth, t: startT, unit: startUnit, compare: false, meas: false, view: 'curve', curve: 'pt', running: false, lastInput: 0, time: 0 };
+    vents = [makeVent()];
+    cmp = [makeVent(), makeVent()];
+  }
+  function makeVent() { return { bubbles: [], spawn: 0, boiling: null }; }
+  var vents, cmp;
+  function ventList() { return st.compare ? [{ d: COMPARE_SHALLOW, v: cmp[0], label: 'shallow vent' }, { d: COMPARE_DEEP, v: cmp[1], label: 'deep vent' }] : [{ d: st.depth, v: vents[0], label: 'vent' }]; }
+
+  // ===========================================================================
+  // Motion
+  // ===========================================================================
+  var events = [];
+  function stepVent(item, dt) {
+    var v = item.v, b = boils(item.d, st.t);
+    if (v.boiling !== null && b !== v.boiling) events.push({ label: item.label, start: b });
+    v.boiling = b;
+    if (!b) { v.bubbles = []; return; }
+    var excess = st.t - bpC(pressureAtm(item.d));
+    v.spawn += dt * (2 + Math.min(10, excess * 0.4));
+    while (v.spawn >= 1 && v.bubbles.length < 30) { v.spawn -= 1; v.bubbles.push({ x: (Math.random() - 0.5) * 0.5, y: 0, r: 1.5 + Math.random() * 1.5, vy: 30 + Math.random() * 25 }); }
+    v.bubbles.forEach(function (q) { q.y += q.vy * dt; q.r = Math.min(7, q.r + dt * 2.2); q.x += (Math.random() - 0.5) * 0.02; });
+    v.bubbles = v.bubbles.filter(function (q) { return q.y < 400; });
+  }
+
+  // ===========================================================================
+  // Drawing
+  // ===========================================================================
+  var FONT = 'system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif';
+  function C(n) { if (!colours) colours = {}; if (!(n in colours)) colours[n] = getComputedStyle(document.documentElement).getPropertyValue('--' + n).trim(); return colours[n]; }
+  function sizeCanvas(cv, bg) {
+    var w = cv.clientWidth, h = cv.clientHeight, dpr = window.devicePixelRatio || 1;
+    if (!w || !h) return null;
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    var ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = bg || C('bg'); ctx.fillRect(0, 0, w, h);
+    return { ctx: ctx, W: w, H: h };
+  }
+  // Scene text is always light on the dark sea, with a dark halo.
+  function seaText(ctx, text, x, y, bold) {
+    ctx.font = (bold ? '600 ' : '') + '12px ' + FONT; ctx.lineWidth = 3; ctx.strokeStyle = '#03101c'; ctx.strokeText(text, x, y); ctx.fillStyle = '#eef6fb'; ctx.fillText(text, x, y);
+  }
+  // Fixed pseudo-random numbers so the chimney's rough outline does not flicker.
+  function hash(i) { var x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
+
+  // The column strip: 0 to 2,000 m to scale, with the sea floor at the chosen depth.
+  function drawColumn(ctx, x, y, w, h, depth) {
+    var g = ctx.createLinearGradient(0, y, 0, y + h); g.addColorStop(0, '#1d5d86'); g.addColorStop(1, '#020c18');
+    ctx.fillStyle = '#9fc6de'; ctx.fillRect(x, y - 8, w, 8);                     // sky
+    var fy = y + depth / DEPTH_MAX * h;
+    ctx.fillStyle = g; ctx.fillRect(x, y, w, fy - y);
+    ctx.fillStyle = '#3a3128'; ctx.fillRect(x, fy, w, y + h - fy);              // rock below the floor
+    ctx.strokeStyle = '#d7e7f2'; ctx.lineWidth = 1; ctx.strokeRect(x + 0.5, y - 8.5, w - 1, h + 8);
+    ctx.fillStyle = '#cfa27a'; ctx.beginPath(); ctx.moveTo(x + w / 2 - 4, fy); ctx.lineTo(x + w / 2 - 1.5, fy - 7); ctx.lineTo(x + w / 2 + 1.5, fy - 7); ctx.lineTo(x + w / 2 + 4, fy); ctx.fill();
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    [0, 500, 1000, 1500, 2000].forEach(function (m) {
+      var ty = y + m / DEPTH_MAX * h;
+      ctx.strokeStyle = '#d7e7f2'; ctx.beginPath(); ctx.moveTo(x + w, ty); ctx.lineTo(x + w + 4, ty); ctx.stroke();
+      ctx.font = '10px ' + FONT; ctx.fillStyle = C('fg'); ctx.fillText(m === 0 ? '0 m' : String(m), x + w + 6, ty);
+    });
+    ctx.fillStyle = C('marker'); ctx.beginPath(); ctx.moveTo(x - 1, fy); ctx.lineTo(x - 8, fy - 5); ctx.lineTo(x - 8, fy + 5); ctx.fill();
+  }
+  // Close-up of one vent: dark sea, rough chimney, shimmering hot water, bubbles when boiling.
+  function drawCloseUp(ctx, x, y, w, h, depth, v, label, small) {
+    ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+    var shade = depth / DEPTH_MAX;
+    var g = ctx.createLinearGradient(0, y, 0, y + h);
+    g.addColorStop(0, shade < 0.05 ? '#1f6690' : 'rgb(' + Math.round(16 - 12 * shade) + ',' + Math.round(52 - 38 * shade) + ',' + Math.round(84 - 56 * shade) + ')');
+    g.addColorStop(1, '#020a14'); ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
+    if (depth < 30) { ctx.fillStyle = '#9fc6de'; ctx.fillRect(x, y, w, 6); }   // near the surface: the surface shows
+    var floorY = y + h - 22, cx = x + w * 0.5, topY = y + h * (small ? 0.42 : 0.38), baseW = w * 0.34, topW = w * 0.09;
+    // sea floor
+    ctx.fillStyle = '#2b2620'; ctx.beginPath(); ctx.moveTo(x, floorY);
+    for (var i = 0; i <= 20; i++) ctx.lineTo(x + i * w / 20, floorY + (hash(i) - 0.5) * 6);
+    ctx.lineTo(x + w, y + h); ctx.lineTo(x, y + h); ctx.fill();
+    // chimney: a rough mineral tower
+    ctx.fillStyle = '#4a3f35'; ctx.strokeStyle = '#7b6a58'; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(cx - baseW / 2, floorY + 2);
+    var n = 12;
+    for (i = 0; i <= n; i++) { var f = i / n, yy = floorY - f * (floorY - topY); ctx.lineTo(cx - (baseW / 2) * (1 - f) - (topW / 2) * f - hash(i + 3) * 5, yy); }
+    for (i = n; i >= 0; i--) { f = i / n; yy = floorY - f * (floorY - topY); ctx.lineTo(cx + (baseW / 2) * (1 - f) + (topW / 2) * f + hash(i + 40) * 5, yy); }
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    for (i = 0; i < 14; i++) { ctx.fillStyle = i % 2 ? '#5d4f42' : '#3a3129'; ctx.beginPath(); ctx.arc(cx + (hash(i + 70) - 0.5) * baseW * 0.6, topY + hash(i + 90) * (floorY - topY), 2 + hash(i + 7) * 3, 0, 2 * Math.PI); ctx.fill(); }
+    // small crabs at the base (generic, drawn here)
+    if (!small) [[-0.36, 1], [0.33, -1]].forEach(function (c) {
+      var bx = cx + c[0] * w, by = floorY - 2;
+      ctx.strokeStyle = '#e8e2d6'; ctx.lineWidth = 1;
+      for (var k = -1; k <= 1; k += 2) for (var j = 0; j < 3; j++) { ctx.beginPath(); ctx.moveTo(bx + k * 3, by); ctx.lineTo(bx + k * (7 + j), by + 3 - j * 2); ctx.stroke(); }
+      ctx.fillStyle = '#e8e2d6'; ctx.beginPath(); ctx.ellipse(bx, by - 1, 5, 3, 0, 0, 2 * Math.PI); ctx.fill();
+    });
+    // shimmering hot water rising from the opening
+    var t = st.time, still = isReduced();
+    ctx.lineWidth = 1.4;
+    for (i = 0; i < 6; i++) {
+      ctx.strokeStyle = 'rgba(214, 236, 248,' + (0.28 - i * 0.03) + ')';
+      ctx.beginPath();
+      for (var s = 0; s <= 30; s++) {
+        var py = topY - s * (topY - y) / 30, spread = topW / 2 + s * 1.2;
+        var px = cx + (i - 2.5) / 2.5 * spread + Math.sin(s * 0.5 + (still ? 0 : t * 3) + i) * (1 + s * 0.08);
+        if (s) ctx.lineTo(px, py); else ctx.moveTo(px, py);
+      }
+      ctx.stroke();
+    }
+    // vapor bubbles: only when the water is at or above the boiling point here
+    var bubs = v.bubbles;
+    if ((still || !st.running) && v.boiling) bubs = [{ x: -0.1, y: 20, r: 3 }, { x: 0.12, y: 45, r: 4.5 }, { x: -0.05, y: 75, r: 5.5 }, { x: 0.08, y: 110, r: 6.5 }];
+    bubs.forEach(function (q) {
+      var bx = cx + q.x * (topW + q.y * 0.4), by = topY - q.y;
+      if (by < y - 10) return;
+      ctx.beginPath(); ctx.arc(bx, by, q.r, 0, 2 * Math.PI); ctx.fillStyle = 'rgba(230,245,255,0.25)'; ctx.fill();
+      ctx.strokeStyle = '#eaf6ff'; ctx.lineWidth = 1.3; ctx.stroke();
+    });
+    ctx.restore();
+    // labels
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    seaText(ctx, label === 'vent' ? fmtDepth(depth) + ' down' : (label === 'shallow vent' ? 'Shallow: ' : 'Deep: ') + fmtDepth(depth), x + 6, y + 8, true);
+    if (small) {
+      seaText(ctx, fmtP(pressureAtm(depth)) + ', boils at ' + fmtTemp(bpC(pressureAtm(depth))), x + 6, y + 24, false);
+      seaText(ctx, v.boiling ? 'Boiling: bubbles' : 'Not boiling: hot liquid', x + 6, y + 40, true);
+    }
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    seaText(ctx, 'chimney', cx, y + h - 3, false);
+  }
+
+  var ventCv = document.getElementById('vent');
+  function drawVent() {
+    var c = sizeCanvas(ventCv, '#020a14'); if (!c) return;
+    var ctx = c.ctx, W = c.W, H = c.H;
+    ctx.fillStyle = C('bg'); ctx.fillRect(0, 0, W, H);
+    if (!st.compare) {
+      drawColumn(ctx, 10, 14, 18, H - 22, st.depth);
+      ctx.font = '10px ' + FONT; ctx.fillStyle = C('fg'); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+      drawCloseUp(ctx, 58, 0, W - 58, H, st.depth, vents[0], 'vent', false);
+    } else {
+      var half = (W - 6) / 2;
+      drawCloseUp(ctx, 0, 0, half, H, COMPARE_SHALLOW, cmp[0], 'shallow vent', true);
+      drawCloseUp(ctx, half + 6, 0, half, H, COMPARE_DEEP, cmp[1], 'deep vent', true);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Molecules at the vent opening
+  // ---------------------------------------------------------------------------
+  var mw = { W: 0, H: 0, sites: [], cav: null, next: 0 };
+  function molLayout(W, H) {
+    mw.W = W; mw.H = H; mw.sites = [];
+    var top = 30, dy = 15;
+    for (var y = top + 8, row = 0; y < H - 6; y += dy, row++)
+      for (var x = 10 + (row % 2) * 8; x < W - 6; x += 16) mw.sites.push({ x: x, y: y, a: Math.random() * 6.3, p: Math.random() * 6.3 });
+    mw.cav = null; mw.next = 0;
+  }
+  function focusDepth() { return st.compare ? COMPARE_DEEP : st.depth; }
+  function molStep(dt) {
+    var b = boils(focusDepth(), st.t);
+    mw.next -= dt;
+    if (!mw.cav && mw.next <= 0) { mw.cav = { x: mw.W * 0.5, y: mw.H * 0.72, r: 2, phase: 'open', t: 0, mol: [] }; mw.next = b ? 0.4 : 1.6; }
+    var c = mw.cav;
+    if (c) {
+      c.t += dt;
+      if (b) {
+        c.r = Math.min(30, c.r + 40 * dt);
+        if (c.r > 14 && c.mol.length < 4 && Math.random() < dt * 6) c.mol.push({ ox: (Math.random() - 0.5), oy: (Math.random() - 0.5), a: Math.random() * 6.3 });
+        if (c.r >= 30) c.y -= 50 * dt;
+        if (c.y + c.r < 30) { mw.cav = null; }
+      } else if (c.phase === 'open') { c.r = Math.min(9, c.r + 45 * dt); if (c.r >= 9) c.phase = 'close'; }
+      else { c.r -= 60 * dt; if (c.r <= 0) mw.cav = null; }
+    }
+  }
+  function water(ctx, x, y, a) {   // one whole water molecule: an O and two H, bent
+    ctx.strokeStyle = C('h2o-edge'); ctx.lineWidth = 0.8;
+    [a + 0.92, a - 0.92].forEach(function (t) { ctx.beginPath(); ctx.arc(x + Math.cos(t) * 4.2, y + Math.sin(t) * 4.2, 2.2, 0, 2 * Math.PI); ctx.fillStyle = C('h2o-h'); ctx.fill(); ctx.stroke(); });
+    ctx.beginPath(); ctx.arc(x, y, 3.6, 0, 2 * Math.PI); ctx.fillStyle = C('h2o-o'); ctx.fill(); ctx.stroke();
+  }
+  function drawMolecules(c) {
+    var ctx = c.ctx, W = c.W, H = c.H;
+    if (mw.W !== W || mw.H !== H) molLayout(W, H);
+    var d = focusDepth(), b = boils(d, st.t), P = pressureAtm(d);
+    if (isReduced() || !st.running) mw.cav = b ? { x: W * 0.5, y: H * 0.6, r: 26, mol: [{ ox: -0.4, oy: -0.3, a: 1 }, { ox: 0.35, oy: 0.1, a: 2.5 }, { ox: -0.1, oy: 0.45, a: 4 }] } : null;
+    ctx.fillStyle = C('win-bg'); ctx.fillRect(0, 0, W, H);
+    // the water above pressing down: arrow size grows with pressure
+    var aw = 1.5 + Math.log(P) * 1.1;
+    ctx.strokeStyle = C('press'); ctx.fillStyle = C('press'); ctx.lineWidth = aw;
+    for (var i = 0; i < 6; i++) {
+      var ax = W * (0.12 + i * 0.152);
+      ctx.beginPath(); ctx.moveTo(ax, 2); ctx.lineTo(ax, 16); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(ax - 3 - aw, 16); ctx.lineTo(ax + 3 + aw, 16); ctx.lineTo(ax, 24); ctx.fill();
+    }
+    ctx.font = '600 11px ' + FONT; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    halo(ctx, 'Water above presses down: ' + fmtP(P), W * 0.12 + 8, 10);
+    var jig = st.running && !isReduced() ? 0.6 + (st.t - 20) / 350 * 1.6 : 0;
+    var cav = mw.cav;
+    mw.sites.forEach(function (s) {
+      var x = s.x + (jig ? Math.sin(st.time * 9 + s.p) * jig : 0), y = s.y + (jig ? Math.cos(st.time * 7 + s.p * 1.3) * jig : 0);
+      if (cav) { var dx = x - cav.x, dy = y - cav.y, dd = Math.sqrt(dx * dx + dy * dy), m = cav.r + 6; if (dd < m) { if (dd < 1e-6) { dx = 1; dd = 1; } x = cav.x + dx / dd * m; y = cav.y + dy / dd * m; } }
+      water(ctx, x, y, s.a + (jig ? Math.sin(st.time * 3 + s.p) * 0.3 : 0));
+    });
+    if (cav && cav.r > 1) {
+      ctx.beginPath(); ctx.arc(cav.x, cav.y, cav.r, 0, 2 * Math.PI); ctx.fillStyle = C('bg'); ctx.fill();
+      ctx.strokeStyle = C('bubble-edge'); ctx.lineWidth = 1.5; ctx.stroke();
+      cav.mol.forEach(function (m) { water(ctx, cav.x + m.ox * cav.r * 0.9, cav.y + m.oy * cav.r * 0.9, m.a + st.time); });
+      ctx.textAlign = 'center';
+      halo(ctx, b ? 'vapor bubble grows' : 'bubble collapses', cav.x, Math.max(36, cav.y - cav.r - 9));
+    }
+  }
+  function halo(ctx, text, x, y) { ctx.lineWidth = 3; ctx.strokeStyle = C('win-bg'); ctx.strokeText(text, x, y); ctx.fillStyle = C('fg'); ctx.fillText(text, x, y); }
+
+  // ---------------------------------------------------------------------------
+  // Curve: boiling point against pressure (or ln P against 1/T), from the equation the student used
+  // ---------------------------------------------------------------------------
+  function drawCurve(c) {
+    var ctx = c.ctx, W = c.W, H = c.H, K = st.unit === 'K', off = K ? KELVIN : 0, ln = st.curve === 'ln';
+    var pad = { l: 46, r: 12, t: 8, b: 30 }, pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
+    var xMin, xMax, yMin, yMax;
+    if (!ln) { xMin = 0; xMax = 210; yMin = 80 + off; yMax = 410 + off; }
+    else { xMin = 1 / (380 + KELVIN); xMax = 1 / (80 + KELVIN); yMin = -1; yMax = 5.5; }
+    function X(v) { return pad.l + (v - xMin) / (xMax - xMin) * pw; }
+    function Y(v) { return pad.t + (1 - (v - yMin) / (yMax - yMin)) * ph; }
+    function pt(P, tC) { return ln ? { x: X(1 / (tC + KELVIN)), y: Y(Math.log(P)) } : { x: X(P), y: Y(tC + off) }; }
+    ctx.font = '11px ' + FONT; ctx.lineWidth = 1;
+    var xt = ln ? [0.0016, 0.0020, 0.0024, 0.0028] : [0, 50, 100, 150, 200];
+    var yt = ln ? [0, 1, 2, 3, 4, 5] : (K ? [400, 450, 500, 550, 600, 650] : [100, 150, 200, 250, 300, 350, 400]);
+    ctx.strokeStyle = C('grid');
+    xt.forEach(function (v) { ctx.beginPath(); ctx.moveTo(Math.round(X(v)) + 0.5, pad.t); ctx.lineTo(Math.round(X(v)) + 0.5, pad.t + ph); ctx.stroke(); });
+    yt.forEach(function (v) { ctx.beginPath(); ctx.moveTo(pad.l, Math.round(Y(v)) + 0.5); ctx.lineTo(pad.l + pw, Math.round(Y(v)) + 0.5); ctx.stroke(); });
+    ctx.strokeStyle = C('rule'); ctx.beginPath(); ctx.moveTo(pad.l + 0.5, pad.t); ctx.lineTo(pad.l + 0.5, pad.t + ph + 0.5); ctx.lineTo(pad.l + pw, pad.t + ph + 0.5); ctx.stroke();
+    ctx.fillStyle = C('fg'); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    xt.forEach(function (v) { ctx.fillText(ln ? v.toFixed(4) : String(v), X(v), pad.t + ph + 3); });
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    yt.forEach(function (v) { ctx.fillText(String(v), pad.l - 4, Y(v)); });
+    ctx.font = '600 11px ' + FONT; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText(ln ? '1/T (K⁻¹)' : 'Pressure at the vent (atm)', pad.l + pw / 2, H - 1);
+    ctx.save(); ctx.translate(11, pad.t + ph / 2); ctx.rotate(-Math.PI / 2); ctx.textBaseline = 'middle';
+    ctx.fillText(ln ? 'ln (P / atm)' : 'Boiling point (' + (K ? 'K' : '°C') + ')', 0, 0); ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.rect(pad.l, pad.t, pw, ph); ctx.clip();
+    // the equation's curve, 1 to 201 atm
+    ctx.strokeStyle = C('curve'); ctx.lineWidth = 2.2; ctx.beginPath();
+    for (var j = 0; j <= 200; j++) { var P = 1 + j, q = pt(P, bpC(P)); if (j) ctx.lineTo(q.x, q.y); else ctx.moveTo(q.x, q.y); }
+    ctx.stroke();
+    // region words
+    ctx.font = '11px ' + FONT; ctx.textBaseline = 'middle';
+    if (!ln) { ctx.textAlign = 'left'; halo2(ctx, 'boils (above the curve)', pad.l + 8, pad.t + 12); ctx.textAlign = 'right'; halo2(ctx, 'stays liquid (below)', pad.l + pw - 6, pad.t + ph - 12); }
+    else { ctx.textAlign = 'right'; halo2(ctx, 'boils (below the line)', pad.l + pw - 6, pad.t + ph - 12); halo2(ctx, 'stays liquid (above)', pad.l + pw - 6, pad.t + 12); }
+    // measured values and the gap at 200 atm
+    if (st.meas) {
+      MEASURED.forEach(function (m) {
+        var q = pt(m[0], m[1]);
+        ctx.fillStyle = C('bg'); ctx.strokeStyle = C('meas'); ctx.lineWidth = 2; ctx.beginPath(); ctx.rect(q.x - 4, q.y - 4, 8, 8); ctx.fill(); ctx.stroke();
+      });
+      var a = pt(200, 366.8), bq = pt(200, bpC(200));
+      ctx.strokeStyle = C('meas'); ctx.lineWidth = 1.5; ctx.beginPath();
+      if (!ln) { ctx.moveTo(a.x - 9, a.y); ctx.lineTo(a.x - 9, bq.y); ctx.moveTo(a.x - 12, a.y); ctx.lineTo(a.x - 6, a.y); ctx.moveTo(a.x - 12, bq.y); ctx.lineTo(a.x - 6, bq.y); }
+      else { ctx.moveTo(a.x, a.y + 9); ctx.lineTo(bq.x, a.y + 9); }
+      ctx.stroke();
+      ctx.font = '600 11px ' + FONT; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      var m50 = pt(50, 265.0);
+      if (!ln) {
+        ctx.strokeStyle = C('meas'); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(a.x - 9, bq.y); ctx.lineTo(a.x - 9, bq.y + 14); ctx.stroke();
+        halo2(ctx, "the equation's error", a.x - 4, bq.y + 22); halo2(ctx, '(ΔHvap held constant)', a.x - 4, bq.y + 36);
+        ctx.textAlign = 'right'; halo2(ctx, 'measured', m50.x - 7, m50.y - 9);
+      } else {
+        ctx.strokeStyle = C('meas'); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(bq.x, a.y + 9); ctx.lineTo(bq.x, a.y + 30); ctx.stroke();
+        ctx.textAlign = 'left'; halo2(ctx, "the equation's error", bq.x - 4, a.y + 38); halo2(ctx, '(ΔHvap held constant)', bq.x - 4, a.y + 52);
+        halo2(ctx, 'measured', m50.x + 8, m50.y - 10);
+      }
+    }
+    ctx.restore();
+    // the vent dot(s): pressure and water temperature
+    ventList().forEach(function (it, i) {
+      var q = pt(pressureAtm(it.d), st.t);
+      q.x = clamp(q.x, pad.l, pad.l + pw); q.y = clamp(q.y, pad.t, pad.t + ph);
+      ctx.fillStyle = C('marker'); ctx.strokeStyle = C('bg'); ctx.lineWidth = 2; ctx.beginPath();
+      if (i === 0) { ctx.moveTo(q.x, q.y - 7); ctx.lineTo(q.x + 7, q.y); ctx.lineTo(q.x, q.y + 7); ctx.lineTo(q.x - 7, q.y); ctx.closePath(); }
+      else ctx.arc(q.x, q.y, 5.5, 0, 2 * Math.PI);
+      ctx.fill(); ctx.stroke();
+      ctx.font = '600 11px ' + FONT; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+      halo2(ctx, st.compare ? (i === 0 ? 'shallow' : 'deep') : 'vent', q.x + 8, q.y - 3);
+    });
+  }
+  function halo2(ctx, text, x, y) { ctx.lineWidth = 3; ctx.strokeStyle = C('bg'); ctx.strokeText(text, x, y); ctx.fillStyle = C('fg'); ctx.fillText(text, x, y); }
+
+  var panelCv = document.getElementById('panel');
+  function drawPanel() { var c = sizeCanvas(panelCv); if (!c) return; if (st.view === 'mol') drawMolecules(c); else drawCurve(c); }
+
+  // ===========================================================================
+  // Text
+  // ===========================================================================
+  var el = function (id) { return document.getElementById(id); };
+  function statusText() {
+    if (st.compare) {
+      var a = boils(COMPARE_SHALLOW, st.t), b = boils(COMPARE_DEEP, st.t);
+      return 'Same water, ' + fmtTemp(st.t) + '. Shallow vent: ' + (a ? 'boiling' : 'not boiling') + '. Deep vent: ' + (b ? 'boiling' : 'not boiling') + '.';
+    }
+    return boils(st.depth, st.t) ? 'Boiling: vapor bubbles form and rise.' : 'Not boiling: the water comes out as hot liquid, not steam. No bubbles.';
+  }
+  function describeVent() {
+    if (st.compare) {
+      return 'Two vents side by side with the same water temperature, ' + fmtTempWords(st.t) + '. ' +
+        [[COMPARE_SHALLOW, 'Shallow'], [COMPARE_DEEP, 'Deep']].map(function (p) {
+          var P = pressureAtm(p[0]); return p[1] + ' vent at ' + fmtDepth(p[0]) + ': pressure ' + fmtP(P) + ', boiling point ' + fmtTemp(bpC(P)) + ', ' + (boils(p[0], st.t) ? 'boiling, with bubbles rising.' : 'not boiling; hot liquid water rises, no bubbles.');
+        }).join(' ');
+    }
+    var P = pressureAtm(st.depth), b = boils(st.depth, st.t);
+    return 'A rough mineral chimney on the sea floor, ' + fmtDepth(st.depth) + ' down; a strip beside it shows the water column to scale, from the surface to 2,000 m. Shimmering hot water rises from the chimney. Pressure at the vent ' + fmtP(P) + '. Vent water ' + fmtTemp(st.t) + '; boiling point here ' + fmtTemp(bpC(P)) + '. ' +
+      (b ? 'The water is boiling: vapor bubbles rise from the opening.' : 'The water is not boiling: it comes out as hot liquid, with no bubbles.');
+  }
+  function describePanel() {
+    var d = focusDepth(), P = pressureAtm(d), b = boils(d, st.t);
+    if (st.view === 'mol') {
+      return 'Magnified view at the opening of the ' + (st.compare ? 'deep ' : '') + 'vent. Whole water molecules, each an oxygen with two hydrogens, are packed together. Arrows at the top show the water above pressing down, ' + fmtP(P) + '. ' +
+        (b ? 'A vapor bubble opens, grows and rises; inside it are a few whole water molecules, far apart.' : 'A vapor bubble tries to open and collapses at once.');
+    }
+    var s = (st.curve === 'ln' ? 'ln P against 1/T, a straight line' : 'Boiling point against pressure, from 1 to 201 atm') + ', from the equation you used. ' +
+      (st.curve === 'ln' ? 'The water boils when its dot is on or below the line. ' : 'The water boils when its dot is on or above the curve. ') +
+      ventList().map(function (it) { var p = pressureAtm(it.d); return 'The ' + (st.compare ? it.label + ' ' : 'vent ') + 'dot is at ' + fmtP(p) + ' and ' + fmtTemp(st.t) + ', ' + (boils(it.d, st.t) ? 'on the boiling side.' : 'on the liquid side.'); }).join(' ');
+    if (st.meas) s += ' Measured boiling points are shown as squares; they lie above the curve, and the gap grows with pressure, to ' + (366.8 - bpC(200)).toFixed(1) + ' degrees at 200 atm. This gap is labelled the equation\'s error, with ΔHvap held constant.';
+    return s;
+  }
+  function captionText() {
+    if (st.view === 'mol') return 'A bubble opens only when the vapor inside it pushes back as hard as the water around it. It holds whole water molecules, not hydrogen and oxygen.';
+    return 'From the equation you used (ΔHvap held at its 100 °C value).' + (st.meas ? ' Squares: measured (IAPWS steam tables).' : '');
+  }
+  var live = el('live'), restTimer = null;
+  function say(m) { live.textContent = ''; setTimeout(function () { live.textContent = m; }, 30); }
+  function flushEvents() {
+    if (!events.length) return;
+    say(events.map(function (e) { return (st.compare ? (e.label === 'shallow vent' ? 'Shallow vent: ' : 'Deep vent: ') : '') + (e.start ? 'bubbles start; the water is boiling.' : 'bubbles stop; the water is not boiling.'); }).join(' '));
+    events = [];
+  }
+  function announceAtRest() {
+    if (restTimer) clearTimeout(restTimer);
+    restTimer = setTimeout(function () {
+      restTimer = null;
+      if (st.compare) { say(statusText()); return; }
+      var P = pressureAtm(st.depth);
+      say('Depth ' + fmtDepth(st.depth) + ', pressure ' + fmtP(P) + ', boiling point ' + fmtTemp(bpC(P)) + ', water ' + fmtTemp(st.t) + '. ' + (boils(st.depth, st.t) ? 'Boiling.' : 'Not boiling.'));
+    }, 700);
+  }
+  function updateText() {
+    var P = pressureAtm(st.depth);
+    el('vDepth').textContent = fmtDepth(st.depth); el('vP').textContent = fmtP(P);
+    el('vT').textContent = fmtTemp(st.t); el('vBp').textContent = fmtTemp(bpC(P));
+    el('status').textContent = statusText();
+    el('descVent').textContent = describeVent(); el('descPanel').textContent = describePanel(); el('caption').textContent = captionText();
+    el('depthVal').textContent = st.compare ? '100 and 1,500 m' : fmtDepth(st.depth); el('tempVal').textContent = fmtTemp(st.t);
+    depthIn.setAttribute('aria-valuetext', st.compare ? 'Compare mode: vents at 100 and 1,500 metres' : Math.round(st.depth) + ' metres');
+    tempIn.setAttribute('aria-valuetext', fmtTempWords(st.t));
+    playBtn.textContent = st.running ? 'Pause' : 'Play';
+  }
+
+  // ===========================================================================
+  // Loop
+  // ===========================================================================
+  var rafId = null, timerId = null, lastT = 0;
+  function tick(dt) {
+    st.time += dt;
+    ventList().forEach(function (it) { stepVent(it, dt); });
+    if (st.view === 'mol' && !isReduced()) molStep(dt);
+    flushEvents();
+    if ((performance.now() - st.lastInput) / 1000 > IDLE_STOP_S) { stop(); say('Paused after two minutes without input.'); }
+  }
+  function render() { drawVent(); drawPanel(); updateText(); }
+  function frame(now) { rafId = null; var dt = Math.min(0.05, Math.max(0, (now - lastT) / 1000)); lastT = now; tick(dt); render(); schedule(); }
+  function schedule() {
+    if (!st.running) return;
+    if (isReduced()) { if (!timerId) timerId = setTimeout(function () { timerId = null; var now = performance.now(), dt = Math.min(1, (now - lastT) / 1000); lastT = now; tick(dt); render(); schedule(); }, 1000); }
+    else if (!rafId) rafId = requestAnimationFrame(frame);
+  }
+  function start() { st.lastInput = performance.now(); if (!st.running) { st.running = true; lastT = performance.now(); } schedule(); }
+  function stop() { st.running = false; if (rafId) { cancelAnimationFrame(rafId); rafId = null; } if (timerId) { clearTimeout(timerId); timerId = null; } render(); }
+  function instant() { ventList().forEach(function (it) { stepVent(it, 0); }); flushEvents(); render(); }
+
+  // ===========================================================================
+  // Controls
+  // ===========================================================================
+  var depthIn = el('depth'), tempIn = el('temp'), playBtn = el('play');
+  function changed() { start(); instant(); announceAtRest(); }
+  function setDepth(v, exact) { st.depth = clamp(exact ? v : Math.round(v / DEPTH_STEP) * DEPTH_STEP, 0, DEPTH_MAX); depthIn.value = String(st.depth); changed(); }
+  function setTemp(v) { st.t = Math.round(clamp(v, T_MIN, T_MAX) * 10) / 10; tempIn.value = String(st.t); changed(); }
+  depthIn.addEventListener('input', function () { setDepth(Number(depthIn.value)); });
+  tempIn.addEventListener('input', function () { setTemp(Number(tempIn.value)); });
+  depthIn.addEventListener('keydown', function (e) {
+    var k = e.key, d = null;
+    if (k === 'ArrowRight' || k === 'ArrowUp') d = 10; else if (k === 'ArrowLeft' || k === 'ArrowDown') d = -10;
+    else if (k === 'PageUp') d = 100; else if (k === 'PageDown') d = -100;
+    else if (k === 'Home') { e.preventDefault(); setDepth(0); return; } else if (k === 'End') { e.preventDefault(); setDepth(DEPTH_MAX); return; }
+    if (d !== null) { e.preventDefault(); setDepth(Math.round(st.depth / 10) * 10 + d); }
+  });
+  tempIn.addEventListener('keydown', function (e) {
+    var k = e.key, d = null;
+    if (k === 'ArrowRight' || k === 'ArrowUp') d = e.shiftKey ? 0.1 : 1; else if (k === 'ArrowLeft' || k === 'ArrowDown') d = e.shiftKey ? -0.1 : -1;
+    else if (k === 'PageUp') d = 10; else if (k === 'PageDown') d = -10;
+    else if (k === 'Home') { e.preventDefault(); setTemp(T_MIN); return; } else if (k === 'End') { e.preventDefault(); setTemp(T_MAX); return; }
+    if (d !== null) { e.preventDefault(); setTemp(st.t + d); }
+  });
+  playBtn.addEventListener('click', function () { if (st.running) stop(); else { start(); render(); } });
+  el('reset').addEventListener('click', function () { stop(); initState(); syncControls(); applyLayout(); mw.W = 0; instant(); say('Reset to the opening state.'); });
+  el('compare').addEventListener('change', function () { st.compare = el('compare').checked; cmp.forEach(function (v) { v.boiling = null; }); applyLayout(); changed(); });
+  el('meas').addEventListener('change', function () { st.meas = el('meas').checked; render(); });
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="unit"]'), function (r) { r.addEventListener('change', function () { if (r.checked) { st.unit = r.value; render(); announceAtRest(); } }); });
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="view"]'), function (r) { r.addEventListener('change', function () { if (r.checked) { st.view = r.value; applyLayout(); render(); } }); });
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="curve"]'), function (r) { r.addEventListener('change', function () { if (r.checked) { st.curve = r.value; render(); } }); });
+  function syncControls() {
+    depthIn.value = String(st.depth); tempIn.value = String(st.t);
+    el('compare').checked = st.compare; el('meas').checked = st.meas;
+    document.querySelector('input[name="unit"][value="' + st.unit + '"]').checked = true;
+    document.querySelector('input[name="view"][value="' + st.view + '"]').checked = true;
+    document.querySelector('input[name="curve"][value="' + st.curve + '"]').checked = true;
+  }
+  function applyLayout() {
+    el('top').classList.toggle('compare', st.compare);
+    depthIn.disabled = st.compare;
+    el('curveSwitch').hidden = st.view !== 'curve';
+  }
+
+  // ===========================================================================
+  // Start: the student's depth, paused, the water at the boiling point found.
+  // ===========================================================================
+  applyTheme();
+  if (darkQ && themeParam !== 'light' && themeParam !== 'dark') { var cw = function () { applyTheme(); render(); }; if (darkQ.addEventListener) darkQ.addEventListener('change', cw); else if (darkQ.addListener) darkQ.addListener(cw); }
+  if (reduceQ) { var rm = function () { render(); }; if (reduceQ.addEventListener) reduceQ.addEventListener('change', rm); else if (reduceQ.addListener) reduceQ.addListener(rm); }
+  initState(); syncControls(); applyLayout();
+  if (window.ResizeObserver) new ResizeObserver(function () { render(); }).observe(document.body); else window.addEventListener('resize', render);
+  instant();
+})();
+</script>
+</body>
+</html>
