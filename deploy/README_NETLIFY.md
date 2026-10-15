@@ -9,7 +9,7 @@ The full move of the brain to Netlify stays a December job, as the spec says.
    git (it is in `.gitignore`).
 2. Make sure `media/ch13_eq/` holds the chapter 13 files: the five from `media/ch13_ice/` (rename the folder) plus the three
    floaters' pictures and pages from SCENARIO_CLAUDE and Simulation_Claude.
-3. `sh scripts/make_netlify_site.sh` → `deploy/netlify_site/`.
+3. `sh scripts/make_netlify_site.sh` → `deploy/netlify_site/`. It lists every picture and simulation the tutor refers to (20 today) and marks any missing from `media/`; fix those before step 4. The site gets a `gallery.html` with all of them, linked from the yellow bar.
 4. Open https://app.netlify.com/drop and drag the `netlify_site` folder onto it. Netlify gives a `*.netlify.app` address; rename
    the site in Site settings if you like. (Or, with the Netlify CLI: `netlify deploy --prod --dir deploy/netlify_site`.)
 5. Open the address. "New problem" should work at once with no settings box. Add `?debug=1` to see the raw server replies.

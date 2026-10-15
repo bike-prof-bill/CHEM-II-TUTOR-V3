@@ -1185,13 +1185,13 @@ obj	ch10_cc.TRAP_NOTES	RATIO_NOT_SCALED	{"ask": "That number is a ratio of two p
 obj	ch10_cc.TRAP_NOTES	RECIPROCAL_NOT_TAKEN	{"ask": "That number is 1/T. What is one more step to get T?", "note": "They stopped at 1/T: the number is the reciprocal of the temperature, typed as if it were the temperature."}
 obj	ch10_cc.TRAP_NOTES	SIGN_FLIPPED	{"ask": "As the temperature goes up, should the vapor pressure go up or down, and does your number do that?", "note": "Their number is what results when the negative sign is lost or the ratio is inverted without it."}
 obj	ch10_cc.TRAP_NOTES	SLOPE_SIGN_KEPT	{"ask": "Does it take energy or release energy for a molecule to leave the liquid, and what sign does that give ΔHvap?", "note": "They kept the slope's negative sign on dHvap."}
-obj	ch13_eq.EQUATION_PICKS	-	{"fits": ["haber_setup", "wgs_equilibrium", "agcl_tracer", "agbr_tracer", "agi_tracer", "hi_volume", "hi_equilibrium", "no2_equilibrium"], "id": "eq_k", "text": "K = [C]^c [D]^d / ( [A]^a [B]^b )"}
-obj	ch13_eq.EQUATION_PICKS	-	{"fits": ["haber_setup", "wgs_equilibrium", "agcl_tracer", "agbr_tracer", "agi_tracer", "hi_volume", "hi_equilibrium", "no2_equilibrium"], "id": "eq_q", "text": "Q = [C]₀^c [D]₀^d / ( [A]₀^a [B]₀^b )"}
-obj	ch13_eq.EQUATION_PICKS	-	{"fits": [], "id": "eq_g", "text": "ΔG° = −RT ln K"}
-obj	ch13_eq.EQUATION_PICKS	-	{"fits": [], "id": "eq_kp", "text": "Kp = Kc (RT)^Δn"}
-obj	ch13_eq.EQUATION_PICKS	-	{"fits": [], "id": "eq_ph", "text": "pH = −log[H₃O⁺]"}
-obj	ch13_eq.EQUATION_PICKS	-	{"fits": [], "id": "eq_r", "text": "rate = k [A]^m [B]^n"}
-obj	ch13_eq.RELATION_TEXT	-	"K = [products]^coefficients / [reactants]^coefficients at equilibrium; Q is the same fraction at any moment"
+obj	ch13_eq.EQUATION_PICKS	-	{"fits": ["haber_setup", "wgs_equilibrium", "agcl_tracer", "agbr_tracer", "agi_tracer", "hi_volume", "hi_equilibrium", "no2_equilibrium"], "id": "eq_k", "text": "\\( K = \\dfrac{[\\mathrm{C}]^{c}[\\mathrm{D}]^{d}}{[\\mathrm{A}]^{a}[\\mathrm{B}]^{b}} \\)"}
+obj	ch13_eq.EQUATION_PICKS	-	{"fits": ["haber_setup", "wgs_equilibrium", "agcl_tracer", "agbr_tracer", "agi_tracer", "hi_volume", "hi_equilibrium", "no2_equilibrium"], "id": "eq_q", "text": "\\( Q = \\dfrac{[\\mathrm{C}]_0^{\\,c}[\\mathrm{D}]_0^{\\,d}}{[\\mathrm{A}]_0^{\\,a}[\\mathrm{B}]_0^{\\,b}} \\)"}
+obj	ch13_eq.EQUATION_PICKS	-	{"fits": [], "id": "eq_g", "text": "\\( \\Delta G^\\circ = -RT \\ln K \\)"}
+obj	ch13_eq.EQUATION_PICKS	-	{"fits": [], "id": "eq_kp", "text": "\\( K_p = K_c (RT)^{\\Delta n} \\)"}
+obj	ch13_eq.EQUATION_PICKS	-	{"fits": [], "id": "eq_ph", "text": "\\( \\mathrm{pH} = -\\log[\\mathrm{H_3O^+}] \\)"}
+obj	ch13_eq.EQUATION_PICKS	-	{"fits": [], "id": "eq_r", "text": "\\( \\text{rate} = k[\\mathrm{A}]^{m}[\\mathrm{B}]^{n} \\)"}
+obj	ch13_eq.RELATION_TEXT	-	"K = products over reactants, each raised to its coefficient, at equilibrium; Q is the same fraction at any moment"
 obj	ch13_eq.TITLE	-	"Equilibrium: which way, how far, and what a change does"
 obj	ch13_eq.TRAP_NOTES	COEFFICIENTS_AS_MULTIPLIERS	{"ask": "Look at the largest coefficient. In the expression, where does that number go?", "note": "Their number comes from multiplying each concentration by its coefficient instead of raising it to that power."}
 obj	ch13_eq.TRAP_NOTES	COEFF_NOT_EXPONENT	{"ask": "The coefficients do double duty. What is the exponent for each species?", "note": "Their expression holds only with every exponent read as 1: the coefficients are in the table but not used as exponents."}
@@ -1297,8 +1297,7 @@ prose	ch13_eq	-	Hydrogen and iodine make hydrogen iodide: \( \mathrm{H_2}(g) + \
 prose	ch13_eq	-	Hydrogen and iodine make hydrogen iodide: \( \mathrm{H_2}(g) + \mathrm{I_2}(g) \rightleftharpoons 2\mathrm{HI}(g) \). At 400 °C, \( K_c = 50.0 \). A 5.00 L flask is filled with 1.50 mol of hydrogen and 1.50 mol of iodine. Find the concentration of hydrogen iodide at equilibrium. How much hydrogen is left?
 prose	ch13_eq	-	Hydrogen and iodine make hydrogen iodide: \( \mathrm{H_2}(g) + \mathrm{I_2}(g) \rightleftharpoons 2\mathrm{HI}(g) \). At 400 °C, \( K_c = 50.0 \). A 5.00 L flask is filled with 1.50 mol of hydrogen iodide. Find the concentration of hydrogen iodide at equilibrium. How much hydrogen forms?
 prose	ch13_eq	-	Inside a steel reactor at 500 °C, nitrogen and hydrogen make ammonia: N2(g) + 3H2(g) ⇌ 2NH3(g). At this temperature, Kc = 0.060. A chemist tests a {V} pilot vessel. She puts in {amounts}. Set up the ICE table. Then write Kc in terms of x.
-prose	ch13_eq	-	K = [C]^c [D]^d / ( [A]^a [B]^b )
-prose	ch13_eq	-	K = [products]^coefficients / [reactants]^coefficients at equilibrium; Q is the same fraction at any moment
+prose	ch13_eq	-	K = products over reactants, each raised to its coefficient, at equilibrium; Q is the same fraction at any moment
 prose	ch13_eq	-	Kc from the equilibrium row
 prose	ch13_eq	-	Look at the largest coefficient. In the expression, where does that number go?
 prose	ch13_eq	-	NO2 added to an equilibrium mixture
@@ -1326,7 +1325,6 @@ prose	ch13_eq	-	On Mars, a rover fills a sealed {V} steel chamber with {amounts}
 prose	ch13_eq	-	Q < K, moles in 0.500 L
 prose	ch13_eq	-	Q < K, solid present
 prose	ch13_eq	-	Q = K after a volume change
-prose	ch13_eq	-	Q = [C]₀^c [D]₀^d / ( [A]₀^a [B]₀^b )
 prose	ch13_eq	-	Q > K, no solid at the start
 prose	ch13_eq	-	Q > K, silver ion added
 prose	ch13_eq	-	Silver bromide dissolves in water: \( \mathrm{AgBr}(s) \rightleftharpoons \mathrm{Ag^{+}}(aq) + \mathrm{Br^{-}}(aq) \). At 25 °C, \( K_c = 5.0 \times 10^{-13} \). A chemist made solid silver bromide by mixing silver nitrate solution with a little less sodium bromide solution, so the water holds a little extra silver. The solid has sat in a sealed beaker for days. The ion probes read \( [\mathrm{Ag^{+}}] = 1.0 \times 10^{-6} \) M and \( [\mathrm{Br^{-}}] = 5.0 \times 10^{-7} \) M. A pellet of silver bromide made with radioactive silver is dropped onto the solid. Write Q, find its value, and say which way the reaction goes.
@@ -1362,6 +1360,12 @@ prose	ch13_eq	-	They predicted a shift after a volume change although both sides
 prose	ch13_eq	-	They predicted more dissolving after a product ion was added.
 prose	ch13_eq	-	Which concentrations go on top of the fraction, and which go underneath?
 prose	ch13_eq	-	Which volume does the gas fill now?
+prose	ch13_eq	-	\( K = \dfrac{[\mathrm{C}]^{c}[\mathrm{D}]^{d}}{[\mathrm{A}]^{a}[\mathrm{B}]^{b}} \)
+prose	ch13_eq	-	\( K_p = K_c (RT)^{\Delta n} \)
+prose	ch13_eq	-	\( Q = \dfrac{[\mathrm{C}]_0^{\,c}[\mathrm{D}]_0^{\,d}}{[\mathrm{A}]_0^{\,a}[\mathrm{B}]_0^{\,b}} \)
+prose	ch13_eq	-	\( \Delta G^\circ = -RT \ln K \)
+prose	ch13_eq	-	\( \mathrm{pH} = -\log[\mathrm{H_3O^+}] \)
+prose	ch13_eq	-	\( \text{rate} = k[\mathrm{A}]^{m}[\mathrm{B}]^{n} \)
 prose	ch13_eq	-	approved (Silent Beaker kit, 13 Oct 2026)
 prose	ch13_eq	-	approved (ch13_eq kit, 14 Oct 2026)
 prose	ch13_eq	-	approved (three-floaters kit, 14 Oct 2026)
@@ -1373,7 +1377,6 @@ prose	ch13_eq	-	names the right answer as an error
 prose	ch13_eq	-	neither because it stays at equilibrium
 prose	ch13_eq	-	neither: no change overall
 prose	ch13_eq	-	product absent (Q = 0)
-prose	ch13_eq	-	rate = k [A]^m [B]^n
 prose	ch13_eq	-	reactants only, equal
 prose	ch13_eq	-	reactants only, unequal
 prose	ch13_eq	-	reverse: more solid forms

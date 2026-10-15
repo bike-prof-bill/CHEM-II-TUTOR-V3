@@ -2,7 +2,7 @@
  "contract": 3,
  "archetype_id": "ch13_eq",
  "title": "Equilibrium: which way, how far, and what a change does",
- "relation": "K = [products]^coefficients / [reactants]^coefficients at equilibrium; Q is the same fraction at any moment",
+ "relation": "K = products over reactants, each raised to its coefficient, at equilibrium; Q is the same fraction at any moment",
  "notebook_url": "https://notebook.google.com/notebook/6458f208-db32-496a-8088-fe0c1c6cd539",
  "kinds": [
   "haber_setup",
@@ -44,7 +44,7 @@
  "equation_picks": [
   {
    "id": "eq_k",
-   "text": "K = [C]^c [D]^d / ( [A]^a [B]^b )",
+   "text": "\\( K = \\dfrac{[\\mathrm{C}]^{c}[\\mathrm{D}]^{d}}{[\\mathrm{A}]^{a}[\\mathrm{B}]^{b}} \\)",
    "fits": [
     "haber_setup",
     "wgs_equilibrium",
@@ -58,7 +58,7 @@
   },
   {
    "id": "eq_q",
-   "text": "Q = [C]₀^c [D]₀^d / ( [A]₀^a [B]₀^b )",
+   "text": "\\( Q = \\dfrac{[\\mathrm{C}]_0^{\\,c}[\\mathrm{D}]_0^{\\,d}}{[\\mathrm{A}]_0^{\\,a}[\\mathrm{B}]_0^{\\,b}} \\)",
    "fits": [
     "haber_setup",
     "wgs_equilibrium",
@@ -72,22 +72,22 @@
   },
   {
    "id": "eq_kp",
-   "text": "Kp = Kc (RT)^Δn",
+   "text": "\\( K_p = K_c (RT)^{\\Delta n} \\)",
    "fits": []
   },
   {
    "id": "eq_g",
-   "text": "ΔG° = −RT ln K",
+   "text": "\\( \\Delta G^\\circ = -RT \\ln K \\)",
    "fits": []
   },
   {
    "id": "eq_r",
-   "text": "rate = k [A]^m [B]^n",
+   "text": "\\( \\text{rate} = k[\\mathrm{A}]^{m}[\\mathrm{B}]^{n} \\)",
    "fits": []
   },
   {
    "id": "eq_ph",
-   "text": "pH = −log[H₃O⁺]",
+   "text": "\\( \\mathrm{pH} = -\\log[\\mathrm{H_3O^+}] \\)",
    "fits": []
   }
  ],
@@ -39094,5 +39094,5 @@
    "opener_index": 4
   }
  ],
- "content_version": "0948c5d45d"
+ "content_version": "0481abba5e"
 }

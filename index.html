@@ -65,7 +65,7 @@
 </head>
 <body>
 <div id="previewBar" style="display:none;background:#fff4d6;color:#4a3a00;padding:8px 14px;font-size:14px;border-bottom:1px solid #e6cf7a">
-  <span id="previewLabel"></span> <a id="previewMail" href="#" style="margin-left:12px;color:#1b5e6e">Email the instructor</a>
+  <span id="previewLabel"></span> <a id="previewMail" href="#" style="margin-left:12px;color:#1b5e6e">Email the instructor</a> <a href="gallery.html" target="_blank" style="margin-left:12px;color:#1b5e6e">All pictures and simulations</a>
   <div style="margin-top:6px;display:flex;gap:6px;align-items:flex-start"><textarea id="cmtBox" rows="2" style="flex:1;font:inherit" placeholder="Comment on what the tutor just did (goes to the log, with the problem and the step)"></textarea><button id="cmtSend" type="button">Log comment</button></div>
   <div id="cmtAbout" style="font-size:12px;color:#6b5a1a;margin-top:3px"></div>
 </div>
@@ -168,8 +168,8 @@ async function call(payload) {
 
 // ---------- chat ----------
 function add(cls, text) { const d = document.createElement("div"); d.className = "msg " + cls; d.textContent = text; $("log").appendChild(d); renderMath(d); $("log").scrollTop = 1e9; return d; }
-function renderMath(el) {   // tutor text only; the student's own words are never rendered
-  if (!el.classList.contains("tutor") || typeof renderMathInElement !== "function") return;
+function renderMath(el, force) {   // tutor text and the problem panel only; the student's own words are never rendered
+  if ((!force && !el.classList.contains("tutor")) || typeof renderMathInElement !== "function") return;
   try { renderMathInElement(el, { delimiters: [{ left: "\\(", right: "\\)", display: false }, { left: "\\[", right: "\\]", display: true }], throwOnError: false }); } catch (e) {}
 }
 function setBusy(b) { busy = b; $("sendBtn").disabled = b || away || !sessionId; $("box").disabled = b || away || !sessionId; $("newBtn").disabled = b; }
@@ -240,7 +240,7 @@ async function newProblem(want) {
 function showPinned(p, pins) {
   p = p || {}; pins = pins || []; const pretty = t => String(t).replace(/\*/g, "·").replace(/\bdH(vap)?\b/g, "ΔHvap");
   const generic = pins.filter(x => x.id !== "relation_chosen" && !/^rearranged/.test(x.id));   // those two keep their own slots
-  [["pinRel", p.relation], ["pinRe", (p.rearranged || []).join("\n")]].forEach(([id, t]) => { $(id).style.display = t ? "block" : "none"; if (t) $(id).querySelector("code").textContent = pretty(t); });
+  [["pinRel", p.relation], ["pinRe", (p.rearranged || []).join("\n")]].forEach(([id, t]) => { $(id).style.display = t ? "block" : "none"; if (t) { const c = $(id).querySelector("code"); c.textContent = pretty(t); renderMath(c, true); } });
   $("pinList").innerHTML = ""; generic.forEach(x => { const d = document.createElement("div"); d.className = "pin"; d.innerHTML = "<span></span><code></code>"; d.querySelector("span").textContent = x.label; d.querySelector("code").textContent = pretty(x.text); $("pinList").appendChild(d); });
   $("pinCard").style.display = (p.relation || p.rearranged || generic.length) ? "block" : "none";
 }
@@ -255,13 +255,13 @@ function showImage(m) { const im = $("openerImg"), vd = $("openerVid"), isVideo 
   if (m.credit) m.credit.split(/(https?:\/\/\S+)/).forEach(part => { if (/^https?:\/\//.test(part)) { const a = document.createElement("a"); a.href = part; a.target = "_blank"; a.rel = "noopener"; a.textContent = /creativecommons/.test(part) ? "licence" : "source"; c.appendChild(a); } else c.appendChild(document.createTextNode(part)); }); }
 function showProblem(p) {
   if (p.media && p.media.image) showImage(p.media);                          // the full picture, now that the account is given
-  $("problemText").className = ""; $("problemText").textContent = p.text;
+  $("problemText").className = ""; $("problemText").textContent = p.text; renderMath($("problemText"), true);   // chapter 13 problems carry \( \) math (15 Oct: it showed raw)
   $("box").placeholder = "Your working, or a question…";   // givens are NOT listed as T1, P1…: sorting them is the student's job
   equations = p.equations || []; $("eqBtn").disabled = false;
   // picking an equation records the choice with the server; the relation is pinned under Your symbols. (9 Oct: the text was also placed in
   // the box; 11 Oct: removed, an un-rearranged equation sitting in the box while the tutor asks for the rearrangement confused the instructor.)
   // instructor, 11 Oct: the picked equation goes into the box only when the next step is NOT a rearrangement of it
-  $("eqList").innerHTML = ""; equations.forEach(e => { const b = document.createElement("button"); b.className = "eq"; b.textContent = e.text; b.onclick = async () => { $("eqDlg").close(); await send({ pick: e.id });
+  $("eqList").innerHTML = ""; equations.forEach(e => { const b = document.createElement("button"); b.className = "eq"; b.textContent = e.text; renderMath(b, true); b.onclick = async () => { $("eqDlg").close(); await send({ pick: e.id });
     if (!(lastNext && lastNext.kind === "equation")) { $("box").value = e.text; $("box").setSelectionRange(e.text.length, e.text.length); } $("box").focus(); }; $("eqList").appendChild(b); });
   if (p.plots) drawPlots(p.plots, "Measured vapor pressures", false);
   add("note", "The problem is now on the left.");

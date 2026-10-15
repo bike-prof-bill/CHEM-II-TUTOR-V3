@@ -18,7 +18,8 @@ course notebook; two more park the step and the run is recorded without credit.
   them blank for a random one. **Rung** is yours alone: *Worked* shows the tutor's worked problem with the steps shown, *Faded*
   is the normal student setting, *Independent* is the exam setting (credit only there).
 - Press **New problem**. Answer in plain English and numbers; units matter.
-- Pictures and simulations open on the left when the scene calls for them. Move the probe; the log records it.
+- Pictures, two short videos and simulations open on the left when the scene calls for them. Move the probe; the log records it.
+  **All pictures and simulations** in the yellow bar opens a page with every one of them, so you can look without walking a problem.
 - Add `?debug=1` to the page address to see the tutor's raw reply beneath each message.
 
 ## Things worth trying (ten minutes)

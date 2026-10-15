@@ -20,7 +20,7 @@ from _equilibrium import (quotient, multipliers_quotient, direction, x_max, solv
 
 ID = "ch13_eq"
 TITLE = "Equilibrium: which way, how far, and what a change does"
-RELATION_TEXT = "K = [products]^coefficients / [reactants]^coefficients at equilibrium; Q is the same fraction at any moment"
+RELATION_TEXT = "K = products over reactants, each raised to its coefficient, at equilibrium; Q is the same fraction at any moment"
 NOTEBOOK_URL = "https://notebook.google.com/notebook/6458f208-db32-496a-8088-fe0c1c6cd539"   # INSTRUCTOR: the course notebook
 KINDS = ["haber_setup", "wgs_equilibrium", "agcl_tracer", "agbr_tracer", "agi_tracer", "hi_volume", "hi_equilibrium", "no2_equilibrium"]
 
@@ -151,13 +151,13 @@ MECHANISM_WORDS = ["molecul", "particl", "atom", "ion", "collid", "collis", "for
                    "associat", "equal", "same pace", "both direction", "energ", "bond", "swap", "break apart", "dissolv", "precipitat", "settle", "trade", "exchange"]
 
 # ---- the unnamed Equations list. The K form and the Q form both fit (the student meets Q first; instructor to confirm).
-EQUATION_PICKS = [
-  {"id": "eq_k",  "text": "K = [C]^c [D]^d / ( [A]^a [B]^b )",         "fits": KINDS},
-  {"id": "eq_q",  "text": "Q = [C]₀^c [D]₀^d / ( [A]₀^a [B]₀^b )",      "fits": KINDS},
-  {"id": "eq_kp", "text": "Kp = Kc (RT)^Δn",                             "fits": []},
-  {"id": "eq_g",  "text": "ΔG° = −RT ln K",                              "fits": []},
-  {"id": "eq_r",  "text": "rate = k [A]^m [B]^n",                         "fits": []},
-  {"id": "eq_ph", "text": "pH = −log[H₃O⁺]",                             "fits": []},
+EQUATION_PICKS = [   # written in \( \) so the page renders them; the instructor's rule: no caret in anything a student reads (15 Oct)
+  {"id": "eq_k",  "text": r"\( K = \dfrac{[\mathrm{C}]^{c}[\mathrm{D}]^{d}}{[\mathrm{A}]^{a}[\mathrm{B}]^{b}} \)",            "fits": KINDS},
+  {"id": "eq_q",  "text": r"\( Q = \dfrac{[\mathrm{C}]_0^{\,c}[\mathrm{D}]_0^{\,d}}{[\mathrm{A}]_0^{\,a}[\mathrm{B}]_0^{\,b}} \)",  "fits": KINDS},
+  {"id": "eq_kp", "text": r"\( K_p = K_c (RT)^{\Delta n} \)",                                                          "fits": []},
+  {"id": "eq_g",  "text": r"\( \Delta G^\circ = -RT \ln K \)",                                                      "fits": []},
+  {"id": "eq_r",  "text": r"\( \text{rate} = k[\mathrm{A}]^{m}[\mathrm{B}]^{n} \)",                                   "fits": []},
+  {"id": "eq_ph", "text": r"\( \mathrm{pH} = -\log[\mathrm{H_3O^+}] \)",                                             "fits": []},
 ]
 CONSTANTS = []
 # The Q-step named errors (1/Q, coefficients as multipliers, exponents dropped): their base errors rows (every scenario) were approved
