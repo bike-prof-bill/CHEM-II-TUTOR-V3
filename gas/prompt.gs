@@ -23,11 +23,32 @@ function buildSystem(arch, S, V, ctx) {
   else out += "\nEverything is established. The problem is over. Respond to what the student just said in one sentence. Ask nothing.";
   if (ctx.active && ctx.lastItem) out += "\nThis is the LAST item. If you accept it, the problem is complete: acknowledge their account in one or two sentences and ask nothing. A question after acceptance is wrong.";
   if (ctx.notes.length) out += "\n\nSERVER VERDICT THIS TURN:\n- " + ctx.notes.join("\n- ");
+  var tone = tonePhrasesFor(ctx);
+  if (tone.length) out += "\n\nREGISTER FOR YOUR FIRST SENTENCE (the instructor's phrases): open in this register, in your own words, then ask your one question. Examples: " + tone.map(function (t) { return "\"" + t.phrase + "\""; }).join(" | ") +
+    ". A phrase that claims something about the student's work may be used only if the server verdict above shows it true this turn. Never the same opening two turns running. Never praise the wrong value itself." +
+    (tone.some(function (t) { return t.probe; }) ? " The one question may follow this example when it fits the step: " + tone.filter(function (t) { return t.probe; }).map(function (t) { return "\"" + t.probe + "\""; }).join(" | ") : "");
   if (ctx.judge) out += "\n\nYOU JUDGE THIS TURN: set accept to 1 if the student's message is a TRUE statement that establishes the item above, however brief or incomplete. Do not hold out for the fuller account you have in mind: completeness is not the test, truth is. Set accept to 0 only for a false statement, no statement, or a different scene; if you correct or redirect, accept is 0.";
   if (ctx.extra) out += "\n\n" + ctx.extra;
   return out;
 }
 
+
+// Tone phrases (instructor, 15 Oct): approved rows in gas/Tone.gs, chosen by the situation of the turn and the error named, if any.
+function tonePhrasesFor(ctx) {
+  var T = (typeof TONE !== "undefined" && TONE) || []; if (!T.length) return [];
+  var sit = ctx.tone_situation || ""; if (!sit) return [];
+  var errs = ctx.tone_errors || [];
+  var ch = ctx.chapter || "";
+  var inChapter = function (t) { return !t.chapters || !t.chapters.length || t.chapters.indexOf(ch) > -1; };
+  var fit;
+  if (sit === "named_error") {                                                     // a phrase written for the named error, whatever its situation; else the plain wrong-try phrases
+    fit = T.filter(function (t) { return inChapter(t) && t.errors.length && t.errors.some(function (e) { return errs.indexOf(e) > -1; }); });
+    if (!fit.length) fit = T.filter(function (t) { return inChapter(t) && t.situation === "wrong_try" && !t.errors.length; });
+  } else fit = T.filter(function (t) { return inChapter(t) && t.situation === sit && !t.errors.length; });
+  if (!fit.length) return [];
+  var seed = (ctx.turn_count || 0); var start = seed % fit.length;                   // rotate so the model does not see the same examples every turn
+  return fit.slice(start).concat(fit.slice(0, start)).slice(0, 3);
+}
 
 var SECOND_READER = "You are checking one student message for a FALSE statement about the chemistry. The message answers the scenario given first; " +
   "comparisons in it (weaker, stronger, faster, less energy) are relative to the other substance or condition in that scenario, not absolute claims. " +
@@ -73,4 +94,4 @@ function fallbackReply(arch, S, V, ev, p) {
   return reply;
 }
 
-if (typeof module !== "undefined") module.exports = { RULES: RULES, buildSystem: buildSystem, SECOND_READER: SECOND_READER, HINT_OF_KIND: HINT_OF_KIND, fallbackReply: fallbackReply, secondReaderMsg: secondReaderMsg, nearMissAsk: nearMissAsk, NEAR_MISS_ASK: NEAR_MISS_ASK };
+if (typeof module !== "undefined") module.exports = { RULES: RULES, buildSystem: buildSystem, tonePhrasesFor: tonePhrasesFor, SECOND_READER: SECOND_READER, HINT_OF_KIND: HINT_OF_KIND, fallbackReply: fallbackReply, secondReaderMsg: secondReaderMsg, nearMissAsk: nearMissAsk, NEAR_MISS_ASK: NEAR_MISS_ASK };

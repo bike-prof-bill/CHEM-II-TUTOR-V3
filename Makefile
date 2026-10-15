@@ -34,6 +34,7 @@ test-regression:
 	$(NODE) tests/regression/one_stage_one_notebook_card.test.js
 	$(NODE) tests/regression/random_clicker.test.js
 	$(NODE) tests/regression/no_exam_by_chance.test.js
+	$(NODE) tests/modules/tone_phrases.test.js
 	$(NODE) tests/regression/log_row_never_dropped.test.js
 	$(NODE) tests/regression/no_repeated_problem.test.js
 

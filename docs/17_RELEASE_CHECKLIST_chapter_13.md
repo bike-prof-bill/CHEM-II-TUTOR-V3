@@ -8,7 +8,7 @@ Do these in order. Each line says where.
    three pictures). Commit.
 
 ## B. Apps Script (the brain)
-2. Paste, one file each, replacing the old text: `Core`, `stepmap`, `Code`, `Shell_version`.
+2. Paste, one file each, replacing the old text: `Core`, `stepmap`, `prompt`, `Code`, `Shell_version`. Make a new script file `Tone` and paste `gas/Tone.gs` into it (the instructor's tone phrases, approved rows only).
 3. Make a new script file `Archetype_ch13_eq` and paste `gas/Archetype_ch13_eq.gs` into it.
 4. Delete the script file `Archetype_ch13_ice`.
 5. Deploy → Manage deployments → pencil → Version: New version → Deploy.

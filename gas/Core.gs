@@ -12,10 +12,19 @@
 // that want one call (the test suites, the local server's plain mode).
 
 if (typeof require !== "undefined") ["parse", "match", "stepmap", "ladder", "guards", "prompt", "log", "logqueue"].forEach(function (m) { Object.assign(global, require("./" + m + ".gs")); });
+if (typeof require !== "undefined") { try { global.TONE = require("./Tone.gs"); } catch (e) { global.TONE = []; } }   // the instructor's tone phrases (generated; optional)
 
 var CORE = (function () {
 
   // ---------- Phase A ----------
+  // The situation of a turn, for the instructor's tone phrases (15 Oct): named_error | second_wrong_try | wrong_try | right_step | account_rejected | ""
+  function toneSituation(S, V, ev, active) {
+    if (ev.traps && ev.traps.length) return "named_error";
+    if (ev.counted_fail) { var stg = stageOf(V, active); return ((S.tries && S.tries[stg]) || 0) >= 1 ? "second_wrong_try" : "wrong_try"; }
+    if (ev.newly && ev.newly.length) return "right_step";
+    if (active === "account_given" && !(ev.newly && ev.newly.length)) return "account_rejected";
+    return "";
+  }
   function verdict(arch, S, input) {
     var t0 = Date.now();
     var V = arch.variants[S.variantIndex], msg = String(input.message || "");
@@ -245,7 +254,8 @@ var CORE = (function () {
     var ev = S.pending.ev, p = S.pending.p, msg = p.msg, history = p.history, notes = p.notes, reply = null, accepted = false, kind = ev.turn_kind;
     var active = activeState(S, V), b = active ? entry(V, active) : null, move = active ? moveFor(arch, V, active) : {};
     var lastItem = !!(b && liveItems(S, V).every(function (x) { return x.id === b.id || isSet(S, x.id); }));
-    var ctx = { progress: progress(S, V), active: active, register: b ? b.register : "", ask: move.ask, notes: notes, judge: p.judge && p.gateOK, lastItem: lastItem };
+    var ctx = { progress: progress(S, V), active: active, register: b ? b.register : "", ask: move.ask, notes: notes, judge: p.judge && p.gateOK, lastItem: lastItem,
+                tone_situation: toneSituation(S, V, ev, active), tone_errors: ev.traps || [], turn_count: S.turns || 0, chapter: (String(arch.archetype_id || "").match(/^ch(\d+)/) || [])[1] || "" };
     if (p.switchAsk) { ctx.extra = "They are stuck inside one account. Move them to a different one. Ask toward this instead: " + p.switchAsk; ctx.judge = false; }
 
     // A choice item (a pick from the Equations list, a prediction) is answered with buttons: the authored question is the whole of

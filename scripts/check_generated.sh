@@ -3,7 +3,7 @@
 # Generation is deterministic; a mismatch means a hand edit or a forgotten regeneration.
 set -e
 cd "$(dirname "$0")/.."
-GEN="gas/Shell_version.gs gas/Archetype_ch10_cc.gs gas/Archetype_ch10_cc_test.gs output/ch10_cc.bundle.json gas/Units.gs gas/Archetype_ch13_eq_test.gs gas/Archetype_ch13_eq.gs output/ch13_eq.bundle.json"
+GEN="gas/Shell_version.gs gas/Archetype_ch10_cc.gs gas/Archetype_ch10_cc_test.gs output/ch10_cc.bundle.json gas/Units.gs gas/Tone.gs gas/Archetype_ch13_eq_test.gs gas/Archetype_ch13_eq.gs output/ch13_eq.bundle.json"
 mkdir -p /tmp/_gen_before
 for f in $GEN; do cp "$f" /tmp/_gen_before/$(basename "$f"); done
 python3 run.py all --per-kind 3 --seed 1 > /tmp/_gen_log.txt
