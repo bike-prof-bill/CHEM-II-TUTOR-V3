@@ -14,7 +14,10 @@
 if (typeof require !== "undefined") ["parse", "match", "stepmap", "ladder", "guards", "prompt", "log", "logqueue"].forEach(function (m) { Object.assign(global, require("./" + m + ".gs")); });
 if (typeof require !== "undefined") { try { global.TONE = require("./Tone.gs"); } catch (e) { global.TONE = []; } }   // the instructor's tone phrases (generated; optional)
 
-var CORE = (function () {
+// CORE is built on first use, not when this file loads: Apps Script runs each file's top level in the order of the file list, and
+// this file names functions from the other modules (prompt, stepmap, ladder, guards, log). Building late makes the file order
+// irrelevant (15 Oct: "buildSystem is not defined" when prompt sat below Core in the list).
+var CORE_BUILD = function () {
 
   // ---------- Phase A ----------
   // The situation of a turn, for the instructor's tone phrases (15 Oct): named_error | second_wrong_try | wrong_try | right_step | account_rejected | ""
@@ -389,6 +392,11 @@ var CORE = (function () {
     checkEquation: checkEquation, checkTable: checkTable, parseTableText: parseTableText, activeState: activeState, liveItems: liveItems,
     progress: progress, problemPayload: problemPayload, openerMedia: openerMedia, evalArithmetic: evalArithmetic, isAskingForHelp: isAskingForHelp,
     checkDraft: checkDraft, buildSystem: buildSystem, logRow: logRow, chooseVariant: chooseVariant, logqAppend: logqAppend, logqFlush: logqFlush };
-})();
+};
+var CORE_INSTANCE = null;
+var CORE = new Proxy({}, { get: function (_, k) { if (!CORE_INSTANCE) CORE_INSTANCE = CORE_BUILD(); return CORE_INSTANCE[k]; },
+                           has: function (_, k) { if (!CORE_INSTANCE) CORE_INSTANCE = CORE_BUILD(); return k in CORE_INSTANCE; },
+                           ownKeys: function () { if (!CORE_INSTANCE) CORE_INSTANCE = CORE_BUILD(); return Reflect.ownKeys(CORE_INSTANCE); },
+                           getOwnPropertyDescriptor: function (_, k) { if (!CORE_INSTANCE) CORE_INSTANCE = CORE_BUILD(); return Object.getOwnPropertyDescriptor(CORE_INSTANCE, k); } });
 
 if (typeof module !== "undefined") module.exports = CORE;

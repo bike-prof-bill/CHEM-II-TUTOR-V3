@@ -4,7 +4,7 @@ const CORE = require("../../gas/Core.gs");
 let pass = 0, fail = 0; const ok = (c, m) => { c ? pass++ : (fail++, console.log("  FAIL:", m)); };
 const P = require("../../gas/prompt.gs");
 const SHIPPED = require("../../gas/Tone.gs");
-ok(SHIPPED.length === 24 && !SHIPPED.some(t => t.id === "T05") && !SHIPPED.some(t => /spot-on|nailed|I love|Close!/.test(t.phrase)), "24 approved rows ship; the struck row and the edited (unconfirmed) rows do not");
+ok(SHIPPED.length === 31 && !SHIPPED.some(t => t.id === "T05") && !SHIPPED.some(t => /spot-on|nailed|I love|Close!/.test(t.phrase)), "31 approved rows ship (the seven edits confirmed); the struck row does not; no flattery remains");
 ok(SHIPPED.filter(t => t.probe).length >= 4, "the instructor's matrix probes ride with their phrases");
 global.TONE = [
   { id: "T01", phrase: "common intuition", situation: "wrong_try", errors: [], conditional: false },
