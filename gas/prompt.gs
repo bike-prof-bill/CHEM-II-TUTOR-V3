@@ -44,10 +44,31 @@ function tonePhrasesFor(ctx) {
   if (sit === "named_error") {                                                     // a phrase written for the named error, whatever its situation; else the plain wrong-try phrases
     fit = T.filter(function (t) { return inChapter(t) && t.errors.length && t.errors.some(function (e) { return errs.indexOf(e) > -1; }); });
     if (!fit.length) fit = T.filter(function (t) { return inChapter(t) && t.situation === "wrong_try" && !t.errors.length; });
-  } else fit = T.filter(function (t) { return inChapter(t) && t.situation === sit && !t.errors.length; });
+  } else fit = T.filter(function (t) { return inChapter(t) && t.situation === sit && sit !== "completed" && !t.errors.length; });
   if (!fit.length) return [];
   var seed = (ctx.turn_count || 0); var start = seed % fit.length;                   // rotate so the model does not see the same examples every turn
   return fit.slice(start).concat(fit.slice(0, start)).slice(0, 3);
+}
+
+// The completion phrase (situation "completed"): one approved row fitting the chapter and the run (clean or recovered), rotating by problem; the probe is a parting thought, not a question to answer.
+function completionPhrase(arch, S, V) {
+  var T = (typeof TONE !== "undefined" && TONE) || []; if (!T.length) return "";
+  var ch = (String(arch.archetype_id || "").match(/^ch(\d+)/) || [])[1] || "";
+  var fit = T.filter(function (t) { return t.situation === "completed" && (!t.chapters || !t.chapters.length || t.chapters.indexOf(ch) > -1) && (t.condition === "any" || !t.condition || (t.condition === "clean" ? S.clean === true : S.clean === false)); });
+  if (!fit.length) return "";
+  var t = fit[(S.variantIndex || 0) % fit.length];
+  // The parting thought is rhetorical (instructor, 16 Oct): metacognitive fodder, not a question to answer. It is the one exception to the
+  // 9 Oct rule that nothing asks the student anything once the problem is done; the model's own draft is still held to that rule.
+  return t.phrase + (PARTING_THOUGHT && t.probe ? " " + PARTING_LABEL + t.probe : "");
+}
+var PARTING_THOUGHT = true, PARTING_LABEL = "A thought to carry, not a question to answer: ";
+// An alternative way to ask what the particles are doing, from the instructor's probe bank: fits the chapter, rotates by turn.
+function accountProbeFor(arch, S) {
+  var P = (typeof ACCOUNT_PROBES !== "undefined" && ACCOUNT_PROBES) || []; if (!P.length) return null;
+  var ch = (String(arch.archetype_id || "").match(/^ch(\d+)/) || [])[1] || "";
+  var fit = P.filter(function (q) { return !q.chapters || !q.chapters.length || q.chapters.indexOf(ch) > -1; });
+  if (!fit.length) return null;
+  return fit[(S.turns || 0) % fit.length];
 }
 
 var SECOND_READER = "You are checking one student message for a FALSE statement about the chemistry. The message answers the scenario given first; " +
@@ -94,4 +115,4 @@ function fallbackReply(arch, S, V, ev, p) {
   return reply;
 }
 
-if (typeof module !== "undefined") module.exports = { RULES: RULES, buildSystem: buildSystem, tonePhrasesFor: tonePhrasesFor, SECOND_READER: SECOND_READER, HINT_OF_KIND: HINT_OF_KIND, fallbackReply: fallbackReply, secondReaderMsg: secondReaderMsg, nearMissAsk: nearMissAsk, NEAR_MISS_ASK: NEAR_MISS_ASK };
+if (typeof module !== "undefined") module.exports = { RULES: RULES, buildSystem: buildSystem, tonePhrasesFor: tonePhrasesFor, completionPhrase: completionPhrase, accountProbeFor: accountProbeFor, SECOND_READER: SECOND_READER, HINT_OF_KIND: HINT_OF_KIND, fallbackReply: fallbackReply, secondReaderMsg: secondReaderMsg, nearMissAsk: nearMissAsk, NEAR_MISS_ASK: NEAR_MISS_ASK };

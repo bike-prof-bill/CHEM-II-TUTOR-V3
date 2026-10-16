@@ -12,7 +12,7 @@
 // that want one call (the test suites, the local server's plain mode).
 
 if (typeof require !== "undefined") ["parse", "match", "stepmap", "ladder", "guards", "prompt", "log", "logqueue"].forEach(function (m) { Object.assign(global, require("./" + m + ".gs")); });
-if (typeof require !== "undefined") { try { global.TONE = require("./Tone.gs"); } catch (e) { global.TONE = []; } }   // the instructor's tone phrases (generated; optional)
+if (typeof require !== "undefined") { try { var _T = require("./Tone.gs"); global.TONE = _T.TONE || []; global.ACCOUNT_PROBES = _T.ACCOUNT_PROBES || []; } catch (e) { global.TONE = []; global.ACCOUNT_PROBES = []; } }   // the instructor's tone phrases and account probes (generated; optional)
 
 // CORE is built on first use, not when this file loads: Apps Script runs each file's top level in the order of the file list, and
 // this file names functions from the other modules (prompt, stepmap, ladder, guards, log). Building late makes the file order
@@ -22,6 +22,7 @@ var CORE_BUILD = function () {
   // ---------- Phase A ----------
   // The situation of a turn, for the instructor's tone phrases (15 Oct): named_error | second_wrong_try | wrong_try | right_step | account_rejected | ""
   function toneSituation(S, V, ev, active) {
+    if (ev.completed) return "completed";
     if (ev.traps && ev.traps.length) return "named_error";
     if (ev.counted_fail) { var stg = stageOf(V, active); return ((S.tries && S.tries[stg]) || 0) >= 1 ? "second_wrong_try" : "wrong_try"; }
     if (ev.newly && ev.newly.length) return "right_step";
@@ -258,7 +259,7 @@ var CORE_BUILD = function () {
     var active = activeState(S, V), b = active ? entry(V, active) : null, move = active ? moveFor(arch, V, active) : {};
     var lastItem = !!(b && liveItems(S, V).every(function (x) { return x.id === b.id || isSet(S, x.id); }));
     var ctx = { progress: progress(S, V), active: active, register: b ? b.register : "", ask: move.ask, notes: notes, judge: p.judge && p.gateOK, lastItem: lastItem,
-                tone_situation: toneSituation(S, V, ev, active), tone_errors: ev.traps || [], turn_count: S.turns || 0, chapter: (String(arch.archetype_id || "").match(/^ch(\d+)/) || [])[1] || "" };
+                tone_situation: toneSituation(S, V, ev, active), tone_errors: ev.traps || [], turn_count: S.turns || 0, clean: S.clean, variant_index: S.variantIndex, chapter: (String(arch.archetype_id || "").match(/^ch(\d+)/) || [])[1] || "" };
     if (p.switchAsk) { ctx.extra = "They are stuck inside one account. Move them to a different one. Ask toward this instead: " + p.switchAsk; ctx.judge = false; }
 
     // A choice item (a pick from the Equations list, a prediction) is answered with buttons: the authored question is the whole of
@@ -302,6 +303,8 @@ var CORE_BUILD = function () {
     var card = null;
     if (ev.counted_fail && p.judge) { var lad = applyLadder(arch, S, V, ev, { now: p.now }); if (lad.card || lad.reply) { card = lad.card; reply = lad.reply; } else if (lad.switchAsk) p.switchAsk = lad.switchAsk; }
 
+    // a second rejected account with no authored switch question: an alternative way to ask what the particles are doing (the instructor's probe bank, 16 Oct)
+    if (!card && !p.switchAsk && active === "account_given" && ev.counted_fail && ((S.tries && S.tries[stageOf(V, active)]) || 0) === 1) { var pr = accountProbeFor(arch, S); if (pr) { p.switchAsk = pr.question; ev.probe_id = pr.id; reply = null; } }
     // the cheap checks and the leak guard on the draft: one rewrite, then the authored fallback
     var done = activeState(S, V) === null;
     if (reply && !card) {
@@ -327,6 +330,7 @@ var CORE_BUILD = function () {
       var showB = (ev.newly.length && !ev.units_check && !ev.near_miss && !ev.repeat && !ev.wrong_unknown) ? showFor(arch, V, S, nowA) : "";
       if (nowAsk) { var ackOnly = cutQuestions(reply); reply = (ackOnly ? ackOnly + " " : "") + (showB || nowAsk); }   // Worked rung: the show cell is the whole prompt
     }
+    if (done && !card) { var cp = completionPhrase(arch, S, V); if (cp) reply = reply + " " + cp; }   // the instructor's completion phrase and parting thought (16 Oct), approved rows only
     S.lastReply = reply; S.pending = null;
     var res = assemble(arch, S, V, ev, reply, card, false);
     res.needs_say = false; res.checked = checkedLabels(V, ev);
@@ -381,7 +385,7 @@ var CORE_BUILD = function () {
   // A fingerprint of the code that is actually running: the source text of one function per module, hashed. Compared with the
   // value run.py computed from the repository (SHELL_VERSION), it shows a stale paste in Apps Script, which a pasted constant cannot.
   function shellFingerprint() {
-    var parts = [verdict, say, parseNumbers, evalArithmetic, match, checkEquation, liveItems, optionsOf, moveFor, applyLadder, checkDraft, buildSystem, fallbackReply, nearMissAsk, symbolShown, showFor, offerFor, logRow, logqAppend];
+    var parts = [verdict, say, parseNumbers, evalArithmetic, match, checkEquation, liveItems, optionsOf, moveFor, completionPhrase, accountProbeFor, applyLadder, checkDraft, buildSystem, fallbackReply, nearMissAsk, symbolShown, showFor, offerFor, logRow, logqAppend];
     var text = parts.map(function (f) { return String(f).replace(/\s+/g, " "); }).join("|"), h = 5381;
     for (var i = 0; i < text.length; i++) h = ((h * 33) ^ text.charCodeAt(i)) >>> 0;
     return h.toString(16);

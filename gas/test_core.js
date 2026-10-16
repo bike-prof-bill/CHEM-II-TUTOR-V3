@@ -157,8 +157,9 @@ const REFLECT = "The rearrangement was hardest; I would tell a friend to undo th
   V.expected.filter(e => e.role === "intermediate" || e.role === "key").forEach(e => say(S, e.value + " " + e.unit, asking));
   say(S, "The value says the attractions are moderate; the measurements support the picture only roughly.", asking);
   const r = say(S, REFLECT, asking);     // the reflection is the last item now
-  ok(r.done && !/\?/.test(r.reply) && /QUESTION_AFTER_COMPLETION/.test(r.log.guards), "completion: question cut, guard logged: " + JSON.stringify(r.reply));
-  const r2 = say(S, "thanks", asking); ok(r2.done && !/\?/.test(r2.reply), "after completion: still no question"); }
+  const noQ = (s) => !/\?/.test(String(s).split("A thought to carry, not a question to answer:")[0]);   // the instructor's parting thought (16 Oct) is the one allowed question after completion
+  ok(r.done && noQ(r.reply) && /QUESTION_AFTER_COMPLETION/.test(r.log.guards), "completion: the model's question cut, guard logged: " + JSON.stringify(r.reply));
+  const r2 = say(S, "thanks", asking); ok(r2.done && noQ(r2.reply), "after completion: still no question from the tutor itself"); }
 
 // 6j. a student's question has no question mark (instructor, 9 Oct): read the words
 { const Q = ["what do you mean by infer", "I do not know", "how do i convert this", "which one is the relation", "huh", "not sure what you want here", "explain that", "im lost"];

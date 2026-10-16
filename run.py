@@ -75,9 +75,20 @@ if os.path.exists("content_tone_phrases.csv"):
         if not r.get("id") or not st.lower().startswith("approved"): continue        # approved rows only: DRAFT, struck and blank stay out
         get = lambda pref: next((v for k, v in r.items() if k and k.lower().startswith(pref)), "") or ""
         tone.append({"id": r["id"].strip(), "phrase": get("phrase").strip(), "situation": get("situation").strip(), "errors": [e.strip() for e in get("fits error ids").split(";") if e.strip()],
-                     "chapters": [c.strip() for c in get("chapters").split(";") if c.strip()], "probe": get("probe").strip(), "conditional": get("only when true").strip().lower() in ("yes", "y", "true")})
-open("gas/Tone.gs", "w").write("// GENERATED from content_tone_phrases.csv by run.py: approved rows only. Do not edit by hand.\n" + f"var TONE = {json.dumps(tone, ensure_ascii=False)};\nif (typeof module !== 'undefined') module.exports = TONE;\n")
-print(f"tone phrases approved and shipped: {len(tone)}")
+                     "chapters": [c.strip() for c in get("chapters").split(";") if c.strip()], "probe": get("probe").strip(), "conditional": get("only when true").strip().lower() in ("yes", "y", "true"),
+                     "condition": (get("condition").strip() or "any")})
+probes = []
+if os.path.exists("content_account_probes.csv"):                        # the instructor's alternative ways to ask what the particles are doing (16 Oct)
+    for r in csv.DictReader(open("content_account_probes.csv", encoding="utf-8-sig")):
+        st = (r.get("status") or "").strip()
+        if not r.get("id") or not st.lower().startswith("approved"): continue
+        get = lambda pref: next((v for k, v in r.items() if k and k.lower().startswith(pref)), "") or ""
+        probes.append({"id": r["id"].strip(), "category": get("category").strip(), "question": get("question").strip(), "keywords": [k.strip() for k in get("accepted").split(";") if k.strip()],
+                       "errors": get("expected").strip(), "chapters": [c.strip() for c in get("chapters").split(";") if c.strip()]})
+open("gas/Tone.gs", "w").write("// GENERATED from content_tone_phrases.csv and content_account_probes.csv by run.py: approved rows only. Do not edit by hand.\n"
+                             + f"var TONE = {json.dumps(tone, ensure_ascii=False)};\nvar ACCOUNT_PROBES = {json.dumps(probes, ensure_ascii=False)};\n"
+                             + "if (typeof module !== 'undefined') module.exports = { TONE: TONE, ACCOUNT_PROBES: ACCOUNT_PROBES };\n")
+print(f"tone phrases approved and shipped: {len(tone)}; account probes: {len(probes)}")
 open("gas/Units.gs", "w").write(
   "// GENERATED from units.json by run.py. Do not edit by hand; edit units.json.\n"
   "var UNITS_DATA = " + json.dumps(engine.UNITS, ensure_ascii=False) + ";\n"
