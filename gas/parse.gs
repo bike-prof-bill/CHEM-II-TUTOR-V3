@@ -174,8 +174,9 @@ function evalArithmetic(text, arch) {
   var t = eqNormalize(String(text)).replace(/(\d),(?=\d{3}\b)/g, "$1").trim(), unit = null;
   var um = new RegExp("\\s*(" + UNITS.unitPattern + ")\\s*$").exec(t);
   if (um) { unit = UNITS.canon(um[1]); t = t.slice(0, um.index); }
-  if (!/[+\-*\/^]/.test(t.replace(/^\s*[-+]/, "")) || !/\d/.test(t)) return null;
-  if (!/^[\d.\s+\-*\/^()eE]+$/.test(t) || /[eE](?![+\-]?\d)/.test(t)) return null;
+  if (!/[+\-*\/^]|\b(ln|log|exp|sqrt)\b/.test(t.replace(/^\s*[-+]/, "")) || !/\d/.test(t)) return null;
+  var bare = t.replace(/\b(ln|log|exp|sqrt)\b/g, "");                       // the functions a chapter 14 student types: -log(0.0025), 10^-4.74 (15 Oct)
+  if (!/^[\d.\s+\-*\/^()eE]+$/.test(bare) || /[eE](?![+\-]?\d)/.test(bare)) return null;
   var toks = eqTokens(t, arch); if (!toks || !toks.length || toks.some(function (k) { return k.t === "var"; })) return null;
   try { var v = eqEval(eqParse(toks), {}); return isFinite(v) ? { x: v, unit: unit, worked: true } : null; } catch (e) { return null; }
 }

@@ -9,6 +9,7 @@ test: test-gen test-verify test-modules test-regression gen-check content-check 
 test-gen:
 	$(PY) test_ch10_cc.py
 	$(PY) test_ch13_eq.py
+	$(PY) test_ch14.py
 
 test-verify:
 	$(NODE) gas/test_core.js
@@ -16,6 +17,7 @@ test-verify:
 	$(NODE) gas/test_bird.js
 	$(NODE) gas/test_vent.js
 	$(NODE) gas/test_eq.js
+	$(NODE) gas/test_ch14.js
 
 test-modules:
 	$(NODE) tests/modules/units.test.js

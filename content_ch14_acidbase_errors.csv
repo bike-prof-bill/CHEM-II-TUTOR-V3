@@ -1,0 +1,13 @@
+﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
+SQRT_FORGOTTEN,,,,x = Ka·c typed as x,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+PH_FROM_FORMAL_CONCENTRATION,,,,pH = -log c: the weak acid treated as strong,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+PKA_TYPED_AS_PH,,,,-log Ka offered as the pH,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+PERCENT_AS_FRACTION,,,,x/c typed where the percent is asked,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+SMALL_X_WHEN_IT_FAILS,,,,the small-x value typed where more than 5 % ionises,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+EXCEEDS_INITIAL,,,,x above the starting concentration,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+WATER_IN_EXPRESSION,,,,water written into the Ka expression (by shape),DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+CHANGE_SIGNS_REVERSED,,,,change row signs the wrong way (table),DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+WATER_IN_TABLE,,,,a fourth column for water (table),DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+DILUTION_IONIZATION_FALLS,,,,wrong pick: percent ionised falls on dilution,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+CONJUGATE_LOWERS_PH,,,,wrong pick: pH falls when the conjugate base is added,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+CONJUGATE_RAISES_PH,,,,wrong pick: pH rises when the conjugate acid is added to a base,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves

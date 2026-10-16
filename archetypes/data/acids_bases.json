@@ -1,0 +1,87 @@
+{
+ "_about": "Acids and bases for chapter 14 fixed problems. GROUND OF TRUTH (instructor, 13 Oct 2026): OpenStax Chemistry 2e first (Appendix H for Ka, Appendix I for Kb), NIST only where the text has no value. Every value carries its source; a value marked 'instructor confirms' has not yet been checked against the text by the instructor.",
+ "Kw": {
+  "value": 1e-14,
+  "T_C": 25.0,
+  "source": "OpenStax Chemistry 2e, 14.1 (Kw = 1.0 × 10⁻¹⁴ at 25 °C)"
+ },
+ "acids": {
+  "acetic": {
+   "formula": "CH3COOH",
+   "conjugate": "CH3COO-",
+   "name": "acetic acid",
+   "conjugate_name": "acetate ion",
+   "Ka": 1.8e-05,
+   "source": "OpenStax Appendix H (1.8 × 10⁻⁵); instructor confirms"
+  },
+  "hydrofluoric": {
+   "formula": "HF",
+   "conjugate": "F-",
+   "name": "hydrofluoric acid",
+   "conjugate_name": "fluoride ion",
+   "Ka": 0.00072,
+   "source": "OpenStax Appendix H; instructor confirms the value (7.2 × 10⁻⁴ in some editions, 6.8 × 10⁻⁴ in others)"
+  },
+  "nitrous": {
+   "formula": "HNO2",
+   "conjugate": "NO2-",
+   "name": "nitrous acid",
+   "conjugate_name": "nitrite ion",
+   "Ka": 0.00045,
+   "source": "OpenStax Appendix H (4.5 × 10⁻⁴); instructor confirms"
+  },
+  "hypochlorous": {
+   "formula": "HOCl",
+   "conjugate": "OCl-",
+   "name": "hypochlorous acid",
+   "conjugate_name": "hypochlorite ion",
+   "Ka": 2.9e-08,
+   "source": "OpenStax Appendix H (2.9 × 10⁻⁸); instructor confirms"
+  }
+ },
+ "bases": {
+  "ammonia": {
+   "formula": "NH3",
+   "conjugate": "NH4+",
+   "name": "ammonia",
+   "conjugate_name": "ammonium ion",
+   "Kb": 1.8e-05,
+   "source": "OpenStax Appendix I (1.8 × 10⁻⁵); instructor confirms"
+  },
+  "methylamine": {
+   "formula": "CH3NH2",
+   "conjugate": "CH3NH3+",
+   "name": "methylamine",
+   "conjugate_name": "methylammonium ion",
+   "Kb": 0.00044,
+   "source": "OpenStax Appendix I (4.4 × 10⁻⁴); instructor confirms"
+  }
+ },
+ "strong": {
+  "HCl": {
+   "name": "hydrochloric acid",
+   "kind": "acid",
+   "ions_per_formula": 1
+  },
+  "HNO3": {
+   "name": "nitric acid",
+   "kind": "acid",
+   "ions_per_formula": 1
+  },
+  "NaOH": {
+   "name": "sodium hydroxide",
+   "kind": "base",
+   "ions_per_formula": 1
+  },
+  "KOH": {
+   "name": "potassium hydroxide",
+   "kind": "base",
+   "ions_per_formula": 1
+  },
+  "Ba(OH)2": {
+   "name": "barium hydroxide",
+   "kind": "base",
+   "ions_per_formula": 2
+  }
+ }
+}

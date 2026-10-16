@@ -1,0 +1,3 @@
+﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
+POH_TYPED_AS_PH,,,,-log[OH-] offered as the pH,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+IONS_PER_FORMULA_IGNORED,,,,formula concentration typed as [OH-] for a dihydroxide,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves

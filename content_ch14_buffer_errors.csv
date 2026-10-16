@@ -1,0 +1,6 @@
+﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
+RATIO_INVERTED,,,,"acid over base, on the ratio or in the pH",DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+LOG_FORGOTTEN,,,,pKa + the ratio,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+PKA_TYPED_AS_PH,,,,pKa offered as the pH when the ratio is not 1,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+BUFFER_PH_FIXED,,,,wrong pick: no change at all after a little strong acid or base,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+ADDED_NOT_CONSUMED,,,,new pH as if the added acid or base stayed free in solution,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves

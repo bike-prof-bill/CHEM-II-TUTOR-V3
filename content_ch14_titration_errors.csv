@@ -1,0 +1,14 @@
+﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
+MOLES_FROM_ONE_SOLUTION,,,,"moles counted from one solution only, or over the wrong volume",DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+VOLUME_NOT_TOTALED,,,,"concentration over the sample volume, not the total",DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+RATIO_INVERTED,,,,acid over conjugate before equivalence,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+PH_FROM_FORMAL_CONCENTRATION,,,,pH from the acid left as if it were strong,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+KA_FOR_HYDROLYSIS,,,,x at equivalence from Ka instead of Kb,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+PH_7_AT_EQUIVALENCE,,,,pH 7 at a weak acid's equivalence point,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+HH_AT_EQUIVALENCE,,,,pKa offered as the pH at equivalence,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+POH_TYPED_AS_PH,,,,-log[OH-] offered as the pH,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+SQRT_FORGOTTEN,,,,x = Ka·c at the start,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+PERCENT_AS_FRACTION,,,,x/c where the percent is asked (start),DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+SMALL_X_WHEN_IT_FAILS,,,,small-x value where the rule fails (start),DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+EXCEEDS_INITIAL,,,,x above the starting concentration (start),DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+WATER_IN_EXPRESSION,,,,water in the Ka expression (start),DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
