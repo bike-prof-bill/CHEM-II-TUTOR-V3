@@ -392,20 +392,19 @@
   },
   {
    "title": "The Silent Beaker",
-   "question": "A sealed beaker holds water over a layer of white silver chloride. The solid has sat there for days. A silver-ion probe in the water gives a steady reading. A radiation probe near the top of the water reads 0 counts per minute. Now a chemist drops a small pellet of radioactive silver chloride onto the solid at the bottom. The silver-ion probe does not move. But the radiation count starts to rise, then levels off. The beaker looks as still as before. What are the particles doing?",
-   "model_answer": "The solid never stops dissolving. Silver ions and chloride ions keep breaking away from the crystals into the water. At the same time, silver ions and chloride ions in the water collide and settle back onto the solid. The two happen at the same rate. So the amount of silver in the water stays the same, and the ion probe does not move. Some radioactive silver ions break away from the pellet into the water, and ordinary silver ions settle into the solid in their place. That is why the count rises while the total stays the same. The count levels off once the radioactive silver has spread evenly between the solid and the water. The ions keep trading places.",
+   "question": "A sealed beaker holds water over a layer of white silver chloride. The solid has sat there for days. A silver-ion probe in the water gives a steady reading. A radiation probe near the top of the water reads 0 counts per minute. Now a chemist drops a small pellet of radioactive silver chloride onto the solid at the bottom. The silver-ion probe does not move. But the radiation count starts to rise, then levels off. The beaker looks as still as before. What microscopic processes are taking place between the solid and the solution?",
+   "model_answer": "Dissolution and precipitation at equal rates (dynamic equilibrium). Ag⁺ and Cl⁻ leave the lattice and redeposit continuously; [Ag⁺] constant. Tracer ¹¹⁰ᵐAg⁺ exchanges into solution until distributed; count rises, then levels.",
    "target": "Dynamic equilibrium in a saturated solution: dissolving and settling go on at equal rates; adding more solid does not change Q.",
    "keywords": [
+    "dissolution",
     "dissolve",
-    "precipitate",
-    "ions",
-    "collide",
+    "precipitation",
     "settle",
-    "break away",
     "equal rates",
     "same rate",
-    "trade places",
-    "exchange"
+    "dynamic equilibrium",
+    "exchange",
+    "trade places"
    ],
    "liquids": [
     "A1",
@@ -474,21 +473,19 @@
   },
   {
    "title": "The Purple Piston",
-   "question": "A sealed glass cylinder at 400 °C holds hydrogen, purple iodine vapor and colorless hydrogen iodide. The mixture has sat for hours. A detector shines green light through the gas and reads how much of it the purple iodine absorbs. Now a motor pushes the piston down and squeezes the gas into half the space. The detector's reading jumps to twice what it was. Then it holds steady, hour after hour. What are the molecules doing?",
-   "model_answer": "Squeezing the gas into half the space puts every molecule twice as close to its neighbors. Hydrogen, iodine and hydrogen iodide all become twice as crowded at once. That is why the reading jumps: twice as much iodine now sits in the light's path. Hydrogen molecules now hit iodine molecules four times as often, because both are twice as crowded. Pairs of hydrogen iodide molecules also meet four times as often. So the forward and reverse reactions both speed up by the same amount. They stay balanced, no extra iodine is used up or made, and the reading holds.",
+   "question": "A sealed glass cylinder at 400 °C holds hydrogen, purple iodine vapor and colorless hydrogen iodide. The mixture has sat for hours. A detector shines green light through the gas and reads how much of it the purple iodine absorbs. Now a motor pushes the piston down and squeezes the gas into half the space. The detector's reading jumps to twice what it was. Then it holds steady, hour after hour. How does compression change the rates of the forward and reverse reactions?",
+   "model_answer": "Halving V doubles every concentration. Forward rate ∝ [H₂][I₂] rises 4×; reverse rate ∝ [HI]² rises 4×. Rates stay equal; Q = K (Δn = 0); no shift. Absorbance doubles from concentration alone.",
    "target": "When the moles of gas are the same on both sides of the equation, a change in volume changes every concentration by the same factor; Q stays equal to K, and nothing shifts.",
    "keywords": [
+    "collision frequency",
     "collide",
-    "collision",
-    "crowded",
-    "closer",
-    "same rate",
+    "forward rate",
+    "reverse rate",
     "equal rates",
-    "both directions",
-    "speed up",
-    "balanced",
-    "forward",
-    "reverse"
+    "same rate",
+    "Q = K",
+    "Δn = 0",
+    "same number of molecules"
    ],
    "liquids": [
     "P1a",
@@ -556,20 +553,17 @@
   },
   {
    "title": "The Fading Brown",
-   "question": "A sealed glass cell with a piston sits at 25 °C. A detector shines blue light through it and reads how much light the gas absorbs. Brown nitrogen dioxide absorbs blue light; colorless dinitrogen tetroxide does not. A chemist fills the cell with brown nitrogen dioxide. In a split second the brown fades, and the detector's reading drops. Then the color stops changing. The reading holds steady, hour after hour. What are the molecules doing?",
-   "model_answer": "When two brown nitrogen dioxide molecules collide, they can join into one colorless dinitrogen tetroxide molecule. That is why the brown fades at first. But dinitrogen tetroxide molecules also break apart into two brown molecules again, when a collision gives them enough energy. Soon the joining and the breaking apart happen at the same rate. From then on, as many brown molecules are made each second as are used up, so the color and the reading stay steady. The molecules have not stopped. They keep joining and splitting at equal rates.",
+   "question": "A sealed glass cell with a piston sits at 25 °C. A detector shines blue light through it and reads how much light the gas absorbs. Brown nitrogen dioxide absorbs blue light; colorless dinitrogen tetroxide does not. A chemist fills the cell with brown nitrogen dioxide. In a split second the brown fades, and the detector's reading drops. Then the color stops changing. The reading holds steady, hour after hour. What microscopic processes continue once the color is constant?",
+   "model_answer": "2NO₂ → N₂O₄ (dimerization) and N₂O₄ → 2NO₂ (dissociation) at equal rates; dynamic equilibrium. [NO₂] constant, so absorbance constant.",
    "target": "A steady color does not mean the reaction has stopped: joining and splitting go on at equal rates. Squeezing shifts this equilibrium toward fewer gas molecules; warming shifts it toward the reaction that takes in heat.",
    "keywords": [
-    "collide",
+    "dimerization",
     "join",
-    "pair",
-    "break apart",
+    "dissociation",
     "split",
-    "same rate",
     "equal rates",
-    "both directions",
-    "forward",
-    "reverse"
+    "same rate",
+    "dynamic equilibrium"
    ],
    "liquids": [
     "F1a",
@@ -39094,5 +39088,5 @@
    "opener_index": 4
   }
  ],
- "content_version": "0481abba5e"
+ "content_version": "fe4f9eeb27"
 }

@@ -67,8 +67,10 @@ function openerCoverage(text, opener, arch) {
   var MECHANISM = (arch && arch.mechanism_words && arch.mechanism_words.length) ? arch.mechanism_words : GENERIC_MECHANISM;
   var low = String(text || "").toLowerCase(), hits = 0;
   (opener.keywords || []).forEach(function (k) {
-    // a short keyword (IMF, Q, pH) must appear as a whole word; a longer one matches on its stem (12 Oct: "IMF" had matched everything)
-    var ok = k.toLowerCase().split(/\s+/).every(function (w) { return w.length < 4 ? new RegExp("(^|[^a-z0-9])" + w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "($|[^a-z0-9])").test(low) : low.indexOf(w.slice(0, Math.min(6, w.length - 1))) > -1; });
+    // every keyword must appear as a whole word or whole phrase (12 Oct: "IMF" had matched everything; 17 Oct: "proton" matched inside "protonated")
+    var kw = k.toLowerCase().trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, "\\s+");   // whole word or whole phrase, any length, a plain inflection allowed (17 Oct: "proton" had matched inside "protonated")
+    if (/e$/.test(kw)) kw = kw.slice(0, -1) + "e?";                                                  // evaporate, evaporates, evaporated, evaporating: one word; protonated is not proton
+    var ok = !!kw && new RegExp("(^|[^a-z0-9])" + kw + "(e?s|d|ed|ing)?($|[^a-z0-9])").test(low);
     if (ok) hits++;
   });
   // label words are removed before the mechanism count, so "evaporates" does not count as the mechanism word "vapor"

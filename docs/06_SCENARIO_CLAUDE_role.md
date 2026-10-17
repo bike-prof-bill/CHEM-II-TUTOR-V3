@@ -29,7 +29,7 @@ look up when a shorter one does the same work: "work out" before "infer", "undo"
 
 Every scenario starts from something a student has seen or felt, not from a formula, and carries an instrument reading (a gauge,
 a probe, a vapor monitor): the sensor is the bridge from the macroscopic to the submicroscopic, and the particle account explains
-the reading (instructor, 13 Oct). The opening question asks what the particles are doing; the problem is hidden until the student
+the reading (instructor, 13 Oct). The opening question names the process the problem is about and asks about it precisely (17 Oct: not "what are the particles doing", which the instructor calls meaningless, since in chemistry the answer is often "nothing"; instead, for example, "What microscopic processes are taking place?" or "Which species does each solute form in water, and how completely?"; the instructor's Johnstone probe bank, `content_account_probes.csv`, is the source of the question types). The model answer is terse and technical, for the model. The problem is hidden until the student
 has answered that. The three accounts the tutor moves between are
 particles (never seen, inferred), symbols (the bridge), and measurement (what an instrument reads); a scenario should let a
 student travel between all three.
@@ -37,7 +37,7 @@ student travel between all three.
 ## What a scenario is
 
 One opener and everything born from it. An opener is: a short title; the opening question (a scene a student can picture, with its
-instrument reading, ending with what the particles are doing); the deterministic keywords a right answer would contain, drawn from
+instrument reading, ending with a precise question about the process); the deterministic keywords a right answer would contain (technical terms, each with a plain synonym; matched as whole words or whole phrases), drawn from
 the chapter's own vocabulary (OpenStax, `reference/openstax/`; a keyword shorter than four letters, such as IMF, matches only as a
 whole word); the label words that name the phenomenon without mechanism; the substances or systems it fits; the kinds of problem
 it may draw; optional pictures (one shown with the question, one after the account is accepted), their alt text and credit; a

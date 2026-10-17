@@ -202,25 +202,17 @@
  "openers": [
   {
    "title": "Same Label, Different pH",
-   "question": "In the stockroom, the student worker lines up two bottles. Both labels say 2.0 M. One is hydrochloric acid. The other is acetic acid, the acid in vinegar. Her pH meter reads −0.30 for the hydrochloric acid but 2.22 for the acetic acid. That is more than 300 times less hydronium. Same label, very different pH. What are the acetic acid molecules doing in the water?",
-   "model_answer": "Hydrochloric acid is strong: every molecule gives its proton to water. Acetic acid is weak. Its molecules also give protons to water, but the acetate ions they leave behind take protons back from hydronium ions. At equilibrium the two happen at the same rate, and only a few acetic acid molecules in every thousand have given up their proton. The rest stay whole. So the bottle holds far less hydronium than its label suggests, and its pH is higher. How far a weak acid ionizes is set by its Ka.",
+   "question": "In the stockroom, the student worker lines up two bottles. Both labels say 2.0 M. One is hydrochloric acid. The other is acetic acid, the acid in vinegar. Her pH meter reads −0.30 for the hydrochloric acid but 2.22 for the acetic acid. That is more than 300 times less hydronium. Same label, very different pH. Which species are present in each bottle, and which ones dominate?",
+   "model_answer": "HCl: H₃O⁺ and Cl⁻ only (complete ionization). CH₃COOH: weak; Ka = 1.8 × 10⁻⁵; about 0.3 % ionized; molecular CH₃COOH dominates; H₃O⁺ and CH₃COO⁻ minor. Proton transfer both ways at equal rates.",
    "target": "A weak acid ionizes only partly: proton transfer runs both ways and settles at an equilibrium set by Ka, so [H₃O⁺] is far less than the acid's concentration; the fraction ionized grows on dilution.",
    "keywords": [
-    "equilibrium",
-    "both directions",
-    "take back",
+    "weak acid",
+    "partial ionization",
     "few",
-    "fraction",
-    "small part",
-    "most stay",
-    "whole",
-    "proton",
-    "water",
-    "hydronium",
-    "acetate",
-    "equal rates",
-    "Ka",
-    "weak"
+    "molecular acetic acid",
+    "whole molecules",
+    "equilibrium",
+    "Ka"
    ],
    "liquids": [
     "K1",
@@ -267,26 +259,19 @@
   },
   {
    "title": "The Fishy Bowl",
-   "question": "Fish that is no longer fresh smells \"fishy\". The smell is trimethylamine, a weak base that escapes from the fish into the air. A cook rinses the fish in a bowl of water. A pH probe in the rinse water reads about 11, and an amine sensor held above the bowl beeps. She squeezes lemon juice into the bowl. The sensor goes quiet, and the smell fades. What are the trimethylamine molecules doing in the water, before and after the lemon?",
-   "model_answer": "Trimethylamine is a weak base. A few of its molecules take a proton from water, making trimethylammonium ions and hydroxide ions, so the water is basic. Protons also move back, and at equilibrium the two happen at the same rate. Most molecules stay whole, and whole molecules can escape into the air: that is the smell. Lemon juice adds acid. Its protons go to the trimethylamine molecules and turn almost all of them into trimethylammonium ions. Ions stay in the water and cannot escape into the air, so the smell fades.",
+   "question": "Fish that is no longer fresh smells \"fishy\". The smell is trimethylamine, a weak base that escapes from the fish into the air. A cook rinses the fish in a bowl of water. A pH probe in the rinse water reads about 11, and an amine sensor held above the bowl beeps. She squeezes lemon juice into the bowl. The sensor goes quiet, and the smell fades. Which trimethylamine species dominate before and after the lemon juice, and why does the smell fade?",
+   "model_answer": "Before: (CH₃)₃N, weak base, Kb = 6.3 × 10⁻⁵; molecular amine dominates; it is volatile (smell). After: H₃O⁺ protonates the amine to (CH₃)₃NH⁺; the ion is not volatile; the smell fades.",
    "target": "A weak base takes protons from water only partly, at an equilibrium set by Kb: x is [OH⁻], so the pOH comes first, then the pH. Adding acid turns the base into its conjugate acid.",
    "keywords": [
-    "take a proton",
-    "takes",
-    "proton",
-    "water",
-    "hydroxide",
+    "weak base",
+    "partial ionization",
     "few",
-    "small fraction",
-    "most stay",
-    "whole",
-    "equilibrium",
-    "both directions",
-    "equal rates",
-    "escape",
-    "ion",
-    "Kb",
-    "weak base"
+    "protonation",
+    "takes a proton",
+    "volatile",
+    "escapes",
+    "ammonium ion",
+    "ion"
    ],
    "liquids": [
     "X1",
@@ -7522,5 +7507,5 @@
    "opener_index": 1
   }
  ],
- "content_version": "d31a4f4ea5"
+ "content_version": "483c9d83e2"
 }

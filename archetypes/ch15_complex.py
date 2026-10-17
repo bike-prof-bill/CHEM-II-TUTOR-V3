@@ -32,7 +32,7 @@ TRAP_NOTES = dict(TRAP_NOTES_COMMON, **{
 
 def complex_(formula):
     c = dict(_D["complexes"][formula]); c["formula"] = formula
-    c["words"] = {"complex": c["name"], "formula": formula, "metal": c["metal_name"], "ligand": c["ligand_name"]}; return c
+    c["words"] = {"complex": c["name"], "formula": c["formula_display"], "metal": c["metal_name"], "ligand": c["ligand_name"], "metal_ion": c["metal_display"], "ligand_formula": c["ligand_display"]}; return c
 def _p(fid, formula, c_metal, v_metal, c_lig, v_lig, text, family):
     return {"id": fid, "kind": "free_metal", "cx": complex_(formula), "c_metal": c_metal, "v_metal": v_metal, "c_lig": c_lig, "v_lig": v_lig, "text": text, "family": family, "version": "", "sf": 2, "status": DRAFT}
 FIXED = [

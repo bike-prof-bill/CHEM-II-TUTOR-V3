@@ -10,7 +10,7 @@ DRAFT = "DRAFT (placeholder; SCENARIO_CLAUDE writes the problems)"
 
 def salt(formula):
     s = dict(_D["salts"][formula]); s["formula"] = formula; s["n_ions"] = s["n_cat"] + s["n_an"]
-    s["words"] = {"salt": s["name"], "formula": formula, "cation": s["cation"], "anion": s["anion"]}
+    s["words"] = {"salt": s["name"], "formula": formula, "cation": s["cation_display"], "anion": s["anion_display"]}   # display forms, no caret (17 Oct)
     return s
 
 def ksp_coefficient(st): return (st["n_cat"] ** st["n_cat"]) * (st["n_an"] ** st["n_an"])         # 1, 4 or 27 for 1:1, 1:2, 2:1

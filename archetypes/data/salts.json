@@ -9,7 +9,9 @@
    "n_an": 1,
    "Ksp": 1.6e-10,
    "molar_mass": 143.32,
-   "source": "OpenStax Appendix J (1.6 × 10⁻¹⁰), as used in chapter 13"
+   "source": "OpenStax Appendix J (1.6 × 10⁻¹⁰), as used in chapter 13",
+   "cation_display": "Ag⁺",
+   "anion_display": "Cl⁻"
   },
   "AgBr": {
    "name": "silver bromide",
@@ -19,7 +21,9 @@
    "n_an": 1,
    "Ksp": 5e-13,
    "molar_mass": 187.77,
-   "source": "OpenStax Appendix J (5.0 × 10⁻¹³), as used in chapter 13"
+   "source": "OpenStax Appendix J (5.0 × 10⁻¹³), as used in chapter 13",
+   "cation_display": "Ag⁺",
+   "anion_display": "Br⁻"
   },
   "BaSO4": {
    "name": "barium sulfate",
@@ -29,7 +33,9 @@
    "n_an": 1,
    "Ksp": 2.3e-08,
    "molar_mass": 233.39,
-   "source": "SCENARIO_CLAUDE confirms from Appendix J"
+   "source": "SCENARIO_CLAUDE confirms from Appendix J",
+   "cation_display": "Ba²⁺",
+   "anion_display": "SO₄²⁻"
   },
   "CaF2": {
    "name": "calcium fluoride",
@@ -39,7 +45,9 @@
    "n_an": 2,
    "Ksp": 4e-11,
    "molar_mass": 78.07,
-   "source": "SCENARIO_CLAUDE confirms from Appendix J"
+   "source": "SCENARIO_CLAUDE confirms from Appendix J",
+   "cation_display": "Ca²⁺",
+   "anion_display": "F⁻"
   },
   "Mg(OH)2": {
    "name": "magnesium hydroxide",
@@ -49,7 +57,9 @@
    "n_an": 2,
    "Ksp": 8.9e-12,
    "molar_mass": 58.32,
-   "source": "SCENARIO_CLAUDE confirms from Appendix J"
+   "source": "SCENARIO_CLAUDE confirms from Appendix J",
+   "cation_display": "Mg²⁺",
+   "anion_display": "OH⁻"
   },
   "PbI2": {
    "name": "lead(II) iodide",
@@ -59,7 +69,9 @@
    "n_an": 2,
    "Ksp": 1.4e-08,
    "molar_mass": 461.01,
-   "source": "SCENARIO_CLAUDE confirms from Appendix J"
+   "source": "SCENARIO_CLAUDE confirms from Appendix J",
+   "cation_display": "Pb²⁺",
+   "anion_display": "I⁻"
   },
   "Ag2CrO4": {
    "name": "silver chromate",
@@ -69,7 +81,9 @@
    "n_an": 1,
    "Ksp": 9e-12,
    "molar_mass": 331.73,
-   "source": "SCENARIO_CLAUDE confirms from Appendix J"
+   "source": "SCENARIO_CLAUDE confirms from Appendix J",
+   "cation_display": "Ag⁺",
+   "anion_display": "CrO₄²⁻"
   },
   "CaCO3": {
    "name": "calcium carbonate",
@@ -79,7 +93,9 @@
    "n_an": 1,
    "Ksp": 8.7e-09,
    "molar_mass": 100.09,
-   "source": "SCENARIO_CLAUDE confirms from Appendix J"
+   "source": "SCENARIO_CLAUDE confirms from Appendix J",
+   "cation_display": "Ca²⁺",
+   "anion_display": "CO₃²⁻"
   }
  },
  "complexes": {
@@ -91,7 +107,10 @@
    "ligand_name": "ammonia",
    "n_ligand": 2,
    "Kf": 17000000.0,
-   "source": "SCENARIO_CLAUDE confirms from Appendix K (OpenStax lists 1.7 × 10⁷)"
+   "source": "SCENARIO_CLAUDE confirms from Appendix K (OpenStax lists 1.7 × 10⁷)",
+   "metal_display": "Ag⁺",
+   "ligand_display": "NH₃",
+   "formula_display": "Ag(NH₃)₂⁺"
   },
   "Cu(NH3)4^2+": {
    "name": "tetraamminecopper(II) ion",
@@ -101,7 +120,10 @@
    "ligand_name": "ammonia",
    "n_ligand": 4,
    "Kf": 11000000000000.0,
-   "source": "SCENARIO_CLAUDE confirms from Appendix K"
+   "source": "SCENARIO_CLAUDE confirms from Appendix K",
+   "metal_display": "Cu²⁺",
+   "ligand_display": "NH₃",
+   "formula_display": "Cu(NH₃)₄²⁺"
   },
   "Zn(NH3)4^2+": {
    "name": "tetraamminezinc(II) ion",
@@ -111,7 +133,10 @@
    "ligand_name": "ammonia",
    "n_ligand": 4,
    "Kf": 2900000000.0,
-   "source": "SCENARIO_CLAUDE confirms from Appendix K"
+   "source": "SCENARIO_CLAUDE confirms from Appendix K",
+   "metal_display": "Zn²⁺",
+   "ligand_display": "NH₃",
+   "formula_display": "Zn(NH₃)₄²⁺"
   },
   "Fe(SCN)^2+": {
    "name": "thiocyanatoiron(III) ion",
@@ -121,7 +146,10 @@
    "ligand_name": "thiocyanate ion",
    "n_ligand": 1,
    "Kf": 890.0,
-   "source": "SCENARIO_CLAUDE confirms from Appendix K"
+   "source": "SCENARIO_CLAUDE confirms from Appendix K",
+   "metal_display": "Fe³⁺",
+   "ligand_display": "SCN⁻",
+   "formula_display": "Fe(SCN)²⁺"
   }
  }
 }

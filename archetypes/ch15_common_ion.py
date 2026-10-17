@@ -47,7 +47,7 @@ def make_fixed(rng, fid):
                       {"state": "perturb_1", "kind": "direction", "register": "macro", "requires": ["ratio_found"], "options": opts("p1", [("rises", "rises: more of the solid dissolves"), ("falls", "falls: less of the solid dissolves"), ("unchanged", "unchanged: the same amount dissolves")], {"rises": "SOLUBILITY_RISES_WITH_COMMON_ION"}), "right": ["p1:falls"], "explicit": True, "pin": True},
                       {"state": "perturb_1_why", "kind": "text", "register": "submicro", "requires": ["perturb_1"]}]
     tail(board, "perturb_1_why")
-    words = dict(st["words"]); words["common_ion"] = st["anion"] if which == "anion" else st["cation"]; words["source_salt"] = P["source_salt"]
+    words = dict(st["words"]); words["common_ion"] = st["anion_display"] if which == "anion" else st["cation_display"]; words["source_salt"] = P["source_salt"]
     return {"kind": P["kind"], "fixed_id": fid, "version": "", "status": P["status"], "context": {"family": P["family"], "s": round_sig(s, 5), "s_pure": round_sig(s_pure, 5), "small_ok": r["small_ok"]}, "text": P["text"],
             "givens": {"Ksp": {"value": st["Ksp"], "unit": ""}, "c_common": {"value": c0, "unit": "M"}}, "board": board, "targets": expected, "traps": traps,
             "table": ice_table(st, c0, which), "words": words, "eq_checks": [expression_check(st, c0, which)], "reveal_with_problem": None, "sim": None,
