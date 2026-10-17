@@ -467,17 +467,24 @@
     if (s && st.steady === false) say(say2('Concentrations steady. ' + readout() + ' ') + barWords());
     st.steady = s;
   }
+  // Safari cancels a click if a button's text is rewritten between press and release, so text, attributes and
+  // control values are written only when they change (the page redraws many times a second while running).
+  function setText(id, t) { var e = el(id); if (e.textContent !== t) e.textContent = t; }
+  function setAttr(e, n, v) { if (e.getAttribute(n) !== v) e.setAttribute(n, v); }
+  function setHidden(id, h) { var e = el(id); if (e.hidden !== h) e.hidden = h; }
+  function setDisabled(id, d) { var e = el(id); if (e.disabled !== d) e.disabled = d; }
+  function setNum(e, n, v) { if (Math.abs(Number(e[n]) - Number(v)) > 1e-9 || e[n] === '') e[n] = String(v); }
   function updateText() {
     var c = now();
-    el('rV').textContent = fmt(st.V) + ' L'; el('rP').textContent = fmt(pressure(c)) + ' atm';
-    el('rH2').textContent = fmt(c.H2) + ' M'; el('rI2').textContent = fmt(c.I2) + ' M'; el('rHI').textContent = fmt(c.HI) + ' M';
-    el('rD').textContent = fmt(c.I2 / DETECTOR_ONE); el('rQ').textContent = fmtQ(c);
-    el('status').textContent = statusText();
-    el('descScene').textContent = describeScene(); el('descPanel').textContent = describePanel(); el('caption').textContent = captionText();
-    el('play').textContent = isReduced() ? 'Show the end' : st.running ? 'Pause' : 'Play';
-    el('valve').disabled = st.valve;
-    el('valve').setAttribute('aria-label', st.valve ? 'Open the hydrogen valve (already opened; Reset to open again)' : 'Open the hydrogen valve');
-    ['vHalf', 'vThird', 'vDouble', 'vStart'].forEach(function (id) { var b = el(id), target = st.V0 * Number(b.getAttribute('data-f')); b.setAttribute('aria-pressed', String(!st.stroke && Math.abs(st.V - target) < 1e-9)); });
+    setText('rV', fmt(st.V) + ' L'); setText('rP', fmt(pressure(c)) + ' atm');
+    setText('rH2', fmt(c.H2) + ' M'); setText('rI2', fmt(c.I2) + ' M'); setText('rHI', fmt(c.HI) + ' M');
+    setText('rD', fmt(c.I2 / DETECTOR_ONE)); setText('rQ', fmtQ(c));
+    setText('status', statusText());
+    setText('descScene', describeScene()); setText('descPanel', describePanel()); setText('caption', captionText());
+    setText('play', isReduced() ? 'Show the end' : st.running ? 'Pause' : 'Play');
+    setDisabled('valve', st.valve);
+    setAttr(el('valve'), 'aria-label', st.valve ? 'Open the hydrogen valve (already opened; Reset to open again)' : 'Open the hydrogen valve');
+    ['vHalf', 'vThird', 'vDouble', 'vStart'].forEach(function (id) { var b = el(id), target = st.V0 * Number(b.getAttribute('data-f')); setAttr(b, 'aria-pressed', String(!st.stroke && Math.abs(st.V - target) < 1e-9)); });
   }
 
   // ===========================================================================

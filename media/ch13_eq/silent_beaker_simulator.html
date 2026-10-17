@@ -560,18 +560,25 @@
     if (steady && st.steady === false) say('Readings steady. ' + readoutWords() + ' ' + barWords());
     st.steady = steady;
   }
+  // Safari cancels a click if a button's text is rewritten between press and release, so text, attributes and
+  // control values are written only when they change (the page redraws many times a second while running).
+  function setText(id, t) { var e = el(id); if (e.textContent !== t) e.textContent = t; }
+  function setAttr(e, n, v) { if (e.getAttribute(n) !== v) e.setAttribute(n, v); }
+  function setHidden(id, h) { var e = el(id); if (e.hidden !== h) e.hidden = h; }
+  function setDisabled(id, d) { var e = el(id); if (e.disabled !== d) e.disabled = d; }
+  function setNum(e, n, v) { if (Math.abs(Number(e[n]) - Number(v)) > 1e-9 || e[n] === '') e[n] = String(v); }
   function updateText() {
     var c = now();
-    el('rAg').textContent = fmtM(c.A); el('rX').textContent = fmtM(c.X); el('rCount').textContent = fmtCount(countOf(m.y)) + ' counts/min';
-    el('rQ').textContent = fmtSci(c.A * c.X); el('rK').textContent = S.Kshow;
-    el('status').textContent = statusText();
-    el('descScene').textContent = describeScene(); el('descPanel').textContent = describePanel(); el('caption').textContent = captionText();
-    el('play').textContent = isReduced() ? 'Show the end' : st.running ? 'Pause' : 'Play';
+    setText('rAg', fmtM(c.A)); setText('rX', fmtM(c.X)); setText('rCount', fmtCount(countOf(m.y)) + ' counts/min');
+    setText('rQ', fmtSci(c.A * c.X)); setText('rK', S.Kshow);
+    setText('status', statusText());
+    setText('descScene', describeScene()); setText('descPanel', describePanel()); setText('caption', captionText());
+    setText('play', isReduced() ? 'Show the end' : st.running ? 'Pause' : 'Play');
     var hasSolid = c.N > EPS;
-    el('pellet').disabled = st.pellet || !hasSolid;
-    el('pellet').setAttribute('aria-label', st.pellet ? 'Drop the radioactive pellet (already dropped; Reset to drop again)' : hasSolid ? 'Drop the radioactive pellet' : 'Drop the radioactive pellet (available when there is solid in the beaker)');
-    el('add').disabled = st.added;
-    el('add').setAttribute('aria-label', st.added ? 'Add ' + S.sodium + ' (already added; Reset to add again)' : 'Add ' + S.sodium);
+    setDisabled('pellet', st.pellet || !hasSolid);
+    setAttr(el('pellet'), 'aria-label', st.pellet ? 'Drop the radioactive pellet (already dropped; Reset to drop again)' : hasSolid ? 'Drop the radioactive pellet' : 'Drop the radioactive pellet (available when there is solid in the beaker)');
+    setDisabled('add', st.added);
+    setAttr(el('add'), 'aria-label', st.added ? 'Add ' + S.sodium + ' (already added; Reset to add again)' : 'Add ' + S.sodium);
   }
 
   // ===========================================================================

@@ -3,20 +3,29 @@ const CORE = require("./Core.gs"), fs = require("fs");
 let pass = 0, fail = 0; const ok = (c, m) => { c ? pass++ : (fail++, console.log("  FAIL:", m)); };
 const load = (id) => require("./Archetype_" + id + "_test.gs")[id];
 const PH = load("ch14_ph"), AB = load("ch14_acidbase"), BU = load("ch14_buffer"), TI = load("ch14_titration");
-for (const [id, A, n] of [["ch14_ph", PH, 3], ["ch14_acidbase", AB, 5], ["ch14_buffer", BU, 2], ["ch14_titration", TI, 7]])
+for (const [id, A, n] of [["ch14_buffer", BU, 2], ["ch14_titration", TI, 7]])
   ok(A.variants.length === n && !fs.existsSync(__dirname + "/Archetype_" + id + ".gs") && A.variants.every(v => v.status.startsWith("DRAFT")), id + ": " + n + " DRAFT placeholders, nothing shipped");
+ok(PH.variants.length === 36 && fs.existsSync(__dirname + "/Archetype_ch14_ph.gs") && PH.openers.length === 4, "ch14_ph: 36 approved problems under 4 scenarios, shipped");
+ok(AB.variants.length === 12 && fs.existsSync(__dirname + "/Archetype_ch14_acidbase.gs") && AB.openers.length === 2, "ch14_acidbase: 12 approved problems under 2 scenarios, shipped");
 const sess = (A, fid) => { const i = A.variants.findIndex(v => v.fixed_id === fid), V = A.variants[i], S = CORE.newSession(A, { variantIndex: i, openerIndex: V.opener_index, stamp: fid, rung: "independent" }); return { S, V, say: (m, x) => CORE.processTurn(A, S, Object.assign({ message: m, now: Date.now() }, x || {}), null) }; };
 const ACC = "Some molecules hand a proton to water, making hydronium ions, while some hydronium ions hand it back; the two rates are equal so the fraction ionised holds.";
 
-// pH & pOH: S3 barium hydroxide, typed calculations, dilution
-{ const { S, say } = sess(PH, "S3"); say("Every formula unit splits into one barium ion and two hydroxide ions; all of it, nothing comes back."); say("", { pick: "eq_ph" });
-  let r = say("0.010 M"); ok(S.board.ion_found === "ticked", "[OH-] 0.010 M counts both hydroxides");
-  r = say("14 + log(0.010)"); ok(S.board.pH_found === "ticked", "pH typed as 14 + log(0.010): read and ticked");
-  r = say("2.0"); ok(S.board.pOH_found === "ticked", "pOH 2.0 ticks");
-  r = say("rises"); ok(r.log.counted_fail, "dilution raises a base's pH: wrong"); r = say("falls"); ok(S.board.perturb_1 === "ticked", "falls: ticked"); }
+// pH & pOH: W2 (the Corn Soak's two-hydroxide offer): moles in a volume, the formula concentration named, dilution named
+{ const { S, say } = sess(PH, "W2"); say("Every formula unit splits into one calcium ion and two hydroxide ions; all of it, nothing comes back."); say("", { pick: "eq_ph" });
+  let r = say("0.003 M"); ok(/MOLES_NOT_CONCENTRATION/.test(r.log.trap_ids), "the moles typed as M: named");
+  r = say("0.006 M"); ok(/IONS_PER_FORMULA_IGNORED/.test(r.log.trap_ids), "the formula concentration as [OH-]: named (moles problems make it catchable)");
+  r = say("0.012 M"); ok(S.board.ion_found === "ticked", "[OH-] 0.012 M ticks");
+  r = say("14 + log(0.012)"); ok(S.board.pH_found === "ticked", "pH typed as 14 + log(0.012): read and ticked");
+  r = say("1.92"); ok(S.board.pOH_found === "ticked", "pOH 1.92 ticks");
+  r = say("rises"); ok(r.log.trap_ids === "DILUTION_AWAY_FROM_7" && /7/.test(r.reply), "dilution raising a base's pH: a named wrong pick with the approved ask"); r = say("falls"); ok(S.board.perturb_1 === "ticked", "falls: ticked"); }
+// Off the Scale N1a: a pH below zero
+{ const { S, say } = sess(PH, "N1a"); say("Every HCl molecule hands its proton to water; the hydronium ions equal the acid put in, more than one per litre."); say("", { pick: "eq_ph" }); say("1.5 M");
+  let r = say("0.18"); ok(r.log.trap_ids === "PH_SIGN_DROPPED", "the sign dropped on a negative pH: named");
+  r = say("-0.41"); ok(r.log.trap_ids === "LN_FOR_LOG", "the natural logarithm used for log: named");
+  r = say("-0.18"); ok(S.board.pH_found === "ticked", "pH -0.18 ticks"); }
 
-// Acids & Bases: W1 full walk with the named errors
-{ const { S, say } = sess(AB, "W1"); say(ACC); say("", { pick: "eq_ka" });
+// Acids & Bases: K1 (Same Label, the worked core) full walk with the named errors
+{ const { S, say } = sess(AB, "K1"); say(ACC); say("", { pick: "eq_ka" });
   let r = say("I: 0.1 | 0 | 0\nC: -x | +x | +x\nE: 0.1 - x | x | x"); ok(S.board.table === "ticked", "the table ticks");
   r = say("1.8e-5 = x*x/((0.1 - x)*55.5)"); ok(/WATER_IN_EXPRESSION/.test(r.log.trap_ids), "water in the expression: named");
   say("1.8e-5 = x*x/(0.1 - x)"); r = say("", { pick: "method:quadratic" }); ok(r.log.counted_fail, "the quadratic where small-x holds: a wrong try");
@@ -59,6 +68,7 @@ for (const A of [PH, AB, BU, TI]) A.variants.forEach((V, i) => {
   say(ACC);
   for (const b of V.board) {
     if (b.id === "account_given") continue;
+    if (b.id === "offer" || b.kind === "offer") continue;
     if (b.id === "relation_chosen") { const right = A.equation_picks.find(e => e.fits.indexOf(V.kind) > -1); say("", { pick: right.id }); }
     else if (b.kind === "number") say(ex(b.id).map(e => e.value + (e.unit ? " " + e.unit : "")).join(", "));
     else if (b.kind === "table") { const t = V.table.rows; say("I: " + t.I.join(" | ") + "\nC: " + t.C.join(" | ") + "\nE: " + t.E.join(" | ")); }

@@ -1,0 +1,8 @@
+﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
+DILUTION_IGNORED,,,,a concentration before mixing used after it; or Q from them,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+VOLUME_NOT_TOTALED,,,,a concentration over the other solution's volume,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+Q_INVERTED,,,,1/Q,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+EXPONENTS_DROPPED,,,,Q with every exponent 1,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+COEFFICIENTS_AS_MULTIPLIERS,,,,coefficients multiplied in,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+PRECIPITATE_WHEN_Q_LESS,,,,wrong pick: a precipitate predicted with Q below Ksp,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+NO_PRECIPITATE_WHEN_Q_MORE,,,,wrong pick: none predicted with Q above Ksp,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves

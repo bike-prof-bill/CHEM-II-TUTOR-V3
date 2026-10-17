@@ -10,6 +10,7 @@ test-gen:
 	$(PY) test_ch10_cc.py
 	$(PY) test_ch13_eq.py
 	$(PY) test_ch14.py
+	$(PY) test_ch15.py
 
 test-verify:
 	$(NODE) gas/test_core.js
@@ -18,6 +19,7 @@ test-verify:
 	$(NODE) gas/test_vent.js
 	$(NODE) gas/test_eq.js
 	$(NODE) gas/test_ch14.js
+	$(NODE) gas/test_ch15.js
 
 test-modules:
 	$(NODE) tests/modules/units.test.js

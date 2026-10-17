@@ -25,21 +25,43 @@ def build(A):
     return V
 ex = lambda V, fid, st: [e for e in V[fid]["expected"] if e["state"] == st][0]["value"]
 right = lambda V, fid, st: [b for b in V[fid]["board"] if b["id"] == st][0]["right"]
-# 1. pH & pOH
-V = build(PH); check(len(V) == 3, "ph: three placeholders")
-check(near(ex(V, "S1", "pH_found"), -math.log10(0.0025)) and near(ex(V, "S2", "pH_found"), 12.0) and near(ex(V, "S3", "ion_found"), 0.010) and near(ex(V, "S3", "pH_found"), 12.0), "S1 2.60; S2 12.00; S3: two hydroxides per formula, [OH-] 0.010 M, pH 12.00")
-check(right(V, "S1", "perturb_1") == ["p1:rises"] and right(V, "S2", "perturb_1") == ["p1:falls"], "dilution raises an acid's pH, lowers a base's")
-check(not any(t["id"] == "IONS_PER_FORMULA_IGNORED" for t in V["S3"]["traps"]) and [e["abs_tol"] for e in V["S1"]["expected"] if e["state"] == "pH_found"] == [0.03], "the dihydroxide's 'formula concentration as [OH-]' equals the given, so the engine drops it as undetectable (a restated given); pH read to two decimals")
-# 2. Acids & Bases
-V = build(AB); check(len(V) == 5, "acidbase: five placeholders")
-x = (-1.8e-5 + math.sqrt(1.8e-5 ** 2 + 4 * 1.8e-5 * 0.10)) / 2
-check(near(ex(V, "W1", "x_found"), x) and near(ex(V, "W1", "pH_found"), -math.log10(x)) and near(ex(V, "W1", "percent_found"), 100 * x / 0.10), "W1: x, pH 2.87, 1.3 %")
-check(right(V, "W1", "method") == ["method:smallx"] and right(V, "W1", "approx_checked") == ["approx:holds"] and right(V, "W2", "method") == ["method:quadratic"] and right(V, "W2", "approx_checked") == ["approx:fails"], "small-x where the 5 % rule holds, the quadratic where it fails")
-x2 = (-4.5e-4 + math.sqrt(4.5e-4 ** 2 + 4 * 4.5e-4 * 0.0050)) / 2
-check(near(ex(V, "W2", "x_found"), x2) and ex(V, "W2", "percent_found") > 5 and any(t["id"] == "SMALL_X_WHEN_IT_FAILS" and near(t["value"], math.sqrt(4.5e-4 * 0.0050)) for t in V["W2"]["traps"]), "W2: the quadratic x, the small-x value named")
-xb = (-1.8e-5 + math.sqrt(1.8e-5 ** 2 + 4 * 1.8e-5 * 0.25)) / 2
-check(near(ex(V, "B1", "pOH_found"), -math.log10(xb)) and near(ex(V, "B1", "pH_found"), 14 + math.log10(xb)) and right(V, "B2", "method") == ["method:quadratic"], "B1 pOH 2.67, pH 11.33; B2 methylamine 0.010 M needs the quadratic")
-check(right(V, "W1", "perturb_1") == ["p1:rises"] and right(V, "W1", "perturb_2") == ["p2:rises"] and right(V, "B1", "perturb_2") == ["p2:falls"], "dilution raises percent ionised; conjugate base raises an acid's pH; conjugate acid lowers a base's")
+# 1. pH & pOH and 2. Acids & Bases: every problem against SCENARIO_CLAUDE's sheets (approved 15-16 Oct)
+def item(exp, key):
+    m = re.search(r"(?:^|\| )" + re.escape(key) + r"[^:|]*: ([^|]+)", exp); return m.group(1).strip() if m else None
+def num(s):
+    m = re.search(r"-?[0-9.]+(?:e-?\d+)?", s.replace("× 10⁻", "e-").replace("× 10", "e")); return float(m.group(0))
+sheets_ph = ["docs/handoff_examples/ch14_ph_problems_off_the_scale.csv", "docs/handoff_examples/ch14_ph_problems_corn_soak_stockroom_concrete.csv"]
+sheets_ab = ["docs/handoff_examples/ch14_acidbase_problems_same_label.csv", "docs/handoff_examples/ch14_acidbase_problems_fishy_bowl.csv"]
+def shipped(A):
+    m = engine.read_moves(f"content_{A.ID}_moves.csv"); e = engine.read_errors(f"content_{A.ID}_errors.csv")
+    out = engine.build(A, 1, 1, engine.read_openers(f"content_{A.ID}_openers.csv"), m, e); return out, {v["fixed_id"]: v for v in out["variants"]}
+import csv, re
+out, V = shipped(PH); check(len(V) == 36 and len(out["openers"]) == 4 and all(not v["status"].startswith("DRAFT") for v in V.values()), "ph: 36 problems under 4 scenarios ship, none DRAFT")
+roles = {o["title"]: o.get("role") for o in out["openers"]}; check(roles.get("The Corn Soak") == "worked" and roles.get("Concrete Burn") == "exam", "ph: roles as the README says")
+for f in sheets_ph:
+    for row in csv.DictReader(open(f, encoding="utf-8-sig")):
+        v = V[row["id"]]; exp = row["expected, item by item"]; tr = row["givens and trap values"]
+        check(near(ex(V, row["id"], "ion_found"), num(item(exp, "ion_found")), 0.02) and abs(ex(V, row["id"], "pH_found") - num(item(exp, "pH_found"))) <= 0.006 and abs(ex(V, row["id"], "pOH_found") - num(item(exp, "pOH_found"))) <= 0.006, f"{row['id']}: ion, pH, pOH as the sheet")
+        want = item(exp, "perturb_1").split()[0]; b = [x for x in v["board"] if x["id"] == "perturb_1"][0]
+        check(b["right"] == ["p1:" + want] and any(o.get("names") == "DILUTION_AWAY_FROM_7" for o in b["options"] if o["id"] != b["right"][0]), f"{row['id']}: dilution {want}; the other direction named")
+        tids = {t["id"] for t in v["traps"]}
+        for tid in ("PH_SIGN_DROPPED", "POH_SIGN_DROPPED", "LN_FOR_LOG", "MOLES_NOT_CONCENTRATION"):
+            if tid in tr: check(tid in tids, f"{row['id']}: {tid} named as the sheet lists")
+        if "IONS_PER_FORMULA_IGNORED" in tr and "detectable only" not in tr.split("IONS_PER_FORMULA_IGNORED")[1].split("|")[0]: check("IONS_PER_FORMULA_IGNORED" in tids, f"{row['id']}: IONS_PER_FORMULA_IGNORED named")
+        if "LN_FOR_LOG" in tr:
+            want_ln = num(tr.split("LN_FOR_LOG")[1].split(":")[1].split("|")[0]); got = [t["value"] for t in v["traps"] if t["id"] == "LN_FOR_LOG"]
+            check(got and abs(got[0] - want_ln) <= 0.02, f"{row['id']}: LN_FOR_LOG value {want_ln} (got {got})")
+check(V["W1"]["version"] == "one_hydroxide" and V["W2"]["version"] == "two_hydroxides", "the Corn Soak's two versions")
+out, V = shipped(AB); check(len(V) == 12 and len(out["openers"]) == 2 and all(not v["status"].startswith("DRAFT") for v in V.values()), "acidbase: 12 problems under 2 scenarios ship")
+for f in sheets_ab:
+    for row in csv.DictReader(open(f, encoding="utf-8-sig")):
+        v = V[row["id"]]; exp = row["expected, item by item"]
+        check(near(ex(V, row["id"], "x_found"), num(item(exp, "x_found")), 0.02) and abs(ex(V, row["id"], "pH_found") - num(item(exp, "pH_found"))) <= 0.006 and near(ex(V, row["id"], "percent_found"), num(item(exp, "percent_found")), 0.05), f"{row['id']}: x, pH, percent as the sheet")
+        if item(exp, "pOH_found"): check(abs(ex(V, row["id"], "pOH_found") - num(item(exp, "pOH_found"))) <= 0.006, f"{row['id']}: pOH as the sheet")
+        check(right(V, row["id"], "method") == ["method:" + item(exp, "method")] and right(V, row["id"], "approx_checked") == ["approx:" + item(exp, "approx_checked")], f"{row['id']}: method and the 5 % check as the sheet")
+check(V["K1"]["version"] == "holds" and V["K2"]["version"] == "fails" and all(V[f"X{i}"]["context"]["approx_ok"] for i in range(1, 7)), "Same Label's two versions; every Fishy Bowl problem holds the rule (instructor's exception)")
+D = json.load(open("archetypes/data/acids_bases.json", encoding="utf-8"))
+check(D["acids"]["hydrofluoric"]["Ka"] == 6.4e-4 and D["acids"]["nitrous"]["Ka"] == 4.6e-4 and "Ca(OH)2" in D["strong"] and "formic" in D["acids"] and "trimethylamine" in D["bases"], "the appendix corrections and additions are in")
 # 3. Buffers (the pH after a small addition, the instructor's floor 0.75 mL)
 V = build(BU); check(len(V) == 2, "buffer: two placeholders")
 pKa = -math.log10(1.8e-5)

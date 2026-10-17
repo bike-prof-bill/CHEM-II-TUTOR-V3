@@ -20,6 +20,14 @@ re-derived in `test_ch14.py`.
 6. The small-x rule follows the text: the right method when the 5 % rule holds, the quadratic when it fails, a check step after
    the percent. (The instructor's own classroom rule, c > 100·K, is noted here and not encoded.)
 
+## State on 16 Oct 2026
+`ch14_ph` is complete and ships: four scenarios (The Corn Soak, worked, with a two-hydroxide offer; Concrete Burn, exam; Off the
+Scale and The Stockroom Morning, floaters), 36 problems; `ch14_acidbase` ships its worked and exam scenarios (Same Label, Different
+pH; The Fishy Bowl), 12 problems, floaters to come; buffers and titration wait for their scenarios. Added for the approved sheets:
+moles in a volume as givens (ion = n / V × ions per formula), the named errors PH_SIGN_DROPPED, POH_SIGN_DROPPED, LN_FOR_LOG,
+DILUTION_AWAY_FROM_7 (a named wrong pick), MOLES_NOT_CONCENTRATION on the ion step, and POH_TYPED_AS_PH on weak bases as asked;
+Appendix corrections (HF 6.4 × 10⁻⁴, HNO₂ 4.6 × 10⁻⁴) and four new entries.
+
 ## Step maps
 - **pH & pOH** (`strong_acid`, `strong_base`): account → pH relation → the ion concentration from the formula, with units,
   counting ions per formula unit → pH → pOH → tenfold dilution: pH rises (acid) or falls (base), then why → meaning → reflection.

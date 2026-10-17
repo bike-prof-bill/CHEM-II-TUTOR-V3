@@ -1,0 +1,12 @@
+﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
+DILUTION_IGNORED,,,,a concentration before mixing used after it (named on Q-like steps; equals a given at the concentration step),DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+VOLUME_NOT_TOTALED,,,,over the other solution's volume,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+LIGAND_LEFT_IGNORED,,,,the ligand's full concentration used as the ligand left; or x from it,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+KF_FOR_KD,,,,x from Kf where Kd was needed,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+LIGAND_EXPONENT_DROPPED,,,,x with the ligand to the first power,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+COMPLETION_NOT_ASSUMED,,,,the metal's concentration before complexing given as free metal; or a table starting before formation,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+SMALL_S_WHEN_IT_FAILS,,,,the small-x value where x is not small (small Kf),DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+COEFF_NOT_EXPONENT,,,,(by shape),DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+EXPONENT_NOT_IN_TABLE,,,,(by shape),DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+COEFFICIENT_DROPPED_IN_TABLE,,,,change row +x for n ligands (table),DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+FREE_METAL_RISES_WITH_LIGAND,,,,wrong pick: more free metal when ligand is added,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves

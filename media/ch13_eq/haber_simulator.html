@@ -548,17 +548,22 @@
     });
   }
   function announceAtRest() { if (restTimer) clearTimeout(restTimer); restTimer = setTimeout(function () { restTimer = null; say(spoken(vessels.map(readout).join(' '))); }, 700); }
+  // Safari cancels a click if a button's text is rewritten between press and release, so text, attributes and
+  // control states are written only when they change (the page redraws many times a second while running).
+  function setT(e, t) { if (e.textContent !== t) e.textContent = t; }
+  function setA(e, n, v) { if (e.getAttribute(n) !== v) e.setAttribute(n, v); }
+  function setD(e, d) { if (e.disabled !== d) e.disabled = d; }
   function updateText() {
     var v = vessels[0], c = conc(v);
-    el('rN2').textContent = fmtM(c[0]); el('rH2').textContent = fmtM(c[1]); el('rNH3').textContent = fmtM(c[2]);
-    el('rQ').textContent = fmtQ(c); el('rP').textContent = fmtP(c);
-    el('status').textContent = statusText();
-    el('descScene').textContent = describeScene(); el('descPanel').textContent = describePanel(); el('caption').textContent = captionText();
-    SP.forEach(function (k) { el('v' + k).textContent = st.n[k].toFixed(2) + ' mol'; el('s' + k).setAttribute('aria-valuetext', st.n[k].toFixed(2) + ' moles of ' + NAME[k]); el('s' + k).disabled = st.compare; });
+    setT(el('rN2'), fmtM(c[0])); setT(el('rH2'), fmtM(c[1])); setT(el('rNH3'), fmtM(c[2]));
+    setT(el('rQ'), fmtQ(c)); setT(el('rP'), fmtP(c));
+    setT(el('status'), statusText());
+    setT(el('descScene'), describeScene()); setT(el('descPanel'), describePanel()); setT(el('caption'), captionText());
+    SP.forEach(function (k) { setT(el('v' + k), st.n[k].toFixed(2) + ' mol'); setA(el('s' + k), 'aria-valuetext', st.n[k].toFixed(2) + ' moles of ' + NAME[k]); setD(el('s' + k), st.compare); });
     var canAdd = !st.compare && v.live && v.settled;
-    el('add').disabled = !canAdd; el('addWhich').disabled = !canAdd;
-    el('add').setAttribute('aria-label', canAdd ? 'Add a little of the chosen gas' : 'Add a little of the chosen gas (available once the vessel settles)');
-    el('play').textContent = st.running ? 'Pause' : 'Play';
+    setD(el('add'), !canAdd); setD(el('addWhich'), !canAdd);
+    setA(el('add'), 'aria-label', canAdd ? 'Add a little of the chosen gas' : 'Add a little of the chosen gas (available once the vessel settles)');
+    setT(el('play'), st.running ? 'Pause' : 'Play');
   }
 
   // ===========================================================================

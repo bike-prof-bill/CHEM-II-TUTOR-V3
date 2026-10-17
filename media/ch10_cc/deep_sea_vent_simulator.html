@@ -528,16 +528,20 @@
       say('Depth ' + fmtDepth(st.depth) + ', pressure ' + fmtP(P) + ', boiling point ' + fmtTemp(bpC(P)) + ', water ' + fmtTemp(st.t) + '. ' + (boils(st.depth, st.t) ? 'Boiling.' : 'Not boiling.'));
     }, 700);
   }
+  // Safari cancels a click if a button's text is rewritten between press and release, so text and attributes are
+  // written only when they change (the page redraws many times a second while running).
+  function setT(e, t) { if (e.textContent !== t) e.textContent = t; }
+  function setA(e, n, v) { if (e.getAttribute(n) !== v) e.setAttribute(n, v); }
   function updateText() {
     var P = pressureAtm(st.depth);
-    el('vDepth').textContent = fmtDepth(st.depth); el('vP').textContent = fmtP(P);
-    el('vT').textContent = fmtTemp(st.t); el('vBp').textContent = fmtTemp(bpC(P));
-    el('status').textContent = statusText();
-    el('descVent').textContent = describeVent(); el('descPanel').textContent = describePanel(); el('caption').textContent = captionText();
-    el('depthVal').textContent = st.compare ? '100 and 1,500 m' : fmtDepth(st.depth); el('tempVal').textContent = fmtTemp(st.t);
-    depthIn.setAttribute('aria-valuetext', st.compare ? 'Compare mode: vents at 100 and 1,500 metres' : Math.round(st.depth) + ' metres');
-    tempIn.setAttribute('aria-valuetext', fmtTempWords(st.t));
-    playBtn.textContent = st.running ? 'Pause' : 'Play';
+    setT(el('vDepth'), fmtDepth(st.depth)); setT(el('vP'), fmtP(P));
+    setT(el('vT'), fmtTemp(st.t)); setT(el('vBp'), fmtTemp(bpC(P)));
+    setT(el('status'), statusText());
+    setT(el('descVent'), describeVent()); setT(el('descPanel'), describePanel()); setT(el('caption'), captionText());
+    setT(el('depthVal'), st.compare ? '100 and 1,500 m' : fmtDepth(st.depth)); setT(el('tempVal'), fmtTemp(st.t));
+    setA(depthIn, 'aria-valuetext', st.compare ? 'Compare mode: vents at 100 and 1,500 metres' : Math.round(st.depth) + ' metres');
+    setA(tempIn, 'aria-valuetext', fmtTempWords(st.t));
+    setT(playBtn, st.running ? 'Pause' : 'Play');
   }
 
   // ===========================================================================

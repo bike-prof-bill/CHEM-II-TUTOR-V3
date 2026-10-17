@@ -12,23 +12,23 @@
    "name": "acetic acid",
    "conjugate_name": "acetate ion",
    "Ka": 1.8e-05,
-   "source": "OpenStax Appendix H (1.8 × 10⁻⁵); instructor confirms"
+   "source": "OpenStax Appendix H (1.8 × 10⁻⁵) (confirmed against the appendix, 16 Oct)"
   },
   "hydrofluoric": {
    "formula": "HF",
    "conjugate": "F-",
    "name": "hydrofluoric acid",
    "conjugate_name": "fluoride ion",
-   "Ka": 0.00072,
-   "source": "OpenStax Appendix H; instructor confirms the value (7.2 × 10⁻⁴ in some editions, 6.8 × 10⁻⁴ in others)"
+   "Ka": 0.00064,
+   "source": "OpenStax Appendix H (6.4 × 10⁻⁴), confirmed against the appendix the instructor supplied, 16 Oct"
   },
   "nitrous": {
    "formula": "HNO2",
    "conjugate": "NO2-",
    "name": "nitrous acid",
    "conjugate_name": "nitrite ion",
-   "Ka": 0.00045,
-   "source": "OpenStax Appendix H (4.5 × 10⁻⁴); instructor confirms"
+   "Ka": 0.00046,
+   "source": "OpenStax Appendix H (4.6 × 10⁻⁴), confirmed 16 Oct"
   },
   "hypochlorous": {
    "formula": "HOCl",
@@ -36,7 +36,15 @@
    "name": "hypochlorous acid",
    "conjugate_name": "hypochlorite ion",
    "Ka": 2.9e-08,
-   "source": "OpenStax Appendix H (2.9 × 10⁻⁸); instructor confirms"
+   "source": "OpenStax Appendix H (2.9 × 10⁻⁸) (confirmed against the appendix, 16 Oct)"
+  },
+  "formic": {
+   "formula": "HCOOH",
+   "conjugate": "HCOO-",
+   "name": "formic acid",
+   "conjugate_name": "formate ion",
+   "Ka": 0.00018,
+   "source": "OpenStax Appendix H"
   }
  },
  "bases": {
@@ -46,7 +54,7 @@
    "name": "ammonia",
    "conjugate_name": "ammonium ion",
    "Kb": 1.8e-05,
-   "source": "OpenStax Appendix I (1.8 × 10⁻⁵); instructor confirms"
+   "source": "OpenStax Appendix I (1.8 × 10⁻⁵) (confirmed against the appendix, 16 Oct)"
   },
   "methylamine": {
    "formula": "CH3NH2",
@@ -54,7 +62,23 @@
    "name": "methylamine",
    "conjugate_name": "methylammonium ion",
    "Kb": 0.00044,
-   "source": "OpenStax Appendix I (4.4 × 10⁻⁴); instructor confirms"
+   "source": "OpenStax Appendix I (4.4 × 10⁻⁴) (confirmed against the appendix, 16 Oct)"
+  },
+  "trimethylamine": {
+   "formula": "(CH3)3N",
+   "conjugate": "(CH3)3NH+",
+   "name": "trimethylamine",
+   "conjugate_name": "trimethylammonium ion",
+   "Kb": 6.3e-05,
+   "source": "OpenStax Appendix I"
+  },
+  "dimethylamine": {
+   "formula": "(CH3)2NH",
+   "conjugate": "(CH3)2NH2+",
+   "name": "dimethylamine",
+   "conjugate_name": "dimethylammonium ion",
+   "Kb": 0.00059,
+   "source": "OpenStax Appendix I"
   }
  },
  "strong": {
@@ -82,6 +106,12 @@
    "name": "barium hydroxide",
    "kind": "base",
    "ions_per_formula": 2
+  },
+  "Ca(OH)2": {
+   "name": "calcium hydroxide",
+   "kind": "base",
+   "ions_per_formula": 2,
+   "source": "OpenStax Table 14.6 (strong bases) and Exercise 18(d); saturated near 0.0069 M (Appendix J, Ksp 1.3 × 10⁻⁶)"
   }
  }
 }

@@ -586,17 +586,22 @@
     });
   }
   function announceAtRest() { if (restTimer) clearTimeout(restTimer); restTimer = setTimeout(function () { restTimer = null; say(chambers.map(readout).join(' ')); }, 700); }
+  // Safari cancels a click if a button's text is rewritten between press and release, so text, attributes and
+  // control states are written only when they change (the page redraws many times a second while running).
+  function setT(e, t) { if (e.textContent !== t) e.textContent = t; }
+  function setA(e, n, v) { if (e.getAttribute(n) !== v) e.setAttribute(n, v); }
+  function setD(e, d) { if (e.disabled !== d) e.disabled = d; }
   function updateText() {
     var ch = chambers[0], c = conc(ch);
-    el('rCO').textContent = fmtM(c[0]); el('rH2O').textContent = fmtM(c[1]); el('rCO2').textContent = fmtM(c[2]); el('rH2').textContent = fmtM(c[3]);
-    el('rQ').textContent = fmtQ(c); el('rP').textContent = pressure(c).toPrecision(3) + ' atm';
-    el('status').textContent = statusText();
-    el('descScene').textContent = describeScene(); el('descPanel').textContent = describePanel(); el('caption').textContent = captionText();
-    SP.forEach(function (k) { el('v' + k).textContent = st.n[k].toFixed(2) + ' mol'; el('s' + k).setAttribute('aria-valuetext', st.n[k].toFixed(2) + ' moles of ' + NAME[k]); });
+    setT(el('rCO'), fmtM(c[0])); setT(el('rH2O'), fmtM(c[1])); setT(el('rCO2'), fmtM(c[2])); setT(el('rH2'), fmtM(c[3]));
+    setT(el('rQ'), fmtQ(c)); setT(el('rP'), pressure(c).toPrecision(3) + ' atm');
+    setT(el('status'), statusText());
+    setT(el('descScene'), describeScene()); setT(el('descPanel'), describePanel()); setT(el('caption'), captionText());
+    SP.forEach(function (k) { setT(el('v' + k), st.n[k].toFixed(2) + ' mol'); setA(el('s' + k), 'aria-valuetext', st.n[k].toFixed(2) + ' moles of ' + NAME[k]); });
     var canAdd = !st.compare && chambers[0].live && chambers[0].settled;
-    el('add').disabled = !canAdd; el('addWhich').disabled = !canAdd;
-    el('addNote').textContent = st.compare ? '' : canAdd ? '' : '(once settled)';
-    el('play').textContent = st.running ? 'Pause' : 'Play';
+    setD(el('add'), !canAdd); setD(el('addWhich'), !canAdd);
+    setT(el('addNote'), st.compare ? '' : canAdd ? '' : '(once settled)');
+    setT(el('play'), st.running ? 'Pause' : 'Play');
   }
 
   // ===========================================================================

@@ -1,0 +1,10 @@
+﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
+COEFF_NOT_EXPONENT,,,,expression with the exponents read as 1 (by shape),DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+EXPONENT_NOT_IN_TABLE,,,,expression with the exponents but +s for every ion (by shape),DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+COEFFICIENT_DROPPED_IN_TABLE,,,,change row +s for an ion that forms two per unit (table),DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+ROOT_FORGOTTEN,,,,s = Ksp / coefficient without the root,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+COEFFICIENT_FORGOTTEN,,,,the 4 or the 27 left out of s or of Ksp,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+S_FOR_ION,,,,s given where 2s was asked,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+GRAMS_WITHOUT_MOLAR_MASS,,,,"grams per litre equal to moles per litre, or the reverse",DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+EXPONENTS_DROPPED,,,,Ksp from the ion concentrations with every exponent 1,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+SOLUBILITY_RISES_WITH_COMMON_ION,,,,wrong pick: more dissolves when a common ion is added,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves

@@ -1,4 +1,4 @@
-# Release checklist: chapter 13 (15 Oct 2026)
+# Release checklist: chapter 13 (15 Oct 2026), extended 16 Oct for chapter 14's first two archetypes
 
 Do these in order. Each line says where.
 
@@ -9,7 +9,7 @@ Do these in order. Each line says where.
 
 ## B. Apps Script (the brain)
 2. Paste, one file each, replacing the old text: `Core`, `stepmap`, `prompt`, `Code`, `Shell_version`. Make a new script file `Tone` and paste `gas/Tone.gs` into it (the instructor's tone phrases, approved rows only).
-3. Make a new script file `Archetype_ch13_eq` and paste `gas/Archetype_ch13_eq.gs` into it.
+3. Make a new script file `Archetype_ch13_eq` and paste `gas/Archetype_ch13_eq.gs` into it. (16 Oct: also new files `Archetype_ch14_ph` and `Archetype_ch14_acidbase` from their .gs files; paste `prompt`, `parse` and `Tone` too; the alive reply then lists ch14_ph at baf253e64b and ch14_acidbase at e3dd495c99.)
 4. Delete the script file `Archetype_ch13_ice`.
 5. Deploy → Manage deployments → pencil → Version: New version → Deploy.
 6. Open the `/exec` URL. Expect: `shell_expected` and `shell_actual` both `61bae0be`, `shell_ok` true; archetypes `ch10_cc` at

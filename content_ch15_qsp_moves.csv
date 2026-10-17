@@ -1,0 +1,10 @@
+﻿state,stage,label_when_done,ask,switch_ask,notebook_prompt,return_ask,park_text,status,opener (blank = every scenario of this archetype),show,version
+account_given,,,,,,,,"DRAFT (no wording yet: SCENARIO_CLAUDE writes ask, switch_ask, notebook_prompt, return_ask, park_text; the instructor approves)",,,
+relation_chosen,,,,,,,,"DRAFT (no wording yet: SCENARIO_CLAUDE writes ask, switch_ask, notebook_prompt, return_ask, park_text; the instructor approves)",,,
+conc_found,,,,,,,,"DRAFT (no wording yet: SCENARIO_CLAUDE writes ask, switch_ask, notebook_prompt, return_ask, park_text; the instructor approves)",,,
+Q_found,,,,,,,,"DRAFT (no wording yet: SCENARIO_CLAUDE writes ask, switch_ask, notebook_prompt, return_ask, park_text; the instructor approves)",,,
+verdict,,,,,,,,"DRAFT (no wording yet: SCENARIO_CLAUDE writes ask, switch_ask, notebook_prompt, return_ask, park_text; the instructor approves)",,,
+perturb_1,,,,,,,,"DRAFT (no wording yet: SCENARIO_CLAUDE writes ask, switch_ask, notebook_prompt, return_ask, park_text; the instructor approves)",,,
+perturb_1_why,,,,,,,,"DRAFT (no wording yet: SCENARIO_CLAUDE writes ask, switch_ask, notebook_prompt, return_ask, park_text; the instructor approves)",,,
+meaning_given,,,,,,,,"DRAFT (no wording yet: SCENARIO_CLAUDE writes ask, switch_ask, notebook_prompt, return_ask, park_text; the instructor approves)",,,
+reflection,,,,,,,,"DRAFT (no wording yet: SCENARIO_CLAUDE writes ask, switch_ask, notebook_prompt, return_ask, park_text; the instructor approves)",,,

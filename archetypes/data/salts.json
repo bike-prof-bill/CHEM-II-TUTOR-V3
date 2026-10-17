@@ -1,0 +1,127 @@
+{
+ "_about": "Sparingly soluble salts for chapter 15 fixed problems. GROUND OF TRUTH (instructor, 13 Oct 2026): OpenStax Chemistry 2e Appendix J first; every value carries its source; a value marked 'SCENARIO_CLAUDE confirms from Appendix J' is a placeholder taken from memory of the table and must be checked before a problem using it is approved. Stoichiometry: cation count and anion count per formula unit; molar mass in g/mol for solubility in g/L. Complexes: metal, ligand, ligands per complex, formation constant Kf (Appendix K first).",
+ "salts": {
+  "AgCl": {
+   "name": "silver chloride",
+   "cation": "Ag+",
+   "anion": "Cl-",
+   "n_cat": 1,
+   "n_an": 1,
+   "Ksp": 1.6e-10,
+   "molar_mass": 143.32,
+   "source": "OpenStax Appendix J (1.6 × 10⁻¹⁰), as used in chapter 13"
+  },
+  "AgBr": {
+   "name": "silver bromide",
+   "cation": "Ag+",
+   "anion": "Br-",
+   "n_cat": 1,
+   "n_an": 1,
+   "Ksp": 5e-13,
+   "molar_mass": 187.77,
+   "source": "OpenStax Appendix J (5.0 × 10⁻¹³), as used in chapter 13"
+  },
+  "BaSO4": {
+   "name": "barium sulfate",
+   "cation": "Ba2+",
+   "anion": "SO4^2-",
+   "n_cat": 1,
+   "n_an": 1,
+   "Ksp": 2.3e-08,
+   "molar_mass": 233.39,
+   "source": "SCENARIO_CLAUDE confirms from Appendix J"
+  },
+  "CaF2": {
+   "name": "calcium fluoride",
+   "cation": "Ca2+",
+   "anion": "F-",
+   "n_cat": 1,
+   "n_an": 2,
+   "Ksp": 4e-11,
+   "molar_mass": 78.07,
+   "source": "SCENARIO_CLAUDE confirms from Appendix J"
+  },
+  "Mg(OH)2": {
+   "name": "magnesium hydroxide",
+   "cation": "Mg2+",
+   "anion": "OH-",
+   "n_cat": 1,
+   "n_an": 2,
+   "Ksp": 8.9e-12,
+   "molar_mass": 58.32,
+   "source": "SCENARIO_CLAUDE confirms from Appendix J"
+  },
+  "PbI2": {
+   "name": "lead(II) iodide",
+   "cation": "Pb2+",
+   "anion": "I-",
+   "n_cat": 1,
+   "n_an": 2,
+   "Ksp": 1.4e-08,
+   "molar_mass": 461.01,
+   "source": "SCENARIO_CLAUDE confirms from Appendix J"
+  },
+  "Ag2CrO4": {
+   "name": "silver chromate",
+   "cation": "Ag+",
+   "anion": "CrO4^2-",
+   "n_cat": 2,
+   "n_an": 1,
+   "Ksp": 9e-12,
+   "molar_mass": 331.73,
+   "source": "SCENARIO_CLAUDE confirms from Appendix J"
+  },
+  "CaCO3": {
+   "name": "calcium carbonate",
+   "cation": "Ca2+",
+   "anion": "CO3^2-",
+   "n_cat": 1,
+   "n_an": 1,
+   "Ksp": 8.7e-09,
+   "molar_mass": 100.09,
+   "source": "SCENARIO_CLAUDE confirms from Appendix J"
+  }
+ },
+ "complexes": {
+  "Ag(NH3)2+": {
+   "name": "diamminesilver(I) ion",
+   "metal": "Ag+",
+   "metal_name": "silver ion",
+   "ligand": "NH3",
+   "ligand_name": "ammonia",
+   "n_ligand": 2,
+   "Kf": 17000000.0,
+   "source": "SCENARIO_CLAUDE confirms from Appendix K (OpenStax lists 1.7 × 10⁷)"
+  },
+  "Cu(NH3)4^2+": {
+   "name": "tetraamminecopper(II) ion",
+   "metal": "Cu2+",
+   "metal_name": "copper(II) ion",
+   "ligand": "NH3",
+   "ligand_name": "ammonia",
+   "n_ligand": 4,
+   "Kf": 11000000000000.0,
+   "source": "SCENARIO_CLAUDE confirms from Appendix K"
+  },
+  "Zn(NH3)4^2+": {
+   "name": "tetraamminezinc(II) ion",
+   "metal": "Zn2+",
+   "metal_name": "zinc ion",
+   "ligand": "NH3",
+   "ligand_name": "ammonia",
+   "n_ligand": 4,
+   "Kf": 2900000000.0,
+   "source": "SCENARIO_CLAUDE confirms from Appendix K"
+  },
+  "Fe(SCN)^2+": {
+   "name": "thiocyanatoiron(III) ion",
+   "metal": "Fe3+",
+   "metal_name": "iron(III) ion",
+   "ligand": "SCN-",
+   "ligand_name": "thiocyanate ion",
+   "n_ligand": 1,
+   "Kf": 890.0,
+   "source": "SCENARIO_CLAUDE confirms from Appendix K"
+  }
+ }
+}

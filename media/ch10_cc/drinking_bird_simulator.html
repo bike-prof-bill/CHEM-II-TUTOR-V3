@@ -694,17 +694,21 @@
       else say('Body ' + fmtP(main.Pb) + ', head ' + fmtP(main.Ph) + ', difference ' + fmtP(main.Pb - main.Ph) + '. Liquid ' + fmtCm(main.h) + ' up the neck.');
     }, 700);
   }
+  // Safari cancels a click if a button's text is rewritten between press and release, so text and attributes are
+  // written only when they change (the page redraws many times a second while running).
+  function setT(e, t) { if (e.textContent !== t) e.textContent = t; }
+  function setA(e, n, v) { if (e.getAttribute(n) !== v) e.setAttribute(n, v); }
   function updateText() {
     var b = main;
-    el('vTb').textContent = fmtT(b.Tb); el('vTh').textContent = fmtT(b.Th);
-    el('vPb').textContent = fmtP(b.Pb); el('vPh').textContent = fmtP(b.Ph);
-    el('vD').textContent = fmtP(b.Pb - b.Ph); el('vH').textContent = fmtCm(b.h);
-    el('status').textContent = statusText();
-    el('descBird').textContent = describeBird(); el('descPanel').textContent = describePanel(); el('caption').textContent = captionText();
-    el('roomVal').textContent = fmtT(st.room); el('gapVal').textContent = st.gap.toFixed(1) + ' °C, set by you';
-    roomIn.setAttribute('aria-valuetext', fmtT(st.room));
-    gapIn.setAttribute('aria-valuetext', st.gap.toFixed(1) + ' degrees below the body, set by you');
-    playBtn.textContent = st.running ? 'Pause' : 'Play';
+    setT(el('vTb'), fmtT(b.Tb)); setT(el('vTh'), fmtT(b.Th));
+    setT(el('vPb'), fmtP(b.Pb)); setT(el('vPh'), fmtP(b.Ph));
+    setT(el('vD'), fmtP(b.Pb - b.Ph)); setT(el('vH'), fmtCm(b.h));
+    setT(el('status'), statusText());
+    setT(el('descBird'), describeBird()); setT(el('descPanel'), describePanel()); setT(el('caption'), captionText());
+    setT(el('roomVal'), fmtT(st.room)); setT(el('gapVal'), st.gap.toFixed(1) + ' °C, set by you');
+    setA(roomIn, 'aria-valuetext', fmtT(st.room));
+    setA(gapIn, 'aria-valuetext', st.gap.toFixed(1) + ' degrees below the body, set by you');
+    setT(playBtn, st.running ? 'Pause' : 'Play');
   }
 
   // ===========================================================================
