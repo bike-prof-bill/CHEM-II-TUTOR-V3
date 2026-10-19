@@ -177,6 +177,14 @@ function meter(p) { if (!p) { $("meter").innerHTML = ""; $("doneCard").style.dis
   const L = p.labels || []; $("doneCard").style.display = L.length ? "block" : "none"; $("doneList").innerHTML = ""; L.forEach(t => { const li = document.createElement("li"); li.textContent = t; $("doneList").appendChild(li); }); }
 // choices the server offers for the active item (approach, method, prediction): buttons under the reply
 function showChoices(c) { document.querySelectorAll(".choices").forEach(e => e.remove()); if (!c) return;
+  if (c.kind === "coefficients") {   // a row of coefficient boxes (chapter 17): a blank box means 1; Balance sends "coeffs: a,b,c,..."
+    const d = document.createElement("div"); d.className = "msg choices"; const row = document.createElement("div"); row.style.cssText = "display:flex;flex-wrap:wrap;gap:6px;align-items:center";
+    const inputs = [];
+    c.species.forEach((sp, i) => { if (i === c.arrow_after) { const ar = document.createElement("span"); ar.textContent = "→"; ar.style.margin = "0 6px"; row.appendChild(ar); } else if (i > 0) { const pl = document.createElement("span"); pl.textContent = "+"; pl.style.margin = "0 4px"; row.appendChild(pl); }
+      const inp = document.createElement("input"); inp.type = "text"; inp.inputMode = "numeric"; inp.setAttribute("aria-label", "coefficient of " + sp); inp.style.cssText = "width:2.6em;font:inherit;text-align:center"; inputs.push(inp); row.appendChild(inp);
+      const lab = document.createElement("span"); lab.textContent = sp; row.appendChild(lab); });
+    const go = document.createElement("button"); go.className = "eq"; go.textContent = "Balance"; go.onclick = () => send(undefined, "coeffs: " + inputs.map(x => x.value.trim()).join(","));
+    d.appendChild(row); d.appendChild(go); $("log").appendChild(d); $("log").scrollTop = $("log").scrollHeight; return; }
   const d = document.createElement("div"); d.className = "msg choices"; c.options.forEach(o => { const b = document.createElement("button"); b.className = "eq"; b.textContent = o.text; b.onclick = () => send({ pick: o.id }); d.appendChild(b); }); $("log").appendChild(d); $("log").scrollTop = 1e9; }
 
 let lastNext = null;   // the next item the server reported, so the page can shape its input to it
@@ -199,8 +207,8 @@ function handle(res, echo) {
   if (res.done && !doneShown) { doneShown = true; add("note", res.credit ? "Problem complete. Clean run recorded." : "Problem complete. Recorded without credit for this attempt; a new problem is a fresh start."); $("box").placeholder = "Press New problem for another"; }
 }
 
-async function send(extra) {
-  const text = extra ? "" : $("box").value.trim(); if (busy || away || (!text && !extra)) return;
+async function send(extra, forced) {
+  const text = forced !== undefined ? String(forced) : (extra ? "" : $("box").value.trim()); if (busy || away || (!text && !extra)) return;
   if (text) { add("me", text); $("box").value = ""; }
   flushProbe(); setBusy(true);
   // two phases: the verdict renders at once (checked labels, pins, meter, card); the sentence follows when the model is done

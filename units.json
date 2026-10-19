@@ -76,6 +76,61 @@
     "g": 1,
     "mol": -1
    }
+  },
+  "entropy": {
+   "canonical": "J/K",
+   "dim": {
+    "J": 1,
+    "K": -1
+   }
+  },
+  "potential": {
+   "canonical": "V",
+   "dim": {
+    "V": 1
+   }
+  },
+  "charge": {
+   "canonical": "C",
+   "dim": {
+    "C": 1
+   }
+  },
+  "mass": {
+   "canonical": "g",
+   "dim": {
+    "g": 1
+   }
+  },
+  "time": {
+   "canonical": "s",
+   "dim": {
+    "s": 1
+   }
+  },
+  "current": {
+   "canonical": "A",
+   "dim": {
+    "A": 1
+   }
+  },
+  "inverse_time": {
+   "canonical": "s⁻¹",
+   "dim": {
+    "s": -1
+   }
+  },
+  "atomic_mass": {
+   "canonical": "amu",
+   "dim": {
+    "amu": 1
+   }
+  },
+  "particle_energy": {
+   "canonical": "MeV",
+   "dim": {
+    "MeV": 1
+   }
   }
  },
  "units": {
@@ -97,8 +152,7 @@
     "degC",
     "°C",
     "deg C",
-    "celsius",
-    "C"
+    "celsius"
    ]
   },
   "atm": {
@@ -304,6 +358,256 @@
     "g/mol",
     "g mol⁻¹",
     "grams per mole"
+   ]
+  },
+  "J/K": {
+   "dimension": "entropy",
+   "factor": 1,
+   "offset": 0,
+   "aliases": [
+    "J/K",
+    "J K⁻¹",
+    "J/(K)",
+    "joules per kelvin",
+    "J per K"
+   ]
+  },
+  "kJ/K": {
+   "dimension": "entropy",
+   "factor": 1000,
+   "offset": 0,
+   "aliases": [
+    "kJ/K",
+    "kJ K⁻¹"
+   ]
+  },
+  "V": {
+   "dimension": "potential",
+   "factor": 1,
+   "offset": 0,
+   "aliases": [
+    "V",
+    "volt",
+    "volts"
+   ]
+  },
+  "mV": {
+   "dimension": "potential",
+   "factor": 0.001,
+   "offset": 0,
+   "aliases": [
+    "mV",
+    "millivolt",
+    "millivolts"
+   ]
+  },
+  "C": {
+   "dimension": "charge",
+   "factor": 1,
+   "offset": 0,
+   "aliases": [
+    "C",
+    "coulomb",
+    "coulombs"
+   ]
+  },
+  "kC": {
+   "dimension": "charge",
+   "factor": 1000,
+   "offset": 0,
+   "aliases": [
+    "kC"
+   ]
+  },
+  "g": {
+   "dimension": "mass",
+   "factor": 1,
+   "offset": 0,
+   "aliases": [
+    "g",
+    "gram",
+    "grams"
+   ]
+  },
+  "kg": {
+   "dimension": "mass",
+   "factor": 1000,
+   "offset": 0,
+   "aliases": [
+    "kg",
+    "kilogram",
+    "kilograms"
+   ]
+  },
+  "mg": {
+   "dimension": "mass",
+   "factor": 0.001,
+   "offset": 0,
+   "aliases": [
+    "mg",
+    "milligram",
+    "milligrams"
+   ]
+  },
+  "s": {
+   "dimension": "time",
+   "factor": 1,
+   "offset": 0,
+   "aliases": [
+    "s",
+    "sec",
+    "second",
+    "seconds"
+   ]
+  },
+  "min": {
+   "dimension": "time",
+   "factor": 60,
+   "offset": 0,
+   "aliases": [
+    "min",
+    "minute",
+    "minutes"
+   ]
+  },
+  "h": {
+   "dimension": "time",
+   "factor": 3600,
+   "offset": 0,
+   "aliases": [
+    "h",
+    "hr",
+    "hour",
+    "hours"
+   ]
+  },
+  "A": {
+   "dimension": "current",
+   "factor": 1,
+   "offset": 0,
+   "aliases": [
+    "A",
+    "amp",
+    "amps",
+    "ampere",
+    "amperes"
+   ]
+  },
+  "mA": {
+   "dimension": "current",
+   "factor": 0.001,
+   "offset": 0,
+   "aliases": [
+    "mA"
+   ]
+  },
+  "d": {
+   "dimension": "time",
+   "factor": 86400,
+   "offset": 0,
+   "aliases": [
+    "d",
+    "day",
+    "days"
+   ]
+  },
+  "y": {
+   "dimension": "time",
+   "factor": 31557600,
+   "offset": 0,
+   "aliases": [
+    "y",
+    "yr",
+    "yrs",
+    "year",
+    "years"
+   ]
+  },
+  "s⁻¹": {
+   "dimension": "inverse_time",
+   "factor": 1,
+   "offset": 0,
+   "aliases": [
+    "s⁻¹",
+    "s^-1",
+    "/s",
+    "1/s",
+    "per second"
+   ]
+  },
+  "min⁻¹": {
+   "dimension": "inverse_time",
+   "factor": 0.016666666666666666,
+   "offset": 0,
+   "aliases": [
+    "min⁻¹",
+    "min^-1",
+    "/min",
+    "1/min",
+    "per minute"
+   ]
+  },
+  "h⁻¹": {
+   "dimension": "inverse_time",
+   "factor": 0.0002777777777777778,
+   "offset": 0,
+   "aliases": [
+    "h⁻¹",
+    "h^-1",
+    "/h",
+    "1/h",
+    "hr⁻¹",
+    "per hour"
+   ]
+  },
+  "d⁻¹": {
+   "dimension": "inverse_time",
+   "factor": 1.1574074074074073e-05,
+   "offset": 0,
+   "aliases": [
+    "d⁻¹",
+    "d^-1",
+    "/d",
+    "1/d",
+    "day⁻¹",
+    "per day"
+   ]
+  },
+  "y⁻¹": {
+   "dimension": "inverse_time",
+   "factor": 3.168808781402895e-08,
+   "offset": 0,
+   "aliases": [
+    "y⁻¹",
+    "y^-1",
+    "/y",
+    "1/y",
+    "yr⁻¹",
+    "yr^-1",
+    "/yr",
+    "per year"
+   ]
+  },
+  "amu": {
+   "dimension": "atomic_mass",
+   "factor": 1,
+   "offset": 0,
+   "aliases": [
+    "amu",
+    "Da",
+    "dalton",
+    "daltons"
+   ]
+  },
+  "MeV": {
+   "dimension": "particle_energy",
+   "factor": 1,
+   "offset": 0,
+   "aliases": [
+    "MeV",
+    "MeV/nucleon",
+    "MeV per nucleon",
+    "MeV nucleon⁻¹"
    ]
   }
  }

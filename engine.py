@@ -130,10 +130,14 @@ def validate(v):
         if not CONSTANT_COLLISIONS_REJECT and "constant" in (a["role"], b["role"]) and "key" not in (a["role"], b["role"]): continue
         if (a.get("require_worked") and b["role"] == "given") or (b.get("require_worked") and a["role"] == "given"): continue   # a worked check equal to a given: by design
         if (a.get("after") or b.get("after")) and {a["role"], b["role"]} & {"given", "constant"}: continue   # an `after` entry is live only once its predecessor is set
+        if a.get("after") and b.get("after") and a["state"] != b["state"]: continue   # two items each asked for by name at their own step are never live together (chapter 16: the two routes to ΔG° agree by design)
         if _collide(a, b, lambda ta, tb: max(ta, tb)): reasons.append(("ambiguous", a["id"], b["id"]))
     for tr in v["traps"]:
         if "value" not in tr: continue                       # a bound ("above": x) is not a value and cannot collide
         for e in E:
+            if e.get("state") == tr["state"] and e["value"] and tr["value"] and e.get("abs_tol", 0) >= 0.5 * abs(e["value"]) and abs(math.log10(abs(e["value"]))) >= 15:   # an item accepted as a power of ten (chapter 17's K): clear means a factor of 3 apart or the other sign
+                if (e["value"] > 0) == (tr["value"] > 0) and max(abs(e["value"]), abs(tr["value"])) / min(abs(e["value"]), abs(tr["value"])) <= 3: reasons.append(("trap_near_expected", tr["id"], e["id"]))
+                continue
             if e.get("state") == tr["state"] and _collide(e, tr, lambda ta, tb: CLEARANCE * ta):
                 reasons.append(("trap_near_expected", tr["id"], e["id"]))
     # a trap that lies on a given is undetectable (the student may simply have restated the given): drop the trap, keep the variant
@@ -247,7 +251,7 @@ def _standard(A, rng, state, context, unknown):
             "eq_checks": A.equation_check(rng, unknown)}
 
 # ---------- the step map as a schema (rebuild spec, Change 1) ----------
-FACE_OF_KIND = {"pick": "choice", "direction": "choice", "number": "check", "equation": "check", "table": "check", "text": "why", "reflection": "why"}
+FACE_OF_KIND = {"pick": "choice", "direction": "choice", "number": "check", "equation": "check", "table": "check", "coefficients": "check", "text": "why", "reflection": "why"}
 KINDS_OF_ITEM = set(FACE_OF_KIND)
 
 def stamp_board(v, A, moves, opener_title=None):

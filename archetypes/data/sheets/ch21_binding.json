@@ -1,0 +1,1902 @@
+{
+ "archetype": "ch21_binding",
+ "source_sheet": "ch21_binding_problems.csv",
+ "problems": [
+  {
+   "id": "HS1",
+   "scenario": "Helium from the Sun",
+   "kind": "binding",
+   "text": "The atomic mass of ⁴₂He is 4.0026 amu (OpenStax Example 21.2). Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 0.0305,
+     "unit": "amu",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 4.552e-12,
+     "unit": "J",
+     "half_ulp": 5e-16
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 28.41,
+     "unit": "MeV",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 7.104,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 0.0294
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 2741000000000000.0
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 14.21
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 28410000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "HS2",
+   "scenario": "Helium from the Sun",
+   "kind": "binding",
+   "text": "The atomic mass of ¹⁹₉F is 18.9984 amu (Example 21.2, Check Your Learning). Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 9.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 10.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 0.1593,
+     "unit": "amu",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 2.377e-11,
+     "unit": "J",
+     "half_ulp": 5e-15
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 148.4,
+     "unit": "MeV",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 7.808,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 0.1543
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 1.431e+16
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 16.48
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 148400000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "HS3",
+   "scenario": "Helium from the Sun",
+   "kind": "binding",
+   "text": "The atomic mass of ²₁H (deuterium) is 2.0141 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 1.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 1.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 0.00245,
+     "unit": "amu",
+     "half_ulp": 5e-06
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 3.657e-13,
+     "unit": "J",
+     "half_ulp": 5e-17
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 2.282,
+     "unit": "MeV",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 1.141,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 0.0019
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 220200000000000.0
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 2.282
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 2282000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  },
+  {
+   "id": "HS4",
+   "scenario": "Helium from the Sun",
+   "kind": "binding",
+   "text": "The atomic mass of ⁷₃Li is 7.0160 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 3.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 4.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 0.04235,
+     "unit": "amu",
+     "half_ulp": 5e-06
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 6.321e-12,
+     "unit": "J",
+     "half_ulp": 5e-16
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 39.45,
+     "unit": "MeV",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 5.636,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 0.0407
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 3806000000000000.0
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 13.15
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 39450000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  },
+  {
+   "id": "HS5",
+   "scenario": "Helium from the Sun",
+   "kind": "binding",
+   "text": "The atomic mass of ¹⁴₇N is 14.0031 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 7.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 7.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 0.1128,
+     "unit": "amu",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 1.683e-11,
+     "unit": "J",
+     "half_ulp": 5e-15
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 105.0,
+     "unit": "MeV",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 7.503,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 0.1089
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 1.013e+16
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 15.01
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 105000000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  },
+  {
+   "id": "HS6",
+   "scenario": "Helium from the Sun",
+   "kind": "binding",
+   "text": "The atomic mass of ²⁰₁₀Ne is 19.9924 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 10.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 10.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 0.1731,
+     "unit": "amu",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 2.583e-11,
+     "unit": "J",
+     "half_ulp": 5e-15
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 161.3,
+     "unit": "MeV",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 8.063,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 0.1676
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 1.556e+16
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 16.13
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 161300000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  },
+  {
+   "id": "BC1",
+   "scenario": "The Binding Energy Curve",
+   "kind": "binding",
+   "text": "The atomic mass of ¹²₆C is 12.0000 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 0.0993,
+     "unit": "amu",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 1.482e-11,
+     "unit": "J",
+     "half_ulp": 5e-15
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 92.51,
+     "unit": "MeV",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 7.709,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 0.096
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 8925000000000000.0
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 15.42
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 92510000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  },
+  {
+   "id": "BC2",
+   "scenario": "The Binding Energy Curve",
+   "kind": "binding",
+   "text": "The atomic mass of ¹⁶₈O is 15.9949 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 8.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 8.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 0.1375,
+     "unit": "amu",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 2.052e-11,
+     "unit": "J",
+     "half_ulp": 5e-15
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 128.1,
+     "unit": "MeV",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 8.006,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 0.1331
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 1.236e+16
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 16.01
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 128100000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  },
+  {
+   "id": "BC3",
+   "scenario": "The Binding Energy Curve",
+   "kind": "binding",
+   "text": "The atomic mass of ⁴⁰₂₀Ca is 39.9626 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 20.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 20.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 0.3684,
+     "unit": "amu",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 5.498e-11,
+     "unit": "J",
+     "half_ulp": 5e-15
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 343.2,
+     "unit": "MeV",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 8.58,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 0.3574
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 3.311e+16
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 17.16
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 343200000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  },
+  {
+   "id": "BC4",
+   "scenario": "The Binding Energy Curve",
+   "kind": "binding",
+   "text": "The atomic mass of ⁶²₂₈Ni is 61.9283 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 28.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 34.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 0.5873,
+     "unit": "amu",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 8.765e-11,
+     "unit": "J",
+     "half_ulp": 5e-15
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 547.1,
+     "unit": "MeV",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 8.825,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 0.5719
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 5.279e+16
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 19.54
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 547100000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  },
+  {
+   "id": "BC5",
+   "scenario": "The Binding Energy Curve",
+   "kind": "binding",
+   "text": "The atomic mass of ¹³⁸₅₆Ba is 137.9052 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 56.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 82.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 1.248,
+     "unit": "amu",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 1.862e-10,
+     "unit": "J",
+     "half_ulp": 5e-14
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 1162.0,
+     "unit": "MeV",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 8.424,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 1.217
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 1.122e+17
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 20.76
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 1162000000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  },
+  {
+   "id": "BC6",
+   "scenario": "The Binding Energy Curve",
+   "kind": "binding",
+   "text": "The atomic mass of ²⁰⁸₈₂Pb is 207.9767 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 82.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 126.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 1.763,
+     "unit": "amu",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 2.632e-10,
+     "unit": "J",
+     "half_ulp": 5e-14
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 1643.0,
+     "unit": "MeV",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 7.897,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 1.718
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 1.585e+17
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 20.03
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 1643000000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  },
+  {
+   "id": "FE1",
+   "scenario": "Why Iron Is the End",
+   "kind": "binding",
+   "text": "The atomic mass of ⁵⁶₂₆Fe is 55.9349 amu (OpenStax Example 21.3). Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 26.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 30.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 0.5302,
+     "unit": "amu",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 7.913e-11,
+     "unit": "J",
+     "half_ulp": 5e-15
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 493.9,
+     "unit": "MeV",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 8.82,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 0.5159
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 4.765e+16
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 19.0
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 493900000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "FE2",
+   "scenario": "Why Iron Is the End",
+   "kind": "binding",
+   "text": "The atomic mass of ⁵²₂₄Cr is 51.9405 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 24.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 28.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 0.4915,
+     "unit": "amu",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 7.335e-11,
+     "unit": "J",
+     "half_ulp": 5e-15
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 457.9,
+     "unit": "MeV",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 8.806,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 0.4783
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 4.418e+16
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 19.08
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 457900000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  },
+  {
+   "id": "FE3",
+   "scenario": "Why Iron Is the End",
+   "kind": "binding",
+   "text": "The atomic mass of ⁵⁵₂₅Mn is 54.9380 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 25.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 30.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 0.5192,
+     "unit": "amu",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 7.75e-11,
+     "unit": "J",
+     "half_ulp": 5e-15
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 483.7,
+     "unit": "MeV",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 8.795,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 0.5055
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 4.667e+16
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 19.35
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 483700000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  },
+  {
+   "id": "FE4",
+   "scenario": "Why Iron Is the End",
+   "kind": "binding",
+   "text": "The atomic mass of ⁵⁸₂₈Ni is 57.9353 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 28.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 30.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 0.5455,
+     "unit": "amu",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 8.141e-11,
+     "unit": "J",
+     "half_ulp": 5e-15
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 508.2,
+     "unit": "MeV",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 8.762,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 0.5301
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 4.903e+16
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 18.15
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 508200000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  },
+  {
+   "id": "FE5",
+   "scenario": "Why Iron Is the End",
+   "kind": "binding",
+   "text": "The atomic mass of ⁶³₂₉Cu is 62.9296 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 29.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 34.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 0.5939,
+     "unit": "amu",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 8.863e-11,
+     "unit": "J",
+     "half_ulp": 5e-15
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 553.2,
+     "unit": "MeV",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 8.782,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 0.5779
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 5.338e+16
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 19.08
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 553200000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  },
+  {
+   "id": "FE6",
+   "scenario": "Why Iron Is the End",
+   "kind": "binding",
+   "text": "The atomic mass of ⁶⁴₃₀Zn is 63.9291 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 30.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 34.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 0.6022,
+     "unit": "amu",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 8.988e-11,
+     "unit": "J",
+     "half_ulp": 5e-15
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 561.0,
+     "unit": "MeV",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 8.766,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 0.5857
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 5.413e+16
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 18.7
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 561000000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  },
+  {
+   "id": "FF1",
+   "scenario": "Fission and Fusion",
+   "kind": "binding",
+   "text": "The atomic mass of ²³⁵₉₂U is 235.0439 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 92.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 143.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 1.922,
+     "unit": "amu",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 2.869e-10,
+     "unit": "J",
+     "half_ulp": 5e-14
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 1791.0,
+     "unit": "MeV",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 7.621,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 1.872
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 1.728e+17
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 19.47
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 1791000000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  },
+  {
+   "id": "FF2",
+   "scenario": "Fission and Fusion",
+   "kind": "binding",
+   "text": "The atomic mass of ²³⁸₉₂U is 238.0508 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 92.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 146.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 1.942,
+     "unit": "amu",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 2.898e-10,
+     "unit": "J",
+     "half_ulp": 5e-14
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 1809.0,
+     "unit": "MeV",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 7.6,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.05
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 1.891
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 1.745e+17
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 19.66
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 1809000000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  },
+  {
+   "id": "FF3",
+   "scenario": "Fission and Fusion",
+   "kind": "binding",
+   "text": "The atomic mass of ²³⁹₉₄Pu is 239.0522 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 94.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 145.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 1.947,
+     "unit": "amu",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 2.906e-10,
+     "unit": "J",
+     "half_ulp": 5e-14
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 1814.0,
+     "unit": "MeV",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 7.59,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 1.895
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 1.75e+17
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 19.3
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 1814000000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  },
+  {
+   "id": "FF4",
+   "scenario": "Fission and Fusion",
+   "kind": "binding",
+   "text": "The atomic mass of ³₂He is 3.0160 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 1.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 0.0084,
+     "unit": "amu",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 1.254e-12,
+     "unit": "J",
+     "half_ulp": 5e-16
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 7.826,
+     "unit": "MeV",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 2.609,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 0.0073
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 755000000000000.0
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 3.913
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 7826000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  },
+  {
+   "id": "FF5",
+   "scenario": "Fission and Fusion",
+   "kind": "binding",
+   "text": "The atomic mass of ⁶₃Li is 6.0151 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 3.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 3.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 0.03455,
+     "unit": "amu",
+     "half_ulp": 5e-06
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 5.156e-12,
+     "unit": "J",
+     "half_ulp": 5e-16
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 32.19,
+     "unit": "MeV",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 5.365,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 0.0329
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 3105000000000000.0
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 10.73
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 32190000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  },
+  {
+   "id": "FF6",
+   "scenario": "Fission and Fusion",
+   "kind": "binding",
+   "text": "The atomic mass of ³₁H (tritium) is 3.0160 amu. Using 1.0073 amu per proton, 1.0087 amu per neutron and 0.00055 amu per electron, find the mass defect, the binding energy per nucleus in J and in MeV, and the binding energy per nucleon.",
+   "constants": "1.0073 amu (proton), 1.0087 amu (neutron), 0.00055 amu (electron), 1.6605 × 10⁻²⁷ kg/amu, c = 2.998 × 10⁸ m/s, 1 MeV = 1.602 × 10⁻¹³ J (OpenStax 21.1); atomic masses as stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Z_found",
+     "label": "protons",
+     "value": 1.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "N_found",
+     "label": "neutrons",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "defect_found",
+     "label": "mass defect",
+     "value": 0.00925,
+     "unit": "amu",
+     "half_ulp": 5e-06
+    },
+    {
+     "state": "EJ_found",
+     "label": "binding energy",
+     "value": 1.381e-12,
+     "unit": "J",
+     "half_ulp": 5e-16
+    },
+    {
+     "state": "EMeV_found",
+     "label": "binding energy",
+     "value": 8.618,
+     "unit": "MeV",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "per_found",
+     "label": "per nucleon",
+     "value": 2.873,
+     "unit": "MeV/nucleon",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ELECTRONS_OMITTED",
+     "state": "defect_found",
+     "value": 0.0087
+    },
+    {
+     "id": "AMU_NOT_CONVERTED",
+     "state": "EJ_found",
+     "value": 831400000000000.0
+    },
+    {
+     "id": "DIVIDED_BY_Z",
+     "state": "per_found",
+     "value": 8.618
+    },
+    {
+     "id": "EV_FOR_MEV",
+     "state": "EMeV_found",
+     "value": 8618000.0
+    }
+   ],
+   "picks": {
+    "perturb_1": "no"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026; isotope masses confirmed against NIST)"
+  }
+ ]
+}

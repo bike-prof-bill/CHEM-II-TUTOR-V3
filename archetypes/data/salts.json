@@ -9,7 +9,7 @@
    "n_an": 1,
    "Ksp": 1.6e-10,
    "molar_mass": 143.32,
-   "source": "OpenStax Appendix J (1.6 × 10⁻¹⁰), as used in chapter 13",
+   "source": "OpenStax Appendix J (1.6 × 10⁻¹⁰), as used in chapter 13; confirmed 17 Oct",
    "cation_display": "Ag⁺",
    "anion_display": "Cl⁻"
   },
@@ -21,7 +21,7 @@
    "n_an": 1,
    "Ksp": 5e-13,
    "molar_mass": 187.77,
-   "source": "OpenStax Appendix J (5.0 × 10⁻¹³), as used in chapter 13",
+   "source": "OpenStax Appendix J (5.0 × 10⁻¹³), as used in chapter 13; confirmed 17 Oct",
    "cation_display": "Ag⁺",
    "anion_display": "Br⁻"
   },
@@ -33,7 +33,7 @@
    "n_an": 1,
    "Ksp": 2.3e-08,
    "molar_mass": 233.39,
-   "source": "SCENARIO_CLAUDE confirms from Appendix J",
+   "source": "OpenStax Appendix J; confirmed by SCENARIO_CLAUDE against the instructor's appendix, 17 Oct",
    "cation_display": "Ba²⁺",
    "anion_display": "SO₄²⁻"
   },
@@ -45,7 +45,7 @@
    "n_an": 2,
    "Ksp": 4e-11,
    "molar_mass": 78.07,
-   "source": "SCENARIO_CLAUDE confirms from Appendix J",
+   "source": "OpenStax Appendix J; confirmed by SCENARIO_CLAUDE against the instructor's appendix, 17 Oct",
    "cation_display": "Ca²⁺",
    "anion_display": "F⁻"
   },
@@ -57,7 +57,7 @@
    "n_an": 2,
    "Ksp": 8.9e-12,
    "molar_mass": 58.32,
-   "source": "SCENARIO_CLAUDE confirms from Appendix J",
+   "source": "OpenStax Appendix J; confirmed by SCENARIO_CLAUDE against the instructor's appendix, 17 Oct",
    "cation_display": "Mg²⁺",
    "anion_display": "OH⁻"
   },
@@ -69,7 +69,7 @@
    "n_an": 2,
    "Ksp": 1.4e-08,
    "molar_mass": 461.01,
-   "source": "SCENARIO_CLAUDE confirms from Appendix J",
+   "source": "OpenStax Appendix J; confirmed by SCENARIO_CLAUDE against the instructor's appendix, 17 Oct",
    "cation_display": "Pb²⁺",
    "anion_display": "I⁻"
   },
@@ -81,7 +81,7 @@
    "n_an": 1,
    "Ksp": 9e-12,
    "molar_mass": 331.73,
-   "source": "SCENARIO_CLAUDE confirms from Appendix J",
+   "source": "OpenStax Appendix J; confirmed by SCENARIO_CLAUDE against the instructor's appendix, 17 Oct",
    "cation_display": "Ag⁺",
    "anion_display": "CrO₄²⁻"
   },
@@ -93,9 +93,69 @@
    "n_an": 1,
    "Ksp": 8.7e-09,
    "molar_mass": 100.09,
-   "source": "SCENARIO_CLAUDE confirms from Appendix J",
+   "source": "OpenStax Appendix J; confirmed by SCENARIO_CLAUDE against the instructor's appendix, 17 Oct",
    "cation_display": "Ca²⁺",
    "anion_display": "CO₃²⁻"
+  },
+  "CaC2O4": {
+   "name": "calcium oxalate",
+   "cation": "Ca2+",
+   "anion": "C2O4^2-",
+   "n_cat": 1,
+   "n_an": 1,
+   "Ksp": 1.96e-09,
+   "molar_mass": 146.11,
+   "source": "OpenStax Appendix J (as the monohydrate, 1.96 × 10⁻⁹); confirmed by SCENARIO_CLAUDE against the instructor's appendix, 17 Oct",
+   "cation_display": "Ca²⁺",
+   "anion_display": "C₂O₄²⁻"
+  },
+  "AgI": {
+   "name": "silver iodide",
+   "cation": "Ag+",
+   "anion": "I-",
+   "n_cat": 1,
+   "n_an": 1,
+   "Ksp": 1.5e-16,
+   "molar_mass": 234.77,
+   "source": "OpenStax Appendix J (1.5 × 10⁻¹⁶); confirmed 17 Oct",
+   "cation_display": "Ag⁺",
+   "anion_display": "I⁻"
+  },
+  "Ca(OH)2": {
+   "name": "calcium hydroxide",
+   "cation": "Ca2+",
+   "anion": "OH-",
+   "n_cat": 1,
+   "n_an": 2,
+   "Ksp": 1.3e-06,
+   "molar_mass": 74.09,
+   "source": "OpenStax Appendix J (1.3 × 10⁻⁶); confirmed 17 Oct",
+   "cation_display": "Ca²⁺",
+   "anion_display": "OH⁻"
+  },
+  "Ag2CO3": {
+   "name": "silver carbonate",
+   "cation": "Ag+",
+   "anion": "CO3^2-",
+   "n_cat": 2,
+   "n_an": 1,
+   "Ksp": 8.1e-12,
+   "molar_mass": 275.75,
+   "source": "OpenStax Appendix J (8.1 × 10⁻¹²); confirmed 17 Oct",
+   "cation_display": "Ag⁺",
+   "anion_display": "CO₃²⁻"
+  },
+  "BaF2": {
+   "name": "barium fluoride",
+   "cation": "Ba2+",
+   "anion": "F-",
+   "n_cat": 1,
+   "n_an": 2,
+   "Ksp": 2.4e-05,
+   "molar_mass": 175.32,
+   "source": "OpenStax Appendix J (2.4 × 10⁻⁵); confirmed 17 Oct",
+   "cation_display": "Ba²⁺",
+   "anion_display": "F⁻"
   }
  },
  "complexes": {
@@ -107,7 +167,7 @@
    "ligand_name": "ammonia",
    "n_ligand": 2,
    "Kf": 17000000.0,
-   "source": "SCENARIO_CLAUDE confirms from Appendix K (OpenStax lists 1.7 × 10⁷)",
+   "source": "OpenStax 15.2 (1.7 × 10⁷); confirmed 17 Oct",
    "metal_display": "Ag⁺",
    "ligand_display": "NH₃",
    "formula_display": "Ag(NH₃)₂⁺"
@@ -119,8 +179,8 @@
    "ligand": "NH3",
    "ligand_name": "ammonia",
    "n_ligand": 4,
-   "Kf": 11000000000000.0,
-   "source": "SCENARIO_CLAUDE confirms from Appendix K",
+   "Kf": 17000000000000.0,
+   "source": "OpenStax Appendix K (1.7 × 10¹³); corrected from Fable's 1.1 × 10¹³ on SCENARIO_CLAUDE's check, 17 Oct",
    "metal_display": "Cu²⁺",
    "ligand_display": "NH₃",
    "formula_display": "Cu(NH₃)₄²⁺"
@@ -133,7 +193,7 @@
    "ligand_name": "ammonia",
    "n_ligand": 4,
    "Kf": 2900000000.0,
-   "source": "SCENARIO_CLAUDE confirms from Appendix K",
+   "source": "not in OpenStax Appendix K; unconfirmed and unused (keep out of problems until a source is found)",
    "metal_display": "Zn²⁺",
    "ligand_display": "NH₃",
    "formula_display": "Zn(NH₃)₄²⁺"
@@ -146,10 +206,36 @@
    "ligand_name": "thiocyanate ion",
    "n_ligand": 1,
    "Kf": 890.0,
-   "source": "SCENARIO_CLAUDE confirms from Appendix K",
+   "source": "OpenStax Appendix K (8.9 × 10²); confirmed 17 Oct; unused so far",
    "metal_display": "Fe³⁺",
    "ligand_display": "SCN⁻",
    "formula_display": "Fe(SCN)²⁺"
+  },
+  "Ag(S2O3)2^3-": {
+   "name": "bis(thiosulfato)argentate(I) ion",
+   "metal": "Ag+",
+   "metal_name": "silver ion",
+   "ligand": "S2O3^2-",
+   "ligand_name": "thiosulfate ion",
+   "n_ligand": 2,
+   "Kf": 47000000000000.0,
+   "source": "OpenStax 15.3, Example 15.16 (4.7 × 10¹³); confirmed 17 Oct",
+   "metal_display": "Ag⁺",
+   "ligand_display": "S₂O₃²⁻",
+   "formula_display": "Ag(S₂O₃)₂³⁻"
+  },
+  "Al(OH)4-": {
+   "name": "tetrahydroxoaluminate ion",
+   "metal": "Al3+",
+   "metal_name": "aluminium ion",
+   "ligand": "OH-",
+   "ligand_name": "hydroxide ion",
+   "n_ligand": 4,
+   "Kf": 1.1e+33,
+   "source": "OpenStax 15.3 (1.1 × 10³³); confirmed 17 Oct",
+   "metal_display": "Al³⁺",
+   "ligand_display": "OH⁻",
+   "formula_display": "Al(OH)₄⁻"
   }
  }
 }

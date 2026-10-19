@@ -103,6 +103,7 @@ function progress(S, V) {
 }
 function choicesFor(arch, S, V) {         // the buttons the page shows when the active item is a pick or direction with its own options
   var a = activeState(S, V), b = a ? entry(V, a) : null;
+  if (b && b.kind === "coefficients") return { item: b.id, kind: "coefficients", species: b.species || [], arrow_after: b.arrow_after };   // boxes, one per species; arrow_after = how many are reactants
   if (!b || (b.kind !== "pick" && b.kind !== "direction") || b.options_from === "equation_picks") return null;
   return { item: b.id, kind: b.kind, options: optionsOf(arch, V, b).map(function (o) { return { id: o.id, text: o.text }; }) };
 }

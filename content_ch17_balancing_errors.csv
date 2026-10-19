@@ -1,0 +1,5 @@
+﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
+N_ADDED,They took n as the sum of the two electron counts instead of their least common multiple.,"Do the electrons released and taken up need to be added, or made equal?",,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+NOT_EQUALIZED,"They added the half-reactions without multiplying them, so electrons don't cancel.","After adding, are there any electrons left over?",,coefficients equal to the unscaled sum of the halves,"approved (instructor, 18 Oct 2026)"
+WRONG_ION_FOR_MEDIUM,Their equation for a basic solution contains H⁺ (or OH⁻ for an acidic one).,Which ion does this solution actually contain?,,"H⁺ in a basic answer, or OH⁻ in an acidic one","approved (instructor, 18 Oct 2026)"
+CHARGE_UNBALANCED,Their atoms balance but the total charge does not.,Add up the charges on each side. Do they match?,,the checker finds atoms balanced and charge not,"approved (instructor, 18 Oct 2026)"

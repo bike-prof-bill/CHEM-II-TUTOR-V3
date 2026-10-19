@@ -11,6 +11,9 @@ test-gen:
 	$(PY) test_ch13_eq.py
 	$(PY) test_ch14.py
 	$(PY) test_ch15.py
+	$(PY) test_ch16.py
+	$(PY) test_ch17.py
+	$(PY) test_ch19_21.py
 
 test-verify:
 	$(NODE) gas/test_core.js
@@ -20,6 +23,9 @@ test-verify:
 	$(NODE) gas/test_eq.js
 	$(NODE) gas/test_ch14.js
 	$(NODE) gas/test_ch15.js
+	$(NODE) gas/test_ch16.js
+	$(NODE) gas/test_ch17.js
+	$(NODE) gas/test_ch19_21.js
 
 test-modules:
 	$(NODE) tests/modules/units.test.js

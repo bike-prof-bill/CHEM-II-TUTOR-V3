@@ -1,6 +1,7 @@
 ﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
-RATIO_INVERTED,,,,"acid over base, on the ratio or in the pH",DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
-LOG_FORGOTTEN,,,,pKa + the ratio,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
-PKA_TYPED_AS_PH,,,,pKa offered as the pH when the ratio is not 1,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
-BUFFER_PH_FIXED,,,,wrong pick: no change at all after a little strong acid or base,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
-ADDED_NOT_CONSUMED,,,,new pH as if the added acid or base stayed free in solution,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+RATIO_INVERTED,"Their ratio, or their pH, uses acid over base instead of base over acid.","In the Henderson-Hasselbalch equation, which partner goes on top: the acid or its conjugate base?",,"acid over base, on the ratio or in the pH","approved (instructor, 17 Oct 2026)"
+LOG_FORGOTTEN,"Their pH is pKa plus the ratio itself, without the logarithm.","The equation adds the logarithm of the ratio, not the ratio. What is log of your ratio?",,pKa + the ratio,"approved (instructor, 17 Oct 2026)"
+PKA_TYPED_AS_PH,"They gave the pKa as the pH, but the two partners are not equal.",pH equals pKa only when the ratio is 1. Is your ratio 1?,,pKa offered as the pH when the ratio is not 1,"approved (instructor, 17 Oct 2026)"
+BUFFER_PH_FIXED,They predicted no change at all after a little strong acid or base.,A buffer resists change; does it stop all change? What happens to the ratio when one partner is used up a little?,,wrong pick: no change at all after a little strong acid or base,"approved (instructor, 17 Oct 2026)"
+ADDED_NOT_CONSUMED,"Their new pH treats the added acid or base as free in solution, as if no buffer were there.",Does the added hydronium or hydroxide stay free? Which partner reacts with it first?,,new pH as if the added acid or base stayed free in solution,"approved (instructor, 17 Oct 2026)"
+KB_USED_AS_KA,"Their pH uses pKb of the weak base (for ammonia, 4.74) in place of pKa of its conjugate acid (9.26).","The Henderson-Hasselbalch equation needs pKa of the acid partner. For a basic buffer, what is pKa of the conjugate acid? Remember Ka × Kb = Kw.",,"pH = pKb + log(ratio), at pH_found and pH_after_n (basic buffers); new, Fable to build","approved (instructor, 17 Oct 2026)"

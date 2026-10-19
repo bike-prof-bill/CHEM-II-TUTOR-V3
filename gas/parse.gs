@@ -209,7 +209,9 @@ function keysToName(m) {                                     // map of base symb
 }
 function keysSame(a, b) { var k; for (k in a) if (a[k] !== b[k]) return false; for (k in b) if (a[k] !== b[k]) return false; return true; }
 function keysMul(a, b, sign) { var out = {}, k; for (k in a) out[k] = a[k]; for (k in b) { out[k] = (out[k] || 0) + sign * b[k]; if (!out[k]) delete out[k]; } return out; }
-function evalWithUnits(text, arch) {                       // a dropped closing bracket at the end is forgiven (up to two)
+function evalWithUnits(text, arch) {
+  // a plain number with one unit ("0.1315 y⁻¹", "4.3 h⁻¹") is not arithmetic: the unit's own exponent must not reach the number (19 Oct)
+  if (new RegExp("^\\s*[-+]?\\d[\\d.,]*(?:\\s*[eE][-+]?\\d+|\\s*[×x*]\\s*10\\s*\\^?\\s*[-+⁻]?[\\d⁰¹²³⁴⁵⁶⁷⁸⁹]+)?\\s*(" + UNITS.unitPattern + ")\\s*$").test(String(text))) return null;                       // a dropped closing bracket at the end is forgiven (up to two)
   var r = evalWithUnits1(text, arch); if (r) return r;
   var opens = (String(text).match(/[(\[{]/g) || []).length, closes = (String(text).match(/[)\]}]/g) || []).length;
   if (opens > closes && opens - closes <= 2) return evalWithUnits1(String(text) + ")".repeat(opens - closes), arch);

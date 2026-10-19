@@ -45,6 +45,39 @@
    "conjugate_name": "formate ion",
    "Ka": 0.00018,
    "source": "OpenStax Appendix H"
+  },
+  "ammonium": {
+   "formula": "NH4+",
+   "conjugate": "NH3",
+   "name": "ammonium ion",
+   "conjugate_name": "ammonia",
+   "Ka": 5.6e-10,
+   "source": "Ka = Kw / Kb(NH3) = 5.6 × 10⁻¹⁰ (OpenStax 14.3; Kb from Appendix I); approved 17 Oct"
+  },
+  "dihydrogen_phosphate": {
+   "formula": "H2PO4-",
+   "conjugate": "HPO4^2-",
+   "name": "dihydrogen phosphate ion",
+   "conjugate_name": "hydrogen phosphate ion",
+   "Ka": 6.2e-08,
+   "source": "OpenStax Appendix H (6.2 × 10⁻⁸); approved 17 Oct"
+  },
+  "carbonic_blood": {
+   "formula": "H2CO3",
+   "conjugate": "HCO3-",
+   "name": "carbonic acid (body temperature)",
+   "conjugate_name": "bicarbonate ion",
+   "Ka": 7.943282347242822e-07,
+   "pKa": 6.1,
+   "source": "OpenStax 14.6, How Sciences Interconnect: The Buffer System in Blood (pKa 6.1 at body temperature; [H₂CO₃] about 0.0012 M, [HCO₃⁻] about 0.024 M). Kept separate from Appendix H's 4.3 × 10⁻⁷ at 25 °C. Approved 17 Oct"
+  },
+  "lactic": {
+   "formula": "CH3CH(OH)COOH",
+   "conjugate": "CH3CH(OH)COO-",
+   "name": "lactic acid",
+   "conjugate_name": "lactate ion",
+   "Ka": 0.000136,
+   "source": "OpenStax Exercise 63 (1.36 × 10⁻⁴); approved 17 Oct"
   }
  },
  "bases": {
@@ -79,6 +112,22 @@
    "conjugate_name": "dimethylammonium ion",
    "Kb": 0.00059,
    "source": "OpenStax Appendix I"
+  },
+  "hypochlorite": {
+   "formula": "ClO-",
+   "conjugate": "HClO",
+   "name": "hypochlorite ion",
+   "conjugate_name": "hypochlorous acid",
+   "Kb": 3.448275862068965e-07,
+   "source": "Kb = Kw / Ka(HOCl) = 3.4 × 10⁻⁷ (Appendix H; 14.3); approved 17 Oct"
+  },
+  "acetate": {
+   "formula": "CH3COO-",
+   "conjugate": "CH3COOH",
+   "name": "acetate ion",
+   "conjugate_name": "acetic acid",
+   "Kb": 5.555555555555555e-10,
+   "source": "Kb = Kw / Ka(acetic) = 5.6 × 10⁻¹⁰ (Appendix H; 14.3); approved 17 Oct"
   }
  },
  "strong": {

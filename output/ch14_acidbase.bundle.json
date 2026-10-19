@@ -183,7 +183,14 @@
    "ask": "Water is the solvent, and its concentration barely changes. Does it need a column?"
   }
  },
- "trap_notes_by_opener": {},
+ "trap_notes_by_opener": {
+  "The Bleach Puzzle": {
+   "KA_USED_AS_KB": {
+    "note": "Their Kb is the partner acid's Ka, typed as it stands.",
+    "ask": "Ka and Kb of a conjugate pair are not the same number. What do they multiply to?"
+   }
+  }
+ },
  "equation_symbols": {
   "x": [
    "x"
@@ -310,6 +317,123 @@
     "basic"
    ],
    "role": "exam",
+   "items": {
+    "add": [],
+    "remove": []
+   }
+  },
+  {
+   "title": "The Weak Acid That Eats Glass",
+   "question": "Hydrofluoric acid is a weak acid. A pH meter in 0.10 M hydrofluoric acid reads 2.11; in 0.10 M hydrochloric acid it reads 1.00. Yet hydrofluoric acid is kept in plastic bottles because it etches glass, and it is one of the most dangerous acids in any lab. Hydrochloric acid does not touch glass. Which species dominate in the hydrofluoric acid solution, and which of them attacks the glass?",
+   "model_answer": "HF is weak: Ka 6.4 × 10⁻⁴ (Appendix H); in 0.10 M about 7.7 % ionized, so molecular HF dominates; H₃O⁺ and F⁻ are minor. Glass (SiO₂) reacts with HF: SiO₂ + 4HF → SiF₄ + 2H₂O. \"Weak\" describes partial ionization, not hazard; the danger comes from HF and fluoride, not from hydronium.",
+   "target": "A weak acid ionizes only partly, so molecular HA dominates; 'weak' describes ionization, not hazard.",
+   "keywords": [
+    "weak acid",
+    "partial ionization",
+    "few",
+    "molecular HF",
+    "whole molecules",
+    "equilibrium",
+    "Ka",
+    "etch",
+    "silicon dioxide"
+   ],
+   "liquids": [
+    "H1",
+    "H2",
+    "H3",
+    "H4",
+    "H5",
+    "H6"
+   ],
+   "kinds": [
+    "weak_acid"
+   ],
+   "fits": [
+    "H1",
+    "H2",
+    "H3",
+    "H4",
+    "H5",
+    "H6"
+   ],
+   "media": {
+    "image_with_question": "ch14_acidbase/Eats_glass.jpg",
+    "image_after_account": "",
+    "image_alt": "A lab bench: a plastic bottle labeled 0.10 M HF, an etched glass slide beside it, and a pH probe in a plastic beaker with its meter reading 2.11.",
+    "simulation": "ch14_acidbase/weak_acid_base_simulator.html?species={species}&c={c}&theme={theme}",
+    "simulation_opens": "meaning",
+    "credit": "AI image made by the instructor with NotebookLM"
+   },
+   "label_words": [
+    "weak acid",
+    "strong acid",
+    "equilibrium",
+    "ionization",
+    "pH",
+    "Ka",
+    "corrosive"
+   ],
+   "role": "floater",
+   "items": {
+    "add": [],
+    "remove": []
+   }
+  },
+  {
+   "title": "The Bleach Puzzle",
+   "question": "Household bleach is sodium hypochlorite, NaClO. A lab dissolves pure sodium hypochlorite in water at 0.70 M, about the strength of bleach. A pH meter reads 10.7, strongly basic, yet the formula has no OH in it. Sodium hypochlorite contains no hydroxide. Where do the hydroxide ions come from?",
+   "model_answer": "ClO⁻ is the conjugate base of the weak acid HClO (Ka 2.9 × 10⁻⁸, Appendix H). It takes protons from water: ClO⁻ + H₂O ⇌ HClO + OH⁻; Kb = Kw ÷ Ka = 3.4 × 10⁻⁷. Partial: about 0.07 % at 0.70 M; pH 10.7. Na⁺ is a spectator. The weaker the acid, the stronger its conjugate base.",
+   "target": "An anion that is the conjugate base of a weak acid takes protons from water, making hydroxide; Kb = Kw ÷ Ka.",
+   "keywords": [
+    "conjugate base",
+    "takes a proton",
+    "proton transfer",
+    "water",
+    "hydroxide",
+    "hypochlorous acid",
+    "Kb",
+    "Ka",
+    "Kw",
+    "spectator",
+    "partial"
+   ],
+   "liquids": [
+    "C1",
+    "C2",
+    "C3",
+    "C4",
+    "C5",
+    "C6"
+   ],
+   "kinds": [
+    "weak_base"
+   ],
+   "fits": [
+    "C1",
+    "C2",
+    "C3",
+    "C4",
+    "C5",
+    "C6"
+   ],
+   "media": {
+    "image_with_question": "ch14_acidbase/Bleach_puzzle.jpg",
+    "image_after_account": "",
+    "image_alt": "A laundry-room shelf: a white jug labeled sodium hypochlorite beside a small beaker with a pH probe; the meter reads 10.70.",
+    "simulation": "ch14_acidbase/weak_acid_base_simulator.html?species={species}&c={c}&theme={theme}",
+    "simulation_opens": "meaning",
+    "credit": "AI image made by the instructor with NotebookLM"
+   },
+   "label_words": [
+    "weak base",
+    "conjugate base",
+    "hydrolysis",
+    "basic salt",
+    "pH",
+    "Kb"
+   ],
+   "role": "floater",
    "items": {
     "add": [],
     "remove": []
@@ -486,6 +610,13 @@
    "label_when_done": "Reflection written",
    "ask": "Which step was hardest for you? In one sentence, what would you tell a friend who is stuck there?",
    "status": "approved (instructor, 16 Oct 2026)"
+  },
+  "Kb_found": {
+   "state": "Kb_found",
+   "ask": "The problem gives Ka for the partner acid. Find Kb for the base from Kw and that Ka.",
+   "switch_ask": "Ka and Kb of a conjugate pair multiply to Kw. Which one do you have, and which one does the table need?",
+   "park_text": "Kb = Kw ÷ Ka",
+   "status": "approved (instructor, 19 Oct 2026: 'yes build'; plain wording by Fable, SCENARIO_CLAUDE may rewrite)"
   }
  },
  "moves_by_opener": {
@@ -644,6 +775,53 @@
     "return_ask": "What does adding acid do to a weak base?",
     "status": "approved (instructor, 16 Oct 2026)"
    }
+  },
+  "The Weak Acid That Eats Glass": {
+   "account_given": {
+    "state": "account_given",
+    "stage": "opening",
+    "label_when_done": "Particle account given",
+    "switch_ask": "At 7.7 % ionized, which is there more of in the bottle: whole HF molecules, or fluoride ions?",
+    "park_text": "Most HF stays as whole molecules; only a few percent give their proton to water. Whole HF molecules react with the glass.",
+    "status": "approved (instructor, 17 Oct 2026)"
+   },
+   "meaning_given": {
+    "state": "meaning_given",
+    "stage": "meaning",
+    "label_when_done": "Meaning stated",
+    "ask": "What does \"weak\" tell you about an acid, and what does it not tell you?",
+    "switch_ask": "Does Ka say anything about what else the acid's molecules can react with?",
+    "notebook_prompt": "Explain the difference between an acid's strength (how far it ionizes) and how dangerous or reactive it is. Use an example other than mine. Do not solve any problem for me. Then ask me one short question and wait for my answer.",
+    "return_ask": "What does \"weak\" describe?",
+    "status": "approved (instructor, 17 Oct 2026)"
+   }
+  },
+  "The Bleach Puzzle": {
+   "account_given": {
+    "state": "account_given",
+    "stage": "opening",
+    "label_when_done": "Particle account given",
+    "switch_ask": "Hypochlorite is the partner of a weak acid. What can it take from a water molecule, and what does the water become?",
+    "park_text": "Hypochlorite takes a proton from water and becomes hypochlorous acid; the water becomes hydroxide. Only a small fraction does this.",
+    "status": "approved (instructor, 17 Oct 2026)"
+   },
+   "perturb_2": {
+    "state": "perturb_2",
+    "stage": "change",
+    "label_when_done": "Partner predicted",
+    "ask": "Start again from the original solution. A little hypochlorous acid, HClO, is added. What happens to the pH: does it rise, fall, or stay the same? Pick one.",
+    "status": "approved (instructor, 17 Oct 2026)"
+   },
+   "meaning_given": {
+    "state": "meaning_given",
+    "stage": "meaning",
+    "label_when_done": "Meaning stated",
+    "ask": "Why does the salt of a weak acid make water basic, and why is the effect larger for a weaker acid?",
+    "switch_ask": "Compare Kb for hypochlorite and for acetate. Which acid is weaker, and which base is stronger?",
+    "notebook_prompt": "Explain why the conjugate base of a weak acid makes a solution basic, and how Ka and Kb are related. Use an example other than mine. Do not solve any problem for me. Then ask me one short question and wait for my answer.",
+    "return_ask": "How are Ka and Kb of a conjugate pair related?",
+    "status": "approved (instructor, 17 Oct 2026)"
+   }
   }
  },
  "variants": [
@@ -651,7 +829,7 @@
    "kind": "weak_acid",
    "fixed_id": "K1",
    "version": "holds",
-   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16 Oct 2026)",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
    "text": "For the lab, the stockroom worker makes 0.10 M acetic acid, acetic acid, \\(\\mathrm{CH_3COOH}\\), at 25 °C. \\(K_a = \\) \\(1.8 \\times 10^{-5}\\). Set up the ICE table. Find \\([\\mathrm{H_3O^+}]\\), the pH and the percent ionized. Then check the 5 % rule.",
    "context": {
     "family": "core: 5 % rule holds (worked)",
@@ -1201,7 +1379,7 @@
    "kind": "weak_acid",
    "fixed_id": "K2",
    "version": "fails",
-   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16 Oct 2026)",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
    "text": "She dilutes some acetic acid all the way to 0.00050 M, acetic acid, \\(\\mathrm{CH_3COOH}\\), at 25 °C. \\(K_a = \\) \\(1.8 \\times 10^{-5}\\). Set up the ICE table. Find \\([\\mathrm{H_3O^+}]\\), the pH and the percent ionized. Then check the 5 % rule.",
    "context": {
     "family": "variant: 5 % rule fails, quadratic (worked offer)",
@@ -1758,7 +1936,7 @@
    "kind": "weak_acid",
    "fixed_id": "K3",
    "version": "",
-   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16 Oct 2026)",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
    "text": "A bottle holds 0.50 M formic acid, formic acid, \\(\\mathrm{HCOOH}\\), at 25 °C. \\(K_a = \\) \\(1.8 \\times 10^{-4}\\). Set up the ICE table. Find \\([\\mathrm{H_3O^+}]\\), the pH and the percent ionized. Then check the 5 % rule.",
    "context": {
     "family": "weak acid, rule holds",
@@ -2308,7 +2486,7 @@
    "kind": "weak_acid",
    "fixed_id": "K4",
    "version": "",
-   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16 Oct 2026)",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
    "text": "A bottle holds 0.050 M hypochlorous acid, hypochlorous acid, \\(\\mathrm{HClO}\\), at 25 °C. \\(K_a = \\) \\(2.9 \\times 10^{-8}\\). Set up the ICE table. Find \\([\\mathrm{H_3O^+}]\\), the pH and the percent ionized. Then check the 5 % rule.",
    "context": {
     "family": "weak acid, very small Ka",
@@ -2858,7 +3036,7 @@
    "kind": "weak_acid",
    "fixed_id": "K5",
    "version": "",
-   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16 Oct 2026)",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
    "text": "A plastic bottle holds 0.020 M hydrofluoric acid, hydrofluoric acid, \\(\\mathrm{HF}\\), at 25 °C. \\(K_a = \\) \\(6.4 \\times 10^{-4}\\). Set up the ICE table. Find \\([\\mathrm{H_3O^+}]\\), the pH and the percent ionized. Then check the 5 % rule.",
    "context": {
     "family": "weak acid, rule fails, quadratic",
@@ -3415,7 +3593,7 @@
    "kind": "weak_base",
    "fixed_id": "K6",
    "version": "",
-   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16 Oct 2026)",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
    "text": "A bottle holds 0.15 M ammonia, ammonia, \\(\\mathrm{NH_3}\\), at 25 °C. \\(K_b = \\) \\(1.8 \\times 10^{-5}\\). Set up the ICE table. Find \\([\\mathrm{OH^-}]\\), the pOH, the pH and the percent ionized. Then check the 5 % rule.",
    "context": {
     "family": "weak base, rule holds",
@@ -4000,7 +4178,7 @@
    "kind": "weak_base",
    "fixed_id": "X1",
    "version": "",
-   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16 Oct 2026)",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
    "text": "A lab models fish rinse water with 0.1 M trimethylamine, \\(\\mathrm{(CH_3)_3N}\\), at 25 °C. \\(K_b = 6.3 \\times 10^{-5}\\). Set up the ICE table. Find \\([\\mathrm{OH^-}]\\), the pOH, the pH and the percent ionized. Then check the 5 % rule.",
    "context": {
     "family": "weak base, 5 % rule holds (exam: every version the same concepts)",
@@ -4585,7 +4763,7 @@
    "kind": "weak_base",
    "fixed_id": "X2",
    "version": "",
-   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16 Oct 2026)",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
    "text": "A lab models fish rinse water with 0.25 M trimethylamine, \\(\\mathrm{(CH_3)_3N}\\), at 25 °C. \\(K_b = 6.3 \\times 10^{-5}\\). Set up the ICE table. Find \\([\\mathrm{OH^-}]\\), the pOH, the pH and the percent ionized. Then check the 5 % rule.",
    "context": {
     "family": "weak base, 5 % rule holds (exam: every version the same concepts)",
@@ -5170,7 +5348,7 @@
    "kind": "weak_base",
    "fixed_id": "X3",
    "version": "",
-   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16 Oct 2026)",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
    "text": "A lab models fish rinse water with 0.2 M ammonia, \\(\\mathrm{NH_3}\\), at 25 °C. \\(K_b = 1.8 \\times 10^{-5}\\). Set up the ICE table. Find \\([\\mathrm{OH^-}]\\), the pOH, the pH and the percent ionized. Then check the 5 % rule.",
    "context": {
     "family": "weak base, 5 % rule holds (exam: every version the same concepts)",
@@ -5755,7 +5933,7 @@
    "kind": "weak_base",
    "fixed_id": "X4",
    "version": "",
-   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16 Oct 2026)",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
    "text": "A lab models fish rinse water with 0.05 M ammonia, \\(\\mathrm{NH_3}\\), at 25 °C. \\(K_b = 1.8 \\times 10^{-5}\\). Set up the ICE table. Find \\([\\mathrm{OH^-}]\\), the pOH, the pH and the percent ionized. Then check the 5 % rule.",
    "context": {
     "family": "weak base, 5 % rule holds (exam: every version the same concepts)",
@@ -6340,7 +6518,7 @@
    "kind": "weak_base",
    "fixed_id": "X5",
    "version": "",
-   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16 Oct 2026)",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
    "text": "A lab models fish rinse water with 0.5 M methylamine, \\(\\mathrm{CH_3NH_2}\\), at 25 °C. \\(K_b = 4.4 \\times 10^{-4}\\). Set up the ICE table. Find \\([\\mathrm{OH^-}]\\), the pOH, the pH and the percent ionized. Then check the 5 % rule.",
    "context": {
     "family": "weak base, 5 % rule holds (exam: every version the same concepts)",
@@ -6925,7 +7103,7 @@
    "kind": "weak_base",
    "fixed_id": "X6",
    "version": "",
-   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16 Oct 2026)",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
    "text": "A lab models fish rinse water with 0.8 M dimethylamine, \\(\\mathrm{(CH_3)_2NH}\\), at 25 °C. \\(K_b = 5.9 \\times 10^{-4}\\). Set up the ICE table. Find \\([\\mathrm{OH^-}]\\), the pOH, the pH and the percent ionized. Then check the 5 % rule.",
    "context": {
     "family": "weak base, 5 % rule holds (exam: every version the same concepts)",
@@ -7505,7 +7683,6995 @@
    "archetype_id": "ch14_acidbase",
    "seed": 12,
    "opener_index": 1
+  },
+  {
+   "kind": "weak_acid",
+   "fixed_id": "H1",
+   "version": "",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
+   "text": "A plastic bottle holds 1 M hydrofluoric acid, \\(\\mathrm{HF}\\), at 25 °C. \\(K_a = 6.4 \\times 10^{-4}\\). Set up the ICE table. Find \\([\\mathrm{H_3O^+}]\\), the pH and the percent ionized. Then check the 5 % rule.",
+   "context": {
+    "family": "weak acid, 5 % rule holds",
+    "x": 0.02498,
+    "pH": 1.602,
+    "percent": 2.498,
+    "approx_ok": true
+   },
+   "givens": {
+    "c": {
+     "value": 1.0,
+     "unit": "M"
+    },
+    "Ka": {
+     "value": 0.00064,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium constant chosen"
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting concentration: drop it from the denominator, then check."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      }
+     ],
+     "right": [
+      "method:smallx"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Method chosen"
+    },
+    {
+     "state": "x_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "method"
+     ],
+     "explicit": true,
+     "id": "x_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "x found"
+    },
+    {
+     "state": "pH_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "x_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "pH_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "pH found"
+    },
+    {
+     "state": "percent_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "pH_found"
+     ],
+     "explicit": true,
+     "id": "percent_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Percent ionized found"
+    },
+    {
+     "state": "approx_checked",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "percent_found"
+     ],
+     "options": [
+      {
+       "id": "approx:holds",
+       "text": "holds: less than 5 % ionised, so dropping x was fine"
+      },
+      {
+       "id": "approx:fails",
+       "text": "fails: more than 5 % ionised, so the quadratic was needed"
+      }
+     ],
+     "right": [
+      "approx:holds"
+     ],
+     "explicit": true,
+     "id": "approx_checked",
+     "stage": "check",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "5 % rule checked"
+    },
+    {
+     "state": "perturb_1",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "approx_checked"
+     ],
+     "options": [
+      {
+       "id": "p1:rises",
+       "text": "rises: the percent ionised goes up"
+      },
+      {
+       "id": "p1:falls",
+       "text": "falls: the percent ionised goes down",
+       "names": "DILUTION_IONIZATION_FALLS"
+      },
+      {
+       "id": "p1:unchanged",
+       "text": "unchanged: the percent ionised stays the same"
+      }
+     ],
+     "right": [
+      "p1:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_1",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Dilution predicted"
+    },
+    {
+     "state": "perturb_1_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_1"
+     ],
+     "id": "perturb_1_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Dilution explained"
+    },
+    {
+     "state": "perturb_2",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "perturb_1_why"
+     ],
+     "options": [
+      {
+       "id": "p2:rises",
+       "text": "rises: the pH goes up"
+      },
+      {
+       "id": "p2:falls",
+       "text": "falls: the pH goes down",
+       "names": "CONJUGATE_LOWERS_PH"
+      },
+      {
+       "id": "p2:unchanged",
+       "text": "unchanged: the pH stays the same"
+      }
+     ],
+     "right": [
+      "p2:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_2",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Partner ion predicted"
+    },
+    {
+     "state": "perturb_2_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_2"
+     ],
+     "id": "perturb_2_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Partner ion explained"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "perturb_2_why"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "SQRT_FORGOTTEN",
+     "state": "x_found",
+     "value": 0.00064,
+     "unit": "M",
+     "abs_tol": 1.28e-05
+    },
+    {
+     "id": "PKA_TYPED_AS_PH",
+     "state": "pH_found",
+     "value": 3.1938,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PERCENT_AS_FRACTION",
+     "state": "percent_found",
+     "value": 0.02498,
+     "unit": "",
+     "abs_tol": 0.0005
+    },
+    {
+     "id": "EXCEEDS_INITIAL",
+     "state": "x_found",
+     "above": 1.02,
+     "unit": "M"
+    }
+   ],
+   "table": {
+    "species": [
+     "HF",
+     "H3O+",
+     "F-"
+    ],
+    "rows": {
+     "I": [
+      "1",
+      "0",
+      "0"
+     ],
+     "C": [
+      "-x",
+      "+x",
+      "+x"
+     ],
+     "E": [
+      "1 - x",
+      "x",
+      "x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "-x",
+       "-x"
+      ]
+     },
+     {
+      "id": "WATER_IN_TABLE",
+      "row": "I",
+      "cells": [
+       "1",
+       "0",
+       "0",
+       "55.5"
+      ]
+     }
+    ],
+    "zero_species": [
+     1,
+     2
+    ]
+   },
+   "words": {
+    "acid": "hydrofluoric acid",
+    "formula": "HF",
+    "conjugate": "fluoride ion"
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.15,
+       "K": 0.0264705882
+      },
+      {
+       "x": 0.35,
+       "K": 0.188461538
+      },
+      {
+       "x": 0.55,
+       "K": 0.672222222
+      }
+     ],
+     "alt": [],
+     "bent": {
+      "WATER_IN_EXPRESSION": [
+       {
+        "x": 0.15,
+        "K": 0.000476947536
+       },
+       {
+        "x": 0.35,
+        "K": 0.0033957034
+       },
+       {
+        "x": 0.55,
+        "K": 0.0121121121
+       }
+      ]
+     },
+     "literal_for": {
+      "K": 0.00064
+     },
+     "park_text": "0.00064 = x · x / (1 - x)"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "species": "hydrofluoric",
+    "c": 1.0,
+    "K": 0.00064
+   },
+   "expected": [
+    {
+     "id": "x_H3O",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "x_found",
+     "label": "x = [H3O+]",
+     "value": 0.0249802,
+     "unit": "M",
+     "abs_tol": 0.0005,
+     "require_unit": true
+    },
+    {
+     "id": "key_pH_found",
+     "role": "key",
+     "dim": {},
+     "state": "pH_found",
+     "label": "pH",
+     "value": 1.6024,
+     "unit": "",
+     "abs_tol": 0.03,
+     "require_unit": false,
+     "after": "x_found"
+    },
+    {
+     "id": "percent_ionised_out_of_100",
+     "role": "intermediate",
+     "dim": {},
+     "state": "percent_found",
+     "label": "percent ionised (out of 100)",
+     "value": 2.49802,
+     "unit": "",
+     "abs_tol": 0.05,
+     "require_unit": false,
+     "after": "pH_found"
+    },
+    {
+     "id": "g_c",
+     "state": null,
+     "role": "given",
+     "label": "c",
+     "value": 1.0,
+     "unit": "M",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "abs_tol": 1e-06
+    },
+    {
+     "id": "g_Ka",
+     "state": null,
+     "role": "given",
+     "label": "Ka",
+     "value": 0.00064,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 1.64e-09
+    },
+    {
+     "id": "c_Kw",
+     "state": null,
+     "role": "constant",
+     "label": "Kw",
+     "value": 1e-14,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 1e-17
+    }
+   ],
+   "traps_dropped": [
+    "PH_FROM_FORMAL_CONCENTRATION"
+   ],
+   "variant_id": "ch14_acidbase:13",
+   "archetype_id": "ch14_acidbase",
+   "seed": 13,
+   "opener_index": 2
+  },
+  {
+   "kind": "weak_acid",
+   "fixed_id": "H2",
+   "version": "",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
+   "text": "A plastic bottle holds 0.1 M hydrofluoric acid, \\(\\mathrm{HF}\\), at 25 °C. \\(K_a = 6.4 \\times 10^{-4}\\). Set up the ICE table. Find \\([\\mathrm{H_3O^+}]\\), the pH and the percent ionized. Then check the 5 % rule.",
+   "context": {
+    "family": "weak acid, 5 % rule fails",
+    "x": 0.0076864,
+    "pH": 2.114,
+    "percent": 7.686,
+    "approx_ok": false
+   },
+   "givens": {
+    "c": {
+     "value": 0.1,
+     "unit": "M"
+    },
+    "Ka": {
+     "value": 0.00064,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium constant chosen"
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting concentration: drop it from the denominator, then check."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      }
+     ],
+     "right": [
+      "method:quadratic"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Method chosen"
+    },
+    {
+     "state": "x_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "method"
+     ],
+     "explicit": true,
+     "id": "x_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "x found"
+    },
+    {
+     "state": "pH_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "x_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "pH_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "pH found"
+    },
+    {
+     "state": "percent_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "pH_found"
+     ],
+     "explicit": true,
+     "id": "percent_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Percent ionized found"
+    },
+    {
+     "state": "approx_checked",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "percent_found"
+     ],
+     "options": [
+      {
+       "id": "approx:holds",
+       "text": "holds: less than 5 % ionised, so dropping x was fine"
+      },
+      {
+       "id": "approx:fails",
+       "text": "fails: more than 5 % ionised, so the quadratic was needed"
+      }
+     ],
+     "right": [
+      "approx:fails"
+     ],
+     "explicit": true,
+     "id": "approx_checked",
+     "stage": "check",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "5 % rule checked"
+    },
+    {
+     "state": "perturb_1",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "approx_checked"
+     ],
+     "options": [
+      {
+       "id": "p1:rises",
+       "text": "rises: the percent ionised goes up"
+      },
+      {
+       "id": "p1:falls",
+       "text": "falls: the percent ionised goes down",
+       "names": "DILUTION_IONIZATION_FALLS"
+      },
+      {
+       "id": "p1:unchanged",
+       "text": "unchanged: the percent ionised stays the same"
+      }
+     ],
+     "right": [
+      "p1:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_1",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Dilution predicted"
+    },
+    {
+     "state": "perturb_1_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_1"
+     ],
+     "id": "perturb_1_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Dilution explained"
+    },
+    {
+     "state": "perturb_2",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "perturb_1_why"
+     ],
+     "options": [
+      {
+       "id": "p2:rises",
+       "text": "rises: the pH goes up"
+      },
+      {
+       "id": "p2:falls",
+       "text": "falls: the pH goes down",
+       "names": "CONJUGATE_LOWERS_PH"
+      },
+      {
+       "id": "p2:unchanged",
+       "text": "unchanged: the pH stays the same"
+      }
+     ],
+     "right": [
+      "p2:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_2",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Partner ion predicted"
+    },
+    {
+     "state": "perturb_2_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_2"
+     ],
+     "id": "perturb_2_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Partner ion explained"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "perturb_2_why"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "SQRT_FORGOTTEN",
+     "state": "x_found",
+     "value": 6.4e-05,
+     "unit": "M",
+     "abs_tol": 1.28e-06
+    },
+    {
+     "id": "PH_FROM_FORMAL_CONCENTRATION",
+     "state": "pH_found",
+     "value": 1.0,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PKA_TYPED_AS_PH",
+     "state": "pH_found",
+     "value": 3.1938,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PERCENT_AS_FRACTION",
+     "state": "percent_found",
+     "value": 0.076864,
+     "unit": "",
+     "abs_tol": 0.00154
+    },
+    {
+     "id": "EXCEEDS_INITIAL",
+     "state": "x_found",
+     "above": 0.102,
+     "unit": "M"
+    }
+   ],
+   "table": {
+    "species": [
+     "HF",
+     "H3O+",
+     "F-"
+    ],
+    "rows": {
+     "I": [
+      "0.1",
+      "0",
+      "0"
+     ],
+     "C": [
+      "-x",
+      "+x",
+      "+x"
+     ],
+     "E": [
+      "0.1 - x",
+      "x",
+      "x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "-x",
+       "-x"
+      ]
+     },
+     {
+      "id": "WATER_IN_TABLE",
+      "row": "I",
+      "cells": [
+       "0.1",
+       "0",
+       "0",
+       "55.5"
+      ]
+     }
+    ],
+    "zero_species": [
+     1,
+     2
+    ]
+   },
+   "words": {
+    "acid": "hydrofluoric acid",
+    "formula": "HF",
+    "conjugate": "fluoride ion"
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.015,
+       "K": 0.00264705882
+      },
+      {
+       "x": 0.035,
+       "K": 0.0188461538
+      },
+      {
+       "x": 0.055,
+       "K": 0.0672222222
+      }
+     ],
+     "alt": [],
+     "bent": {
+      "WATER_IN_EXPRESSION": [
+       {
+        "x": 0.015,
+        "K": 4.76947536e-05
+       },
+       {
+        "x": 0.035,
+        "K": 0.00033957034
+       },
+       {
+        "x": 0.055,
+        "K": 0.00121121121
+       }
+      ]
+     },
+     "literal_for": {
+      "K": 0.00064
+     },
+     "park_text": "0.00064 = x · x / (0.1 - x)"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "species": "hydrofluoric",
+    "c": 0.1,
+    "K": 0.00064
+   },
+   "expected": [
+    {
+     "id": "x_H3O",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "x_found",
+     "label": "x = [H3O+]",
+     "value": 0.0076864,
+     "unit": "M",
+     "abs_tol": 0.000154,
+     "require_unit": true
+    },
+    {
+     "id": "key_pH_found",
+     "role": "key",
+     "dim": {},
+     "state": "pH_found",
+     "label": "pH",
+     "value": 2.11428,
+     "unit": "",
+     "abs_tol": 0.03,
+     "require_unit": false,
+     "after": "x_found"
+    },
+    {
+     "id": "percent_ionised_out_of_100",
+     "role": "intermediate",
+     "dim": {},
+     "state": "percent_found",
+     "label": "percent ionised (out of 100)",
+     "value": 7.6864,
+     "unit": "",
+     "abs_tol": 0.154,
+     "require_unit": false,
+     "after": "pH_found"
+    },
+    {
+     "id": "g_c",
+     "state": null,
+     "role": "given",
+     "label": "c",
+     "value": 0.1,
+     "unit": "M",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "abs_tol": 1.01e-07
+    },
+    {
+     "id": "g_Ka",
+     "state": null,
+     "role": "given",
+     "label": "Ka",
+     "value": 0.00064,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 1.64e-09
+    },
+    {
+     "id": "c_Kw",
+     "state": null,
+     "role": "constant",
+     "label": "Kw",
+     "value": 1e-14,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 1e-17
+    }
+   ],
+   "variant_id": "ch14_acidbase:14",
+   "archetype_id": "ch14_acidbase",
+   "seed": 14,
+   "opener_index": 2
+  },
+  {
+   "kind": "weak_acid",
+   "fixed_id": "H3",
+   "version": "",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
+   "text": "A plastic bottle holds 0.05 M hydrofluoric acid, \\(\\mathrm{HF}\\), at 25 °C. \\(K_a = 6.4 \\times 10^{-4}\\). Set up the ICE table. Find \\([\\mathrm{H_3O^+}]\\), the pH and the percent ionized. Then check the 5 % rule.",
+   "context": {
+    "family": "weak acid, 5 % rule fails",
+    "x": 0.0053459,
+    "pH": 2.272,
+    "percent": 10.69,
+    "approx_ok": false
+   },
+   "givens": {
+    "c": {
+     "value": 0.05,
+     "unit": "M"
+    },
+    "Ka": {
+     "value": 0.00064,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium constant chosen"
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting concentration: drop it from the denominator, then check."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      }
+     ],
+     "right": [
+      "method:quadratic"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Method chosen"
+    },
+    {
+     "state": "x_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "method"
+     ],
+     "explicit": true,
+     "id": "x_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "x found"
+    },
+    {
+     "state": "pH_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "x_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "pH_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "pH found"
+    },
+    {
+     "state": "percent_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "pH_found"
+     ],
+     "explicit": true,
+     "id": "percent_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Percent ionized found"
+    },
+    {
+     "state": "approx_checked",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "percent_found"
+     ],
+     "options": [
+      {
+       "id": "approx:holds",
+       "text": "holds: less than 5 % ionised, so dropping x was fine"
+      },
+      {
+       "id": "approx:fails",
+       "text": "fails: more than 5 % ionised, so the quadratic was needed"
+      }
+     ],
+     "right": [
+      "approx:fails"
+     ],
+     "explicit": true,
+     "id": "approx_checked",
+     "stage": "check",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "5 % rule checked"
+    },
+    {
+     "state": "perturb_1",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "approx_checked"
+     ],
+     "options": [
+      {
+       "id": "p1:rises",
+       "text": "rises: the percent ionised goes up"
+      },
+      {
+       "id": "p1:falls",
+       "text": "falls: the percent ionised goes down",
+       "names": "DILUTION_IONIZATION_FALLS"
+      },
+      {
+       "id": "p1:unchanged",
+       "text": "unchanged: the percent ionised stays the same"
+      }
+     ],
+     "right": [
+      "p1:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_1",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Dilution predicted"
+    },
+    {
+     "state": "perturb_1_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_1"
+     ],
+     "id": "perturb_1_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Dilution explained"
+    },
+    {
+     "state": "perturb_2",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "perturb_1_why"
+     ],
+     "options": [
+      {
+       "id": "p2:rises",
+       "text": "rises: the pH goes up"
+      },
+      {
+       "id": "p2:falls",
+       "text": "falls: the pH goes down",
+       "names": "CONJUGATE_LOWERS_PH"
+      },
+      {
+       "id": "p2:unchanged",
+       "text": "unchanged: the pH stays the same"
+      }
+     ],
+     "right": [
+      "p2:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_2",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Partner ion predicted"
+    },
+    {
+     "state": "perturb_2_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_2"
+     ],
+     "id": "perturb_2_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Partner ion explained"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "perturb_2_why"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "SQRT_FORGOTTEN",
+     "state": "x_found",
+     "value": 3.2e-05,
+     "unit": "M",
+     "abs_tol": 6.4e-07
+    },
+    {
+     "id": "PH_FROM_FORMAL_CONCENTRATION",
+     "state": "pH_found",
+     "value": 1.301,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PKA_TYPED_AS_PH",
+     "state": "pH_found",
+     "value": 3.1938,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PERCENT_AS_FRACTION",
+     "state": "percent_found",
+     "value": 0.10692,
+     "unit": "",
+     "abs_tol": 0.005
+    },
+    {
+     "id": "EXCEEDS_INITIAL",
+     "state": "x_found",
+     "above": 0.051,
+     "unit": "M"
+    }
+   ],
+   "table": {
+    "species": [
+     "HF",
+     "H3O+",
+     "F-"
+    ],
+    "rows": {
+     "I": [
+      "0.05",
+      "0",
+      "0"
+     ],
+     "C": [
+      "-x",
+      "+x",
+      "+x"
+     ],
+     "E": [
+      "0.05 - x",
+      "x",
+      "x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "-x",
+       "-x"
+      ]
+     },
+     {
+      "id": "WATER_IN_TABLE",
+      "row": "I",
+      "cells": [
+       "0.05",
+       "0",
+       "0",
+       "55.5"
+      ]
+     }
+    ],
+    "zero_species": [
+     1,
+     2
+    ]
+   },
+   "words": {
+    "acid": "hydrofluoric acid",
+    "formula": "HF",
+    "conjugate": "fluoride ion"
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.0075,
+       "K": 0.00132352941
+      },
+      {
+       "x": 0.0175,
+       "K": 0.00942307692
+      },
+      {
+       "x": 0.0275,
+       "K": 0.0336111111
+      }
+     ],
+     "alt": [],
+     "bent": {
+      "WATER_IN_EXPRESSION": [
+       {
+        "x": 0.0075,
+        "K": 2.38473768e-05
+       },
+       {
+        "x": 0.0175,
+        "K": 0.00016978517
+       },
+       {
+        "x": 0.0275,
+        "K": 0.000605605606
+       }
+      ]
+     },
+     "literal_for": {
+      "K": 0.00064
+     },
+     "park_text": "0.00064 = x · x / (0.05 - x)"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "species": "hydrofluoric",
+    "c": 0.05,
+    "K": 0.00064
+   },
+   "expected": [
+    {
+     "id": "x_H3O",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "x_found",
+     "label": "x = [H3O+]",
+     "value": 0.0053459,
+     "unit": "M",
+     "abs_tol": 0.000107,
+     "require_unit": true
+    },
+    {
+     "id": "key_pH_found",
+     "role": "key",
+     "dim": {},
+     "state": "pH_found",
+     "label": "pH",
+     "value": 2.27198,
+     "unit": "",
+     "abs_tol": 0.03,
+     "require_unit": false,
+     "after": "x_found"
+    },
+    {
+     "id": "percent_ionised_out_of_100",
+     "role": "intermediate",
+     "dim": {},
+     "state": "percent_found",
+     "label": "percent ionised (out of 100)",
+     "value": 10.6918,
+     "unit": "",
+     "abs_tol": 0.5,
+     "require_unit": false,
+     "after": "pH_found"
+    },
+    {
+     "id": "g_c",
+     "state": null,
+     "role": "given",
+     "label": "c",
+     "value": 0.05,
+     "unit": "M",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "abs_tol": 5.1e-08
+    },
+    {
+     "id": "g_Ka",
+     "state": null,
+     "role": "given",
+     "label": "Ka",
+     "value": 0.00064,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 1.64e-09
+    },
+    {
+     "id": "c_Kw",
+     "state": null,
+     "role": "constant",
+     "label": "Kw",
+     "value": 1e-14,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 1e-17
+    }
+   ],
+   "variant_id": "ch14_acidbase:15",
+   "archetype_id": "ch14_acidbase",
+   "seed": 15,
+   "opener_index": 2
+  },
+  {
+   "kind": "weak_acid",
+   "fixed_id": "H4",
+   "version": "",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
+   "text": "A plastic bottle holds 0.5 M hydrofluoric acid, \\(\\mathrm{HF}\\), at 25 °C. \\(K_a = 6.4 \\times 10^{-4}\\). Set up the ICE table. Find \\([\\mathrm{H_3O^+}]\\), the pH and the percent ionized. Then check the 5 % rule.",
+   "context": {
+    "family": "weak acid, 5 % rule holds",
+    "x": 0.017571,
+    "pH": 1.755,
+    "percent": 3.514,
+    "approx_ok": true
+   },
+   "givens": {
+    "c": {
+     "value": 0.5,
+     "unit": "M"
+    },
+    "Ka": {
+     "value": 0.00064,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium constant chosen"
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting concentration: drop it from the denominator, then check."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      }
+     ],
+     "right": [
+      "method:smallx"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Method chosen"
+    },
+    {
+     "state": "x_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "method"
+     ],
+     "explicit": true,
+     "id": "x_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "x found"
+    },
+    {
+     "state": "pH_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "x_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "pH_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "pH found"
+    },
+    {
+     "state": "percent_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "pH_found"
+     ],
+     "explicit": true,
+     "id": "percent_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Percent ionized found"
+    },
+    {
+     "state": "approx_checked",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "percent_found"
+     ],
+     "options": [
+      {
+       "id": "approx:holds",
+       "text": "holds: less than 5 % ionised, so dropping x was fine"
+      },
+      {
+       "id": "approx:fails",
+       "text": "fails: more than 5 % ionised, so the quadratic was needed"
+      }
+     ],
+     "right": [
+      "approx:holds"
+     ],
+     "explicit": true,
+     "id": "approx_checked",
+     "stage": "check",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "5 % rule checked"
+    },
+    {
+     "state": "perturb_1",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "approx_checked"
+     ],
+     "options": [
+      {
+       "id": "p1:rises",
+       "text": "rises: the percent ionised goes up"
+      },
+      {
+       "id": "p1:falls",
+       "text": "falls: the percent ionised goes down",
+       "names": "DILUTION_IONIZATION_FALLS"
+      },
+      {
+       "id": "p1:unchanged",
+       "text": "unchanged: the percent ionised stays the same"
+      }
+     ],
+     "right": [
+      "p1:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_1",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Dilution predicted"
+    },
+    {
+     "state": "perturb_1_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_1"
+     ],
+     "id": "perturb_1_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Dilution explained"
+    },
+    {
+     "state": "perturb_2",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "perturb_1_why"
+     ],
+     "options": [
+      {
+       "id": "p2:rises",
+       "text": "rises: the pH goes up"
+      },
+      {
+       "id": "p2:falls",
+       "text": "falls: the pH goes down",
+       "names": "CONJUGATE_LOWERS_PH"
+      },
+      {
+       "id": "p2:unchanged",
+       "text": "unchanged: the pH stays the same"
+      }
+     ],
+     "right": [
+      "p2:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_2",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Partner ion predicted"
+    },
+    {
+     "state": "perturb_2_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_2"
+     ],
+     "id": "perturb_2_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Partner ion explained"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "perturb_2_why"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "SQRT_FORGOTTEN",
+     "state": "x_found",
+     "value": 0.00032,
+     "unit": "M",
+     "abs_tol": 6.4e-06
+    },
+    {
+     "id": "PH_FROM_FORMAL_CONCENTRATION",
+     "state": "pH_found",
+     "value": 0.30103,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PKA_TYPED_AS_PH",
+     "state": "pH_found",
+     "value": 3.1938,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PERCENT_AS_FRACTION",
+     "state": "percent_found",
+     "value": 0.035143,
+     "unit": "",
+     "abs_tol": 0.000703
+    },
+    {
+     "id": "EXCEEDS_INITIAL",
+     "state": "x_found",
+     "above": 0.51,
+     "unit": "M"
+    }
+   ],
+   "table": {
+    "species": [
+     "HF",
+     "H3O+",
+     "F-"
+    ],
+    "rows": {
+     "I": [
+      "0.5",
+      "0",
+      "0"
+     ],
+     "C": [
+      "-x",
+      "+x",
+      "+x"
+     ],
+     "E": [
+      "0.5 - x",
+      "x",
+      "x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "-x",
+       "-x"
+      ]
+     },
+     {
+      "id": "WATER_IN_TABLE",
+      "row": "I",
+      "cells": [
+       "0.5",
+       "0",
+       "0",
+       "55.5"
+      ]
+     }
+    ],
+    "zero_species": [
+     1,
+     2
+    ]
+   },
+   "words": {
+    "acid": "hydrofluoric acid",
+    "formula": "HF",
+    "conjugate": "fluoride ion"
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.075,
+       "K": 0.0132352941
+      },
+      {
+       "x": 0.175,
+       "K": 0.0942307692
+      },
+      {
+       "x": 0.275,
+       "K": 0.336111111
+      }
+     ],
+     "alt": [],
+     "bent": {
+      "WATER_IN_EXPRESSION": [
+       {
+        "x": 0.075,
+        "K": 0.000238473768
+       },
+       {
+        "x": 0.175,
+        "K": 0.0016978517
+       },
+       {
+        "x": 0.275,
+        "K": 0.00605605606
+       }
+      ]
+     },
+     "literal_for": {
+      "K": 0.00064
+     },
+     "park_text": "0.00064 = x · x / (0.5 - x)"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "species": "hydrofluoric",
+    "c": 0.5,
+    "K": 0.00064
+   },
+   "expected": [
+    {
+     "id": "x_H3O",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "x_found",
+     "label": "x = [H3O+]",
+     "value": 0.0175714,
+     "unit": "M",
+     "abs_tol": 0.0005,
+     "require_unit": true
+    },
+    {
+     "id": "key_pH_found",
+     "role": "key",
+     "dim": {},
+     "state": "pH_found",
+     "label": "pH",
+     "value": 1.75519,
+     "unit": "",
+     "abs_tol": 0.03,
+     "require_unit": false,
+     "after": "x_found"
+    },
+    {
+     "id": "percent_ionised_out_of_100",
+     "role": "intermediate",
+     "dim": {},
+     "state": "percent_found",
+     "label": "percent ionised (out of 100)",
+     "value": 3.51428,
+     "unit": "",
+     "abs_tol": 0.0703,
+     "require_unit": false,
+     "after": "pH_found"
+    },
+    {
+     "id": "g_c",
+     "state": null,
+     "role": "given",
+     "label": "c",
+     "value": 0.5,
+     "unit": "M",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "abs_tol": 5.01e-07
+    },
+    {
+     "id": "g_Ka",
+     "state": null,
+     "role": "given",
+     "label": "Ka",
+     "value": 0.00064,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 1.64e-09
+    },
+    {
+     "id": "c_Kw",
+     "state": null,
+     "role": "constant",
+     "label": "Kw",
+     "value": 1e-14,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 1e-17
+    }
+   ],
+   "variant_id": "ch14_acidbase:16",
+   "archetype_id": "ch14_acidbase",
+   "seed": 16,
+   "opener_index": 2
+  },
+  {
+   "kind": "weak_acid",
+   "fixed_id": "H5",
+   "version": "",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
+   "text": "A plastic bottle holds 0.02 M nitrous acid, \\(\\mathrm{HNO_2}\\), at 25 °C. \\(K_a = 4.6 \\times 10^{-4}\\). Set up the ICE table. Find \\([\\mathrm{H_3O^+}]\\), the pH and the percent ionized. Then check the 5 % rule.",
+   "context": {
+    "family": "weak acid, 5 % rule fails",
+    "x": 0.0028119,
+    "pH": 2.551,
+    "percent": 14.06,
+    "approx_ok": false
+   },
+   "givens": {
+    "c": {
+     "value": 0.02,
+     "unit": "M"
+    },
+    "Ka": {
+     "value": 0.00046,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium constant chosen"
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting concentration: drop it from the denominator, then check."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      }
+     ],
+     "right": [
+      "method:quadratic"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Method chosen"
+    },
+    {
+     "state": "x_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "method"
+     ],
+     "explicit": true,
+     "id": "x_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "x found"
+    },
+    {
+     "state": "pH_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "x_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "pH_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "pH found"
+    },
+    {
+     "state": "percent_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "pH_found"
+     ],
+     "explicit": true,
+     "id": "percent_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Percent ionized found"
+    },
+    {
+     "state": "approx_checked",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "percent_found"
+     ],
+     "options": [
+      {
+       "id": "approx:holds",
+       "text": "holds: less than 5 % ionised, so dropping x was fine"
+      },
+      {
+       "id": "approx:fails",
+       "text": "fails: more than 5 % ionised, so the quadratic was needed"
+      }
+     ],
+     "right": [
+      "approx:fails"
+     ],
+     "explicit": true,
+     "id": "approx_checked",
+     "stage": "check",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "5 % rule checked"
+    },
+    {
+     "state": "perturb_1",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "approx_checked"
+     ],
+     "options": [
+      {
+       "id": "p1:rises",
+       "text": "rises: the percent ionised goes up"
+      },
+      {
+       "id": "p1:falls",
+       "text": "falls: the percent ionised goes down",
+       "names": "DILUTION_IONIZATION_FALLS"
+      },
+      {
+       "id": "p1:unchanged",
+       "text": "unchanged: the percent ionised stays the same"
+      }
+     ],
+     "right": [
+      "p1:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_1",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Dilution predicted"
+    },
+    {
+     "state": "perturb_1_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_1"
+     ],
+     "id": "perturb_1_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Dilution explained"
+    },
+    {
+     "state": "perturb_2",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "perturb_1_why"
+     ],
+     "options": [
+      {
+       "id": "p2:rises",
+       "text": "rises: the pH goes up"
+      },
+      {
+       "id": "p2:falls",
+       "text": "falls: the pH goes down",
+       "names": "CONJUGATE_LOWERS_PH"
+      },
+      {
+       "id": "p2:unchanged",
+       "text": "unchanged: the pH stays the same"
+      }
+     ],
+     "right": [
+      "p2:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_2",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Partner ion predicted"
+    },
+    {
+     "state": "perturb_2_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_2"
+     ],
+     "id": "perturb_2_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Partner ion explained"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "perturb_2_why"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "SQRT_FORGOTTEN",
+     "state": "x_found",
+     "value": 9.2e-06,
+     "unit": "M",
+     "abs_tol": 1.84e-07
+    },
+    {
+     "id": "PH_FROM_FORMAL_CONCENTRATION",
+     "state": "pH_found",
+     "value": 1.699,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PKA_TYPED_AS_PH",
+     "state": "pH_found",
+     "value": 3.3372,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PERCENT_AS_FRACTION",
+     "state": "percent_found",
+     "value": 0.14059,
+     "unit": "",
+     "abs_tol": 0.005
+    },
+    {
+     "id": "SMALL_X_WHEN_IT_FAILS",
+     "state": "x_found",
+     "value": 0.0030332,
+     "unit": "M",
+     "abs_tol": 6.07e-05
+    },
+    {
+     "id": "EXCEEDS_INITIAL",
+     "state": "x_found",
+     "above": 0.0204,
+     "unit": "M"
+    }
+   ],
+   "table": {
+    "species": [
+     "HNO2",
+     "H3O+",
+     "NO2-"
+    ],
+    "rows": {
+     "I": [
+      "0.02",
+      "0",
+      "0"
+     ],
+     "C": [
+      "-x",
+      "+x",
+      "+x"
+     ],
+     "E": [
+      "0.02 - x",
+      "x",
+      "x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "-x",
+       "-x"
+      ]
+     },
+     {
+      "id": "WATER_IN_TABLE",
+      "row": "I",
+      "cells": [
+       "0.02",
+       "0",
+       "0",
+       "55.5"
+      ]
+     }
+    ],
+    "zero_species": [
+     1,
+     2
+    ]
+   },
+   "words": {
+    "acid": "nitrous acid",
+    "formula": "HNO2",
+    "conjugate": "nitrite ion"
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.003,
+       "K": 0.000529411765
+      },
+      {
+       "x": 0.007,
+       "K": 0.00376923077
+      },
+      {
+       "x": 0.011,
+       "K": 0.0134444444
+      }
+     ],
+     "alt": [],
+     "bent": {
+      "WATER_IN_EXPRESSION": [
+       {
+        "x": 0.003,
+        "K": 9.53895072e-06
+       },
+       {
+        "x": 0.007,
+        "K": 6.79140679e-05
+       },
+       {
+        "x": 0.011,
+        "K": 0.000242242242
+       }
+      ]
+     },
+     "literal_for": {
+      "K": 0.00046
+     },
+     "park_text": "0.00046 = x · x / (0.02 - x)"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "species": "nitrous",
+    "c": 0.02,
+    "K": 0.00046
+   },
+   "expected": [
+    {
+     "id": "x_H3O",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "x_found",
+     "label": "x = [H3O+]",
+     "value": 0.00281186,
+     "unit": "M",
+     "abs_tol": 5.62e-05,
+     "require_unit": true
+    },
+    {
+     "id": "key_pH_found",
+     "role": "key",
+     "dim": {},
+     "state": "pH_found",
+     "label": "pH",
+     "value": 2.55101,
+     "unit": "",
+     "abs_tol": 0.03,
+     "require_unit": false,
+     "after": "x_found"
+    },
+    {
+     "id": "percent_ionised_out_of_100",
+     "role": "intermediate",
+     "dim": {},
+     "state": "percent_found",
+     "label": "percent ionised (out of 100)",
+     "value": 14.0593,
+     "unit": "",
+     "abs_tol": 0.5,
+     "require_unit": false,
+     "after": "pH_found"
+    },
+    {
+     "id": "g_c",
+     "state": null,
+     "role": "given",
+     "label": "c",
+     "value": 0.02,
+     "unit": "M",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "abs_tol": 2.1e-08
+    },
+    {
+     "id": "g_Ka",
+     "state": null,
+     "role": "given",
+     "label": "Ka",
+     "value": 0.00046,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 1.46e-09
+    },
+    {
+     "id": "c_Kw",
+     "state": null,
+     "role": "constant",
+     "label": "Kw",
+     "value": 1e-14,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 1e-17
+    }
+   ],
+   "variant_id": "ch14_acidbase:17",
+   "archetype_id": "ch14_acidbase",
+   "seed": 17,
+   "opener_index": 2
+  },
+  {
+   "kind": "weak_acid",
+   "fixed_id": "H6",
+   "version": "",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
+   "text": "A plastic bottle holds 0.3 M formic acid, \\(\\mathrm{HCOOH}\\), at 25 °C. \\(K_a = 1.8 \\times 10^{-4}\\). Set up the ICE table. Find \\([\\mathrm{H_3O^+}]\\), the pH and the percent ionized. Then check the 5 % rule.",
+   "context": {
+    "family": "weak acid, 5 % rule holds",
+    "x": 0.007259,
+    "pH": 2.139,
+    "percent": 2.42,
+    "approx_ok": true
+   },
+   "givens": {
+    "c": {
+     "value": 0.3,
+     "unit": "M"
+    },
+    "Ka": {
+     "value": 0.00018,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium constant chosen"
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting concentration: drop it from the denominator, then check."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      }
+     ],
+     "right": [
+      "method:smallx"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Method chosen"
+    },
+    {
+     "state": "x_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "method"
+     ],
+     "explicit": true,
+     "id": "x_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "x found"
+    },
+    {
+     "state": "pH_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "x_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "pH_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "pH found"
+    },
+    {
+     "state": "percent_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "pH_found"
+     ],
+     "explicit": true,
+     "id": "percent_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Percent ionized found"
+    },
+    {
+     "state": "approx_checked",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "percent_found"
+     ],
+     "options": [
+      {
+       "id": "approx:holds",
+       "text": "holds: less than 5 % ionised, so dropping x was fine"
+      },
+      {
+       "id": "approx:fails",
+       "text": "fails: more than 5 % ionised, so the quadratic was needed"
+      }
+     ],
+     "right": [
+      "approx:holds"
+     ],
+     "explicit": true,
+     "id": "approx_checked",
+     "stage": "check",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "5 % rule checked"
+    },
+    {
+     "state": "perturb_1",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "approx_checked"
+     ],
+     "options": [
+      {
+       "id": "p1:rises",
+       "text": "rises: the percent ionised goes up"
+      },
+      {
+       "id": "p1:falls",
+       "text": "falls: the percent ionised goes down",
+       "names": "DILUTION_IONIZATION_FALLS"
+      },
+      {
+       "id": "p1:unchanged",
+       "text": "unchanged: the percent ionised stays the same"
+      }
+     ],
+     "right": [
+      "p1:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_1",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Dilution predicted"
+    },
+    {
+     "state": "perturb_1_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_1"
+     ],
+     "id": "perturb_1_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Dilution explained"
+    },
+    {
+     "state": "perturb_2",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "perturb_1_why"
+     ],
+     "options": [
+      {
+       "id": "p2:rises",
+       "text": "rises: the pH goes up"
+      },
+      {
+       "id": "p2:falls",
+       "text": "falls: the pH goes down",
+       "names": "CONJUGATE_LOWERS_PH"
+      },
+      {
+       "id": "p2:unchanged",
+       "text": "unchanged: the pH stays the same"
+      }
+     ],
+     "right": [
+      "p2:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_2",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Partner ion predicted"
+    },
+    {
+     "state": "perturb_2_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_2"
+     ],
+     "id": "perturb_2_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Partner ion explained"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "perturb_2_why"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "SQRT_FORGOTTEN",
+     "state": "x_found",
+     "value": 5.4e-05,
+     "unit": "M",
+     "abs_tol": 1.08e-06
+    },
+    {
+     "id": "PH_FROM_FORMAL_CONCENTRATION",
+     "state": "pH_found",
+     "value": 0.52288,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PKA_TYPED_AS_PH",
+     "state": "pH_found",
+     "value": 3.7447,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PERCENT_AS_FRACTION",
+     "state": "percent_found",
+     "value": 0.024197,
+     "unit": "",
+     "abs_tol": 0.0005
+    },
+    {
+     "id": "EXCEEDS_INITIAL",
+     "state": "x_found",
+     "above": 0.306,
+     "unit": "M"
+    }
+   ],
+   "table": {
+    "species": [
+     "HCOOH",
+     "H3O+",
+     "HCOO-"
+    ],
+    "rows": {
+     "I": [
+      "0.3",
+      "0",
+      "0"
+     ],
+     "C": [
+      "-x",
+      "+x",
+      "+x"
+     ],
+     "E": [
+      "0.3 - x",
+      "x",
+      "x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "-x",
+       "-x"
+      ]
+     },
+     {
+      "id": "WATER_IN_TABLE",
+      "row": "I",
+      "cells": [
+       "0.3",
+       "0",
+       "0",
+       "55.5"
+      ]
+     }
+    ],
+    "zero_species": [
+     1,
+     2
+    ]
+   },
+   "words": {
+    "acid": "formic acid",
+    "formula": "HCOOH",
+    "conjugate": "formate ion"
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.045,
+       "K": 0.00794117647
+      },
+      {
+       "x": 0.105,
+       "K": 0.0565384615
+      },
+      {
+       "x": 0.165,
+       "K": 0.201666667
+      }
+     ],
+     "alt": [],
+     "bent": {
+      "WATER_IN_EXPRESSION": [
+       {
+        "x": 0.045,
+        "K": 0.000143084261
+       },
+       {
+        "x": 0.105,
+        "K": 0.00101871102
+       },
+       {
+        "x": 0.165,
+        "K": 0.00363363363
+       }
+      ]
+     },
+     "literal_for": {
+      "K": 0.00018
+     },
+     "park_text": "0.00018 = x · x / (0.3 - x)"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "species": "formic",
+    "c": 0.3,
+    "K": 0.00018
+   },
+   "expected": [
+    {
+     "id": "x_H3O",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "x_found",
+     "label": "x = [H3O+]",
+     "value": 0.00725902,
+     "unit": "M",
+     "abs_tol": 0.000145,
+     "require_unit": true
+    },
+    {
+     "id": "key_pH_found",
+     "role": "key",
+     "dim": {},
+     "state": "pH_found",
+     "label": "pH",
+     "value": 2.13912,
+     "unit": "",
+     "abs_tol": 0.03,
+     "require_unit": false,
+     "after": "x_found"
+    },
+    {
+     "id": "percent_ionised_out_of_100",
+     "role": "intermediate",
+     "dim": {},
+     "state": "percent_found",
+     "label": "percent ionised (out of 100)",
+     "value": 2.41967,
+     "unit": "",
+     "abs_tol": 0.05,
+     "require_unit": false,
+     "after": "pH_found"
+    },
+    {
+     "id": "g_c",
+     "state": null,
+     "role": "given",
+     "label": "c",
+     "value": 0.3,
+     "unit": "M",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "abs_tol": 3.01e-07
+    },
+    {
+     "id": "g_Ka",
+     "state": null,
+     "role": "given",
+     "label": "Ka",
+     "value": 0.00018,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 1.18e-09
+    },
+    {
+     "id": "c_Kw",
+     "state": null,
+     "role": "constant",
+     "label": "Kw",
+     "value": 1e-14,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 1e-17
+    }
+   ],
+   "variant_id": "ch14_acidbase:18",
+   "archetype_id": "ch14_acidbase",
+   "seed": 18,
+   "opener_index": 2
+  },
+  {
+   "kind": "weak_base",
+   "fixed_id": "C1",
+   "version": "",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
+   "text": "A solution is 0.7 M sodium hypochlorite, \\(\\mathrm{NaClO}\\), at 25 °C. For hypochlorous acid, \\(K_a = 2.9 \\times 10^{-8}\\); \\(K_w = 1.0 \\times 10^{-14}\\). Find Kb for the anion. Set up the ICE table. Find \\([\\mathrm{OH^-}]\\), the pOH, the pH and the percent ionized. Then check the 5 % rule.",
+   "context": {
+    "family": "weak base, 5 % rule holds",
+    "x": 0.00049113,
+    "pH": 10.69,
+    "percent": 0.07016,
+    "approx_ok": true
+   },
+   "givens": {
+    "c": {
+     "value": 0.7,
+     "unit": "M"
+    },
+    "Kb": {
+     "value": 3.448275862068965e-07,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium constant chosen"
+    },
+    {
+     "state": "Kb_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "Kb_found",
+     "stage": "Kb_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": ""
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "Kb_found"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting concentration: drop it from the denominator, then check."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      }
+     ],
+     "right": [
+      "method:smallx"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Method chosen"
+    },
+    {
+     "state": "x_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "method"
+     ],
+     "explicit": true,
+     "id": "x_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "x found"
+    },
+    {
+     "state": "pOH_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "x_found"
+     ],
+     "explicit": true,
+     "id": "pOH_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "pOH found"
+    },
+    {
+     "state": "pH_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "pOH_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "pH_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "pH found"
+    },
+    {
+     "state": "percent_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "pH_found"
+     ],
+     "explicit": true,
+     "id": "percent_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Percent ionized found"
+    },
+    {
+     "state": "approx_checked",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "percent_found"
+     ],
+     "options": [
+      {
+       "id": "approx:holds",
+       "text": "holds: less than 5 % ionised, so dropping x was fine"
+      },
+      {
+       "id": "approx:fails",
+       "text": "fails: more than 5 % ionised, so the quadratic was needed"
+      }
+     ],
+     "right": [
+      "approx:holds"
+     ],
+     "explicit": true,
+     "id": "approx_checked",
+     "stage": "check",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "5 % rule checked"
+    },
+    {
+     "state": "perturb_1",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "approx_checked"
+     ],
+     "options": [
+      {
+       "id": "p1:rises",
+       "text": "rises: the percent ionised goes up"
+      },
+      {
+       "id": "p1:falls",
+       "text": "falls: the percent ionised goes down",
+       "names": "DILUTION_IONIZATION_FALLS"
+      },
+      {
+       "id": "p1:unchanged",
+       "text": "unchanged: the percent ionised stays the same"
+      }
+     ],
+     "right": [
+      "p1:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_1",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Dilution predicted"
+    },
+    {
+     "state": "perturb_1_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_1"
+     ],
+     "id": "perturb_1_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Dilution explained"
+    },
+    {
+     "state": "perturb_2",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "perturb_1_why"
+     ],
+     "options": [
+      {
+       "id": "p2:rises",
+       "text": "rises: the pH goes up",
+       "names": "CONJUGATE_RAISES_PH"
+      },
+      {
+       "id": "p2:falls",
+       "text": "falls: the pH goes down"
+      },
+      {
+       "id": "p2:unchanged",
+       "text": "unchanged: the pH stays the same"
+      }
+     ],
+     "right": [
+      "p2:falls"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_2",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Partner predicted"
+    },
+    {
+     "state": "perturb_2_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_2"
+     ],
+     "id": "perturb_2_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Partner ion explained"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "perturb_2_why"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "KA_USED_AS_KB",
+     "state": "Kb_found",
+     "value": 2.9e-08,
+     "unit": "",
+     "abs_tol": 5.8e-10
+    },
+    {
+     "id": "SQRT_FORGOTTEN",
+     "state": "x_found",
+     "value": 2.4138e-07,
+     "unit": "M",
+     "abs_tol": 5e-09
+    },
+    {
+     "id": "PH_FROM_FORMAL_CONCENTRATION",
+     "state": "pH_found",
+     "value": 13.845,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PKA_TYPED_AS_PH",
+     "state": "pH_found",
+     "value": 6.4624,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PERCENT_AS_FRACTION",
+     "state": "percent_found",
+     "value": 0.00070162,
+     "unit": "",
+     "abs_tol": 1.4e-05
+    },
+    {
+     "id": "EXCEEDS_INITIAL",
+     "state": "x_found",
+     "above": 0.714,
+     "unit": "M"
+    },
+    {
+     "id": "POH_TYPED_AS_PH",
+     "state": "pH_found",
+     "value": 3.3088,
+     "unit": "",
+     "abs_tol": 0.03
+    }
+   ],
+   "table": {
+    "species": [
+     "ClO-",
+     "HClO",
+     "OH-"
+    ],
+    "rows": {
+     "I": [
+      "0.7",
+      "0",
+      "0"
+     ],
+     "C": [
+      "-x",
+      "+x",
+      "+x"
+     ],
+     "E": [
+      "0.7 - x",
+      "x",
+      "x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "-x",
+       "-x"
+      ]
+     },
+     {
+      "id": "WATER_IN_TABLE",
+      "row": "I",
+      "cells": [
+       "0.7",
+       "0",
+       "0",
+       "55.5"
+      ]
+     }
+    ],
+    "zero_species": [
+     1,
+     2
+    ]
+   },
+   "words": {
+    "base": "hypochlorite ion",
+    "formula": "ClO-",
+    "conjugate": "hypochlorous acid"
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.105,
+       "K": 0.0185294118
+      },
+      {
+       "x": 0.245,
+       "K": 0.131923077
+      },
+      {
+       "x": 0.385,
+       "K": 0.470555556
+      }
+     ],
+     "alt": [],
+     "bent": {
+      "WATER_IN_EXPRESSION": [
+       {
+        "x": 0.105,
+        "K": 0.000333863275
+       },
+       {
+        "x": 0.245,
+        "K": 0.00237699238
+       },
+       {
+        "x": 0.385,
+        "K": 0.00847847848
+       }
+      ]
+     },
+     "literal_for": {
+      "K": 3.448275862068965e-07
+     },
+     "park_text": "3.45e-07 = x · x / (0.7 - x)"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "species": "hypochlorite",
+    "c": 0.7,
+    "K": 3.448275862068965e-07
+   },
+   "expected": [
+    {
+     "id": "Kb_of_the_base_from_Kw_and_the_partner_s_Ka",
+     "role": "intermediate",
+     "dim": {},
+     "state": "Kb_found",
+     "label": "Kb of the base, from Kw and the partner's Ka",
+     "value": 3.44828e-07,
+     "unit": "",
+     "abs_tol": 6.9e-09,
+     "require_unit": false,
+     "after": "relation_chosen"
+    },
+    {
+     "id": "x_OH",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "x_found",
+     "label": "x = [OH-]",
+     "value": 0.000491131,
+     "unit": "M",
+     "abs_tol": 9.82e-06,
+     "require_unit": true
+    },
+    {
+     "id": "pOH",
+     "role": "intermediate",
+     "dim": {},
+     "state": "pOH_found",
+     "label": "pOH",
+     "value": 3.3088,
+     "unit": "",
+     "abs_tol": 0.03,
+     "require_unit": false,
+     "after": "x_found"
+    },
+    {
+     "id": "key_pH_found",
+     "role": "key",
+     "dim": {},
+     "state": "pH_found",
+     "label": "pH",
+     "value": 10.6912,
+     "unit": "",
+     "abs_tol": 0.03,
+     "require_unit": false,
+     "after": "pOH_found"
+    },
+    {
+     "id": "percent_ionised_out_of_100",
+     "role": "intermediate",
+     "dim": {},
+     "state": "percent_found",
+     "label": "percent ionised (out of 100)",
+     "value": 0.0701616,
+     "unit": "",
+     "abs_tol": 0.0014,
+     "require_unit": false,
+     "after": "pH_found"
+    },
+    {
+     "id": "g_c",
+     "state": null,
+     "role": "given",
+     "label": "c",
+     "value": 0.7,
+     "unit": "M",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "abs_tol": 7.01e-07
+    },
+    {
+     "id": "g_Kb",
+     "state": null,
+     "role": "given",
+     "label": "Kb",
+     "value": 3.448275862068965e-07,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 3.45e-10
+    },
+    {
+     "id": "c_Kw",
+     "state": null,
+     "role": "constant",
+     "label": "Kw",
+     "value": 1e-14,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 1e-17
+    }
+   ],
+   "variant_id": "ch14_acidbase:19",
+   "archetype_id": "ch14_acidbase",
+   "seed": 19,
+   "opener_index": 3
+  },
+  {
+   "kind": "weak_base",
+   "fixed_id": "C2",
+   "version": "",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
+   "text": "A solution is 0.1 M sodium hypochlorite, \\(\\mathrm{NaClO}\\), at 25 °C. For hypochlorous acid, \\(K_a = 2.9 \\times 10^{-8}\\); \\(K_w = 1.0 \\times 10^{-14}\\). Find Kb for the anion. Set up the ICE table. Find \\([\\mathrm{OH^-}]\\), the pOH, the pH and the percent ionized. Then check the 5 % rule.",
+   "context": {
+    "family": "weak base, 5 % rule holds",
+    "x": 0.00018552,
+    "pH": 10.27,
+    "percent": 0.1855,
+    "approx_ok": true
+   },
+   "givens": {
+    "c": {
+     "value": 0.1,
+     "unit": "M"
+    },
+    "Kb": {
+     "value": 3.448275862068965e-07,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium constant chosen"
+    },
+    {
+     "state": "Kb_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "Kb_found",
+     "stage": "Kb_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": ""
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "Kb_found"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting concentration: drop it from the denominator, then check."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      }
+     ],
+     "right": [
+      "method:smallx"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Method chosen"
+    },
+    {
+     "state": "x_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "method"
+     ],
+     "explicit": true,
+     "id": "x_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "x found"
+    },
+    {
+     "state": "pOH_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "x_found"
+     ],
+     "explicit": true,
+     "id": "pOH_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "pOH found"
+    },
+    {
+     "state": "pH_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "pOH_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "pH_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "pH found"
+    },
+    {
+     "state": "percent_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "pH_found"
+     ],
+     "explicit": true,
+     "id": "percent_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Percent ionized found"
+    },
+    {
+     "state": "approx_checked",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "percent_found"
+     ],
+     "options": [
+      {
+       "id": "approx:holds",
+       "text": "holds: less than 5 % ionised, so dropping x was fine"
+      },
+      {
+       "id": "approx:fails",
+       "text": "fails: more than 5 % ionised, so the quadratic was needed"
+      }
+     ],
+     "right": [
+      "approx:holds"
+     ],
+     "explicit": true,
+     "id": "approx_checked",
+     "stage": "check",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "5 % rule checked"
+    },
+    {
+     "state": "perturb_1",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "approx_checked"
+     ],
+     "options": [
+      {
+       "id": "p1:rises",
+       "text": "rises: the percent ionised goes up"
+      },
+      {
+       "id": "p1:falls",
+       "text": "falls: the percent ionised goes down",
+       "names": "DILUTION_IONIZATION_FALLS"
+      },
+      {
+       "id": "p1:unchanged",
+       "text": "unchanged: the percent ionised stays the same"
+      }
+     ],
+     "right": [
+      "p1:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_1",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Dilution predicted"
+    },
+    {
+     "state": "perturb_1_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_1"
+     ],
+     "id": "perturb_1_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Dilution explained"
+    },
+    {
+     "state": "perturb_2",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "perturb_1_why"
+     ],
+     "options": [
+      {
+       "id": "p2:rises",
+       "text": "rises: the pH goes up",
+       "names": "CONJUGATE_RAISES_PH"
+      },
+      {
+       "id": "p2:falls",
+       "text": "falls: the pH goes down"
+      },
+      {
+       "id": "p2:unchanged",
+       "text": "unchanged: the pH stays the same"
+      }
+     ],
+     "right": [
+      "p2:falls"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_2",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Partner predicted"
+    },
+    {
+     "state": "perturb_2_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_2"
+     ],
+     "id": "perturb_2_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Partner ion explained"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "perturb_2_why"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "KA_USED_AS_KB",
+     "state": "Kb_found",
+     "value": 2.9e-08,
+     "unit": "",
+     "abs_tol": 5.8e-10
+    },
+    {
+     "id": "SQRT_FORGOTTEN",
+     "state": "x_found",
+     "value": 3.4483e-08,
+     "unit": "M",
+     "abs_tol": 6.9e-10
+    },
+    {
+     "id": "PH_FROM_FORMAL_CONCENTRATION",
+     "state": "pH_found",
+     "value": 13.0,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PKA_TYPED_AS_PH",
+     "state": "pH_found",
+     "value": 6.4624,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PERCENT_AS_FRACTION",
+     "state": "percent_found",
+     "value": 0.0018552,
+     "unit": "",
+     "abs_tol": 5e-05
+    },
+    {
+     "id": "EXCEEDS_INITIAL",
+     "state": "x_found",
+     "above": 0.102,
+     "unit": "M"
+    },
+    {
+     "id": "POH_TYPED_AS_PH",
+     "state": "pH_found",
+     "value": 3.7316,
+     "unit": "",
+     "abs_tol": 0.03
+    }
+   ],
+   "table": {
+    "species": [
+     "ClO-",
+     "HClO",
+     "OH-"
+    ],
+    "rows": {
+     "I": [
+      "0.1",
+      "0",
+      "0"
+     ],
+     "C": [
+      "-x",
+      "+x",
+      "+x"
+     ],
+     "E": [
+      "0.1 - x",
+      "x",
+      "x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "-x",
+       "-x"
+      ]
+     },
+     {
+      "id": "WATER_IN_TABLE",
+      "row": "I",
+      "cells": [
+       "0.1",
+       "0",
+       "0",
+       "55.5"
+      ]
+     }
+    ],
+    "zero_species": [
+     1,
+     2
+    ]
+   },
+   "words": {
+    "base": "hypochlorite ion",
+    "formula": "ClO-",
+    "conjugate": "hypochlorous acid"
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.015,
+       "K": 0.00264705882
+      },
+      {
+       "x": 0.035,
+       "K": 0.0188461538
+      },
+      {
+       "x": 0.055,
+       "K": 0.0672222222
+      }
+     ],
+     "alt": [],
+     "bent": {
+      "WATER_IN_EXPRESSION": [
+       {
+        "x": 0.015,
+        "K": 4.76947536e-05
+       },
+       {
+        "x": 0.035,
+        "K": 0.00033957034
+       },
+       {
+        "x": 0.055,
+        "K": 0.00121121121
+       }
+      ]
+     },
+     "literal_for": {
+      "K": 3.448275862068965e-07
+     },
+     "park_text": "3.45e-07 = x · x / (0.1 - x)"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "species": "hypochlorite",
+    "c": 0.1,
+    "K": 3.448275862068965e-07
+   },
+   "expected": [
+    {
+     "id": "Kb_of_the_base_from_Kw_and_the_partner_s_Ka",
+     "role": "intermediate",
+     "dim": {},
+     "state": "Kb_found",
+     "label": "Kb of the base, from Kw and the partner's Ka",
+     "value": 3.44828e-07,
+     "unit": "",
+     "abs_tol": 6.9e-09,
+     "require_unit": false,
+     "after": "relation_chosen"
+    },
+    {
+     "id": "x_OH",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "x_found",
+     "label": "x = [OH-]",
+     "value": 0.000185523,
+     "unit": "M",
+     "abs_tol": 5e-06,
+     "require_unit": true
+    },
+    {
+     "id": "pOH",
+     "role": "intermediate",
+     "dim": {},
+     "state": "pOH_found",
+     "label": "pOH",
+     "value": 3.7316,
+     "unit": "",
+     "abs_tol": 0.03,
+     "require_unit": false,
+     "after": "x_found"
+    },
+    {
+     "id": "key_pH_found",
+     "role": "key",
+     "dim": {},
+     "state": "pH_found",
+     "label": "pH",
+     "value": 10.2684,
+     "unit": "",
+     "abs_tol": 0.03,
+     "require_unit": false,
+     "after": "pOH_found"
+    },
+    {
+     "id": "percent_ionised_out_of_100",
+     "role": "intermediate",
+     "dim": {},
+     "state": "percent_found",
+     "label": "percent ionised (out of 100)",
+     "value": 0.185523,
+     "unit": "",
+     "abs_tol": 0.005,
+     "require_unit": false,
+     "after": "pH_found"
+    },
+    {
+     "id": "g_c",
+     "state": null,
+     "role": "given",
+     "label": "c",
+     "value": 0.1,
+     "unit": "M",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "abs_tol": 1.01e-07
+    },
+    {
+     "id": "g_Kb",
+     "state": null,
+     "role": "given",
+     "label": "Kb",
+     "value": 3.448275862068965e-07,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 3.45e-10
+    },
+    {
+     "id": "c_Kw",
+     "state": null,
+     "role": "constant",
+     "label": "Kw",
+     "value": 1e-14,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 1e-17
+    }
+   ],
+   "variant_id": "ch14_acidbase:20",
+   "archetype_id": "ch14_acidbase",
+   "seed": 20,
+   "opener_index": 3
+  },
+  {
+   "kind": "weak_base",
+   "fixed_id": "C3",
+   "version": "",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
+   "text": "A solution is 0.5 M sodium acetate, \\(\\mathrm{NaCH_3COO}\\), at 25 °C. For acetic acid, \\(K_a = 1.8 \\times 10^{-5}\\); \\(K_w = 1.0 \\times 10^{-14}\\). Find Kb for the anion. Set up the ICE table. Find \\([\\mathrm{OH^-}]\\), the pOH, the pH and the percent ionized. Then check the 5 % rule.",
+   "context": {
+    "family": "weak base, 5 % rule holds",
+    "x": 1.6666e-05,
+    "pH": 9.222,
+    "percent": 0.003333,
+    "approx_ok": true
+   },
+   "givens": {
+    "c": {
+     "value": 0.5,
+     "unit": "M"
+    },
+    "Kb": {
+     "value": 5.555555555555555e-10,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium constant chosen"
+    },
+    {
+     "state": "Kb_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "Kb_found",
+     "stage": "Kb_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": ""
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "Kb_found"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting concentration: drop it from the denominator, then check."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      }
+     ],
+     "right": [
+      "method:smallx"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Method chosen"
+    },
+    {
+     "state": "x_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "method"
+     ],
+     "explicit": true,
+     "id": "x_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "x found"
+    },
+    {
+     "state": "pOH_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "x_found"
+     ],
+     "explicit": true,
+     "id": "pOH_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "pOH found"
+    },
+    {
+     "state": "pH_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "pOH_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "pH_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "pH found"
+    },
+    {
+     "state": "percent_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "pH_found"
+     ],
+     "explicit": true,
+     "id": "percent_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Percent ionized found"
+    },
+    {
+     "state": "approx_checked",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "percent_found"
+     ],
+     "options": [
+      {
+       "id": "approx:holds",
+       "text": "holds: less than 5 % ionised, so dropping x was fine"
+      },
+      {
+       "id": "approx:fails",
+       "text": "fails: more than 5 % ionised, so the quadratic was needed"
+      }
+     ],
+     "right": [
+      "approx:holds"
+     ],
+     "explicit": true,
+     "id": "approx_checked",
+     "stage": "check",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "5 % rule checked"
+    },
+    {
+     "state": "perturb_1",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "approx_checked"
+     ],
+     "options": [
+      {
+       "id": "p1:rises",
+       "text": "rises: the percent ionised goes up"
+      },
+      {
+       "id": "p1:falls",
+       "text": "falls: the percent ionised goes down",
+       "names": "DILUTION_IONIZATION_FALLS"
+      },
+      {
+       "id": "p1:unchanged",
+       "text": "unchanged: the percent ionised stays the same"
+      }
+     ],
+     "right": [
+      "p1:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_1",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Dilution predicted"
+    },
+    {
+     "state": "perturb_1_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_1"
+     ],
+     "id": "perturb_1_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Dilution explained"
+    },
+    {
+     "state": "perturb_2",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "perturb_1_why"
+     ],
+     "options": [
+      {
+       "id": "p2:rises",
+       "text": "rises: the pH goes up",
+       "names": "CONJUGATE_RAISES_PH"
+      },
+      {
+       "id": "p2:falls",
+       "text": "falls: the pH goes down"
+      },
+      {
+       "id": "p2:unchanged",
+       "text": "unchanged: the pH stays the same"
+      }
+     ],
+     "right": [
+      "p2:falls"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_2",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Partner predicted"
+    },
+    {
+     "state": "perturb_2_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_2"
+     ],
+     "id": "perturb_2_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Partner ion explained"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "perturb_2_why"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "KA_USED_AS_KB",
+     "state": "Kb_found",
+     "value": 1.8e-05,
+     "unit": "",
+     "abs_tol": 5e-07
+    },
+    {
+     "id": "SQRT_FORGOTTEN",
+     "state": "x_found",
+     "value": 2.7778e-10,
+     "unit": "M",
+     "abs_tol": 5.56e-12
+    },
+    {
+     "id": "PH_FROM_FORMAL_CONCENTRATION",
+     "state": "pH_found",
+     "value": 13.699,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PERCENT_AS_FRACTION",
+     "state": "percent_found",
+     "value": 3.3333e-05,
+     "unit": "",
+     "abs_tol": 6.67e-07
+    },
+    {
+     "id": "EXCEEDS_INITIAL",
+     "state": "x_found",
+     "above": 0.51,
+     "unit": "M"
+    },
+    {
+     "id": "POH_TYPED_AS_PH",
+     "state": "pH_found",
+     "value": 4.7782,
+     "unit": "",
+     "abs_tol": 0.03
+    }
+   ],
+   "table": {
+    "species": [
+     "CH3COO-",
+     "CH3COOH",
+     "OH-"
+    ],
+    "rows": {
+     "I": [
+      "0.5",
+      "0",
+      "0"
+     ],
+     "C": [
+      "-x",
+      "+x",
+      "+x"
+     ],
+     "E": [
+      "0.5 - x",
+      "x",
+      "x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "-x",
+       "-x"
+      ]
+     },
+     {
+      "id": "WATER_IN_TABLE",
+      "row": "I",
+      "cells": [
+       "0.5",
+       "0",
+       "0",
+       "55.5"
+      ]
+     }
+    ],
+    "zero_species": [
+     1,
+     2
+    ]
+   },
+   "words": {
+    "base": "acetate ion",
+    "formula": "CH3COO-",
+    "conjugate": "acetic acid"
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.075,
+       "K": 0.0132352941
+      },
+      {
+       "x": 0.175,
+       "K": 0.0942307692
+      },
+      {
+       "x": 0.275,
+       "K": 0.336111111
+      }
+     ],
+     "alt": [],
+     "bent": {
+      "WATER_IN_EXPRESSION": [
+       {
+        "x": 0.075,
+        "K": 0.000238473768
+       },
+       {
+        "x": 0.175,
+        "K": 0.0016978517
+       },
+       {
+        "x": 0.275,
+        "K": 0.00605605606
+       }
+      ]
+     },
+     "literal_for": {
+      "K": 5.555555555555555e-10
+     },
+     "park_text": "5.56e-10 = x · x / (0.5 - x)"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "species": "acetate",
+    "c": 0.5,
+    "K": 5.555555555555555e-10
+   },
+   "expected": [
+    {
+     "id": "Kb_of_the_base_from_Kw_and_the_partner_s_Ka",
+     "role": "intermediate",
+     "dim": {},
+     "state": "Kb_found",
+     "label": "Kb of the base, from Kw and the partner's Ka",
+     "value": 5.55556e-10,
+     "unit": "",
+     "abs_tol": 1.11e-11,
+     "require_unit": false,
+     "after": "relation_chosen"
+    },
+    {
+     "id": "x_OH",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "x_found",
+     "label": "x = [OH-]",
+     "value": 1.66664e-05,
+     "unit": "M",
+     "abs_tol": 5e-07,
+     "require_unit": true
+    },
+    {
+     "id": "pOH",
+     "role": "intermediate",
+     "dim": {},
+     "state": "pOH_found",
+     "label": "pOH",
+     "value": 4.77816,
+     "unit": "",
+     "abs_tol": 0.03,
+     "require_unit": false,
+     "after": "x_found"
+    },
+    {
+     "id": "key_pH_found",
+     "role": "key",
+     "dim": {},
+     "state": "pH_found",
+     "label": "pH",
+     "value": 9.22184,
+     "unit": "",
+     "abs_tol": 0.03,
+     "require_unit": false,
+     "after": "pOH_found"
+    },
+    {
+     "id": "percent_ionised_out_of_100",
+     "role": "intermediate",
+     "dim": {},
+     "state": "percent_found",
+     "label": "percent ionised (out of 100)",
+     "value": 0.00333328,
+     "unit": "",
+     "abs_tol": 6.67e-05,
+     "require_unit": false,
+     "after": "pH_found"
+    },
+    {
+     "id": "g_c",
+     "state": null,
+     "role": "given",
+     "label": "c",
+     "value": 0.5,
+     "unit": "M",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "abs_tol": 5.01e-07
+    },
+    {
+     "id": "g_Kb",
+     "state": null,
+     "role": "given",
+     "label": "Kb",
+     "value": 5.555555555555555e-10,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 5.56e-13
+    },
+    {
+     "id": "c_Kw",
+     "state": null,
+     "role": "constant",
+     "label": "Kw",
+     "value": 1e-14,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 1e-17
+    }
+   ],
+   "variant_id": "ch14_acidbase:21",
+   "archetype_id": "ch14_acidbase",
+   "seed": 21,
+   "opener_index": 3
+  },
+  {
+   "kind": "weak_base",
+   "fixed_id": "C4",
+   "version": "",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
+   "text": "A solution is 0.1 M sodium acetate, \\(\\mathrm{NaCH_3COO}\\), at 25 °C. For acetic acid, \\(K_a = 1.8 \\times 10^{-5}\\); \\(K_w = 1.0 \\times 10^{-14}\\). Find Kb for the anion. Set up the ICE table. Find \\([\\mathrm{OH^-}]\\), the pOH, the pH and the percent ionized. Then check the 5 % rule.",
+   "context": {
+    "family": "weak base, 5 % rule holds",
+    "x": 7.4533e-06,
+    "pH": 8.872,
+    "percent": 0.007453,
+    "approx_ok": true
+   },
+   "givens": {
+    "c": {
+     "value": 0.1,
+     "unit": "M"
+    },
+    "Kb": {
+     "value": 5.555555555555555e-10,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium constant chosen"
+    },
+    {
+     "state": "Kb_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "Kb_found",
+     "stage": "Kb_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": ""
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "Kb_found"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting concentration: drop it from the denominator, then check."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      }
+     ],
+     "right": [
+      "method:smallx"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Method chosen"
+    },
+    {
+     "state": "x_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "method"
+     ],
+     "explicit": true,
+     "id": "x_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "x found"
+    },
+    {
+     "state": "pOH_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "x_found"
+     ],
+     "explicit": true,
+     "id": "pOH_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "pOH found"
+    },
+    {
+     "state": "pH_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "pOH_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "pH_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "pH found"
+    },
+    {
+     "state": "percent_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "pH_found"
+     ],
+     "explicit": true,
+     "id": "percent_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Percent ionized found"
+    },
+    {
+     "state": "approx_checked",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "percent_found"
+     ],
+     "options": [
+      {
+       "id": "approx:holds",
+       "text": "holds: less than 5 % ionised, so dropping x was fine"
+      },
+      {
+       "id": "approx:fails",
+       "text": "fails: more than 5 % ionised, so the quadratic was needed"
+      }
+     ],
+     "right": [
+      "approx:holds"
+     ],
+     "explicit": true,
+     "id": "approx_checked",
+     "stage": "check",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "5 % rule checked"
+    },
+    {
+     "state": "perturb_1",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "approx_checked"
+     ],
+     "options": [
+      {
+       "id": "p1:rises",
+       "text": "rises: the percent ionised goes up"
+      },
+      {
+       "id": "p1:falls",
+       "text": "falls: the percent ionised goes down",
+       "names": "DILUTION_IONIZATION_FALLS"
+      },
+      {
+       "id": "p1:unchanged",
+       "text": "unchanged: the percent ionised stays the same"
+      }
+     ],
+     "right": [
+      "p1:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_1",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Dilution predicted"
+    },
+    {
+     "state": "perturb_1_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_1"
+     ],
+     "id": "perturb_1_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Dilution explained"
+    },
+    {
+     "state": "perturb_2",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "perturb_1_why"
+     ],
+     "options": [
+      {
+       "id": "p2:rises",
+       "text": "rises: the pH goes up",
+       "names": "CONJUGATE_RAISES_PH"
+      },
+      {
+       "id": "p2:falls",
+       "text": "falls: the pH goes down"
+      },
+      {
+       "id": "p2:unchanged",
+       "text": "unchanged: the pH stays the same"
+      }
+     ],
+     "right": [
+      "p2:falls"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_2",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Partner predicted"
+    },
+    {
+     "state": "perturb_2_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_2"
+     ],
+     "id": "perturb_2_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Partner ion explained"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "perturb_2_why"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "KA_USED_AS_KB",
+     "state": "Kb_found",
+     "value": 1.8e-05,
+     "unit": "",
+     "abs_tol": 5e-07
+    },
+    {
+     "id": "SQRT_FORGOTTEN",
+     "state": "x_found",
+     "value": 5.5556e-11,
+     "unit": "M",
+     "abs_tol": 1.11e-12
+    },
+    {
+     "id": "PH_FROM_FORMAL_CONCENTRATION",
+     "state": "pH_found",
+     "value": 13.0,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PKA_TYPED_AS_PH",
+     "state": "pH_found",
+     "value": 9.2553,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PERCENT_AS_FRACTION",
+     "state": "percent_found",
+     "value": 7.4533e-05,
+     "unit": "",
+     "abs_tol": 1.49e-06
+    },
+    {
+     "id": "EXCEEDS_INITIAL",
+     "state": "x_found",
+     "above": 0.102,
+     "unit": "M"
+    },
+    {
+     "id": "POH_TYPED_AS_PH",
+     "state": "pH_found",
+     "value": 5.1277,
+     "unit": "",
+     "abs_tol": 0.03
+    }
+   ],
+   "table": {
+    "species": [
+     "CH3COO-",
+     "CH3COOH",
+     "OH-"
+    ],
+    "rows": {
+     "I": [
+      "0.1",
+      "0",
+      "0"
+     ],
+     "C": [
+      "-x",
+      "+x",
+      "+x"
+     ],
+     "E": [
+      "0.1 - x",
+      "x",
+      "x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "-x",
+       "-x"
+      ]
+     },
+     {
+      "id": "WATER_IN_TABLE",
+      "row": "I",
+      "cells": [
+       "0.1",
+       "0",
+       "0",
+       "55.5"
+      ]
+     }
+    ],
+    "zero_species": [
+     1,
+     2
+    ]
+   },
+   "words": {
+    "base": "acetate ion",
+    "formula": "CH3COO-",
+    "conjugate": "acetic acid"
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.015,
+       "K": 0.00264705882
+      },
+      {
+       "x": 0.035,
+       "K": 0.0188461538
+      },
+      {
+       "x": 0.055,
+       "K": 0.0672222222
+      }
+     ],
+     "alt": [],
+     "bent": {
+      "WATER_IN_EXPRESSION": [
+       {
+        "x": 0.015,
+        "K": 4.76947536e-05
+       },
+       {
+        "x": 0.035,
+        "K": 0.00033957034
+       },
+       {
+        "x": 0.055,
+        "K": 0.00121121121
+       }
+      ]
+     },
+     "literal_for": {
+      "K": 5.555555555555555e-10
+     },
+     "park_text": "5.56e-10 = x · x / (0.1 - x)"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "species": "acetate",
+    "c": 0.1,
+    "K": 5.555555555555555e-10
+   },
+   "expected": [
+    {
+     "id": "Kb_of_the_base_from_Kw_and_the_partner_s_Ka",
+     "role": "intermediate",
+     "dim": {},
+     "state": "Kb_found",
+     "label": "Kb of the base, from Kw and the partner's Ka",
+     "value": 5.55556e-10,
+     "unit": "",
+     "abs_tol": 1.11e-11,
+     "require_unit": false,
+     "after": "relation_chosen"
+    },
+    {
+     "id": "x_OH",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "x_found",
+     "label": "x = [OH-]",
+     "value": 7.45328e-06,
+     "unit": "M",
+     "abs_tol": 1.49e-07,
+     "require_unit": true
+    },
+    {
+     "id": "pOH",
+     "role": "intermediate",
+     "dim": {},
+     "state": "pOH_found",
+     "label": "pOH",
+     "value": 5.12765,
+     "unit": "",
+     "abs_tol": 0.03,
+     "require_unit": false,
+     "after": "x_found"
+    },
+    {
+     "id": "key_pH_found",
+     "role": "key",
+     "dim": {},
+     "state": "pH_found",
+     "label": "pH",
+     "value": 8.87235,
+     "unit": "",
+     "abs_tol": 0.03,
+     "require_unit": false,
+     "after": "pOH_found"
+    },
+    {
+     "id": "percent_ionised_out_of_100",
+     "role": "intermediate",
+     "dim": {},
+     "state": "percent_found",
+     "label": "percent ionised (out of 100)",
+     "value": 0.00745328,
+     "unit": "",
+     "abs_tol": 0.000149,
+     "require_unit": false,
+     "after": "pH_found"
+    },
+    {
+     "id": "g_c",
+     "state": null,
+     "role": "given",
+     "label": "c",
+     "value": 0.1,
+     "unit": "M",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "abs_tol": 1.01e-07
+    },
+    {
+     "id": "g_Kb",
+     "state": null,
+     "role": "given",
+     "label": "Kb",
+     "value": 5.555555555555555e-10,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 5.56e-13
+    },
+    {
+     "id": "c_Kw",
+     "state": null,
+     "role": "constant",
+     "label": "Kw",
+     "value": 1e-14,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 1e-17
+    }
+   ],
+   "variant_id": "ch14_acidbase:22",
+   "archetype_id": "ch14_acidbase",
+   "seed": 22,
+   "opener_index": 3
+  },
+  {
+   "kind": "weak_base",
+   "fixed_id": "C5",
+   "version": "",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
+   "text": "A lab solution is 0.01 M methylamine, \\(\\mathrm{CH_3NH_2}\\), at 25 °C. \\(K_b = 4.4 \\times 10^{-4}\\). Set up the ICE table. Find \\([\\mathrm{OH^-}]\\), the pOH, the pH and the percent ionized. Then check the 5 % rule.",
+   "context": {
+    "family": "weak base, 5 % rule fails",
+    "x": 0.0018891,
+    "pH": 11.28,
+    "percent": 18.89,
+    "approx_ok": false
+   },
+   "givens": {
+    "c": {
+     "value": 0.01,
+     "unit": "M"
+    },
+    "Kb": {
+     "value": 0.00044,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium constant chosen"
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting concentration: drop it from the denominator, then check."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      }
+     ],
+     "right": [
+      "method:quadratic"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Method chosen"
+    },
+    {
+     "state": "x_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "method"
+     ],
+     "explicit": true,
+     "id": "x_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "x found"
+    },
+    {
+     "state": "pOH_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "x_found"
+     ],
+     "explicit": true,
+     "id": "pOH_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "pOH found"
+    },
+    {
+     "state": "pH_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "pOH_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "pH_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "pH found"
+    },
+    {
+     "state": "percent_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "pH_found"
+     ],
+     "explicit": true,
+     "id": "percent_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Percent ionized found"
+    },
+    {
+     "state": "approx_checked",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "percent_found"
+     ],
+     "options": [
+      {
+       "id": "approx:holds",
+       "text": "holds: less than 5 % ionised, so dropping x was fine"
+      },
+      {
+       "id": "approx:fails",
+       "text": "fails: more than 5 % ionised, so the quadratic was needed"
+      }
+     ],
+     "right": [
+      "approx:fails"
+     ],
+     "explicit": true,
+     "id": "approx_checked",
+     "stage": "check",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "5 % rule checked"
+    },
+    {
+     "state": "perturb_1",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "approx_checked"
+     ],
+     "options": [
+      {
+       "id": "p1:rises",
+       "text": "rises: the percent ionised goes up"
+      },
+      {
+       "id": "p1:falls",
+       "text": "falls: the percent ionised goes down",
+       "names": "DILUTION_IONIZATION_FALLS"
+      },
+      {
+       "id": "p1:unchanged",
+       "text": "unchanged: the percent ionised stays the same"
+      }
+     ],
+     "right": [
+      "p1:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_1",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Dilution predicted"
+    },
+    {
+     "state": "perturb_1_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_1"
+     ],
+     "id": "perturb_1_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Dilution explained"
+    },
+    {
+     "state": "perturb_2",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "perturb_1_why"
+     ],
+     "options": [
+      {
+       "id": "p2:rises",
+       "text": "rises: the pH goes up",
+       "names": "CONJUGATE_RAISES_PH"
+      },
+      {
+       "id": "p2:falls",
+       "text": "falls: the pH goes down"
+      },
+      {
+       "id": "p2:unchanged",
+       "text": "unchanged: the pH stays the same"
+      }
+     ],
+     "right": [
+      "p2:falls"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_2",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Partner predicted"
+    },
+    {
+     "state": "perturb_2_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_2"
+     ],
+     "id": "perturb_2_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Partner ion explained"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "perturb_2_why"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "SQRT_FORGOTTEN",
+     "state": "x_found",
+     "value": 4.4e-06,
+     "unit": "M",
+     "abs_tol": 8.8e-08
+    },
+    {
+     "id": "PH_FROM_FORMAL_CONCENTRATION",
+     "state": "pH_found",
+     "value": 12.0,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PKA_TYPED_AS_PH",
+     "state": "pH_found",
+     "value": 3.3565,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PERCENT_AS_FRACTION",
+     "state": "percent_found",
+     "value": 0.18891,
+     "unit": "",
+     "abs_tol": 0.005
+    },
+    {
+     "id": "SMALL_X_WHEN_IT_FAILS",
+     "state": "x_found",
+     "value": 0.0020976,
+     "unit": "M",
+     "abs_tol": 5e-05
+    },
+    {
+     "id": "EXCEEDS_INITIAL",
+     "state": "x_found",
+     "above": 0.0102,
+     "unit": "M"
+    },
+    {
+     "id": "POH_TYPED_AS_PH",
+     "state": "pH_found",
+     "value": 2.7237,
+     "unit": "",
+     "abs_tol": 0.03
+    }
+   ],
+   "table": {
+    "species": [
+     "CH3NH2",
+     "CH3NH3+",
+     "OH-"
+    ],
+    "rows": {
+     "I": [
+      "0.01",
+      "0",
+      "0"
+     ],
+     "C": [
+      "-x",
+      "+x",
+      "+x"
+     ],
+     "E": [
+      "0.01 - x",
+      "x",
+      "x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "-x",
+       "-x"
+      ]
+     },
+     {
+      "id": "WATER_IN_TABLE",
+      "row": "I",
+      "cells": [
+       "0.01",
+       "0",
+       "0",
+       "55.5"
+      ]
+     }
+    ],
+    "zero_species": [
+     1,
+     2
+    ]
+   },
+   "words": {
+    "base": "methylamine",
+    "formula": "CH3NH2",
+    "conjugate": "methylammonium ion"
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.0015,
+       "K": 0.000264705882
+      },
+      {
+       "x": 0.0035,
+       "K": 0.00188461538
+      },
+      {
+       "x": 0.0055,
+       "K": 0.00672222222
+      }
+     ],
+     "alt": [],
+     "bent": {
+      "WATER_IN_EXPRESSION": [
+       {
+        "x": 0.0015,
+        "K": 4.76947536e-06
+       },
+       {
+        "x": 0.0035,
+        "K": 3.3957034e-05
+       },
+       {
+        "x": 0.0055,
+        "K": 0.000121121121
+       }
+      ]
+     },
+     "literal_for": {
+      "K": 0.00044
+     },
+     "park_text": "0.00044 = x · x / (0.01 - x)"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "species": "methylamine",
+    "c": 0.01,
+    "K": 0.00044
+   },
+   "expected": [
+    {
+     "id": "x_OH",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "x_found",
+     "label": "x = [OH-]",
+     "value": 0.00188912,
+     "unit": "M",
+     "abs_tol": 5e-05,
+     "require_unit": true
+    },
+    {
+     "id": "pOH",
+     "role": "intermediate",
+     "dim": {},
+     "state": "pOH_found",
+     "label": "pOH",
+     "value": 2.72374,
+     "unit": "",
+     "abs_tol": 0.03,
+     "require_unit": false,
+     "after": "x_found"
+    },
+    {
+     "id": "key_pH_found",
+     "role": "key",
+     "dim": {},
+     "state": "pH_found",
+     "label": "pH",
+     "value": 11.2763,
+     "unit": "",
+     "abs_tol": 0.03,
+     "require_unit": false,
+     "after": "pOH_found"
+    },
+    {
+     "id": "percent_ionised_out_of_100",
+     "role": "intermediate",
+     "dim": {},
+     "state": "percent_found",
+     "label": "percent ionised (out of 100)",
+     "value": 18.8912,
+     "unit": "",
+     "abs_tol": 0.5,
+     "require_unit": false,
+     "after": "pH_found"
+    },
+    {
+     "id": "g_c",
+     "state": null,
+     "role": "given",
+     "label": "c",
+     "value": 0.01,
+     "unit": "M",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "abs_tol": 1.1e-08
+    },
+    {
+     "id": "g_Kb",
+     "state": null,
+     "role": "given",
+     "label": "Kb",
+     "value": 0.00044,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 1.44e-09
+    },
+    {
+     "id": "c_Kw",
+     "state": null,
+     "role": "constant",
+     "label": "Kw",
+     "value": 1e-14,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 1e-17
+    }
+   ],
+   "variant_id": "ch14_acidbase:23",
+   "archetype_id": "ch14_acidbase",
+   "seed": 23,
+   "opener_index": 3
+  },
+  {
+   "kind": "weak_base",
+   "fixed_id": "C6",
+   "version": "",
+   "status": "approved (SCENARIO_CLAUDE's sheet; instructor, 16-17 Oct 2026)",
+   "text": "A solution is 0.02 M sodium hypochlorite, \\(\\mathrm{NaClO}\\), at 25 °C. For hypochlorous acid, \\(K_a = 2.9 \\times 10^{-8}\\); \\(K_w = 1.0 \\times 10^{-14}\\). Find Kb for the anion. Set up the ICE table. Find \\([\\mathrm{OH^-}]\\), the pOH, the pH and the percent ionized. Then check the 5 % rule.",
+   "context": {
+    "family": "weak base, 5 % rule holds",
+    "x": 8.2873e-05,
+    "pH": 9.918,
+    "percent": 0.4144,
+    "approx_ok": true
+   },
+   "givens": {
+    "c": {
+     "value": 0.02,
+     "unit": "M"
+    },
+    "Kb": {
+     "value": 3.448275862068965e-07,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium constant chosen"
+    },
+    {
+     "state": "Kb_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "Kb_found",
+     "stage": "Kb_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": ""
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "Kb_found"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting concentration: drop it from the denominator, then check."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      }
+     ],
+     "right": [
+      "method:smallx"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Method chosen"
+    },
+    {
+     "state": "x_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "method"
+     ],
+     "explicit": true,
+     "id": "x_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "x found"
+    },
+    {
+     "state": "pOH_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "x_found"
+     ],
+     "explicit": true,
+     "id": "pOH_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "pOH found"
+    },
+    {
+     "state": "pH_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "pOH_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "pH_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "pH found"
+    },
+    {
+     "state": "percent_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "pH_found"
+     ],
+     "explicit": true,
+     "id": "percent_found",
+     "stage": "calculate",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Percent ionized found"
+    },
+    {
+     "state": "approx_checked",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "percent_found"
+     ],
+     "options": [
+      {
+       "id": "approx:holds",
+       "text": "holds: less than 5 % ionised, so dropping x was fine"
+      },
+      {
+       "id": "approx:fails",
+       "text": "fails: more than 5 % ionised, so the quadratic was needed"
+      }
+     ],
+     "right": [
+      "approx:holds"
+     ],
+     "explicit": true,
+     "id": "approx_checked",
+     "stage": "check",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "5 % rule checked"
+    },
+    {
+     "state": "perturb_1",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "approx_checked"
+     ],
+     "options": [
+      {
+       "id": "p1:rises",
+       "text": "rises: the percent ionised goes up"
+      },
+      {
+       "id": "p1:falls",
+       "text": "falls: the percent ionised goes down",
+       "names": "DILUTION_IONIZATION_FALLS"
+      },
+      {
+       "id": "p1:unchanged",
+       "text": "unchanged: the percent ionised stays the same"
+      }
+     ],
+     "right": [
+      "p1:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_1",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Dilution predicted"
+    },
+    {
+     "state": "perturb_1_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_1"
+     ],
+     "id": "perturb_1_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Dilution explained"
+    },
+    {
+     "state": "perturb_2",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "perturb_1_why"
+     ],
+     "options": [
+      {
+       "id": "p2:rises",
+       "text": "rises: the pH goes up",
+       "names": "CONJUGATE_RAISES_PH"
+      },
+      {
+       "id": "p2:falls",
+       "text": "falls: the pH goes down"
+      },
+      {
+       "id": "p2:unchanged",
+       "text": "unchanged: the pH stays the same"
+      }
+     ],
+     "right": [
+      "p2:falls"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_2",
+     "stage": "change",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Partner predicted"
+    },
+    {
+     "state": "perturb_2_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_2"
+     ],
+     "id": "perturb_2_why",
+     "stage": "change",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Partner ion explained"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "perturb_2_why"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "KA_USED_AS_KB",
+     "state": "Kb_found",
+     "value": 2.9e-08,
+     "unit": "",
+     "abs_tol": 5.8e-10
+    },
+    {
+     "id": "SQRT_FORGOTTEN",
+     "state": "x_found",
+     "value": 6.8966e-09,
+     "unit": "M",
+     "abs_tol": 1.38e-10
+    },
+    {
+     "id": "PH_FROM_FORMAL_CONCENTRATION",
+     "state": "pH_found",
+     "value": 12.301,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PKA_TYPED_AS_PH",
+     "state": "pH_found",
+     "value": 6.4624,
+     "unit": "",
+     "abs_tol": 0.03
+    },
+    {
+     "id": "PERCENT_AS_FRACTION",
+     "state": "percent_found",
+     "value": 0.0041437,
+     "unit": "",
+     "abs_tol": 8.29e-05
+    },
+    {
+     "id": "EXCEEDS_INITIAL",
+     "state": "x_found",
+     "above": 0.0204,
+     "unit": "M"
+    },
+    {
+     "id": "POH_TYPED_AS_PH",
+     "state": "pH_found",
+     "value": 4.0816,
+     "unit": "",
+     "abs_tol": 0.03
+    }
+   ],
+   "table": {
+    "species": [
+     "ClO-",
+     "HClO",
+     "OH-"
+    ],
+    "rows": {
+     "I": [
+      "0.02",
+      "0",
+      "0"
+     ],
+     "C": [
+      "-x",
+      "+x",
+      "+x"
+     ],
+     "E": [
+      "0.02 - x",
+      "x",
+      "x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "-x",
+       "-x"
+      ]
+     },
+     {
+      "id": "WATER_IN_TABLE",
+      "row": "I",
+      "cells": [
+       "0.02",
+       "0",
+       "0",
+       "55.5"
+      ]
+     }
+    ],
+    "zero_species": [
+     1,
+     2
+    ]
+   },
+   "words": {
+    "base": "hypochlorite ion",
+    "formula": "ClO-",
+    "conjugate": "hypochlorous acid"
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.003,
+       "K": 0.000529411765
+      },
+      {
+       "x": 0.007,
+       "K": 0.00376923077
+      },
+      {
+       "x": 0.011,
+       "K": 0.0134444444
+      }
+     ],
+     "alt": [],
+     "bent": {
+      "WATER_IN_EXPRESSION": [
+       {
+        "x": 0.003,
+        "K": 9.53895072e-06
+       },
+       {
+        "x": 0.007,
+        "K": 6.79140679e-05
+       },
+       {
+        "x": 0.011,
+        "K": 0.000242242242
+       }
+      ]
+     },
+     "literal_for": {
+      "K": 3.448275862068965e-07
+     },
+     "park_text": "3.45e-07 = x · x / (0.02 - x)"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "species": "hypochlorite",
+    "c": 0.02,
+    "K": 3.448275862068965e-07
+   },
+   "expected": [
+    {
+     "id": "Kb_of_the_base_from_Kw_and_the_partner_s_Ka",
+     "role": "intermediate",
+     "dim": {},
+     "state": "Kb_found",
+     "label": "Kb of the base, from Kw and the partner's Ka",
+     "value": 3.44828e-07,
+     "unit": "",
+     "abs_tol": 6.9e-09,
+     "require_unit": false,
+     "after": "relation_chosen"
+    },
+    {
+     "id": "x_OH",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "x_found",
+     "label": "x = [OH-]",
+     "value": 8.28732e-05,
+     "unit": "M",
+     "abs_tol": 1.66e-06,
+     "require_unit": true
+    },
+    {
+     "id": "pOH",
+     "role": "intermediate",
+     "dim": {},
+     "state": "pOH_found",
+     "label": "pOH",
+     "value": 4.08159,
+     "unit": "",
+     "abs_tol": 0.03,
+     "require_unit": false,
+     "after": "x_found"
+    },
+    {
+     "id": "key_pH_found",
+     "role": "key",
+     "dim": {},
+     "state": "pH_found",
+     "label": "pH",
+     "value": 9.91841,
+     "unit": "",
+     "abs_tol": 0.03,
+     "require_unit": false,
+     "after": "pOH_found"
+    },
+    {
+     "id": "percent_ionised_out_of_100",
+     "role": "intermediate",
+     "dim": {},
+     "state": "percent_found",
+     "label": "percent ionised (out of 100)",
+     "value": 0.414366,
+     "unit": "",
+     "abs_tol": 0.00829,
+     "require_unit": false,
+     "after": "pH_found"
+    },
+    {
+     "id": "g_c",
+     "state": null,
+     "role": "given",
+     "label": "c",
+     "value": 0.02,
+     "unit": "M",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "abs_tol": 2.1e-08
+    },
+    {
+     "id": "g_Kb",
+     "state": null,
+     "role": "given",
+     "label": "Kb",
+     "value": 3.448275862068965e-07,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 3.45e-10
+    },
+    {
+     "id": "c_Kw",
+     "state": null,
+     "role": "constant",
+     "label": "Kw",
+     "value": 1e-14,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 1e-17
+    }
+   ],
+   "variant_id": "ch14_acidbase:24",
+   "archetype_id": "ch14_acidbase",
+   "seed": 24,
+   "opener_index": 3
   }
  ],
- "content_version": "483c9d83e2"
+ "content_version": "53ded9568d"
 }

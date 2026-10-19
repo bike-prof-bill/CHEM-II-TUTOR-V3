@@ -1,0 +1,8 @@
+﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
+LAMBDA_INVERTED,They computed t½ ÷ ln 2 instead of ln 2 ÷ t½.,Should λ get larger or smaller as the half-life grows?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+FRACTION_DECAYED,"They gave the fraction that decayed, not the fraction remaining.",Does exp(−λt) give what is left or what is gone?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+LINEAR_HALVING,They treated decay as linear instead of exponential.,"Does the same amount, or the same fraction, decay in each half-life?",,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+LOG10_FOR_LN,They used log base 10 instead of ln.,The equation uses ln. Which key is that?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+RATIO_INVERTED,"Their Nt/N0 is upside down, giving a negative time.","Which goes on top: now, or originally?",,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+DAUGHTER_AS_N0,They used the daughter's moles as N0 instead of parent now plus parent decayed.,What did the rock contain when it formed?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+MASS_RATIO_USED,"They used grams, not moles, for parent and daughter.",Parent and daughter have different molar masses. What must you compare?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"

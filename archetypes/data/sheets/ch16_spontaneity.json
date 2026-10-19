@@ -1,0 +1,1162 @@
+{
+ "archetype": "ch16_spontaneity",
+ "source_sheet": "ch16_spontaneity_problems.csv",
+ "problems": [
+  {
+   "id": "LK1",
+   "scenario": "The Limestone Kiln",
+   "kind": "crossover",
+   "text": "For CaCO₃(s) → CaO(s) + CO₂(g), Appendix G gives ΔH° = 191.6 kJ and ΔS° = 141.9 J/K. Which of the four sign cases is this? Find the temperature at which ΔG° = 0. Then find ΔG° at 298 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 298 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Tcross_found",
+     "label": "T at which ΔG° = 0",
+     "value": 1350.0,
+     "unit": "K",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 298 K",
+     "value": 149.3,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_KJ_MISMATCH",
+     "state": "Tcross_found",
+     "value": 1.35
+    },
+    {
+     "id": "PRODUCTS_REACTANTS_SWAPPED",
+     "state": "Tcross_found",
+     "value": -1350.0
+    },
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -42095.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": 233.9
+    }
+   ],
+   "picks": {
+    "case_pick": "high",
+    "verdict": "no",
+    "perturb_1": "falls"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "LK2",
+   "scenario": "The Limestone Kiln",
+   "kind": "crossover",
+   "text": "For CaCO₃(s) → CaO(s) + CO₂(g), Appendix G gives ΔH° = 191.6 kJ and ΔS° = 141.9 J/K. Which of the four sign cases is this? Find the temperature at which ΔG° = 0. Then find ΔG° at 1500 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 1500 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Tcross_found",
+     "label": "T at which ΔG° = 0",
+     "value": 1350.0,
+     "unit": "K",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 1500 K",
+     "value": -21.26,
+     "unit": "kJ",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_KJ_MISMATCH",
+     "state": "Tcross_found",
+     "value": 1.35
+    },
+    {
+     "id": "PRODUCTS_REACTANTS_SWAPPED",
+     "state": "Tcross_found",
+     "value": -1350.0
+    },
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -212700.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": 404.4
+    }
+   ],
+   "picks": {
+    "case_pick": "high",
+    "verdict": "yes",
+    "perturb_1": "falls"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "LK3",
+   "scenario": "The Limestone Kiln",
+   "kind": "crossover",
+   "text": "For N₂(g) + 3 H₂(g) → 2 NH₃(g), Appendix G gives ΔH° = -91.8 kJ and ΔS° = -198.1 J/K. Which of the four sign cases is this? Find the temperature at which ΔG° = 0. Then find ΔG° at 400 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 400 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Tcross_found",
+     "label": "T at which ΔG° = 0",
+     "value": 463.4,
+     "unit": "K",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 400 K",
+     "value": -12.56,
+     "unit": "kJ",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_KJ_MISMATCH",
+     "state": "Tcross_found",
+     "value": 0.4634
+    },
+    {
+     "id": "PRODUCTS_REACTANTS_SWAPPED",
+     "state": "Tcross_found",
+     "value": -463.4
+    },
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": 79148.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": -171.0
+    }
+   ],
+   "picks": {
+    "case_pick": "low",
+    "verdict": "yes",
+    "perturb_1": "rises"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "LK4",
+   "scenario": "The Limestone Kiln",
+   "kind": "crossover",
+   "text": "For 2 NO₂(g) → N₂O₄(g), Appendix G gives ΔH° = -55.3 kJ and ΔS° = -175.8 J/K. Which of the four sign cases is this? Find the temperature at which ΔG° = 0. Then find ΔG° at 250 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 250 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Tcross_found",
+     "label": "T at which ΔG° = 0",
+     "value": 314.6,
+     "unit": "K",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 250 K",
+     "value": -11.35,
+     "unit": "kJ",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_KJ_MISMATCH",
+     "state": "Tcross_found",
+     "value": 0.3146
+    },
+    {
+     "id": "PRODUCTS_REACTANTS_SWAPPED",
+     "state": "Tcross_found",
+     "value": -314.6
+    },
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": 43895.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": -99.25
+    }
+   ],
+   "picks": {
+    "case_pick": "low",
+    "verdict": "yes",
+    "perturb_1": "rises"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "LK5",
+   "scenario": "The Limestone Kiln",
+   "kind": "crossover",
+   "text": "For PCl₅(g) → PCl₃(g) + Cl₂(g), Appendix G gives ΔH° = 87.9 kJ and ΔS° = 170.5 J/K. Which of the four sign cases is this? Find the temperature at which ΔG° = 0. Then find ΔG° at 600 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 600 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Tcross_found",
+     "label": "T at which ΔG° = 0",
+     "value": 515.6,
+     "unit": "K",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 600 K",
+     "value": -14.39,
+     "unit": "kJ",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_KJ_MISMATCH",
+     "state": "Tcross_found",
+     "value": 0.5156
+    },
+    {
+     "id": "PRODUCTS_REACTANTS_SWAPPED",
+     "state": "Tcross_found",
+     "value": -515.6
+    },
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -102200.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": 190.2
+    }
+   ],
+   "picks": {
+    "case_pick": "high",
+    "verdict": "yes",
+    "perturb_1": "falls"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "LK6",
+   "scenario": "The Limestone Kiln",
+   "kind": "crossover",
+   "text": "For H₂O(l) → H₂O(g), Appendix G gives ΔH° = 44.0 kJ and ΔS° = 118.8 J/K. Which of the four sign cases is this? Find the temperature at which ΔG° = 0. Then find ΔG° at 400 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 400 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Tcross_found",
+     "label": "T at which ΔG° = 0",
+     "value": 370.5,
+     "unit": "K",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 400 K",
+     "value": -3.51,
+     "unit": "kJ",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_KJ_MISMATCH",
+     "state": "Tcross_found",
+     "value": 0.3705
+    },
+    {
+     "id": "PRODUCTS_REACTANTS_SWAPPED",
+     "state": "Tcross_found",
+     "value": -370.5
+    },
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -47476.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": 91.53
+    }
+   ],
+   "picks": {
+    "case_pick": "high",
+    "verdict": "yes",
+    "perturb_1": "falls"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "AR1",
+   "scenario": "The Ammonia Reactor",
+   "kind": "crossover",
+   "text": "For N₂(g) + 3 H₂(g) → 2 NH₃(g), Appendix G gives ΔH° = -91.8 kJ and ΔS° = -198.1 J/K. Which of the four sign cases is this? Find the temperature at which ΔG° = 0. Then find ΔG° at 298 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 298 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Tcross_found",
+     "label": "T at which ΔG° = 0",
+     "value": 463.4,
+     "unit": "K",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 298 K",
+     "value": -32.77,
+     "unit": "kJ",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_KJ_MISMATCH",
+     "state": "Tcross_found",
+     "value": 0.4634
+    },
+    {
+     "id": "PRODUCTS_REACTANTS_SWAPPED",
+     "state": "Tcross_found",
+     "value": -463.4
+    },
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": 58942.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": -150.8
+    }
+   ],
+   "picks": {
+    "case_pick": "low",
+    "verdict": "yes",
+    "perturb_1": "rises"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "AR2",
+   "scenario": "The Ammonia Reactor",
+   "kind": "crossover",
+   "text": "For N₂(g) + 3 H₂(g) → 2 NH₃(g), Appendix G gives ΔH° = -91.8 kJ and ΔS° = -198.1 J/K. Which of the four sign cases is this? Find the temperature at which ΔG° = 0. Then find ΔG° at 700 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 700 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Tcross_found",
+     "label": "T at which ΔG° = 0",
+     "value": 463.4,
+     "unit": "K",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 700 K",
+     "value": 46.87,
+     "unit": "kJ",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_KJ_MISMATCH",
+     "state": "Tcross_found",
+     "value": 0.4634
+    },
+    {
+     "id": "PRODUCTS_REACTANTS_SWAPPED",
+     "state": "Tcross_found",
+     "value": -463.4
+    },
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": 138600.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": -230.5
+    }
+   ],
+   "picks": {
+    "case_pick": "low",
+    "verdict": "no",
+    "perturb_1": "rises"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "AR3",
+   "scenario": "The Ammonia Reactor",
+   "kind": "crossover",
+   "text": "For 2 SO₂(g) + O₂(g) → 2 SO₃(g), Appendix G gives ΔH° = -197.8 kJ and ΔS° = -188.1 J/K. Which of the four sign cases is this? Find the temperature at which ΔG° = 0. Then find ΔG° at 1200 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 1200 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Tcross_found",
+     "label": "T at which ΔG° = 0",
+     "value": 1052.0,
+     "unit": "K",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 1200 K",
+     "value": 27.92,
+     "unit": "kJ",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_KJ_MISMATCH",
+     "state": "Tcross_found",
+     "value": 1.052
+    },
+    {
+     "id": "PRODUCTS_REACTANTS_SWAPPED",
+     "state": "Tcross_found",
+     "value": -1052.0
+    },
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": 225500.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": -423.5
+    }
+   ],
+   "picks": {
+    "case_pick": "low",
+    "verdict": "no",
+    "perturb_1": "rises"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "AR4",
+   "scenario": "The Ammonia Reactor",
+   "kind": "crossover",
+   "text": "For 2 NO(g) + O₂(g) → 2 NO₂(g), Appendix G gives ΔH° = -114.1 kJ and ΔS° = -146.6 J/K. Which of the four sign cases is this? Find the temperature at which ΔG° = 0. Then find ΔG° at 500 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 500 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Tcross_found",
+     "label": "T at which ΔG° = 0",
+     "value": 778.3,
+     "unit": "K",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 500 K",
+     "value": -40.8,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_KJ_MISMATCH",
+     "state": "Tcross_found",
+     "value": 0.7783
+    },
+    {
+     "id": "PRODUCTS_REACTANTS_SWAPPED",
+     "state": "Tcross_found",
+     "value": -778.3
+    },
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": 73186.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": -187.4
+    }
+   ],
+   "picks": {
+    "case_pick": "low",
+    "verdict": "yes",
+    "perturb_1": "rises"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "AR5",
+   "scenario": "The Ammonia Reactor",
+   "kind": "crossover",
+   "text": "For CaCO₃(s) → CaO(s) + CO₂(g), Appendix G gives ΔH° = 191.6 kJ and ΔS° = 141.9 J/K. Which of the four sign cases is this? Find the temperature at which ΔG° = 0. Then find ΔG° at 1200 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 1200 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Tcross_found",
+     "label": "T at which ΔG° = 0",
+     "value": 1350.0,
+     "unit": "K",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 1200 K",
+     "value": 21.31,
+     "unit": "kJ",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_KJ_MISMATCH",
+     "state": "Tcross_found",
+     "value": 1.35
+    },
+    {
+     "id": "PRODUCTS_REACTANTS_SWAPPED",
+     "state": "Tcross_found",
+     "value": -1350.0
+    },
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -170100.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": 361.9
+    }
+   ],
+   "picks": {
+    "case_pick": "high",
+    "verdict": "no",
+    "perturb_1": "falls"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "AR6",
+   "scenario": "The Ammonia Reactor",
+   "kind": "crossover",
+   "text": "For N₂O₄(g) → 2 NO₂(g), Appendix G gives ΔH° = 55.3 kJ and ΔS° = 175.8 J/K. Which of the four sign cases is this? Find the temperature at which ΔG° = 0. Then find ΔG° at 400 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 400 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Tcross_found",
+     "label": "T at which ΔG° = 0",
+     "value": 314.6,
+     "unit": "K",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 400 K",
+     "value": -15.02,
+     "unit": "kJ",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_KJ_MISMATCH",
+     "state": "Tcross_found",
+     "value": 0.3146
+    },
+    {
+     "id": "PRODUCTS_REACTANTS_SWAPPED",
+     "state": "Tcross_found",
+     "value": -314.6
+    },
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -70265.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": 125.6
+    }
+   ],
+   "picks": {
+    "case_pick": "high",
+    "verdict": "yes",
+    "perturb_1": "falls"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "FP1",
+   "scenario": "The Fizzing Peroxide",
+   "kind": "no_crossover",
+   "text": "For 2 H₂O₂(l) → 2 H₂O(l) + O₂(g), Appendix G gives ΔH° = -196.1 kJ and ΔS° = 126.0 J/K. Which of the four sign cases is this? Is there a temperature at which ΔG° = 0? Then find ΔG° at 298 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 298 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 298 K",
+     "value": -233.6,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -37744.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": -158.6
+    }
+   ],
+   "picks": {
+    "case_pick": "always",
+    "verdict": "yes",
+    "perturb_1": "falls"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "FP2",
+   "scenario": "The Fizzing Peroxide",
+   "kind": "no_crossover",
+   "text": "For 3 O₂(g) → 2 O₃(g), Appendix G gives ΔH° = 285.4 kJ and ΔS° = -137.8 J/K. Which of the four sign cases is this? Is there a temperature at which ΔG° = 0? Then find ΔG° at 298 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 298 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 298 K",
+     "value": 326.5,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": 41350.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": 244.3
+    }
+   ],
+   "picks": {
+    "case_pick": "never",
+    "verdict": "no",
+    "perturb_1": "rises"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "FP3",
+   "scenario": "The Fizzing Peroxide",
+   "kind": "no_crossover",
+   "text": "For 2 C(s, graphite) + O₂(g) → 2 CO(g), Appendix G gives ΔH° = -221.0 kJ and ΔS° = 178.7 J/K. Which of the four sign cases is this? Is there a temperature at which ΔG° = 0? Then find ΔG° at 298 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 298 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 298 K",
+     "value": -274.3,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -53480.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": -167.8
+    }
+   ],
+   "picks": {
+    "case_pick": "always",
+    "verdict": "yes",
+    "perturb_1": "falls"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "FP4",
+   "scenario": "The Fizzing Peroxide",
+   "kind": "no_crossover",
+   "text": "For C(s, diamond) → C(s, graphite), Appendix G gives ΔH° = -1.9 kJ and ΔS° = 3.4 J/K. Which of the four sign cases is this? Is there a temperature at which ΔG° = 0? Then find ΔG° at 298 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 298 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 298 K",
+     "value": -2.891,
+     "unit": "kJ",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -1003.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": -0.8887
+    }
+   ],
+   "picks": {
+    "case_pick": "always",
+    "verdict": "yes",
+    "perturb_1": "falls"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "FP5",
+   "scenario": "The Fizzing Peroxide",
+   "kind": "crossover",
+   "text": "For N₂(g) + O₂(g) → 2 NO(g), Appendix G gives ΔH° = 180.5 kJ and ΔS° = 24.8 J/K. Which of the four sign cases is this? Find the temperature at which ΔG° = 0. Then find ΔG° at 2000 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 2000 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Tcross_found",
+     "label": "T at which ΔG° = 0",
+     "value": 7278.0,
+     "unit": "K",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 2000 K",
+     "value": 130.9,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_KJ_MISMATCH",
+     "state": "Tcross_found",
+     "value": 7.278
+    },
+    {
+     "id": "PRODUCTS_REACTANTS_SWAPPED",
+     "state": "Tcross_found",
+     "value": -7278.0
+    },
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -49420.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": 230.1
+    }
+   ],
+   "picks": {
+    "case_pick": "high",
+    "verdict": "no",
+    "perturb_1": "falls"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "FP6",
+   "scenario": "The Fizzing Peroxide",
+   "kind": "crossover",
+   "text": "For 2 NH₃(g) → N₂(g) + 3 H₂(g), Appendix G gives ΔH° = 91.8 kJ and ΔS° = 198.1 J/K. Which of the four sign cases is this? Find the temperature at which ΔG° = 0. Then find ΔG° at 298 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 298 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Tcross_found",
+     "label": "T at which ΔG° = 0",
+     "value": 463.4,
+     "unit": "K",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 298 K",
+     "value": 32.77,
+     "unit": "kJ",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_KJ_MISMATCH",
+     "state": "Tcross_found",
+     "value": 0.4634
+    },
+    {
+     "id": "PRODUCTS_REACTANTS_SWAPPED",
+     "state": "Tcross_found",
+     "value": -463.4
+    },
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -58942.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": 150.8
+    }
+   ],
+   "picks": {
+    "case_pick": "high",
+    "verdict": "no",
+    "perturb_1": "falls"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "SF1",
+   "scenario": "The Smelter's Furnace",
+   "kind": "crossover",
+   "text": "For Fe₂O₃(s) + 3 C(s, graphite) → 2 Fe(s) + 3 CO(g), Appendix G gives ΔH° = 492.6 kJ and ΔS° = 543.1 J/K. Which of the four sign cases is this? Find the temperature at which ΔG° = 0. Then find ΔG° at 298 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 298 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Tcross_found",
+     "label": "T at which ΔG° = 0",
+     "value": 907.1,
+     "unit": "K",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 298 K",
+     "value": 330.8,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_KJ_MISMATCH",
+     "state": "Tcross_found",
+     "value": 0.9071
+    },
+    {
+     "id": "PRODUCTS_REACTANTS_SWAPPED",
+     "state": "Tcross_found",
+     "value": -907.1
+    },
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -161300.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": 654.5
+    }
+   ],
+   "picks": {
+    "case_pick": "high",
+    "verdict": "no",
+    "perturb_1": "falls"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "SF2",
+   "scenario": "The Smelter's Furnace",
+   "kind": "crossover",
+   "text": "For Fe₂O₃(s) + 3 C(s, graphite) → 2 Fe(s) + 3 CO(g), Appendix G gives ΔH° = 492.6 kJ and ΔS° = 543.1 J/K. Which of the four sign cases is this? Find the temperature at which ΔG° = 0. Then find ΔG° at 1200 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 1200 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Tcross_found",
+     "label": "T at which ΔG° = 0",
+     "value": 907.1,
+     "unit": "K",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 1200 K",
+     "value": -159.1,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_KJ_MISMATCH",
+     "state": "Tcross_found",
+     "value": 0.9071
+    },
+    {
+     "id": "PRODUCTS_REACTANTS_SWAPPED",
+     "state": "Tcross_found",
+     "value": -907.1
+    },
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -651200.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": 1144.0
+    }
+   ],
+   "picks": {
+    "case_pick": "high",
+    "verdict": "yes",
+    "perturb_1": "falls"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "SF3",
+   "scenario": "The Smelter's Furnace",
+   "kind": "crossover",
+   "text": "For 2 ZnO(s) + C(s, graphite) → 2 Zn(s) + CO₂(g), Appendix G gives ΔH° = 307.5 kJ and ΔS° = 203.9 J/K. Which of the four sign cases is this? Find the temperature at which ΔG° = 0. Then find ΔG° at 1800 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 1800 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Tcross_found",
+     "label": "T at which ΔG° = 0",
+     "value": 1508.0,
+     "unit": "K",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 1800 K",
+     "value": -59.46,
+     "unit": "kJ",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_KJ_MISMATCH",
+     "state": "Tcross_found",
+     "value": 1.508
+    },
+    {
+     "id": "PRODUCTS_REACTANTS_SWAPPED",
+     "state": "Tcross_found",
+     "value": -1508.0
+    },
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -366600.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": 674.4
+    }
+   ],
+   "picks": {
+    "case_pick": "high",
+    "verdict": "yes",
+    "perturb_1": "falls"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "SF4",
+   "scenario": "The Smelter's Furnace",
+   "kind": "crossover",
+   "text": "For ZnO(s) + C(s, graphite) → Zn(s) + CO(g), Appendix G gives ΔH° = 240.0 kJ and ΔS° = 189.9 J/K. Which of the four sign cases is this? Find the temperature at which ΔG° = 0. Then find ΔG° at 1500 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 1500 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Tcross_found",
+     "label": "T at which ΔG° = 0",
+     "value": 1264.0,
+     "unit": "K",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 1500 K",
+     "value": -44.81,
+     "unit": "kJ",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_KJ_MISMATCH",
+     "state": "Tcross_found",
+     "value": 1.264
+    },
+    {
+     "id": "PRODUCTS_REACTANTS_SWAPPED",
+     "state": "Tcross_found",
+     "value": -1264.0
+    },
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -284600.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": 524.8
+    }
+   ],
+   "picks": {
+    "case_pick": "high",
+    "verdict": "yes",
+    "perturb_1": "falls"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "SF5",
+   "scenario": "The Smelter's Furnace",
+   "kind": "crossover",
+   "text": "For 2 HgO(s) → 2 Hg(l) + O₂(g), Appendix G gives ΔH° = 181.7 kJ and ΔS° = 216.4 J/K. Which of the four sign cases is this? Find the temperature at which ΔG° = 0. Then find ΔG° at 900 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 900 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Tcross_found",
+     "label": "T at which ΔG° = 0",
+     "value": 839.4,
+     "unit": "K",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 900 K",
+     "value": -13.12,
+     "unit": "kJ",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_KJ_MISMATCH",
+     "state": "Tcross_found",
+     "value": 0.8394
+    },
+    {
+     "id": "PRODUCTS_REACTANTS_SWAPPED",
+     "state": "Tcross_found",
+     "value": -839.4
+    },
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -194600.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": 376.4
+    }
+   ],
+   "picks": {
+    "case_pick": "high",
+    "verdict": "yes",
+    "perturb_1": "falls"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "SF6",
+   "scenario": "The Smelter's Furnace",
+   "kind": "crossover",
+   "text": "For 2 CuO(s) → 2 Cu(s) + O₂(g), Appendix G gives ΔH° = 314.6 kJ and ΔS° = 186.2 J/K. Which of the four sign cases is this? Find the temperature at which ΔG° = 0. Then find ΔG° at 1500 K, assuming ΔH° and ΔS° do not change with temperature. Is the reaction spontaneous at 1500 K?",
+   "constants": "Appendix G (OpenStax); R = 8.314 J/(mol·K); T = 298 K unless stated. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Tcross_found",
+     "label": "T at which ΔG° = 0",
+     "value": 1689.0,
+     "unit": "K",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG° at 1500 K",
+     "value": 35.24,
+     "unit": "kJ",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_KJ_MISMATCH",
+     "state": "Tcross_found",
+     "value": 1.689
+    },
+    {
+     "id": "PRODUCTS_REACTANTS_SWAPPED",
+     "state": "Tcross_found",
+     "value": -1689.0
+    },
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -279000.0
+    },
+    {
+     "id": "TDS_SIGN",
+     "state": "dG_found",
+     "value": 594.0
+    }
+   ],
+   "picks": {
+    "case_pick": "high",
+    "verdict": "no",
+    "perturb_1": "falls"
+   },
+   "status": "approved (instructor, 18 Oct 2026)"
+  }
+ ]
+}

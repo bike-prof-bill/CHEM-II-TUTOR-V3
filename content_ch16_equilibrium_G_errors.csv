@@ -1,0 +1,9 @@
+﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
+PRODUCTS_REACTANTS_SWAPPED,They subtracted products from reactants: the sign is reversed.,Which comes first in the subtraction: products or reactants?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+J_KJ_MISMATCH,"Their temperature divides kJ by J/K, so it is a thousand times too small.",What units are ΔH° and ΔS° in? Make them match before dividing.,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+KELVIN_AS_CELSIUS,They gave the temperature in kelvins where °C was asked.,How do you convert K to °C?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+Q_INVERTED,Their Q is reactants over products.,Which pressures go on top of Q?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+LOG_FOR_LN,They used log base 10 where the natural logarithm (ln) is needed.,The relation uses ln. Which button on your calculator is that?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+J_FOR_KJ,They combined J with kJ: TΔS° (or RT ln Q) in J was subtracted from a value in kJ.,ΔH° is in kJ and ΔS° in J/K. What do you do to ΔS° first?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+CELSIUS_FOR_KELVIN,They used the temperature in °C instead of K.,Thermodynamic temperatures must be absolute. What is this temperature in kelvins?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+STANDARD_FOR_NONSTANDARD,They gave ΔG° as ΔG: the pressures were not used.,The mixture is not at standard pressures. Which term accounts for that?,,ΔG° typed at dG_found,"approved (instructor, 18 Oct 2026)"

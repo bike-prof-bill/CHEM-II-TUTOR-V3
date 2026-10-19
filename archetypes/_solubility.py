@@ -1,15 +1,23 @@
 """Shared pieces for the three chapter 15 archetypes (ch15_ksp, ch15_common_ion, ch15_qsp), 16 Oct 2026, prepared for SCENARIO_CLAUDE.
 Salts from archetypes/data/salts.json (Appendix J first). A salt M_a X_b dissolves to a M^+ and b X^-; with molar solubility s,
 [M] = a s and [X] = b s, so Ksp = (a s)^a (b s)^b = a^a b^b s^(a+b). Every function here is re-derived in test_ch15.py."""
-import json, os, math
+import json, os, math, re
 from engine import round_sig
 
 _D = json.load(open(os.path.join(os.path.dirname(__file__), "data", "salts.json"), encoding="utf-8"))
 NOTEBOOK_URL = "https://notebook.google.com/notebook/6458f208-db32-496a-8088-fe0c1c6cd539"   # INSTRUCTOR: the course notebook
 DRAFT = "DRAFT (placeholder; SCENARIO_CLAUDE writes the problems)"
 
-def salt(formula):
+def constant_in_text(text, symbol="K_{sp}"):
+    """The constant as the problem sentence states it (the instructor's rule: the data carry the text's figures). None if absent."""
+    m = re.search(re.escape(symbol) + r"[^0-9]*?= ([0-9.]+)(?: \\times 10\^\{(-?\d+)\})?", text)
+    if not m: return None
+    return float(m.group(1)) * (10 ** int(m.group(2)) if m.group(2) else 1)
+
+def salt(formula, text=None):
     s = dict(_D["salts"][formula]); s["formula"] = formula; s["n_ions"] = s["n_cat"] + s["n_an"]
+    k = constant_in_text(text) if text else None
+    if k is not None and abs(k - s["Ksp"]) <= 0.1 * s["Ksp"]: s["Ksp"] = k                # the sentence's rounding of the appendix value wins (CaC2O4: 2 × 10⁻⁹ for 1.96 × 10⁻⁹)
     s["words"] = {"salt": s["name"], "formula": formula, "cation": s["cation_display"], "anion": s["anion_display"]}   # display forms, no caret (17 Oct)
     return s
 
@@ -69,10 +77,10 @@ def ice_table(st, c_common=0.0, which=None):
     concentration if any; C: +a s, +b s. The checker reads s as the unknown (EQUATION_SYMBOLS maps s to x)."""
     a, b = st["n_cat"], st["n_an"]
     i_cat = g(c_common) if which == "cation" else "0"; i_an = g(c_common) if which == "anion" else "0"
-    e_cat = (f"{g(c_common)} + {a if a > 1 else ''}s" if which == "cation" else f"{a if a > 1 else ''}s")
-    e_an = (f"{g(c_common)} + {b if b > 1 else ''}s" if which == "anion" else f"{b if b > 1 else ''}s")
-    return {"species": [st["cation"], st["anion"]], "rows": {"I": [i_cat, i_an], "C": [f"+{a if a > 1 else ''}s", f"+{b if b > 1 else ''}s"], "E": [e_cat, e_an]},
-            "named": [{"id": "COEFFICIENT_DROPPED_IN_TABLE", "row": "C", "cells": ["+s", "+s"]}] if max(a, b) > 1 else [], "zero_species": [0, 1] if which is None else ([1] if which == "cation" else [0])}
+    e_cat = (f"{g(c_common)} + {a if a > 1 else ''}x" if which == "cation" else f"{a if a > 1 else ''}x")
+    e_an = (f"{g(c_common)} + {b if b > 1 else ''}x" if which == "anion" else f"{b if b > 1 else ''}x")
+    return {"species": [st["cation"], st["anion"]], "rows": {"I": [i_cat, i_an], "C": [f"+{a if a > 1 else ''}x", f"+{b if b > 1 else ''}x"], "E": [e_cat, e_an]},
+            "named": [{"id": "COEFFICIENT_DROPPED_IN_TABLE", "row": "C", "cells": ["+x", "+x"]}] if max(a, b) > 1 else [], "zero_species": [0, 1] if which is None else ([1] if which == "cation" else [0])}
 
 def expression_check(st, c_common=0.0, which=None):
     """Ksp = (a s)^a (b s)^b, or with the common ion added: true states, and the bent forms (coefficient not an exponent; the solid in)."""
@@ -87,9 +95,10 @@ def expression_check(st, c_common=0.0, which=None):
     def states(f): return [{"x": round_sig(x, 9), "K": round_sig(f(x), 9)} for x in (0.5 * sm, 1.0 * sm, 1.5 * sm)]   # the unknown is x in the checker; s is its alias
     bent = {}
     if max(a, b) > 1: bent["COEFF_NOT_EXPONENT"] = states(form(False, True)); bent["EXPONENT_NOT_IN_TABLE"] = states(form(True, False))
-    cat_t = (f"({g(c_common)} + {a if a > 1 else ''}s)" if which == "cation" else (f"({a}s)" if a > 1 else "s")) + (f"^{a}" if a > 1 else "")
-    an_t = (f"({g(c_common)} + {b if b > 1 else ''}s)" if which == "anion" else (f"({b}s)" if b > 1 else "s")) + (f"^{b}" if b > 1 else "")
-    return {"state": "expression_set", "unknown": "K", "true": states(form(True, True)), "alt": [], "bent": bent, "literal_for": {"K": K}, "park_text": f"{K:.2g} = {cat_t} · {an_t}"}
+    SUP = str.maketrans("0123456789", "⁰¹²³⁴⁵⁶⁷⁸⁹")                        # no caret in anything a student reads; x is the unknown (instructor, 17 Oct)
+    cat_t = (f"({g(c_common)} + {a if a > 1 else ''}x)" if which == "cation" else (f"({a}x)" if a > 1 else "x")) + (str(a).translate(SUP) if a > 1 else "")
+    an_t = (f"({g(c_common)} + {b if b > 1 else ''}x)" if which == "anion" else (f"({b}x)" if b > 1 else "x")) + (str(b).translate(SUP) if b > 1 else "")
+    return {"state": "expression_set", "unknown": "K", "true": states(form(True, True)), "alt": [], "bent": bent, "literal_for": {"K": K}, "park_text": f"{K:.3g} = {cat_t} · {an_t}"}
 
 EQ = {
   "ksp":  {"id": "eq_ksp",  "text": r"\( K_{sp} = [\mathrm{M^{m+}}]^{a}[\mathrm{X^{x-}}]^{b} \)"},
@@ -106,14 +115,14 @@ MECHANISM_WORDS = ["ion", "lattice", "crystal", "solid", "dissolv", "precipitat"
 
 TRAP_NOTES_COMMON = {
   "COEFF_NOT_EXPONENT":        {"note": "Their expression holds only with every exponent read as 1: the coefficients are in the table but not used as exponents.", "ask": "The coefficients do double duty. What is the exponent for each ion?"},
-  "EXPONENT_NOT_IN_TABLE":     {"note": "Their expression has the exponents but the change row reads +s for every ion.", "ask": "A coefficient is an exponent here. Is it also in the change row?"},
-  "COEFFICIENT_DROPPED_IN_TABLE": {"note": "Their change row has +s for an ion that forms two per formula unit.", "ask": "How many of that ion does one formula unit release?"},
-  "ROOT_FORGOTTEN":            {"note": "Their s is Ksp divided by the coefficient without the root.", "ask": "What power does s carry in your expression?"},
-  "COEFFICIENT_FORGOTTEN":     {"note": "Their s is the root of Ksp alone: the 4 or the 27 was left out.", "ask": "What multiplies s to the power in your expression?"},
-  "S_FOR_ION":                 {"note": "They gave s where the ion's concentration was asked, though two ions form per formula unit.", "ask": "How many of that ion does each dissolved formula unit put into the water?"},
+  "EXPONENT_NOT_IN_TABLE":     {"note": "Their expression has the exponents but the change row reads +x for every ion.", "ask": "A coefficient is an exponent here. Is it also in the change row?"},
+  "COEFFICIENT_DROPPED_IN_TABLE": {"note": "Their change row has +x for an ion that forms two per formula unit.", "ask": "How many of that ion does one formula unit release?"},
+  "ROOT_FORGOTTEN":            {"note": "Their x is Ksp divided by the coefficient without the root.", "ask": "What power does x carry in your expression?"},
+  "COEFFICIENT_FORGOTTEN":     {"note": "Their x is the root of Ksp alone: the 4 or the 27 was left out.", "ask": "What multiplies x to the power in your expression?"},
+  "S_FOR_ION":                 {"note": "They gave x where the ion's concentration was asked, though two ions form per formula unit.", "ask": "How many of that ion does each dissolved formula unit put into the water?"},
   "GRAMS_WITHOUT_MOLAR_MASS":  {"note": "Their grams per litre equal the molar solubility: the molar mass was not used.", "ask": "What converts moles per litre into grams per litre?"},
-  "COMMON_ION_IGNORED":        {"note": "Their s is the pure-water solubility: the ion already present was not counted.", "ask": "What concentration of that ion was in the water before any solid dissolved?"},
-  "SMALL_S_WHEN_IT_FAILS":     {"note": "They dropped s next to the common ion, but s is not small next to it here.", "ask": "Compare your s with the concentration already present. Is it small next to it?"},
+  "COMMON_ION_IGNORED":        {"note": "Their x is the pure-water solubility: the ion already present was not counted.", "ask": "What concentration of that ion was in the water before any solid dissolved?"},
+  "SMALL_S_WHEN_IT_FAILS":     {"note": "They dropped x next to the common ion, but x is not small next to it here.", "ask": "Compare your x with the concentration already present. Is it small next to it?"},
   "VOLUME_NOT_TOTALED":        {"note": "Their concentration after mixing divides by one solution's volume, not the total.", "ask": "How much liquid is in the beaker now?"},
   "DILUTION_IGNORED":          {"note": "Their concentration after mixing is the concentration before it.", "ask": "Two solutions were poured together. What happened to each one's concentration?"},
   "Q_INVERTED":                {"note": "Their number is 1/Q.", "ask": "Which concentrations go into Q, and are any divided?"},

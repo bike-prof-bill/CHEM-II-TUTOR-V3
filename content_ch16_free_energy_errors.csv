@@ -1,0 +1,8 @@
+﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
+PRODUCTS_REACTANTS_SWAPPED,They subtracted products from reactants: the sign is reversed.,Which comes first in the subtraction: products or reactants?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+COEFFICIENTS_DROPPED,They added the table values without multiplying by the coefficients.,Each value is per mole. How many moles of each species are in the equation?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+J_FOR_KJ,They combined J with kJ: TΔS° (or RT ln Q) in J was subtracted from a value in kJ.,ΔH° is in kJ and ΔS° in J/K. What do you do to ΔS° first?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+TDS_SIGN,They added TΔS° instead of subtracting it.,Look at the relation: is it ΔH° plus or minus TΔS°?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+CELSIUS_FOR_KELVIN,They used the temperature in °C instead of K.,Thermodynamic temperatures must be absolute. What is this temperature in kelvins?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+COUPLED_SUBTRACTED,They subtracted the two ΔG° values instead of adding them.,"When two reactions add to the coupled reaction, what happens to their ΔG° values?",,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+EXTENSIVE_IGNORED,They predicted ΔG° stays the same when the equation is doubled.,"ΔG° is for the equation as written. If twice as much reacts, what happens to ΔG°?",,pick 'unchanged' at perturb_1,"approved (instructor, 18 Oct 2026)"

@@ -45,12 +45,24 @@ var CORE_BUILD = function () {
       else return finishA(arch, S, V, ev, { reply: moveFor(arch, V, S.awaitingReturn).return_ask || "In your own words, what did the notebook show you?", card: null, needsSay: false }, t0);
     }
 
+    // a row of coefficient boxes (chapter 17 balancing, instructor 18 Oct): the page sends "coeffs: 3,2,6,3,2,4" (a blank box is 1); exact
+    // lowest whole numbers tick; a common multiple or a wrong set is a wrong try. Never read as numbers or as a pick.
+    var coeffsSeen = false, cm = msg.match(/^\s*coeffs?\s*:\s*([\d\s,]+)$/i);
+    if (cm && b && b.kind === "coefficients") {
+      coeffsSeen = true; ev.structured = "coeffs:" + cm[1].replace(/\s+/g, "");
+      var typed = cm[1].split(",").map(function (x) { x = x.trim(); return x === "" ? 1 : parseInt(x, 10); }), right = b.right || [];
+      var same = typed.length === right.length && typed.every(function (x, i) { return x === right[i]; });
+      var ratio = typed.length === right.length && typed.every(function (x, i) { return x > 0 && right[i] > 0 && x * right[0] === right[i] * typed[0]; }) && !same;
+      if (same) { tick(S, V, b.id, ev.newly); if (b.pin) addPin(S, b.id, b.label_when_done || b.id, (b.species || []).map(function (s, i) { return (right[i] === 1 ? "" : right[i] + " ") + s; }).join(" + ")); notes.push("The student's coefficients balance the equation. Confirmed by the server."); }
+      else if (ratio) { ev.counted_fail = true; ev.traps.push("NOT_LOWEST_WHOLE_NUMBERS"); notes.push("KNOWN WRONG TURN (NOT_LOWEST_WHOLE_NUMBERS): the coefficients balance but are not the lowest whole numbers. Do not name the fix. Ask one question aimed at it."); }
+      else { ev.counted_fail = true; notes.push("The student's coefficients do not balance the equation. Do not give the right ones. Ask which atom or charge is still uneven."); }
+    }
     // a pick: Equations list, an approach/method list, or a direction (typed direction words count too)
     var pickId = input.pick || null;
     if (!pickId && b && b.kind === "direction" && msg) {
       var esc = function (t) { return t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); };
       var hitsDir = optionsOf(arch, V, b).filter(function (o) { return new RegExp("\\b" + esc(o.text) + "\\b", "i").test(msg); });
-      if (!hitsDir.length) hitsDir = optionsOf(arch, V, b).filter(function (o) { var w = o.text.split(/\s+/).filter(function (x) { return x.toLowerCase() !== "the"; })[0]; w = w && w.replace(/[:,.;!?]+$/, ""); return w && new RegExp("\\b" + esc(w) + "\\b", "i").test(msg); });   // the direction word alone ("the head pressure is lower", 11 Oct); a colon or comma after it is not part of the word (14 Oct)
+      if (!hitsDir.length) hitsDir = optionsOf(arch, V, b).filter(function (o) { var w = o.text.split(/\s+/).filter(function (x) { return x.toLowerCase() !== "the"; })[0]; w = w && w.replace(/[:,.;!?]+$/, ""); return w && new RegExp("(^|[^\\p{L}\\p{N}⁺⁻])" + esc(w) + "($|[^\\p{L}\\p{N}⁺⁻])", "iu").test(msg); });   // whole word, letters of any script and the ion marks ⁺ ⁻ count as word characters (chapter 17: "OH⁻")   // the direction word alone ("the head pressure is lower", 11 Oct); a colon or comma after it is not part of the word (14 Oct)
       if (hitsDir.length === 1) pickId = hitsDir[0].id;
     }
     if (pickId) {
@@ -132,6 +144,7 @@ var CORE_BUILD = function () {
       else { var w1 = evalArithmetic(trimmed(rhs), arch); if (w1) worked.push(w1); else rest.push(line); }
       if (rest.length) plainLines.push(rest.join(" "));
     });
+    if (coeffsSeen) { plainLines = []; worked = []; }                                     // a coefficient row is not a list of numbers
     var nums = parseNumbers(plainLines.join("\n")).concat(worked), strays = 0, unitOnly = (!nums.length && S.pendingUnit !== null) ? parseNumbers("1 " + msg)[0] : null;
     if (unitOnly && unitOnly.unit) {                       // "K" sent on its own after a bare number
       var pt = V.expected[S.pendingUnit.idx];
@@ -205,7 +218,7 @@ var CORE_BUILD = function () {
       else notes.push("The reflection needs a sentence of their own. Ask again, plainly.");
     }
     // a text item: the gates decide what the model may judge
-    var judge = !!(b && b.kind === "text" && ev.active === active && !pickId && !tableSeen), gateOK = true, labelOnly = false;
+    var judge = !!(b && b.kind === "text" && ev.active === active && !pickId && !tableSeen && !coeffsSeen), gateOK = true, labelOnly = false;
     if (judge) {
       if (!hasAccount(msg, arch)) { gateOK = false; notes.push("The message is not yet an account: no sentence of their own. Do not accept."); }
       else if (active === "account_given") {

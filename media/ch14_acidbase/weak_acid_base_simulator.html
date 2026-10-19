@@ -15,14 +15,15 @@
   Data source: the brief's table (instructor, 16 Oct 2026): Ka and Kb at 25 °C from OpenStax Appendices H and I
     (acetic 1.8 × 10^-5, formic 1.8 × 10^-4, hypochlorous 2.9 × 10^-8, hydrofluoric 6.4 × 10^-4, nitrous 4.6 × 10^-4;
     ammonia 1.8 × 10^-5, methylamine 4.4 × 10^-4; added 16 Oct by change brief: trimethylamine 6.3 × 10^-5,
-    dimethylamine 5.9 × 10^-4, Appendix I); Kw = 1.0 × 10^-14 (OpenStax 14.1); comparison HCl and NaOH.
+    dimethylamine 5.9 × 10^-4, Appendix I; added 17 Oct by change brief for "The Bleach Puzzle": hypochlorite and
+    acetate as weak bases, Kb = Kw ÷ Ka from the page's own Ka, OpenStax 14.3; their partner is the parent acid); Kw = 1.0 × 10^-14 (OpenStax 14.1); comparison HCl and NaOH.
     x solves x² + (s + K)x − Kc = 0 (positive root); "x if x is dropped" is √(Kc).
     Display choices: the slider from 1.0 × 10^-5 M (the instructor, 16 Oct; the brief had 1.0 × 10^-4) to 2.0 M;
     the partner salt adds s equal to c, once.
   Model: no activity corrections; water's own ions left out.
   URL parameters:
     species  acetic | formic | hypochlorous | hydrofluoric | nitrous | ammonia | methylamine | trimethylamine |
-             dimethylamine. Default acetic; unknown
+             dimethylamine | hypochlorite | acetate. Default acetic; unknown
              values fall back with a notice.
     c        mol/L, 1.0 × 10^-5 to 2.0. Default 2.0.
     theme    light | dark. Default: the system setting.
@@ -74,7 +75,7 @@
   .ticks { position: relative; height: 13px; margin: 6px 84px 0 0; font-size: 0.68rem; color: var(--muted); }
   .ticks span { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
   .ticks span::before { content: ""; position: absolute; left: 50%; top: -3px; width: 1px; height: 3px; background: var(--rule); }
-  #panel { width: 100%; height: 128px; border: 1px solid var(--grid); margin-top: 2px; }
+  #panel { width: 100%; height: 124px; border: 1px solid var(--grid); margin-top: 2px; }
   .small { margin: 2px 0 0; font-size: 0.76rem; color: var(--muted); }
   [hidden] { display: none !important; }
   :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
@@ -121,7 +122,7 @@
   <p class="small" id="limit" hidden></p>
   <canvas id="panel" role="img" aria-label="A drawing of 100 molecules of the weak acid or base and the ions some of them form. A text description follows." aria-describedby="descPanel"></canvas>
   <p class="small" id="caption"></p>
-  <p class="small">Time is not to scale: the drawing is slowed.</p>
+  <p class="small">Quick start: press Play, then try Dilute tenfold, the Add button for the partner, Compare, or the slider; choose a species from the menu.</p>
 
   <div class="sr-only" id="descScene"></div>
   <div class="sr-only" id="descPanel"></div>
@@ -144,8 +145,12 @@
     ammonia:      { acid: false, K: 1.8e-5, Kshow: '1.8 × 10⁻⁵', show: 'NH₃',     name: 'ammonia',           ion: 'NH₄⁺',    ionName: 'ammonium ions',      salt: 'ammonium chloride' },
     methylamine:  { acid: false, K: 4.4e-4, Kshow: '4.4 × 10⁻⁴', show: 'CH₃NH₂',  name: 'methylamine',       ion: 'CH₃NH₃⁺', ionName: 'methylammonium ions', salt: 'methylammonium chloride' },
     trimethylamine: { acid: false, K: 6.3e-5, Kshow: '6.3 × 10⁻⁵', show: '(CH₃)₃N', name: 'trimethylamine',  ion: '(CH₃)₃NH⁺', ionName: 'trimethylammonium ions', salt: 'trimethylammonium chloride' },   // change brief, 16 Oct; Appendix I
-    dimethylamine:  { acid: false, K: 5.9e-4, Kshow: '5.9 × 10⁻⁴', show: '(CH₃)₂NH', name: 'dimethylamine',  ion: '(CH₃)₂NH₂⁺', ionName: 'dimethylammonium ions', salt: 'dimethylammonium chloride' }    // change brief, 16 Oct; Appendix I
+    dimethylamine:  { acid: false, K: 5.9e-4, Kshow: '5.9 × 10⁻⁴', show: '(CH₃)₂NH', name: 'dimethylamine',  ion: '(CH₃)₂NH₂⁺', ionName: 'dimethylammonium ions', salt: 'dimethylammonium chloride' },   // change brief, 16 Oct; Appendix I
+    // change brief, 17 Oct 2026 ("The Bleach Puzzle"): two conjugate bases; Kb = Kw ÷ Ka from the page's own Ka (set below)
+    hypochlorite: { acid: false, show: 'ClO⁻', name: 'hypochlorite', ion: 'HClO', ionName: 'hypochlorous acid molecules', salt: 'hypochlorous acid', molCharge: '−', ionCharge: '', partnerIsAcid: true, fromAcid: 'hypochlorous' },
+    acetate:      { acid: false, show: 'CH₃COO⁻', name: 'acetate', ion: 'CH₃COOH', ionName: 'acetic acid molecules', salt: 'acetic acid', molCharge: '−', ionCharge: '', partnerIsAcid: true, fromAcid: 'acetic' }
   };
+  ['hypochlorite', 'acetate'].forEach(function (k) { var z = SPECIES[k]; z.K = 1.0e-14 / SPECIES[z.fromAcid].K; z.Kb = true; });   // Kb = Kw ÷ Ka (OpenStax 14.3)
   var FLOOR = 1.0e-5, CEIL = 2.0, DEFAULT = { species: 'acetic', c: 2.0 };   // display choices (brief)
 
   // Cartoon choices:
@@ -209,7 +214,7 @@
   function spoken(t) {
     return t.replace(/( × )?10(⁻?)([⁰¹²³⁴⁵⁶⁷⁸⁹]+)/g, function (a, times, minus, d) { return (times ? ' times ' : '') + '10 to the ' + (minus ? 'minus ' : '') + d.split('').map(function (ch) { return '⁰¹²³⁴⁵⁶⁷⁸⁹'.indexOf(ch); }).join(''); })
       .replace(/−(\d)/g, 'minus $1').replace(/\[H₃O⁺\]|H₃O⁺/g, 'hydronium').replace(/\[OH⁻\]|OH⁻/g, 'hydroxide').replace(/(\d) M\b/g, '$1 molar').replace(/ %/g, ' percent')
-      .replace(/CH₃COOH/g, 'acetic acid').replace(/HCOOH/g, 'formic acid').replace(/HClO/g, 'hypochlorous acid').replace(/HNO₂/g, 'nitrous acid').replace(/\bHF\b/g, 'hydrofluoric acid')
+      .replace(/CH₃COOH/g, 'acetic acid').replace(/CH₃COO⁻/g, 'acetate').replace(/ClO⁻/g, 'hypochlorite').replace(/Kb = Kw ÷ Ka/g, 'K b equals K w divided by K a, which is').replace(/HCOOH/g, 'formic acid').replace(/HClO/g, 'hypochlorous acid').replace(/HNO₂/g, 'nitrous acid').replace(/\bHF\b/g, 'hydrofluoric acid')
       .replace(/\(CH₃\)₃N/g, 'trimethylamine').replace(/\(CH₃\)₂NH/g, 'dimethylamine').replace(/CH₃NH₂/g, 'methylamine').replace(/NH₃/g, 'ammonia');
   }
 
@@ -339,9 +344,9 @@
   function drawP(ctx, p) {
     var x = p.x, y = p.y, c = Math.cos(p.a), s = Math.sin(p.a);
     if (p.k === 'W') return drawWater(ctx, x, y, p.a);
-    if (p.k === 'MOL') { body(ctx, x, y, false); if (S.acid && !p.busy) atom(ctx, x + c * 7, y + s * 7, 2.6, 'h', 'h-edge'); return; }
+    if (p.k === 'MOL') { body(ctx, x, y, false); if (S.acid && !p.busy) atom(ctx, x + c * 7, y + s * 7, 2.6, 'h', 'h-edge'); if (S.molCharge) charge(ctx, x + 6, y - 7, S.molCharge); return; }
     if (p.k === 'ION' && p.partner) { body(ctx, x, y, true); return; }
-    if (p.k === 'ION') { body(ctx, x, y, false); if (!S.acid && !p.busy) atom(ctx, x + c * 7, y + s * 7, 2.6, 'h', 'h-edge'); charge(ctx, x + 6, y - 7, S.acid ? '−' : '+'); return; }
+    if (p.k === 'ION') { body(ctx, x, y, false); if (!S.acid && !p.busy) atom(ctx, x + c * 7, y + s * 7, 2.6, 'h', 'h-edge'); var q = S.ionCharge !== undefined ? S.ionCharge : (S.acid ? '−' : '+'); if (q) charge(ctx, x + 6, y - 7, q); return; }
     if (p.k === 'H3O') { atom(ctx, x, y, 4.6, 'o', 'o-edge'); for (var i = 0; i < 3; i++) { var t = p.a + i * 2.094; atom(ctx, x + Math.cos(t) * 5.2, y + Math.sin(t) * 5.2, 2.5, 'h', 'h-edge'); } charge(ctx, x + 7, y - 7, '+'); return; }
     if (p.k === 'OH') { atom(ctx, x, y, 4.6, 'o', 'o-edge'); atom(ctx, x + c * 5.2, y + s * 5.2, 2.7, 'h', 'h-edge'); charge(ctx, x + 6, y - 7, '−'); }
   }
@@ -351,16 +356,19 @@
   // ---------------------------------------------------------------------------
   var sceneCv = document.getElementById('scene');
   function sceneText(ctx, text, x, y) { ctx.lineWidth = 3; ctx.strokeStyle = '#f4f2ec'; ctx.strokeText(text, x, y); ctx.fillStyle = '#1d1e1c'; ctx.fillText(text, x, y); }
+  function fitLabel(ctx, text, maxW) {   // the largest bold size from 9 px down to 6.5 px at which the formula fits its label
+    for (var px = 9; px >= 6.5; px -= 0.5) { ctx.font = '700 ' + px + 'px ' + FONT; if (ctx.measureText(text).width <= maxW) return; }
+  }
   function bottle(ctx, cx, label, pHtext, sub) {   // a meter (pH and percent ionized) above a labeled bottle with its probe
     ctx.fillStyle = '#3f434a'; ctx.fillRect(cx - 52, 4, 104, 36); ctx.fillStyle = '#f4f2ec'; ctx.fillRect(cx - 47, 8, 94, 17);
     ctx.font = '700 12px ' + FONT; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#1d1e1c'; ctx.fillText(pHtext, cx, 17);
     ctx.font = '600 ' + (sub.length > 16 ? 8 : 9) + 'px ' + FONT; ctx.fillStyle = '#f4f2ec'; ctx.fillText(sub, cx, 32);
-    var x = cx - 20;
-    ctx.fillStyle = '#e3e6df'; ctx.fillRect(x, 54, 40, 40); ctx.strokeStyle = '#3f434a'; ctx.lineWidth = 2; ctx.strokeRect(x, 50, 40, 44);
-    ctx.fillStyle = '#5c6068'; ctx.fillRect(x + 11, 44, 18, 6);
-    ctx.fillStyle = '#ffffff'; ctx.fillRect(x + 3, 66, 34, 16); ctx.strokeStyle = '#7d8187'; ctx.lineWidth = 1; ctx.strokeRect(x + 3.5, 66.5, 33, 15);
-    ctx.font = '700 ' + (label.length > 5 ? 7 : 9) + 'px ' + FONT; ctx.fillStyle = '#1d1e1c'; ctx.fillText(label, cx, 74.5);
-    ctx.strokeStyle = '#2f3237'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x + 33, 40); ctx.lineTo(x + 33, 86); ctx.stroke();
+    var x = cx - 25;   // a 50 px bottle; the label spans x + 2 to x + 43, and the probe stands clear of it at x + 46.5
+    ctx.fillStyle = '#e3e6df'; ctx.fillRect(x, 54, 50, 40); ctx.strokeStyle = '#3f434a'; ctx.lineWidth = 2; ctx.strokeRect(x, 50, 50, 44);
+    ctx.fillStyle = '#5c6068'; ctx.fillRect(x + 16, 44, 18, 6);
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(x + 2, 66, 41, 16); ctx.strokeStyle = '#7d8187'; ctx.lineWidth = 1; ctx.strokeRect(x + 2.5, 66.5, 40, 15);
+    fitLabel(ctx, label, 37); ctx.fillStyle = '#1d1e1c'; ctx.fillText(label, x + 22.5, 74.5);
+    ctx.strokeStyle = '#2f3237'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x + 46.5, 40); ctx.lineTo(x + 46.5, 86); ctx.stroke();
   }
   function drawScene() {
     var cv = sizeCanvas(sceneCv, '#ebe8df'); if (!cv) return;
@@ -374,7 +382,7 @@
     ctx.fillStyle = '#d9d4c4'; ctx.fillRect(px(0), y - 10, px(14) - px(0), 20);
     ctx.strokeStyle = '#3f434a'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
     ctx.font = '10px ' + FONT; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillStyle = '#1d1e1c';
-    for (var p = -1; p <= 15; p++) { var tall = p === 0 || p === 7 || p === 14 || p === -1 || p === 15; ctx.beginPath(); ctx.moveTo(px(p), y - (tall ? 6 : 3)); ctx.lineTo(px(p), y + (tall ? 6 : 3)); ctx.stroke(); if (tall) ctx.fillText(p < 0 ? '−1' : String(p), px(p), (p === -1 || p === 15) ? y + 20 : y + 8); }
+    for (var p = -1; p <= 15; p++) { var tall = p === 0 || p === 7 || p === 14 || p === -1 || p === 15; ctx.beginPath(); ctx.moveTo(px(p), y - (tall ? 6 : 3)); ctx.lineTo(px(p), y + (tall ? 6 : 3)); ctx.stroke(); if (p === 0 || p === 7 || p === 14) ctx.fillText(String(p), px(p), y + 8); }   // labels at 0, 7 and 14 only (instructor, 17 Oct)
     ctx.font = '600 10px ' + FONT; ctx.fillText('usual range (shaded)', px(7), y + 20);
     // markers: the weak species a filled triangle; the strong comparison a hollow one, each named
     function marker(pH, filled, name, lift) {
@@ -399,7 +407,7 @@
     PW = nw;
     if (!st.seeded) { seedAll(); st.seeded = true; }
     ctx.font = '600 11px ' + FONT; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = C('fg');
-    ctx.fillText('100 ' + S.show + ' molecules (a drawing)', 6, 3);
+    ctx.fillText('100 ' + S.show + (S.molCharge ? ' ions' : ' molecules') + ' (a drawing)', 6, 3);
     ctx.textAlign = 'right'; ctx.fillText('Ionized now: ' + ionized(), W - 6, 3);
     ctx.save(); ctx.translate(6, 18);
     ctx.fillStyle = C('win-bg'); ctx.fillRect(0, 0, PW.w, PW.h); ctx.strokeStyle = C('rule'); ctx.lineWidth = 1; ctx.strokeRect(0.5, 0.5, PW.w - 1, PW.h - 1);
@@ -410,7 +418,7 @@
     var y = H - 10, x = 14; ctx.font = '11px ' + FONT; ctx.textBaseline = 'middle';
     function item(p, label, w) { p.x = x; p.y = y; p.a = 0; drawP(ctx, p); ctx.font = '11px ' + FONT; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillStyle = C('fg'); ctx.fillText(label, x + 12, y); x += Math.max(w, 12 + ctx.measureText(label).width + 12); }   // room for the longer names
     item({ k: 'MOL' }, S.show, 74); item({ k: 'ION' }, S.ion, 78); item({ k: S.acid ? 'H3O' : 'OH' }, S.acid ? 'H₃O⁺' : 'OH⁻', 52);
-    if (st.s > 0) item({ k: 'ION', partner: true }, 'from the salt', 90);
+    if (st.s > 0) item({ k: 'ION', partner: true }, S.partnerIsAcid ? 'added acid' : 'from the salt', 90);
     drawWater(ctx, x, y, 0); ctx.fillStyle = C('fg'); ctx.textAlign = 'left'; ctx.fillText('water', x + 10, y);
   }
 
@@ -424,28 +432,27 @@
       '; ' + fmtPct(r.pct) + ' % ionized; partner ' + (st.s > 0 ? S.salt + ' ' + fmt2(st.s) + ' M' : 'none') + '.';
   }
   function statusText() {
-    var out = S.name.charAt(0).toUpperCase() + S.name.slice(1) + ', ' + fmt2(st.c) + ' M, K = ' + S.Kshow + '.';
+    var out = S.name.charAt(0).toUpperCase() + S.name.slice(1) + ', ' + fmt2(st.c) + ' M, ' + (S.Kb ? 'Kb = Kw ÷ Ka = ' + fmt2(S.K) : 'K = ' + S.Kshow) + '.';
     if (st.dil) out += ' Diluted tenfold ' + (st.dil === 1 ? 'once' : st.dil === 2 ? 'twice' : st.dil + ' times') + '.';
     if (st.s > 0) out += ' ' + S.salt.charAt(0).toUpperCase() + S.salt.slice(1) + ' added.';
     if (!st.running && !isReduced()) out += st.started ? ' Paused.' : ' Paused. Press Play to watch.';
     return out;
   }
-  function captionText() {
-    var parts = ['Not to scale for concentration: 100 molecules at every concentration; the number ionized follows the percent.'];
-    if (reading().pct < 1) parts.push('Below 1 %, ionized ones show only now and then.');
-    if (st.s > 0) parts.push('Small rings: ' + S.ionName + ' from the salt; ' + (S.acid ? 'sodium' : 'chloride') + ' ions not drawn.');
-    return parts.join(' ');
+  function captionText() {   // the instructor's caption, 17 Oct 2026
+    var t = 'Note: Fixed 100-molecule ensemble with % ionization scaled to population. Below 1% ionization, ions appear stochastically; motion is slowed for clarity';
+    if (st.s > 0) t += S.partnerIsAcid ? '. Small rings: added ' + S.salt + ' molecules.' : '. Small rings: ions from the salt.';   // the instructor's line, 17 Oct; shown while the salt is in
+    return t;
   }
   function describeScene() {
     var r = reading(), sr = strongReading();
     return spoken('A bottle labeled ' + S.show + ' at 25 °C with a pH meter reading pH ' + fmtP(r.pH) + ', ' + fmtPct(r.pct) + ' % ionized.' +
       (st.strong ? ' Beside it, for comparison, ' + sr.name + ' at the same concentration, ' + fmt2(st.c) + ' M, reading pH ' + fmtP(sr.pH) + ', 100 % ionized.' : '') +
-      ' Both readings are marked on one scale from −1 to 15, with the usual range 0 to 14 shaded. ' + readout());
+      ' Both readings are marked on one scale, labeled at 0, 7 and 14, with the usual range 0 to 14 shaded. ' + readout());
   }
   function describePanel() {
     var mol = count('MOL'), ion = ionized(), part = count('ION', function (p) { return p.partner; });
-    return spoken('A drawing of 100 ' + S.show + ' molecules among faint water molecules. Now ' + mol + ' are whole and ' + ion + ' are ionized, each ionized one beside ' +
-      (S.acid ? 'a hydronium ion' : 'a hydroxide ion') + '.' + (part ? ' ' + part + ' small rings, ' + S.ionName + ' from the ' + S.salt + ' are also drawn.' : '') +
+    return spoken('A drawing of 100 ' + S.show + (S.molCharge ? ' ions' : ' molecules') + ' among faint water molecules. Now ' + mol + ' are whole and ' + ion + ' are ionized, each ionized one beside ' +
+      (S.acid ? 'a hydronium ion' : 'a hydroxide ion') + '.' + (part ? ' ' + part + ' small rings, ' + (S.partnerIsAcid ? 'added ' + S.salt + ' molecules,' : S.ionName + ' from the ' + S.salt) + ' are also drawn.' : '') +
       (st.running ? ' While it runs, molecules now and then ' + (S.acid ? 'hand a proton to water' : 'take a proton from water') + ', and ion pairs now and then take it back.' : ''));
   }
   var live = el('live');

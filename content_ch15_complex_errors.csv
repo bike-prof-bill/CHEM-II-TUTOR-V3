@@ -1,12 +1,12 @@
 ﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
-DILUTION_IGNORED,,,,a concentration before mixing used after it (named on Q-like steps; equals a given at the concentration step),DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
-VOLUME_NOT_TOTALED,,,,over the other solution's volume,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
-LIGAND_LEFT_IGNORED,,,,the ligand's full concentration used as the ligand left; or x from it,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
-KF_FOR_KD,,,,x from Kf where Kd was needed,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
-LIGAND_EXPONENT_DROPPED,,,,x with the ligand to the first power,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
-COMPLETION_NOT_ASSUMED,,,,the metal's concentration before complexing given as free metal; or a table starting before formation,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
-SMALL_S_WHEN_IT_FAILS,,,,the small-x value where x is not small (small Kf),DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
-COEFF_NOT_EXPONENT,,,,(by shape),DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
-EXPONENT_NOT_IN_TABLE,,,,(by shape),DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
-COEFFICIENT_DROPPED_IN_TABLE,,,,change row +x for n ligands (table),DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
-FREE_METAL_RISES_WITH_LIGAND,,,,wrong pick: more free metal when ligand is added,DRAFT: SCENARIO_CLAUDE writes the note and the ask; the instructor approves
+DILUTION_IGNORED,A concentration before mixing used as if it were after mixing.,Mixing spreads each solute through both volumes. What is the total volume?,,a concentration before mixing used after it (named on Q-like steps; equals a given at the concentration step),"approved (instructor, 17 Oct 2026)"
+VOLUME_NOT_TOTALED,"A concentration divided by the other solution's volume, not the total.",Which volume holds the ions after mixing?,,over the other solution's volume,"approved (instructor, 17 Oct 2026)"
+LIGAND_LEFT_IGNORED,"They used the ligand's full concentration, not what is left after the complex forms.",How much ligand did the metal ions take?,,the ligand's full concentration used as the ligand left; or x from it,"approved (instructor, 17 Oct 2026)"
+KF_FOR_KD,They used Kf where Kd was needed.,You are breaking the complex apart. Which constant describes that?,,x from Kf where Kd was needed,"approved (instructor, 17 Oct 2026)"
+LIGAND_EXPONENT_DROPPED,The ligand is taken to the first power where n bind.,How many ligands does each metal ion hold? Where does that number go?,,x with the ligand to the first power,"approved (instructor, 17 Oct 2026)"
+COMPLETION_NOT_ASSUMED,"They gave the metal's concentration before complexing as the free metal, or started the table before formation.","With Kf this large, how much free metal is left once the complex forms?",,the metal's concentration before complexing given as free metal; or a table starting before formation,"approved (instructor, 17 Oct 2026)"
+SMALL_S_WHEN_IT_FAILS,"They dropped x, but it is not small next to the term it was dropped from.",Compare your answer with the term you dropped it from. Is it under 5 %?,,the small-x value where x is not small (small Kf),"approved (instructor, 17 Oct 2026)"
+COEFF_NOT_EXPONENT,"The expression treats the 2 as a multiplier, not an exponent.","The ion that appears twice: is its concentration doubled, squared, or both?",,(by shape),"approved (instructor, 17 Oct 2026)"
+EXPONENT_NOT_IN_TABLE,"The expression has the exponent, but the table gave that ion +x, not +2x.",How many of that ion does one formula unit release?,,(by shape),"approved (instructor, 17 Oct 2026)"
+COEFFICIENT_DROPPED_IN_TABLE,The table gives +x to an ion that forms two (or n) per unit.,One formula unit releases how many of that ion?,,change row +x for n ligands (table),"approved (instructor, 17 Oct 2026)"
+FREE_METAL_RISES_WITH_LIGAND,They predicted more free metal when ligand is added.,More ligand: which way does the formation reaction move?,,wrong pick: more free metal when ligand is added,"approved (instructor, 17 Oct 2026)"
