@@ -1,0 +1,7 @@
+﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
+PRODUCTS_REACTANTS_SWAPPED,They subtracted products from reactants: the sign is reversed.,Which comes first in the subtraction: products or reactants?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+COEFFICIENTS_DROPPED,They added the table values without multiplying by the coefficients.,Each value is per mole. How many moles of each species are in the equation?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+LOG_FOR_LN,They used log base 10 where the natural logarithm (ln) is needed.,The relation uses ln. Which button on your calculator is that?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+SIGN_DROPPED,They dropped the minus sign: their K is 1 ÷ K (or their ΔG° has the wrong sign).,ΔG° = −RT ln K. Where is the minus sign in your work?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+KJ_NOT_CONVERTED,They left ΔH (or ΔG°) in kJ where J were needed.,ΔS is in J/K and R is in J. What must ΔH or ΔG° be in?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+J_FOR_KJ,They combined J with kJ: TΔS° (or RT ln Q) in J was subtracted from a value in kJ.,ΔH° is in kJ and ΔS° in J/K. What do you do to ΔS° first?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"

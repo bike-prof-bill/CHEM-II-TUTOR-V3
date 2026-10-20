@@ -1,0 +1,8 @@
+﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
+DILUTION_IGNORED,A concentration before mixing used as if it were after mixing.,Mixing spreads each solute through both volumes. What is the total volume?,,a concentration before mixing used after it; or Q from them,"approved (instructor, 17 Oct 2026)"
+VOLUME_NOT_TOTALED,"A concentration divided by the other solution's volume, not the total.",Which volume holds the ions after mixing?,,a concentration over the other solution's volume,"approved (instructor, 17 Oct 2026)"
+Q_INVERTED,Their Q is upside down.,Q has the same form as Ksp. Which concentrations go into the product?,,1/Q,"approved (instructor, 17 Oct 2026)"
+EXPONENTS_DROPPED,Ksp (or Q) from the ion concentrations with every exponent left out.,Is each concentration raised to its count in the formula?,,Q with every exponent 1,"approved (instructor, 17 Oct 2026)"
+COEFFICIENTS_AS_MULTIPLIERS,A coefficient multiplied in where it should be an exponent.,"Is the 2 a multiplier on the concentration, or the power it is raised to?",,coefficients multiplied in,"approved (instructor, 17 Oct 2026)"
+PRECIPITATE_WHEN_Q_LESS,They predicted a precipitate with Q below Ksp.,Is Q above or below Ksp? Which way must the ions go?,,wrong pick: a precipitate predicted with Q below Ksp,"approved (instructor, 17 Oct 2026)"
+NO_PRECIPITATE_WHEN_Q_MORE,They predicted no precipitate with Q above Ksp.,Q is above Ksp. Can the solution hold that many ions?,,wrong pick: none predicted with Q above Ksp,"approved (instructor, 17 Oct 2026)"

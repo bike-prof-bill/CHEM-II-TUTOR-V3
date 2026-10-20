@@ -1,0 +1,235 @@
+## 6. What others are doing
+
+### The evidence for AI tutoring is real and better than expected
+
+A Harvard randomized controlled trial (Kestin et al., 2025, ~500 undergraduates)
+found that students using a purpose-built AI tutor learned more, in less time,
+than students in an active-learning physics class — a demanding comparison,
+since active learning is itself the evidence-based standard. A three-arm RCT
+with 362 nursing students in anatomy found module scores of 82.5 for an
+AI-enhanced group against 77.6 blended and 74.1 traditional. Meta-analyses
+report large positive effects, with the strongest results where the AI tutor
+replaces rather than supplements instruction.
+
+This is not a fringe result. It is a reasonably robust finding across countries
+and subjects.
+
+### But the mechanism matters enormously, and this is the key finding
+
+Bastani et al. (2025) ran the comparison that should shape every institutional
+decision here. Students using an **unguarded** chatbot scored higher while
+practicing — and **lower on a later test taken without it** than students who
+never had access at all. A **Socratically guarded** version of the same
+underlying model kept the practice gain and eliminated the later loss.
+
+Read that again. The unguarded tool did not merely fail to help. It produced
+measurable harm to durable learning while producing the appearance of help.
+
+A parallel literature on **metacognitive laziness** (Fan et al., 2025, *BJET*;
+Yurt & Kuşci, 2026) finds that generative AI use is associated with lower
+critical-thinking dispositions, mediated by metacognitive weakness and what the
+authors call epistemic laziness. Because AI output is fluent and immediate,
+students interpret ease of access as evidence of understanding.
+
+The operative distinction in this literature is **augmentation versus
+automation** — whether the tool extends the student's judgment or substitutes
+for their effort. Fluency is not the variable. Whether the student has to think
+is.
+
+**This is the single strongest argument for the design described above**, and
+also the sharpest reason to be sceptical of institutional deployments that hand
+students an unconstrained chatbot and call it tutoring.
+
+### The field is converging on answer-withholding as the core technical problem
+
+Recent benchmarks — MathTutorBench, EduBench, Google's LearnLM rubrics —
+explicitly measure "answer leakage" as a negative and score tutors on whether
+they ask a question the student must answer before progressing.
+
+A significant line of work addresses "scaffolding collapse": a capable model,
+pressed by a frustrated student, does not reliably withhold on the strength of a
+prompt alone. Published architectures use a non-LLM policy core reading trusted
+learner state, deterministic detectors, and separate judge models.
+
+**Our design converges on the same conclusion from a different direction.**
+The server-side verification layer is a non-LLM policy core. Milestone state
+lives on the server, not in the conversation. The model is handed a verdict it
+cannot override. This is not novel — it is the emerging consensus — but it
+means the approach is aligned with where the field is going rather than with
+where consumer chatbots are.
+
+### Institutional deployments are expensive and adoption is the real problem
+
+Arizona State's partnership with OpenAI was the first of its kind. At list price
+for ChatGPT Enterprise, universal access for ASU's 145,000 students would cost
+roughly $99 million annually — about 11% of the university's operating budget.
+Access is consequently allocated by proposal. Per-student AI tutoring
+subscriptions run $4–10 per month; at scale, that is $200,000–500,000 monthly
+for a large district.
+
+**The adoption numbers are the sobering part.** Khan Academy's Khanmigo, the
+most heavily resourced purpose-built AI tutor in existence, reports that **only
+about 15% of students open the tool at all**. Two million Khanmigo users against
+ChatGPT's roughly 140 million weekly math queries. Students are already using
+generative AI heavily — they are largely not using the pedagogically designed
+version.
+
+The Stanford AI Index 2026 reports over 80% of US students using AI for
+schoolwork while only 6% of teachers say their institution's AI policies are
+clear.
+
+**The implication for us is uncomfortable.** A carefully guarded tutor competes
+against an unguarded one the student already has open in another tab, which
+answers instantly and never says no. Our design advantage is exactly what makes
+it less attractive in the moment. Any honest projection has to account for that,
+and the most likely failure of this project is not that it teaches badly — it is
+that students do not use it.
+
+---
+
+## 7. The competing-tab problem
+
+Every faculty member reading this will ask the same question, so it is worth
+addressing directly: what stops a student from pasting the milestone-five
+question into an unguarded chatbot in another tab?
+
+**Nothing does, and no technical measure will.** Timed answer windows do not
+work — a general-purpose model answers in under five seconds, so any window
+generous enough to type in is generous enough to paste into. They are defeated
+by a second device. They conflict with extended-time accommodations. And they
+apply pressure to precisely the reflective step the design exists to elicit.
+
+Worse, **the stage the tutor can verify is the stage a student has least reason
+to outsource.** Arithmetic is checked deterministically. The explanation that
+carries the credit is the one no automated layer can check — and it is exactly
+the kind of question a general-purpose model answers well.
+
+This is not a solved problem anywhere in the field. What follows is what appears
+to actually help.
+
+**Assess without the tool.** Grades come from examinations, where the tutor is
+not present. This is both the incentive structure and the validity check: a
+student who clears every milestone and then cannot perform on the exam has told
+the instructor something specific, per student and per topic. No cheating
+detection apparatus is required — only the outcome measure that should be
+collected anyway.
+
+**Personalize the final question to the session.** The system holds the full
+transcript. A question built from the student's own work — *you first got 79
+g/mol and then corrected to 36,600; what changed, and why does the second make
+sense for a protein when the first does not* — cannot be answered by an external
+model without handing it the conversation. This is a stronger question
+pedagogically whether or not anyone is circumventing anything.
+
+**Require articulation before help.** SocraticAI at Ashoka University requires
+students to state their current understanding and prior attempts before the
+system responds at all, with a validation layer rejecting thin submissions. Over
+a three-week deployment they observed question quality shift from *"my code
+doesn't work"* to *"I implemented recursion correctly, but I'm unsure how my
+base case terminates."* Roughly 75% of students produced substantive
+reflections; instructors reported fewer low-value office-hours questions.
+
+That report is observational — no control group, no stated sample size, three
+weeks, and **no learning outcomes measured**. It should be read as a
+well-designed intervention rather than as evidence. But the front gate is the
+one thing an unguarded chatbot structurally cannot do: it never asks the student
+what they already think.
+
+**Make the guarded path the easier path.** The tutor knows which problem is
+loaded, where the student is, and what they got wrong. An external model needs
+the whole problem pasted in. Where the purpose-built tool is genuinely faster
+for the task at hand, use follows without enforcement.
+
+**The honest summary:** this is a motivation problem wearing a security costume.
+Every barrier is defeated by a second tab. What works is making the guarded path
+more useful and making the unguarded path visibly fail to pay off at assessment
+time.
+
+---
+
+## 8. What would make this credible
+
+Roughly in order of value:
+
+1. **A control comparison.** Even a quasi-experimental one — sections with and
+   without, matched on prior performance. Without this, everything above is
+   argument rather than evidence.
+2. **Adoption data.** The logs already contain it. What fraction of enrolled
+   students open the tool? How many return? Where do sessions terminate?
+3. **A transfer measure.** Bastani's design is the right one: assess without the
+   tool present. Practice-time performance is the wrong outcome.
+4. **A second instructor.** Both for sustainability and because it would reveal
+   how much of the design encodes one person's pedagogy versus something
+   general.
+5. **A FERPA and policy review**, before any use beyond a single course.
+6. **Automated regression testing.** The verification layer needs its own tests
+   that run on every change. The bugs found during development were found by
+   hand.
+
+---
+
+## 9. Summary judgment
+
+The architecture is sound and is aligned with where the research field is
+converging. The pedagogical design targets a real and well-documented failure
+mode of AI-assisted learning. The deterministic verification layer is the right
+answer to a problem that most deployments have not yet acknowledged they have.
+
+It is also a single-instructor project with no outcomes evidence, a bus factor
+of one, an unreviewed privacy posture, and a recent history of silently
+mis-grading students. It is a promising prototype and a plausible research
+instrument. It is not yet a validated intervention, and it should not be
+described as one.
+
+One positioning note. The published systems closest to this one — SocraticAI at
+Ashoka, the CS50 deployment at Harvard, the scaffolding-collapse literature —
+have sophisticated interaction protocols and **no deterministic verification
+layer at all**. They trust the model to judge correctness. This project has the
+verifier they lack and lacks the interaction protocol they have. The two are
+complementary rather than competing, which is a more useful thing to say to a
+funder or a collaborator than a claim of novelty.
+
+The most useful thing faculty in other disciplines could take from it is not the
+tool. It is the design principle: **when an AI system makes a claim your
+discipline can check deterministically, check it deterministically, and do not
+let the model be the judge of its own output.**
+
+---
+
+## References
+
+Bastani, H. et al. (2025). Randomized study of guarded versus unguarded LLM
+tutoring; practice gains and post-test losses.
+
+Fan, Y., Tang, L., Le, H., Shen, K., Tan, S., Zhao, Y., Shen, Y., Li, X., &
+Gašević, D. (2025). Beware of metacognitive laziness: Effects of generative
+artificial intelligence on learning motivation, processes, and performance.
+*British Journal of Educational Technology*, 56, 489–530.
+
+Kestin, G., Miller, K., Klales, A. et al. (2025). AI tutoring outperforms
+in-class active learning: an RCT in an authentic educational setting.
+
+Macina, J. et al. (2025). MathTutorBench: benchmarking answer leakage and
+Socratic questioning quality.
+
+Qin, F., Yu, J., Hao, Z., Liu, Z., & Zhang, Y. AI instructional agent improves
+perceived learner control and learning outcome: evidence from an RCT.
+arXiv:2505.22526.
+
+Raisch, S., & Krakowski, S. (2021). Artificial intelligence and management: the
+automation–augmentation paradox.
+
+Yurt, E., & Kuşci, A. (2026). Generative AI use and critical thinking
+dispositions in higher education: metacognitive weakness and epistemic laziness.
+*Journal of Intelligence*, 14(7), 147.
+
+Zhao, C., Zhu, J., Liu, J., Zhao, W., & Pang, Y. (2026). Effectiveness of a
+generative AI-powered digital tutor integrated with a knowledge graph in anatomy
+education for nursing students: a randomized controlled trial. *BMC Medical
+Education*, 26, 1026.
+
+Sunil, K., & Thakkar, A. (2025). SocraticAI: Transforming LLMs into guided CS
+tutors through scaffolded interaction. arXiv:2512.03501.
+
+Stanford AI Index 2026; Khan Academy Khanmigo product reporting, March–May 2026;
+ASU–OpenAI partnership reporting, 2024–2026.

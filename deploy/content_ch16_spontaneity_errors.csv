@@ -1,0 +1,6 @@
+﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
+J_KJ_MISMATCH,"Their temperature divides kJ by J/K, so it is a thousand times too small.",What units are ΔH° and ΔS° in? Make them match before dividing.,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+PRODUCTS_REACTANTS_SWAPPED,They subtracted products from reactants: the sign is reversed.,Which comes first in the subtraction: products or reactants?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+J_FOR_KJ,They combined J with kJ: TΔS° (or RT ln Q) in J was subtracted from a value in kJ.,ΔH° is in kJ and ΔS° in J/K. What do you do to ΔS° first?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+TDS_SIGN,They added TΔS° instead of subtracting it.,Look at the relation: is it ΔH° plus or minus TΔS°?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+CASE_WRONG,They picked the wrong sign case.,What are the signs of ΔH° and ΔS°? Which term grows with temperature?,,wrong pick at case_pick,"approved (instructor, 18 Oct 2026)"

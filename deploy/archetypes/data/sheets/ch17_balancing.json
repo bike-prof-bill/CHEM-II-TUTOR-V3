@@ -1,0 +1,1660 @@
+{
+ "archetype": "ch17_balancing",
+ "source_sheet": "ch17_balancing_problems.csv",
+ "problems": [
+  {
+   "id": "CN1",
+   "scenario": "Copper in Nitric Acid",
+   "kind": "acid",
+   "text": "Balance the acidic reaction Cu(s) + HNO₃(aq) → Cu²⁺(aq) + NO(g) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 3.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 3.0,
+     "unit": "Cu(s) + 2 HNO₃(aq) + 6 H⁺(aq) → 3 Cu²⁺(aq) + 2 NO(g) + 4 H₂O(l)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 5.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "Cu",
+    "perturb_1": "OH⁻"
+   },
+   "coeffs": {
+    "species": [
+     "Cu(s)",
+     "HNO₃(aq)",
+     "H⁺(aq)",
+     "Cu²⁺(aq)",
+     "NO(g)",
+     "H₂O(l)"
+    ],
+    "right": [
+     3,
+     2,
+     6,
+     3,
+     2,
+     4
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "CN2",
+   "scenario": "Copper in Nitric Acid",
+   "kind": "acid",
+   "text": "Balance the acidic reaction Ag(s) + HNO₃(aq) → Ag⁺(aq) + NO(g) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 1.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 3.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 3.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 3.0,
+     "unit": "Ag(s) + HNO₃(aq) + 3 H⁺(aq) → 3 Ag⁺(aq) + NO(g) + 2 H₂O(l)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 4.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "Ag",
+    "perturb_1": "OH⁻"
+   },
+   "coeffs": {
+    "species": [
+     "Ag(s)",
+     "HNO₃(aq)",
+     "H⁺(aq)",
+     "Ag⁺(aq)",
+     "NO(g)",
+     "H₂O(l)"
+    ],
+    "right": [
+     3,
+     1,
+     3,
+     3,
+     1,
+     2
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "CN3",
+   "scenario": "Copper in Nitric Acid",
+   "kind": "acid",
+   "text": "Balance the acidic reaction Cu(s) + HNO₃(aq) → Cu²⁺(aq) + NO₂(g) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 1.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 2.0,
+     "unit": "Cu(s) + 2 HNO₃(aq) + 2 H⁺(aq) → Cu²⁺(aq) + 2 NO₂(g) + 2 H₂O(l)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 3.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "Cu",
+    "perturb_1": "OH⁻"
+   },
+   "coeffs": {
+    "species": [
+     "Cu(s)",
+     "HNO₃(aq)",
+     "H⁺(aq)",
+     "Cu²⁺(aq)",
+     "NO₂(g)",
+     "H₂O(l)"
+    ],
+    "right": [
+     1,
+     2,
+     2,
+     1,
+     2,
+     2
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "CN4",
+   "scenario": "Copper in Nitric Acid",
+   "kind": "acid",
+   "text": "Balance the acidic reaction Zn(s) + NO₃⁻(aq) → Zn²⁺(aq) + NH₄⁺(aq) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 8.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 8.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 4.0,
+     "unit": "Zn(s) + NO₃⁻(aq) + 10 H⁺(aq) → 4 Zn²⁺(aq) + NH₄⁺(aq) + 3 H₂O(l)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 10.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "Zn",
+    "perturb_1": "OH⁻"
+   },
+   "coeffs": {
+    "species": [
+     "Zn(s)",
+     "NO₃⁻(aq)",
+     "H⁺(aq)",
+     "Zn²⁺(aq)",
+     "NH₄⁺(aq)",
+     "H₂O(l)"
+    ],
+    "right": [
+     4,
+     1,
+     10,
+     4,
+     1,
+     3
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "CN5",
+   "scenario": "Copper in Nitric Acid",
+   "kind": "acid",
+   "text": "Balance the acidic reaction Zn(s) + NO₃⁻(aq) → Zn²⁺(aq) + NO(g) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 3.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 3.0,
+     "unit": "Zn(s) + 2 NO₃⁻(aq) + 8 H⁺(aq) → 3 Zn²⁺(aq) + 2 NO(g) + 4 H₂O(l)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 5.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "Zn",
+    "perturb_1": "OH⁻"
+   },
+   "coeffs": {
+    "species": [
+     "Zn(s)",
+     "NO₃⁻(aq)",
+     "H⁺(aq)",
+     "Zn²⁺(aq)",
+     "NO(g)",
+     "H₂O(l)"
+    ],
+    "right": [
+     3,
+     2,
+     8,
+     3,
+     2,
+     4
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "CN6",
+   "scenario": "Copper in Nitric Acid",
+   "kind": "acid",
+   "text": "Balance the acidic reaction Ag(s) + NO₃⁻(aq) → Ag⁺(aq) + NO₂(g) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 1.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 1.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 1.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 2.0,
+     "unit": "Ag(s) + NO₃⁻(aq) + 2 H⁺(aq) → Ag⁺(aq) + NO₂(g) + H₂O(l)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 2.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "Ag",
+    "perturb_1": "OH⁻"
+   },
+   "coeffs": {
+    "species": [
+     "Ag(s)",
+     "NO₃⁻(aq)",
+     "H⁺(aq)",
+     "Ag⁺(aq)",
+     "NO₂(g)",
+     "H₂O(l)"
+    ],
+    "right": [
+     1,
+     1,
+     2,
+     1,
+     1,
+     1
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "BZ1",
+   "scenario": "The Breathalyzer",
+   "kind": "acid",
+   "text": "Balance the acidic reaction C₂H₅OH(aq) + Cr₂O₇²⁻(aq) → CH₃COOH(aq) + Cr³⁺(aq) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 4.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 12.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 3.0,
+     "unit": "C₂H₅OH(aq) + 2 Cr₂O₇²⁻(aq) + 16 H⁺(aq) → 3 CH₃COOH(aq) + 4 Cr³⁺(aq) + 11 H₂O(l)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 10.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "C",
+    "perturb_1": "OH⁻"
+   },
+   "coeffs": {
+    "species": [
+     "C₂H₅OH(aq)",
+     "Cr₂O₇²⁻(aq)",
+     "H⁺(aq)",
+     "CH₃COOH(aq)",
+     "Cr³⁺(aq)",
+     "H₂O(l)"
+    ],
+    "right": [
+     3,
+     2,
+     16,
+     3,
+     4,
+     11
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "BZ2",
+   "scenario": "The Breathalyzer",
+   "kind": "acid",
+   "text": "Balance the acidic reaction Fe²⁺(aq) + Cr₂O₇²⁻(aq) → Fe³⁺(aq) + Cr³⁺(aq) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 1.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 6.0,
+     "unit": "Fe²⁺(aq) + Cr₂O₇²⁻(aq) + 14 H⁺(aq) → 6 Fe³⁺(aq) + 2 Cr³⁺(aq) + 7 H₂O(l)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 7.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "Fe",
+    "perturb_1": "OH⁻"
+   },
+   "coeffs": {
+    "species": [
+     "Fe²⁺(aq)",
+     "Cr₂O₇²⁻(aq)",
+     "H⁺(aq)",
+     "Fe³⁺(aq)",
+     "Cr³⁺(aq)",
+     "H₂O(l)"
+    ],
+    "right": [
+     6,
+     1,
+     14,
+     6,
+     2,
+     7
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "BZ3",
+   "scenario": "The Breathalyzer",
+   "kind": "acid",
+   "text": "Balance the acidic reaction I⁻(aq) + Cr₂O₇²⁻(aq) → I₂(aq) + Cr³⁺(aq) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 6.0,
+     "unit": "I⁻(aq) + Cr₂O₇²⁻(aq) + 14 H⁺(aq) → 3 I₂(aq) + 2 Cr³⁺(aq) + 7 H₂O(l)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 8.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "I",
+    "perturb_1": "OH⁻"
+   },
+   "coeffs": {
+    "species": [
+     "I⁻(aq)",
+     "Cr₂O₇²⁻(aq)",
+     "H⁺(aq)",
+     "I₂(aq)",
+     "Cr³⁺(aq)",
+     "H₂O(l)"
+    ],
+    "right": [
+     6,
+     1,
+     14,
+     3,
+     2,
+     7
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "BZ4",
+   "scenario": "The Breathalyzer",
+   "kind": "acid",
+   "text": "Balance the acidic reaction SO₂(g) + Cr₂O₇²⁻(aq) → SO₄²⁻(aq) + Cr³⁺(aq) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 3.0,
+     "unit": "SO₂(g) + Cr₂O₇²⁻(aq) + 2 H⁺(aq) → 3 SO₄²⁻(aq) + 2 Cr³⁺(aq) + H₂O(l)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 8.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "S",
+    "perturb_1": "OH⁻"
+   },
+   "coeffs": {
+    "species": [
+     "SO₂(g)",
+     "Cr₂O₇²⁻(aq)",
+     "H⁺(aq)",
+     "SO₄²⁻(aq)",
+     "Cr³⁺(aq)",
+     "H₂O(l)"
+    ],
+    "right": [
+     3,
+     1,
+     2,
+     3,
+     2,
+     1
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "BZ5",
+   "scenario": "The Breathalyzer",
+   "kind": "acid",
+   "text": "Balance the acidic reaction H₂O₂(aq) + Cr₂O₇²⁻(aq) → O₂(g) + Cr³⁺(aq) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 3.0,
+     "unit": "H₂O₂(aq) + Cr₂O₇²⁻(aq) + 8 H⁺(aq) → 3 O₂(g) + 2 Cr³⁺(aq) + 7 H₂O(l)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 8.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "O",
+    "perturb_1": "OH⁻"
+   },
+   "coeffs": {
+    "species": [
+     "H₂O₂(aq)",
+     "Cr₂O₇²⁻(aq)",
+     "H⁺(aq)",
+     "O₂(g)",
+     "Cr³⁺(aq)",
+     "H₂O(l)"
+    ],
+    "right": [
+     3,
+     1,
+     8,
+     3,
+     2,
+     7
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "BZ6",
+   "scenario": "The Breathalyzer",
+   "kind": "acid",
+   "text": "Balance the acidic reaction Sn²⁺(aq) + Cr₂O₇²⁻(aq) → Sn⁴⁺(aq) + Cr³⁺(aq) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 3.0,
+     "unit": "Sn²⁺(aq) + Cr₂O₇²⁻(aq) + 14 H⁺(aq) → 3 Sn⁴⁺(aq) + 2 Cr³⁺(aq) + 7 H₂O(l)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 8.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "Sn",
+    "perturb_1": "OH⁻"
+   },
+   "coeffs": {
+    "species": [
+     "Sn²⁺(aq)",
+     "Cr₂O₇²⁻(aq)",
+     "H⁺(aq)",
+     "Sn⁴⁺(aq)",
+     "Cr³⁺(aq)",
+     "H₂O(l)"
+    ],
+    "right": [
+     3,
+     1,
+     14,
+     3,
+     2,
+     7
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "PF1",
+   "scenario": "The Purple Fades",
+   "kind": "acid",
+   "text": "Balance the acidic reaction Fe²⁺(aq) + MnO₄⁻(aq) → Fe³⁺(aq) + Mn²⁺(aq) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 1.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 5.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 5.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 5.0,
+     "unit": "Fe²⁺(aq) + MnO₄⁻(aq) + 8 H⁺(aq) → 5 Fe³⁺(aq) + Mn²⁺(aq) + 4 H₂O(l)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 6.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "Fe",
+    "perturb_1": "OH⁻"
+   },
+   "coeffs": {
+    "species": [
+     "Fe²⁺(aq)",
+     "MnO₄⁻(aq)",
+     "H⁺(aq)",
+     "Fe³⁺(aq)",
+     "Mn²⁺(aq)",
+     "H₂O(l)"
+    ],
+    "right": [
+     5,
+     1,
+     8,
+     5,
+     1,
+     4
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "PF2",
+   "scenario": "The Purple Fades",
+   "kind": "acid",
+   "text": "Balance the acidic reaction H₂C₂O₄(aq) + MnO₄⁻(aq) → CO₂(g) + Mn²⁺(aq) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 5.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 10.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 5.0,
+     "unit": "H₂C₂O₄(aq) + 2 MnO₄⁻(aq) + 6 H⁺(aq) → 10 CO₂(g) + 2 Mn²⁺(aq) + 8 H₂O(l)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 7.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "C",
+    "perturb_1": "OH⁻"
+   },
+   "coeffs": {
+    "species": [
+     "H₂C₂O₄(aq)",
+     "MnO₄⁻(aq)",
+     "H⁺(aq)",
+     "CO₂(g)",
+     "Mn²⁺(aq)",
+     "H₂O(l)"
+    ],
+    "right": [
+     5,
+     2,
+     6,
+     10,
+     2,
+     8
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "PF3",
+   "scenario": "The Purple Fades",
+   "kind": "acid",
+   "text": "Balance the acidic reaction H₂O₂(aq) + MnO₄⁻(aq) → O₂(g) + Mn²⁺(aq) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 5.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 10.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 5.0,
+     "unit": "H₂O₂(aq) + 2 MnO₄⁻(aq) + 6 H⁺(aq) → 5 O₂(g) + 2 Mn²⁺(aq) + 8 H₂O(l)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 7.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "O",
+    "perturb_1": "OH⁻"
+   },
+   "coeffs": {
+    "species": [
+     "H₂O₂(aq)",
+     "MnO₄⁻(aq)",
+     "H⁺(aq)",
+     "O₂(g)",
+     "Mn²⁺(aq)",
+     "H₂O(l)"
+    ],
+    "right": [
+     5,
+     2,
+     6,
+     5,
+     2,
+     8
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "PF4",
+   "scenario": "The Purple Fades",
+   "kind": "acid",
+   "text": "Balance the acidic reaction Cl⁻(aq) + MnO₄⁻(aq) → Cl₂(g) + Mn²⁺(aq) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 5.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 10.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 10.0,
+     "unit": "Cl⁻(aq) + 2 MnO₄⁻(aq) + 16 H⁺(aq) → 5 Cl₂(g) + 2 Mn²⁺(aq) + 8 H₂O(l)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 7.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "Cl",
+    "perturb_1": "OH⁻"
+   },
+   "coeffs": {
+    "species": [
+     "Cl⁻(aq)",
+     "MnO₄⁻(aq)",
+     "H⁺(aq)",
+     "Cl₂(g)",
+     "Mn²⁺(aq)",
+     "H₂O(l)"
+    ],
+    "right": [
+     10,
+     2,
+     16,
+     5,
+     2,
+     8
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "PF5",
+   "scenario": "The Purple Fades",
+   "kind": "acid",
+   "text": "Balance the acidic reaction NO₂⁻(aq) + MnO₄⁻(aq) → NO₃⁻(aq) + Mn²⁺(aq) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 5.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 10.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 5.0,
+     "unit": "NO₂⁻(aq) + 2 MnO₄⁻(aq) + 6 H⁺(aq) → 5 NO₃⁻(aq) + 2 Mn²⁺(aq) + 3 H₂O(l)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 7.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "N",
+    "perturb_1": "OH⁻"
+   },
+   "coeffs": {
+    "species": [
+     "NO₂⁻(aq)",
+     "MnO₄⁻(aq)",
+     "H⁺(aq)",
+     "NO₃⁻(aq)",
+     "Mn²⁺(aq)",
+     "H₂O(l)"
+    ],
+    "right": [
+     5,
+     2,
+     6,
+     5,
+     2,
+     3
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "PF6",
+   "scenario": "The Purple Fades",
+   "kind": "acid",
+   "text": "Balance the acidic reaction SO₃²⁻(aq) + MnO₄⁻(aq) → SO₄²⁻(aq) + Mn²⁺(aq) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 5.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 10.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 5.0,
+     "unit": "SO₃²⁻(aq) + 2 MnO₄⁻(aq) + 6 H⁺(aq) → 5 SO₄²⁻(aq) + 2 Mn²⁺(aq) + 3 H₂O(l)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 7.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "S",
+    "perturb_1": "OH⁻"
+   },
+   "coeffs": {
+    "species": [
+     "SO₃²⁻(aq)",
+     "MnO₄⁻(aq)",
+     "H⁺(aq)",
+     "SO₄²⁻(aq)",
+     "Mn²⁺(aq)",
+     "H₂O(l)"
+    ],
+    "right": [
+     5,
+     2,
+     6,
+     5,
+     2,
+     3
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "DC1",
+   "scenario": "The Fizzing Drain Cleaner",
+   "kind": "base",
+   "text": "Balance the basic reaction Al(s) + H₂O(l) → Al(OH)₄⁻(aq) + H₂(g) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 3.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 2.0,
+     "unit": "Al(s) + 6 H₂O(l) + 2 OH⁻(aq) → 2 Al(OH)₄⁻(aq) + 3 H₂(g)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 5.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "Al",
+    "perturb_1": "H⁺"
+   },
+   "coeffs": {
+    "species": [
+     "Al(s)",
+     "H₂O(l)",
+     "OH⁻(aq)",
+     "Al(OH)₄⁻(aq)",
+     "H₂(g)"
+    ],
+    "right": [
+     2,
+     6,
+     2,
+     2,
+     3
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "DC2",
+   "scenario": "The Fizzing Drain Cleaner",
+   "kind": "base",
+   "text": "Balance the basic reaction Cr(OH)₃(s) + MnO₄⁻(aq) → CrO₄²⁻(aq) + MnO₂(s) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 3.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 3.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 3.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 2.0,
+     "unit": "Cr(OH)₃(s) + MnO₄⁻(aq) + OH⁻(aq) → CrO₄²⁻(aq) + MnO₂(s) + 2 H₂O(l)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 6.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "Cr",
+    "perturb_1": "H⁺"
+   },
+   "coeffs": {
+    "species": [
+     "Cr(OH)₃(s)",
+     "MnO₄⁻(aq)",
+     "OH⁻(aq)",
+     "CrO₄²⁻(aq)",
+     "MnO₂(s)",
+     "H₂O(l)"
+    ],
+    "right": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     2
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "DC3",
+   "scenario": "The Fizzing Drain Cleaner",
+   "kind": "base",
+   "text": "Balance the basic reaction Br⁻(aq) + MnO₄⁻(aq) → BrO₃⁻(aq) + MnO₂(s) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 3.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 2.0,
+     "unit": "Br⁻(aq) + 2 MnO₄⁻(aq) + H₂O(l) → BrO₃⁻(aq) + 2 MnO₂(s) + 2 OH⁻(aq)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 9.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "Br",
+    "perturb_1": "H⁺"
+   },
+   "coeffs": {
+    "species": [
+     "Br⁻(aq)",
+     "MnO₄⁻(aq)",
+     "H₂O(l)",
+     "BrO₃⁻(aq)",
+     "MnO₂(s)",
+     "OH⁻(aq)"
+    ],
+    "right": [
+     1,
+     2,
+     1,
+     1,
+     2,
+     2
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "DC4",
+   "scenario": "The Fizzing Drain Cleaner",
+   "kind": "base",
+   "text": "Balance the basic reaction Cr(OH)₄⁻(aq) + ClO⁻(aq) → CrO₄²⁻(aq) + Cl⁻(aq) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 3.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 2.0,
+     "unit": "Cr(OH)₄⁻(aq) + 3 ClO⁻(aq) + 2 OH⁻(aq) → 2 CrO₄²⁻(aq) + 3 Cl⁻(aq) + 5 H₂O(l)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 5.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "Cr",
+    "perturb_1": "H⁺"
+   },
+   "coeffs": {
+    "species": [
+     "Cr(OH)₄⁻(aq)",
+     "ClO⁻(aq)",
+     "OH⁻(aq)",
+     "CrO₄²⁻(aq)",
+     "Cl⁻(aq)",
+     "H₂O(l)"
+    ],
+    "right": [
+     2,
+     3,
+     2,
+     2,
+     3,
+     5
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "DC5",
+   "scenario": "The Fizzing Drain Cleaner",
+   "kind": "base",
+   "text": "Balance the basic reaction Zn(s) + NO₃⁻(aq) → Zn(OH)₄²⁻(aq) + NH₃(aq) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 8.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 8.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 4.0,
+     "unit": "Zn(s) + NO₃⁻(aq) + 7 OH⁻(aq) + 6 H₂O(l) → 4 Zn(OH)₄²⁻(aq) + NH₃(aq)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 10.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "Zn",
+    "perturb_1": "H⁺"
+   },
+   "coeffs": {
+    "species": [
+     "Zn(s)",
+     "NO₃⁻(aq)",
+     "OH⁻(aq)",
+     "H₂O(l)",
+     "Zn(OH)₄²⁻(aq)",
+     "NH₃(aq)"
+    ],
+    "right": [
+     4,
+     1,
+     7,
+     6,
+     4,
+     1
+    ],
+    "arrow_after": 4
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "DC6",
+   "scenario": "The Fizzing Drain Cleaner",
+   "kind": "base",
+   "text": "Balance the basic reaction CN⁻(aq) + MnO₄⁻(aq) → CNO⁻(aq) + MnO₂(s) by the half-reaction method. Give the electrons in each half-reaction, the electrons transferred overall, and the coefficients of the balanced equation.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "e_ox_found",
+     "label": "electrons in the oxidation half-reaction",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "e_red_found",
+     "label": "electrons in the reduction half-reaction",
+     "value": 3.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "n_found",
+     "label": "electrons transferred",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "coeffs_found",
+     "label": "coefficients of the balanced equation",
+     "value": 3.0,
+     "unit": "CN⁻(aq) + 2 MnO₄⁻(aq) + H₂O(l) → 3 CNO⁻(aq) + 2 MnO₂(s) + 2 OH⁻(aq)",
+     "half_ulp": 0.5
+    }
+   ],
+   "traps": [
+    {
+     "id": "N_ADDED",
+     "state": "n_found",
+     "value": 5.0
+    }
+   ],
+   "picks": {
+    "oxidized_pick": "C",
+    "perturb_1": "H⁺"
+   },
+   "coeffs": {
+    "species": [
+     "CN⁻(aq)",
+     "MnO₄⁻(aq)",
+     "H₂O(l)",
+     "CNO⁻(aq)",
+     "MnO₂(s)",
+     "OH⁻(aq)"
+    ],
+    "right": [
+     3,
+     2,
+     1,
+     3,
+     2,
+     2
+    ],
+    "arrow_after": 3
+   },
+   "tolerance": "exact integers",
+   "status": "approved (instructor, 18 Oct 2026)"
+  }
+ ]
+}

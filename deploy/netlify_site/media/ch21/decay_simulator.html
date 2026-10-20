@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radioactive decay</title>
+<!--
+  DRAFT: not for students until the instructor approves it.
+  Date: 18 Oct 2026. Built by Simulation_Claude to 02_BRIEF_decay_page.md (SCENARIO_CLAUDE, 18 Oct 2026) on buffer_simulator.html
+    (98b62a53: shell, colours, readings, guarded setters), titration_simulator.html (61254251: the curve with a marked point),
+    entropy_simulator.html (5dbf18b4: random particles that start paused), electrolysis_simulator.html (569656a5: time with
+    units, the "time needed" mode).
+  Brief (one line): ch21_decay, opens at the meaning question: first-order decay, λ = ln 2 ÷ t½, Nt/N0 = e^(−λt),
+    t = −(1/λ) ln(Nt/N0); for rocks N0 = parent now + daughter, in moles. No "never reaches zero", no reason sentences.
+  Data source: the brief's table only (Appendix M; Table 21.2 for Tc-99m and F-18); λ computed as ln 2 ÷ t½. Rock molar masses
+    are the mass numbers (U-238 238, Pb-206 206, Rb-87 87, Sr-87 87), as Example 21.7 does.
+  Model: exact. Readouts to 4 significant figures (ratios to 4 decimals); ages in scientific notation from 10⁴ up.
+    The nuclei: each of the 100 is given one random lifetime, −ln(u)/λ, when the sample is made; at time t it is drawn open if
+    its lifetime is shorter. This has the same statistics as the brief's per-step probability 1 − e^(−λΔt) (decay has no
+    memory) and stays the same sample when the slider moves back.
+  URL parameters:
+    mode     decay | dating | rock. Default decay.
+    isotope  Co-60 Sr-90 Rn-222 P-32 I-131 Na-24 Tc-99m F-18 C-14 U-238 Rb-87. Default Co-60.
+    t        in the isotope's own unit, 0 to 6 half-lives. Default one half-life.
+    ratio    Nt/N0 for dating, more than 0 and at most 1. Default 0.5.
+    m0       g, the starting mass (optional; mass left is shown only when it is given).
+    parent   U-238 | Rb-87 (rock mode). Default U-238.
+    gp, gd   g of parent now and of daughter (rock mode). Defaults 9.58e-05 and 2.51e-05 (problem OR1).
+    theme    light | dark. Default: the system setting.
+  Drawing choices (not data): 100 nuclei in a 10 × 10 grid, filled while undecayed and open after, with a brief flash; Play
+    runs one half-life every 2 s up to 6 half-lives (decay mode) or up to the found time (dating and rock modes).
+    The opening sample uses a fixed seed chosen so its counts sit near the expected curve; each Reset sample draws a new one.
+  Nothing is fetched, stored, or sent. Nothing moves until the student presses Play.
+-->
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #faf9f6; --fg: #1d1e1c; --muted: #4b4d49; --rule: #7f8378; --grid: #e2e3dd; --control-bg: #ffffff; --focus: #7a3a10;
+    --win-bg: #f1f2ee; --curve: #3b3f45; --nucleus: #4f6d7a; --daughter: #8a6a1c; --flash: #e0a100;
+    --notice-bg: #fff3d1; --notice-fg: #3d2c00; --notice-rule: #8a6a00;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #18191b; --fg: #e9eaec; --muted: #b6bac0; --rule: #8d949d; --grid: #303338; --control-bg: #222428; --focus: #ffb38a;
+    --win-bg: #202226; --curve: #e9eaec; --nucleus: #8fb8c9; --daughter: #e0c060; --flash: #ffd54a;
+    --notice-bg: #3a3010; --notice-fg: #ffe9a8; --notice-rule: #c9a63a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--fg); }
+  body { font: 14px/1.35 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; padding: 8px 12px; max-width: 640px; }
+  h1 { font-size: 0.95rem; font-weight: 600; margin: 0 0 4px; }
+  .notice { margin: 0 0 6px; padding: 5px 9px; background: var(--notice-bg); color: var(--notice-fg); border-left: 4px solid var(--notice-rule); font-size: 0.85rem; }
+  .top { display: flex; gap: 10px; align-items: stretch; }
+  canvas { display: block; }
+  #scene { width: 196px; height: 196px; flex: 0 0 196px; border: 1px solid var(--grid); border-radius: 4px; }
+  .readings { flex: 1 1 auto; min-width: 0; }
+  .readings h2 { font-size: 0.8rem; font-weight: 600; margin: 0 0 2px; color: var(--muted); }
+  .readings table { border-collapse: collapse; width: 100%; }
+  .readings td { padding: 0; line-height: 1.22; font-size: 0.76rem; white-space: nowrap; }
+  .readings td.v { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; padding-left: 6px; }
+  #rM { white-space: normal; }
+  .status { margin: 3px 0; font-size: 0.86rem; font-weight: 600; min-height: 2.4em; }
+  .row { display: flex; align-items: center; gap: 4px 5px; flex-wrap: wrap; margin: 3px 0; }
+  .lab { font-size: 0.86rem; }
+  button { font: inherit; font-size: 0.82rem; color: var(--fg); background: var(--control-bg); border: 1px solid var(--rule); border-radius: 4px; padding: 3px 7px; cursor: pointer; touch-action: manipulation; }
+  select, input[type=number] { font: inherit; font-size: 0.82rem; color: var(--fg); background: var(--control-bg); border: 1px solid var(--rule); border-radius: 4px; padding: 2px 4px; }
+  input[type=number] { width: 92px; }
+  button:disabled { opacity: 0.55; cursor: default; }
+  .sl { display: flex; align-items: center; gap: 8px; margin: 2px 0; }
+  .sl label { font-size: 0.84rem; }
+  .sl input { flex: 1 1 auto; min-width: 100px; margin: 0; accent-color: var(--focus); }
+  .sl .val { font-size: 0.84rem; font-weight: 600; font-variant-numeric: tabular-nums; min-width: 84px; text-align: right; white-space: nowrap; }
+  #panel { width: 100%; height: 124px; border: 1px solid var(--grid); margin-top: 2px; }
+  .small { margin: 2px 0 0; font-size: 0.76rem; color: var(--muted); }
+  [hidden] { display: none !important; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+</style>
+</head>
+<body>
+  <h1 id="title">Radioactive decay</h1>
+  <p class="notice" id="notice" role="status" hidden></p>
+
+  <div class="top">
+    <canvas id="scene" role="img" aria-label="A grid of 100 nuclei, filled while undecayed and open after. A text description follows." aria-describedby="descScene"></canvas>
+    <div class="readings">
+      <h2>Readings</h2>
+      <table>
+        <tr><td>λ</td><td class="v" id="rL"></td></tr>
+        <tr id="rowP"><td>mol parent now</td><td class="v" id="rP"></td></tr>
+        <tr id="rowD"><td>mol decayed</td><td class="v" id="rD"></td></tr>
+        <tr id="rowN0"><td>N0 (mol)</td><td class="v" id="rN0"></td></tr>
+        <tr><td id="tLab">t</td><td class="v" id="rT"></td></tr>
+        <tr><td>Nt/N0</td><td class="v" id="rF"></td></tr>
+        <tr><td>Half-lives elapsed</td><td class="v" id="rH"></td></tr>
+        <tr><td>Expected of 100</td><td class="v" id="rE"></td></tr>
+        <tr><td>Counted in the grid</td><td class="v" id="rC"></td></tr>
+        <tr id="rowM"><td>Mass left</td><td class="v" id="rM"></td></tr>
+      </table>
+    </div>
+  </div>
+  <p class="status" id="status"></p>
+
+  <div class="row">
+    <button type="button" id="play">Play</button>
+    <button type="button" id="reset">Reset sample</button>
+    <label for="mode" class="lab">Mode</label>
+    <select id="mode"><option value="decay">decay</option><option value="dating">dating</option><option value="rock">rock</option></select>
+  </div>
+  <div class="row" id="isoRow">
+    <label for="isotope" class="lab">Isotope</label><select id="isotope"></select>
+    <span id="m0Box"><label for="m0" class="lab">Start (g)</label> <input type="number" id="m0" min="0" step="any" placeholder="optional"></span>
+    <span id="ratioBox"><label for="ratio" class="lab">Nt/N0</label> <input type="number" id="ratio" min="0" max="1" step="any"></span>
+  </div>
+  <div class="row" id="rockRow">
+    <label for="parent" class="lab">Parent</label><select id="parent"><option value="U-238">U-238 → Pb-206</option><option value="Rb-87">Rb-87 → Sr-87</option></select>
+    <label for="gp" class="lab">g parent</label><input type="number" id="gp" min="0" step="any">
+    <label for="gd" class="lab">g daughter</label><input type="number" id="gd" min="0" step="any">
+  </div>
+  <div class="sl" id="tRow">
+    <label for="t">Time</label>
+    <input type="range" id="t" min="0" max="600" step="1">
+    <span class="val" id="vT" aria-hidden="true"></span>
+  </div>
+  <canvas id="panel" role="img" aria-label="Nt/N0 against t from 0 to 6 half-lives, with marks at each half-life and the marked point. A text description follows." aria-describedby="descPanel"></canvas>
+  <p class="small" id="caption"></p>
+  <p class="small" id="caption2"></p>
+  <p class="small" id="quick"></p>
+
+  <div class="sr-only" id="descScene"></div>
+  <div class="sr-only" id="descPanel"></div>
+  <div class="sr-only" id="live" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ===========================================================================
+  // DATA: the brief's table. half: t½ in the isotope's unit.
+  // ===========================================================================
+  var ISOTOPES = [['Co-60', 'Cobalt-60', 5.27, 'y'], ['Sr-90', 'Strontium-90', 29, 'y'], ['Rn-222', 'Radon-222', 3.82, 'd'], ['P-32', 'Phosphorus-32', 14.29, 'd'],
+    ['I-131', 'Iodine-131', 8.04, 'd'], ['Na-24', 'Sodium-24', 15, 'h'], ['Tc-99m', 'Technetium-99m', 8.01, 'h'], ['F-18', 'Fluorine-18', 110, 'min'],
+    ['C-14', 'Carbon-14', 5730, 'y'], ['U-238', 'Uranium-238', 4.47e9, 'y'], ['Rb-87', 'Rubidium-87', 4.7e10, 'y']
+  ].map(function (r) { return { id: r[0], name: r[1], half: r[2], unit: r[3] }; });
+  var byId = {}; ISOTOPES.forEach(function (x) { byId[x.id] = x; });
+  var ROCK = { 'U-238': { parentM: 238, daughter: 'Pb-206', daughterM: 206 }, 'Rb-87': { parentM: 87, daughter: 'Sr-87', daughterM: 87 } };
+  var LN2 = Math.LN2, PLAY_S_PER_HALF = 2, IDLE_STOP_S = 120;
+  function lam(x) { return LN2 / x.half; }
+
+  // ===========================================================================
+  // Formatting: 4 significant figures; scientific notation from 10⁴ up (ages) and below 10⁻³
+  // ===========================================================================
+  function sup(n) { return String(n).replace(/-/g, '⁻').replace(/[0-9]/g, function (c) { return '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]; }); }
+  function sig(v, k) {
+    if (v === 0) return '0'; if (!isFinite(v)) return '—';
+    var e = Math.floor(Math.log10(Math.abs(v)) + 1e-12), m = v / Math.pow(10, e); m = Math.round(m * Math.pow(10, k - 1)) / Math.pow(10, k - 1); if (Math.abs(m) >= 10) { m /= 10; e++; }
+    if (e >= -3 && e < 4) return (m * Math.pow(10, e)).toFixed(Math.max(0, k - 1 - e));
+    return m.toFixed(k - 1) + ' × 10' + sup(e);
+  }
+
+  // ===========================================================================
+  // URL parameters
+  // ===========================================================================
+  var params = new URLSearchParams(window.location.search), notices = [];
+  function isPlaceholder(v) { return /^\{.*\}$/.test(v || ''); }
+  function num(key, def, ok, what) {
+    if (!params.has(key)) return def; var raw = params.get(key), v = parseFloat(raw);
+    if (!isFinite(v) || !ok(v)) { notices.push(isPlaceholder(raw) ? 'No ' + what + ' given; using ' + (def === null ? 'none' : def) + '.' : 'Could not use ' + what + ' “' + raw.slice(0, 14) + '”; using ' + (def === null ? 'none' : def) + '.'); return def; }
+    return v;
+  }
+  var iso = (params.get('isotope') || '').trim(); if (!iso) iso = 'Co-60'; else if (!byId[iso]) { notices.push(isPlaceholder(iso) ? 'No isotope given; showing Co-60.' : 'No data for “' + iso.slice(0, 16) + '”; showing Co-60.'); iso = 'Co-60'; }
+  var par = (params.get('parent') || '').trim(); if (!par) par = 'U-238'; else if (!ROCK[par]) { notices.push(isPlaceholder(par) ? 'No parent given; using U-238.' : 'Rock mode uses U-238 or Rb-87; using U-238.'); par = 'U-238'; }
+  var mode = (params.get('mode') || 'decay').trim(); if (['decay', 'dating', 'rock'].indexOf(mode) < 0) { if (!isPlaceholder(mode)) notices.push('Mode “' + mode.slice(0, 12) + '” unknown; using decay.'); mode = 'decay'; }
+  var st = { mode: mode, iso: iso, parent: par, t: null, ratio: num('ratio', 0.5, function (v) { return v > 0 && v <= 1; }, 'ratio'),
+    m0: num('m0', null, function (v) { return v > 0; }, 'm0'), gp: num('gp', 9.58e-5, function (v) { return v > 0; }, 'gp'), gd: num('gd', 2.51e-5, function (v) { return v >= 0; }, 'gd'),
+    running: false, started: false, lastInput: 0, td: null };
+  var x0 = byId[st.iso];
+  st.t = num('t', x0.half, function (v) { return v >= 0 && v <= 6 * x0.half; }, 't');
+  var notice = document.getElementById('notice'); if (notices.length) { notice.textContent = notices.join(' '); notice.hidden = false; }
+  var themeParam = (params.get('theme') || '').trim().toLowerCase();
+  var darkQ = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  var reduceQ = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var colours = null;
+  function applyTheme() { var t = (themeParam === 'light' || themeParam === 'dark') ? themeParam : (darkQ && darkQ.matches ? 'dark' : 'light'); document.documentElement.setAttribute('data-theme', t); colours = null; }
+  function isReduced() { return !!(reduceQ && reduceQ.matches); }
+
+  // ===========================================================================
+  // Helpers (labels and attributes written only when they change: the Safari fix)
+  // ===========================================================================
+  var el = function (id) { return document.getElementById(id); };
+  function setText(id, t) { var e = typeof id === 'string' ? el(id) : id; if (e.textContent !== t) e.textContent = t; }
+  function setAttr(e, n, v) { if (e.getAttribute(n) !== v) e.setAttribute(n, v); }
+  function setHidden(id, h) { var e = el(id); if (e.hidden !== h) e.hidden = h; }
+  function setDisabled(id, d) { var e = el(id); if (e.disabled !== d) e.disabled = d; }
+  var live = el('live'); function say(m) { live.textContent = ''; setTimeout(function () { live.textContent = m.replace(/ × 10([⁻]?)([⁰¹²³⁴⁵⁶⁷⁸⁹]+)/g, function (a, s, d) { return ' times 10 to the ' + (s ? 'minus ' : '') + d.split('').map(function (c) { return '⁰¹²³⁴⁵⁶⁷⁸⁹'.indexOf(c); }).join(''); }); }, 30); }
+  var FONT = 'system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif';
+  function C(n) { if (!colours) colours = {}; if (!(n in colours)) colours[n] = getComputedStyle(document.documentElement).getPropertyValue('--' + n).trim(); return colours[n]; }
+  function sizeCanvas(cv, bg) {
+    var w = cv.clientWidth, h = cv.clientHeight, dpr = window.devicePixelRatio || 1; if (!w || !h) return null;
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    var ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = bg || C('bg'); ctx.fillRect(0, 0, w, h); return { ctx: ctx, W: w, H: h };
+  }
+  function X() { return st.mode === 'rock' ? byId[st.parent] : byId[st.iso]; }
+
+  // ===========================================================================
+  // The model
+  // ===========================================================================
+  function result() {
+    var x = X(), L = lam(x), r = { L: L };
+    if (st.mode === 'decay') { r.t = st.t; r.f = Math.exp(-L * st.t); }
+    else if (st.mode === 'dating') { r.f = st.ratio; r.t = -Math.log(st.ratio) / L; }
+    else { var k = ROCK[st.parent]; r.np = st.gp / k.parentM; r.nd = st.gd / k.daughterM; r.n0 = r.np + r.nd; r.f = r.np / r.n0; r.t = -Math.log(r.f) / L; }
+    return r;
+  }
+
+  // ===========================================================================
+  // a. The nuclei: one random lifetime each (in half-lives)
+  // ===========================================================================
+  var seed = 20261168;   // the opening sample: one whose counts sit near the curve; every Reset draws a new one
+  function rand() { seed = (seed + 0x6D2B79F5) | 0; var t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }
+  var life = [], flashAt = [];
+  function newSample() { life = []; flashAt = []; for (var i = 0; i < 100; i++) { life.push(-Math.log(1 - rand()) / LN2); flashAt.push(-1); } }   // lifetimes in half-lives
+  function shownHalves() { var r = result(), x = X(); return (st.td === null ? r.t : st.td) / x.half; }
+  function counted(h) { var n = 0; for (var i = 0; i < 100; i++) if (life[i] > h) n++; return n; }
+  var sceneCv = el('scene'), clockS = 0;
+  function drawScene() {
+    var cv = sizeCanvas(sceneCv, C('win-bg')); if (!cv) return;
+    var ctx = cv.ctx, W = cv.W, H = cv.H, h = shownHalves(), cell = (W - 16) / 10;
+    ctx.font = '600 10px ' + FONT; ctx.fillStyle = C('fg'); ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('a. 100 nuclei', 6, 3);
+    for (var i = 0; i < 100; i++) {
+      var cx = 8 + (i % 10 + 0.5) * cell, cy = 18 + (Math.floor(i / 10) + 0.5) * (H - 24) / 10, r = Math.min(cell, (H - 24) / 10) * 0.36, alive = life[i] > h;
+      if (!alive && flashAt[i] >= 0 && clockS - flashAt[i] < 0.35) { ctx.beginPath(); ctx.arc(cx, cy, r + 4, 0, 6.283); ctx.fillStyle = C('flash'); ctx.fill(); }
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, 6.283);
+      if (alive) { ctx.fillStyle = C('nucleus'); ctx.fill(); ctx.strokeStyle = C('fg'); ctx.lineWidth = 0.8; ctx.stroke(); }
+      else { ctx.strokeStyle = st.mode === 'rock' ? C('daughter') : C('rule'); ctx.lineWidth = 1.4; ctx.stroke(); }
+    }
+  }
+
+  // ===========================================================================
+  // b. Nt/N0 against t, 0 to 6 half-lives
+  // ===========================================================================
+  var panelCv = el('panel');
+  function drawPanel() {
+    var cv = sizeCanvas(panelCv); if (!cv) return;
+    var ctx = cv.ctx, W = cv.W, H = cv.H, x = X(), r = result(), px0 = 40, px1 = W - 10, py0 = 18, py1 = H - 24, Tm = 6;
+    var Xp = function (h) { return px0 + h / Tm * (px1 - px0); }, Yp = function (f) { return py1 - f * (py1 - py0); };
+    ctx.strokeStyle = C('rule'); ctx.lineWidth = 1; ctx.strokeRect(px0 + 0.5, py0 + 0.5, px1 - px0, py1 - py0);
+    ctx.font = '600 10px ' + FONT; ctx.fillStyle = C('fg'); ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('b. Nt/N0 against t (' + x.id + ', t½ = ' + sig(x.half, 4) + ' ' + x.unit + ')', px0, 3);
+    ctx.font = '10px ' + FONT; ctx.fillStyle = C('muted');
+    for (var k = 1; k <= 6; k++) { var xx = Math.round(Xp(k)) + 0.5; ctx.strokeStyle = C('grid'); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(xx, py0); ctx.lineTo(xx, py1); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(k + ' t½', Xp(k) - (k === 6 ? 8 : 0), py1 + 4); }
+    ctx.textAlign = 'center'; ctx.fillText('0', Xp(0), py1 + 4);
+    [[1, '1'], [0.5, '½'], [0.25, '¼'], [0.125, '⅛']].forEach(function (m) { var yy = Math.round(Yp(m[0])) + 0.5; ctx.strokeStyle = C('grid'); ctx.beginPath(); ctx.moveTo(px0, yy); ctx.lineTo(px1, yy); ctx.stroke(); ctx.fillStyle = C('muted'); ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(m[1], px0 - 4, Yp(m[0])); });
+    ctx.strokeStyle = C('curve'); ctx.lineWidth = 1.8; ctx.beginPath();
+    for (var i = 0; i <= 240; i++) { var h = i / 240 * Tm, y = Yp(Math.pow(2, -h)); if (i) ctx.lineTo(Xp(h), y); else ctx.moveTo(Xp(h), y); } ctx.stroke();
+    var hm = Math.min(Tm, (st.td === null ? r.t : st.td) / x.half), fm = Math.pow(2, -hm);
+    ctx.strokeStyle = C('focus'); ctx.lineWidth = 1; ctx.setLineDash([2, 3]); ctx.beginPath(); ctx.moveTo(Math.round(Xp(hm)) + 0.5, py0); ctx.lineTo(Math.round(Xp(hm)) + 0.5, py1); ctx.moveTo(px0, Math.round(Yp(fm)) + 0.5); ctx.lineTo(px1, Math.round(Yp(fm)) + 0.5); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = C('focus'); ctx.beginPath(); ctx.arc(Xp(hm), Yp(fm), 4, 0, 6.283); ctx.fill();
+    if (r.t / x.half > Tm) { ctx.fillStyle = C('fg'); ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('t is beyond 6 t½', px1 - 4, py0 + 4); }
+  }
+
+  // ===========================================================================
+  // Text
+  // ===========================================================================
+  function tText(t, x) { return sig(t, 4) + ' ' + x.unit; }
+  function readout() { var r = result(), x = X(); return x.id + ': t = ' + tText(r.t, x) + ', Nt/N0 = ' + r.f.toFixed(4) + '.'; }
+  function updateText() {
+    var x = X(), r = result(), rock = st.mode === 'rock', h = shownHalves();
+    setText('rL', sig(r.L, 4) + ' ' + x.unit + '⁻¹');
+    setHidden('rowP', !rock); setHidden('rowD', !rock); setHidden('rowN0', !rock);
+    if (rock) { setText('rP', sig(r.np, 4)); setText('rD', sig(r.nd, 4)); setText('rN0', sig(r.n0, 4)); }
+    setText('tLab', rock ? 'Age' : 't'); setText('rT', tText(r.t, x)); setText('rF', r.f.toFixed(4)); setText('rH', sig(r.t / x.half, 4));
+    setText('rE', sig(100 * r.f, 4)); setText('rC', String(counted(h)) + (st.td !== null && Math.abs(st.td - r.t) > 1e-12 * x.half ? ' (at ' + sig(h, 3) + ' t½)' : ''));
+    setHidden('rowM', !(st.mode === 'decay' && st.m0)); if (st.mode === 'decay' && st.m0) setText('rM', sig(st.m0 * r.f, 4) + ' g of ' + sig(st.m0, 4) + ' g');
+    setHidden('isoRow', rock); setHidden('rockRow', !rock); setHidden('m0Box', st.mode !== 'decay'); setHidden('ratioBox', st.mode !== 'dating'); setHidden('tRow', st.mode !== 'decay');
+    if (el('mode').value !== st.mode) el('mode').value = st.mode; if (el('isotope').value !== st.iso) el('isotope').value = st.iso; if (el('parent').value !== st.parent) el('parent').value = st.parent;
+    var s = el('t'), p = String(Math.round(Math.min(st.t, 6 * x.half) / x.half * 100)); if (s.value !== p) s.value = p;
+    setText('vT', tText(st.t, x)); setAttr(s, 'aria-valuetext', tText(st.t, x) + ', ' + sig(st.t / x.half, 3) + ' half-lives');
+    [['m0', st.m0 === null ? '' : String(st.m0)], ['ratio', String(st.ratio)], ['gp', String(st.gp)], ['gd', String(st.gd)]].forEach(function (f) { var e = el(f[0]); if (document.activeElement !== e && e.value !== f[1]) e.value = f[1]; });
+    var out = x.name + ', t½ = ' + sig(x.half, 4) + ' ' + x.unit + ', ' + st.mode + ' mode. ' + (st.running ? 'Time is running.' : 'Readings are steady.');
+    if (!st.running && !isReduced()) out += st.started ? ' Paused.' : ' Paused. Press Play to watch.';
+    setText('status', out); setText('play', st.running ? 'Pause' : 'Play'); setDisabled('play', isReduced());
+    setText('caption', 'a. Each nucleus has the same chance of decaying in each moment; drawn 100 at a time; random, so counts vary. Filled: undecayed; open' + (rock ? ' (gold): decayed to ' + ROCK[st.parent].daughter : ': decayed') + '.' + (rock ? ' Rock mode takes all the daughter as made by the parent, with none at the start.' : ''));
+    setText('caption2', 'b. Nt/N0 = exp(−λt); marks at each half-life and at ½, ¼ and ⅛; the marked point is at ' + (st.mode === 'decay' ? 'the slider position.' : 'the ratio.'));
+    setText('quick', 'Quick start: press Play, choose a mode and an isotope, then set the time, the ratio or the masses.');
+    setText('descScene', 'A 10 by 10 grid of nuclei: ' + counted(h) + ' filled (undecayed) and ' + (100 - counted(h)) + ' open (decayed), at ' + sig(h, 3) + ' half-lives; expected ' + sig(100 * Math.pow(2, -h), 3) + '.');
+    setText('descPanel', 'Curve of Nt/N0 against time from 0 to 6 half-lives, halving at each half-life mark. The marked point is at ' + sig(Math.min(6, r.t / x.half), 3) + ' half-lives, Nt/N0 = ' + r.f.toFixed(4) + (r.t / x.half > 6 ? '; the time is beyond the plotted range.' : '.'));
+  }
+
+  // ===========================================================================
+  // Loop: one half-life every 2 s
+  // ===========================================================================
+  var rafId = null, lastT = 0;
+  function render() { drawScene(); drawPanel(); updateText(); }
+  function target() { var x = X(); return st.mode === 'decay' ? 6 * x.half : result().t; }
+  function frame(t) {
+    rafId = null; var dt = Math.min(0.05, Math.max(0, (t - lastT) / 1000)); lastT = t; clockS += dt;
+    var x = X(), before = (st.mode === 'decay' ? st.t : st.td) / x.half, now = Math.min(target(), (st.mode === 'decay' ? st.t : st.td) + dt / PLAY_S_PER_HALF * x.half);
+    if (st.mode === 'decay') st.t = now; else st.td = now;
+    for (var i = 0; i < 100; i++) if (life[i] > before && life[i] <= now / x.half) flashAt[i] = clockS;
+    render();
+    if (now >= target()) { st.running = false; if (st.mode !== 'decay') st.td = null; render(); say(readout()); return; }
+    if ((performance.now() - st.lastInput) / 1000 > IDLE_STOP_S) { stop(); return; }
+    rafId = requestAnimationFrame(frame);
+  }
+  function start() {
+    if (isReduced()) return; st.lastInput = performance.now(); st.started = true; st.running = true; lastT = performance.now();
+    if (st.mode === 'decay') { if (st.t >= 6 * X().half - 1e-12) st.t = 0; } else st.td = 0;
+    if (!rafId) rafId = requestAnimationFrame(frame); render();
+  }
+  function stop() { st.running = false; if (rafId) { cancelAnimationFrame(rafId); rafId = null; } if (st.mode !== 'decay') st.td = null; render(); }
+
+  // ===========================================================================
+  // Controls
+  // ===========================================================================
+  var restTimer = null;
+  function changed(msg) { st.lastInput = performance.now(); render(); if (restTimer) clearTimeout(restTimer); restTimer = setTimeout(function () { restTimer = null; say((msg ? msg + ' ' : '') + readout()); }, 500); }
+  function fresh() { if (rafId) { cancelAnimationFrame(rafId); rafId = null; } st.running = false; st.td = null; newSample(); }
+  ISOTOPES.forEach(function (x) { var o = document.createElement('option'); o.value = x.id; o.textContent = x.id + ' (t½ ' + sig(x.half, 3) + ' ' + x.unit + ')'; el('isotope').appendChild(o); });
+  el('mode').addEventListener('change', function () { st.mode = el('mode').value; fresh(); changed('Mode: ' + st.mode + '.'); });
+  el('isotope').addEventListener('change', function () { st.iso = el('isotope').value; st.t = byId[st.iso].half; fresh(); changed('Now ' + byId[st.iso].name + '.'); });
+  el('parent').addEventListener('change', function () { st.parent = el('parent').value; fresh(); changed('Parent ' + st.parent + '.'); });
+  el('t').addEventListener('input', function () { st.t = parseInt(el('t').value, 10) / 100 * X().half; changed(''); });
+  el('t').addEventListener('keydown', function (e) {
+    var k = Math.round(st.t / X().half * 100), ok = true; switch (e.key) { case 'ArrowRight': case 'ArrowUp': k += 1; break; case 'ArrowLeft': case 'ArrowDown': k -= 1; break; case 'PageUp': k += 25; break; case 'PageDown': k -= 25; break; case 'Home': k = 0; break; case 'End': k = 600; break; default: ok = false; }
+    if (ok) { e.preventDefault(); st.t = Math.max(0, Math.min(600, k)) / 100 * X().half; changed(''); }
+  });
+  [['m0', function (v) { return v > 0; }], ['ratio', function (v) { return v > 0 && v <= 1; }], ['gp', function (v) { return v > 0; }], ['gd', function (v) { return v >= 0; }]].forEach(function (f) {
+    el(f[0]).addEventListener('change', function () { var raw = el(f[0]).value, v = parseFloat(raw); if (f[0] === 'm0' && raw.trim() === '') st.m0 = null; else if (isFinite(v) && f[1](v)) st[f[0]] = v; changed(''); });
+  });
+  el('reset').addEventListener('click', function () { fresh(); if (st.mode === 'decay') st.t = 0; changed('A fresh sample of 100.'); });
+  el('play').addEventListener('click', function () { if (st.running) stop(); else start(); });
+
+  applyTheme(); newSample();
+  if (darkQ && themeParam !== 'light' && themeParam !== 'dark') { var cw = function () { applyTheme(); render(); }; if (darkQ.addEventListener) darkQ.addEventListener('change', cw); else if (darkQ.addListener) darkQ.addListener(cw); }
+  if (window.ResizeObserver) new ResizeObserver(function () { render(); }).observe(document.body); else window.addEventListener('resize', render);
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Complex ions</title>
+<!--
+  DRAFT: not for students until the instructor approves it.
+  Date: 17 Oct 2026. Built by Simulation_Claude to 00_README_BRIEF_complex_page.md (SCENARIO_CLAUDE, 17 Oct 2026), from
+    solubility_simulator.html (same zip): layout, meters, themes, keyboard steps, accessibility, the Safari fix (labels written
+    only when they change), the quick start and labels that fit.
+  Brief (one line): ch15_complex, opens at the meaning question: a ligand's lone pairs bind a metal ion into a complex ion; with
+    the ligand in excess nearly all the metal is bound and the free metal ion is tiny. No direction or reason words.
+  Data source: the brief's table (instructor, 17 Oct 2026): Ag(NH3)2+ Kf 1.7 × 10^7 (OpenStax 15.2); Ag(S2O3)2^3- 4.7 × 10^13
+    (15.3, Example 15.16); Al(OH)4- 1.1 × 10^33 (15.3); Cu(NH3)4^2+ 1.7 × 10^13 (Appendix K). One ion per liter is
+    1.7 × 10^-24 M (brief). Arithmetic: x (L + n x)^n ÷ (C − x) = 1 ÷ Kf, solved for x by bisection.
+  URL parameters:
+    complex  Ag(NH3)2+ | Ag(S2O3)2^3- | Al(OH)4- | Cu(NH3)4^2+, case-insensitive. Default Ag(NH3)2+. (Kf, if passed, is ignored.)
+    C        M of complex, 1.0 × 10^-4 to 0.10. Default 0.0050.
+    L        M of ligand left, 1.0 × 10^-5 to 2.0. Default 0.490.
+    theme    light | dark. Default: the system setting.
+  Cartoon choices (not data): 12 complex ions drawn; free ligand drawn in proportion to L ÷ C, capped at 60; free metal ions
+    drawn in proportion to x ÷ C, so below 1 in 100 they appear only now and then; "Add ligand" raises L by a tenth of a power
+    of ten; the 2-minute idle stop.
+  Nothing is fetched, stored, or sent. Nothing moves until the student presses Play or uses a control.
+-->
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #faf9f6; --fg: #1d1e1c; --muted: #4b4d49; --rule: #7f8378; --grid: #e2e3dd; --control-bg: #ffffff; --focus: #7a3a10;
+    --win-bg: #f0f1ec; --ag: #c9ccd2; --cu: #b5651d; --al: #9ea39a; --metal-edge: #2f3237; --n: #2a5db0; --o: #c8392b; --s: #c9a400; --h: #ffffff; --h-edge: #4a4f57;
+    --notice-bg: #fff3d1; --notice-fg: #3d2c00; --notice-rule: #8a6a00;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #18191b; --fg: #e9eaec; --muted: #b6bac0; --rule: #8d949d; --grid: #303338; --control-bg: #222428; --focus: #ffb38a;
+    --win-bg: #202226; --ag: #c9ccd2; --cu: #e0985a; --al: #c3c8cf; --metal-edge: #f2f3f5; --n: #6fa0f0; --o: #ff7366; --s: #f2d24a; --h: #e9eaec; --h-edge: #a49aa8;
+    --notice-bg: #3a3010; --notice-fg: #ffe9a8; --notice-rule: #c9a63a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--fg); }
+  body { font: 14px/1.35 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; padding: 8px 12px; max-width: 640px; }
+  h1 { font-size: 0.95rem; font-weight: 600; margin: 0 0 4px; }
+  .notice { margin: 0 0 6px; padding: 5px 9px; background: var(--notice-bg); color: var(--notice-fg); border-left: 4px solid var(--notice-rule); font-size: 0.85rem; }
+  .top { display: flex; gap: 10px; align-items: stretch; }
+  canvas { display: block; }
+  #scene { width: 220px; height: 160px; flex: 0 0 220px; border-radius: 4px; }
+  .readings { flex: 1 1 auto; min-width: 0; }
+  .readings h2 { font-size: 0.8rem; font-weight: 600; margin: 0 0 2px; color: var(--muted); }
+  .readings table { border-collapse: collapse; width: 100%; }
+  .readings td { padding: 0; line-height: 1.16; font-size: 0.78rem; white-space: nowrap; }
+  .readings td:first-child { white-space: normal; }
+  .readings td.v { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; padding-left: 6px; }
+  .note { font-size: 0.76rem; color: var(--muted); margin: 2px 0 0; min-height: 1.2em; }
+  .status { margin: 3px 0; font-size: 0.86rem; font-weight: 600; min-height: 2.4em; }
+  .row { display: flex; align-items: center; gap: 4px 6px; flex-wrap: wrap; margin: 3px 0; }
+  .lab { font-size: 0.84rem; }
+  button { font: inherit; font-size: 0.82rem; color: var(--fg); background: var(--control-bg); border: 1px solid var(--rule); border-radius: 4px; padding: 3px 7px; cursor: pointer; }
+  select { font: inherit; font-size: 0.82rem; color: var(--fg); background: var(--control-bg); border: 1px solid var(--rule); border-radius: 4px; padding: 2px 4px; }
+  .sl { display: flex; align-items: center; gap: 8px; margin: 2px 0; }
+  .sl label { font-size: 0.84rem; min-width: 112px; }
+  .sl input { flex: 1 1 auto; min-width: 110px; margin: 0; accent-color: var(--focus); }
+  .sl .val { font-size: 0.84rem; font-weight: 600; font-variant-numeric: tabular-nums; min-width: 92px; text-align: right; }
+  button:disabled { opacity: 0.55; cursor: default; }
+  #panel { width: 100%; height: 168px; border: 1px solid var(--grid); margin-top: 2px; }
+  .small { margin: 2px 0 0; font-size: 0.76rem; color: var(--muted); }
+  [hidden] { display: none !important; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+</style>
+</head>
+<body>
+  <h1 id="title"></h1>
+  <p class="notice" id="notice" role="status" hidden></p>
+
+  <div class="top">
+    <canvas id="scene" role="img" aria-label="The flask with its metal-ion electrode and a log scale from 10 to the minus 40 to 1 molar. A text description follows." aria-describedby="descScene"></canvas>
+    <div class="readings">
+      <h2>Readings</h2>
+      <table>
+        <tr><td>Complex</td><td class="v" id="rCx"></td></tr>
+        <tr><td>C, complex</td><td class="v" id="rC"></td></tr>
+        <tr><td>L, ligand left</td><td class="v" id="rL"></td></tr>
+        <tr><td>Kf</td><td class="v" id="rKf"></td></tr>
+        <tr><td>Kd = 1 ÷ Kf</td><td class="v" id="rKd"></td></tr>
+        <tr><td id="lX"></td><td class="v" id="rX"></td></tr>
+        <tr><td>Times smaller than C</td><td class="v" id="rT"></td></tr>
+      </table>
+      <p class="note" id="oneIon"></p>
+    </div>
+  </div>
+  <p class="status" id="status"></p>
+
+  <div class="row">
+    <button type="button" id="play">Play</button>
+    <button type="button" id="addL">Add ligand</button>
+    <button type="button" id="reset">Reset</button>
+    <label for="cx" class="lab">Complex</label>
+    <select id="cx"></select>
+  </div>
+  <div class="sl"><label for="sC" id="lsC">C, complex</label><input type="range" id="sC" step="any"><span class="val" id="vC" aria-hidden="true"></span></div>
+  <div class="sl"><label for="sL" id="lsL">L, ligand left</label><input type="range" id="sL" step="any"><span class="val" id="vL" aria-hidden="true"></span></div>
+  <canvas id="panel" role="img" aria-label="A sketch of the complex ions and free ligand, not to scale. A text description follows." aria-describedby="descPanel"></canvas>
+  <p class="small" id="caption"></p>
+  <p class="small" id="quick"></p>
+
+  <div class="sr-only" id="descScene"></div>
+  <div class="sr-only" id="descPanel"></div>
+  <div class="sr-only" id="live" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ===========================================================================
+  // DATA: the brief's table (instructor, 17 Oct 2026).
+  // ===========================================================================
+  var CX = {
+    'Ag(NH3)2+':    { show: 'Ag(NH₃)₂⁺',    metal: 'Ag⁺',  mk: 'ag', lig: 'NH₃',    lk: 'NH3', n: 2, Kf: 1.7e7,  Ks: '1.7 × 10⁷',  name: 'diamminesilver(I)' },          // OpenStax 15.2
+    'Ag(S2O3)2^3-': { show: 'Ag(S₂O₃)₂³⁻',  metal: 'Ag⁺',  mk: 'ag', lig: 'S₂O₃²⁻', lk: 'S2O3', n: 2, Kf: 4.7e13, Ks: '4.7 × 10¹³', name: 'bis(thiosulfato)argentate(I)' }, // 15.3, Example 15.16
+    'Al(OH)4-':     { show: 'Al(OH)₄⁻',     metal: 'Al³⁺', mk: 'al', lig: 'OH⁻',    lk: 'OH',  n: 4, Kf: 1.1e33, Ks: '1.1 × 10³³', name: 'tetrahydroxoaluminate' },      // 15.3
+    'Cu(NH3)4^2+':  { show: 'Cu(NH₃)₄²⁺',   metal: 'Cu²⁺', mk: 'cu', lig: 'NH₃',    lk: 'NH3', n: 4, Kf: 1.7e13, Ks: '1.7 × 10¹³', name: 'tetraamminecopper(II)' }       // Appendix K
+  };
+  var ONE_ION = 1.7e-24;   // M, one ion per liter (brief)
+  var C_MIN = 1.0e-4, C_MAX = 0.10, L_MIN = 1.0e-5, L_MAX = 2.0, DEF = { key: 'Ag(NH3)2+', C: 0.0050, L: 0.490 };
+
+  // Cartoon choices:
+  var N_CX = 12, LIG_CAP = 60, IDLE_STOP_S = 120;
+
+  // ===========================================================================
+  // URL parameters
+  // ===========================================================================
+  var params = new URLSearchParams(window.location.search), notices = [];
+  var key = DEF.key, raw = (params.get('complex') || '').trim();
+  if (raw) { var nz = function (t) { return t.toLowerCase().replace(/[\s^()]/g, ''); }, hit = Object.keys(CX).filter(function (k) { return nz(k) === nz(raw); })[0]; if (hit) key = hit; else notices.push('No data for “' + raw.slice(0, 40) + '”; showing Ag(NH₃)₂⁺.'); }
+  function num(name, lo, hi, def) { var r = params.get(name); if (r === null || r.trim() === '') return def; var v = Number(r); if (isFinite(v) && v >= lo * (1 - 1e-9) && v <= hi * (1 + 1e-9)) return Math.min(Math.max(v, lo), hi); notices.push('Could not read ' + name + '; using ' + def + ' M.'); return def; }
+  var start0 = { key: key, C: num('C', C_MIN, C_MAX, DEF.C), L: num('L', L_MIN, L_MAX, DEF.L) };
+  var notice = document.getElementById('notice');
+  if (notices.length) { notice.textContent = notices.join(' '); notice.hidden = false; }
+
+  var themeParam = (params.get('theme') || '').trim().toLowerCase();
+  var darkQ = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  var reduceQ = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var colours = null;
+  function applyTheme() { var t = (themeParam === 'light' || themeParam === 'dark') ? themeParam : (darkQ && darkQ.matches ? 'dark' : 'light'); document.documentElement.setAttribute('data-theme', t); colours = null; }
+  function isReduced() { return !!(reduceQ && reduceQ.matches); }
+
+  // ===========================================================================
+  // Chemistry: x (L + n x)^n ÷ (C − x) = 1 ÷ Kf, by bisection on log x; x stays below C.
+  // ===========================================================================
+  var st, X;
+  function freeMetal() {
+    var C = st.C, L = st.L, n = X.n, Kd = 1 / X.Kf, lo = 1e-80, hi = C * (1 - 1e-15);
+    for (var i = 0; i < 300; i++) { var m = Math.sqrt(lo * hi); if (m * Math.pow(L + n * m, n) / (C - m) - Kd > 0) hi = m; else lo = m; }
+    return Math.sqrt(lo * hi);
+  }
+
+  // ===========================================================================
+  // Formatting: 3 significant figures; no carets
+  // ===========================================================================
+  var SUP = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+  function supE(e) { return String(e).split('').map(function (ch) { return SUP[ch]; }).join(''); }
+  function fmtN(v, sf) {
+    if (!(v > 0)) return '0';
+    var e = Math.floor(Math.log10(v)), k = Math.pow(10, sf - 1), r = Math.round(v / Math.pow(10, e) * k + 1e-7) / k; if (r >= 10) { r /= 10; e++; }
+    if (e < -3 || e > 3) return r.toFixed(sf - 1) + ' × 10' + supE(e);
+    return (r * Math.pow(10, e)).toFixed(Math.max(0, sf - 1 - e));
+  }
+  function fmt(v) { return fmtN(v, 3); }
+  function round2(v) { var e = Math.floor(Math.log10(v)); return Math.round(v / Math.pow(10, e) * 10 + 1e-7) / 10 * Math.pow(10, e); }
+  function spoken(t) {
+    return t.replace(/( × )?10(⁻?)([⁰¹²³⁴⁵⁶⁷⁸⁹]+)/g, function (a, times, minus, d) { return (times ? ' times ' : '') + '10 to the ' + (minus ? 'minus ' : '') + d.split('').map(function (ch) { return '⁰¹²³⁴⁵⁶⁷⁸⁹'.indexOf(ch); }).join(''); })
+      .replace(/(\d) M\b/g, '$1 molar').replace(/Kf/g, 'K f').replace(/Kd/g, 'K d').replace(/÷/g, 'divided by')
+      .replace(/³⁻/g, ' three minus').replace(/²⁺/g, ' two plus').replace(/²⁻/g, ' two minus').replace(/³⁺/g, ' three plus').replace(/⁺/g, ' plus').replace(/⁻/g, ' minus')
+      .replace(/[₀₁₂₃₄₅₆₇₈₉]/g, function (c) { return '₀₁₂₃₄₅₆₇₈₉'.indexOf(c); });
+  }
+
+  // ===========================================================================
+  // The sketch (not to scale): N_CX complex ions, each a metal ion with n ligands; free ligand in proportion to L ÷ C (capped);
+  // free metal ions in proportion to x ÷ C, appearing now and then when that is small.
+  // ===========================================================================
+  var PW = { w: 0, h: 0 };
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function P(k, x, y) { return { k: k, x: x, y: y, vx: rnd(-16, 16), vy: rnd(-16, 16), a: rnd(0, 6.3) }; }
+  function count(k) { var n = 0; st.parts.forEach(function (p) { if (p.k === k) n++; }); return n; }
+  function ligTarget() { var raw = N_CX * st.L / st.C; return { n: Math.min(LIG_CAP, Math.round(raw)), capped: raw > LIG_CAP + 0.5 }; }
+  function seed() {
+    st.parts = [];
+    for (var i = 0; i < N_CX; i++) st.parts.push(P('CX', rnd(14, PW.w - 14), rnd(14, PW.h - 14)));
+    var t = ligTarget(); for (i = 0; i < t.n; i++) st.parts.push(P('L', rnd(6, PW.w - 6), rnd(6, PW.h - 6)));
+    var fm = Math.round(N_CX * st.x / st.C); for (i = 0; i < fm; i++) { var q = P('M', rnd(8, PW.w - 8), rnd(8, PW.h - 8)); st.parts.push(q); }
+  }
+  function reconcile() {
+    var t = ligTarget(), g = 0;
+    while (count('L') < t.n && g++ < 80) st.parts.push(P('L', rnd(6, PW.w - 6), rnd(6, PW.h - 6)));
+    while (count('L') > t.n && g++ < 160) { var i = st.parts.findIndex(function (p) { return p.k === 'L'; }); st.parts.splice(i, 1); }
+    var want = Math.round(N_CX * st.x / st.C);   // steady free metal (only when x ÷ C is large enough to draw)
+    while (count('M') - st.flick > want && g++ < 40) { var j = st.parts.findIndex(function (p) { return p.k === 'M' && !p.flick; }); if (j < 0) break; st.parts.splice(j, 1); }
+    while (count('M') - st.flick < want && g++ < 40) st.parts.push(P('M', rnd(8, PW.w - 8), rnd(8, PW.h - 8)));
+  }
+
+  // ===========================================================================
+  // State and time
+  // ===========================================================================
+  function initState() { X = CX[start0.key]; st = { key: start0.key, C: start0.C, L: start0.L, running: false, started: false, lastInput: 0, parts: [], seeded: false, flick: 0 }; st.x = freeMetal(); }
+  function tick(dt) {
+    // now and then, a free metal ion is drawn, in proportion to x ÷ C below one drawn ion on average; it soon rejoins a complex
+    var mean = N_CX * st.x / st.C - Math.round(N_CX * st.x / st.C);
+    if (mean > 0 && Math.random() < mean / 2.5 * dt) { var q = P('M', rnd(8, PW.w - 8), rnd(8, PW.h - 8)); q.flick = 2.5; st.parts.push(q); st.flick++; }
+    st.parts = st.parts.filter(function (p) { if (p.flick === undefined) return true; p.flick -= dt; if (p.flick > 0) return true; st.flick--; return false; });
+    reconcile();
+    st.parts.forEach(function (p) {
+      p.vx += rnd(-24, 24) * dt; p.vy += rnd(-24, 24) * dt; var sp = Math.sqrt(p.vx * p.vx + p.vy * p.vy), cap = p.k === 'CX' ? 14 : 22; if (sp > cap) { p.vx *= cap / sp; p.vy *= cap / sp; }
+      p.x += p.vx * dt; p.y += p.vy * dt; p.a += dt * (p.k === 'CX' ? 0.4 : 0.8);
+      var m = p.k === 'CX' ? 14 : 6;
+      if (p.x < m) { p.x = m; p.vx = Math.abs(p.vx); } if (p.x > PW.w - m) { p.x = PW.w - m; p.vx = -Math.abs(p.vx); }
+      if (p.y < m) { p.y = m; p.vy = Math.abs(p.vy); } if (p.y > PW.h - m) { p.y = PW.h - m; p.vy = -Math.abs(p.vy); }
+    });
+    if ((performance.now() - st.lastInput) / 1000 > IDLE_STOP_S) { stop(); say('Paused after two minutes without input.'); }
+  }
+
+  // ===========================================================================
+  // Drawing
+  // ===========================================================================
+  var FONT = 'system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif';
+  function C(n) { if (!colours) colours = {}; if (!(n in colours)) colours[n] = getComputedStyle(document.documentElement).getPropertyValue('--' + n).trim(); return colours[n]; }
+  function sizeCanvas(cv, bg) {
+    var w = cv.clientWidth, h = cv.clientHeight, dpr = window.devicePixelRatio || 1;
+    if (!w || !h) return null;
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    var ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = bg || C('bg'); ctx.fillRect(0, 0, w, h);
+    return { ctx: ctx, W: w, H: h };
+  }
+  function ball(ctx, x, y, r, f, e) { ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fillStyle = C(f); ctx.fill(); ctx.lineWidth = 1; ctx.strokeStyle = e ? C(e) : C('metal-edge'); ctx.stroke(); }
+  function ligand(ctx, x, y, a) {   // the donor atom carries the lone pair: N (NH3), S (thiosulfate), O (hydroxide)
+    var f = X.lk === 'NH3' ? 'n' : X.lk === 'S2O3' ? 's' : 'o';
+    ball(ctx, x, y, 3.2, f);
+    if (X.lk !== 'S2O3') { var c = Math.cos(a), s = Math.sin(a); ball(ctx, x + c * 4, y + s * 4, 1.8, 'h', 'h-edge'); }
+  }
+  function metal(ctx, x, y) { ball(ctx, x, y, 5, X.mk); }
+  function complex(ctx, x, y, a) {
+    var n = X.n, r = 9;
+    ctx.strokeStyle = C('muted'); ctx.lineWidth = 1;
+    for (var i = 0; i < n; i++) { var t = a + i * 2 * Math.PI / n; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.cos(t) * (r - 3), y + Math.sin(t) * (r - 3)); ctx.stroke(); }   // the bond from each lone pair
+    metal(ctx, x, y);
+    for (i = 0; i < n; i++) { var t2 = a + i * 2 * Math.PI / n; ligand(ctx, x + Math.cos(t2) * r, y + Math.sin(t2) * r, t2); }
+  }
+  function sceneText(ctx, text, x, y) { ctx.lineWidth = 3; ctx.strokeStyle = '#f4f2ec'; ctx.strokeText(text, x, y); ctx.fillStyle = '#1d1e1c'; ctx.fillText(text, x, y); }
+  function fitText(ctx, text, maxW, start, weight) { for (var px = start; px >= 6.5; px -= 0.5) { ctx.font = (weight || '600') + ' ' + px + 'px ' + FONT; if (ctx.measureText(text).width <= maxW) return; } }
+
+  var sceneCv = document.getElementById('scene');
+  function drawScene() {
+    var cv = sizeCanvas(sceneCv, '#ebe8df'); if (!cv) return;
+    var ctx = cv.ctx, W = cv.W, H = cv.H;
+    ctx.fillStyle = '#f4f2ec'; ctx.fillRect(0, 0, W, H); ctx.fillStyle = '#b9b2a2'; ctx.fillRect(0, 98, W, 7);
+    // flask
+    var fx = 60, fy = 98;
+    ctx.beginPath(); ctx.moveTo(fx - 7, 40); ctx.lineTo(fx - 7, 54); ctx.lineTo(fx - 32, fy); ctx.lineTo(fx + 32, fy); ctx.lineTo(fx + 7, 54); ctx.lineTo(fx + 7, 40); ctx.closePath();
+    ctx.save(); ctx.clip(); ctx.fillStyle = X.mk === 'cu' ? 'rgba(42, 93, 176, 0.32)' : '#e3e6df'; ctx.fillRect(fx - 32, 66, 64, 32); ctx.restore();
+    ctx.strokeStyle = '#3f434a'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(fx - 7, 40); ctx.lineTo(fx - 7, 54); ctx.lineTo(fx - 32, fy); ctx.lineTo(fx + 32, fy); ctx.lineTo(fx + 7, 54); ctx.lineTo(fx + 7, 40); ctx.stroke();
+    // electrode and display
+    ctx.fillStyle = '#2f3237'; ctx.fillRect(fx + 1, 18, 3, 72); ctx.strokeStyle = '#2f3237'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(fx + 2.5, 18); ctx.bezierCurveTo(fx + 30, 4, 110, 10, 120, 22); ctx.stroke();
+    ctx.fillStyle = '#3f434a'; ctx.fillRect(112, 18, 104, 38); ctx.fillStyle = '#f4f2ec'; ctx.fillRect(116, 22, 96, 16);
+    fitText(ctx, fmt(st.x) + ' M', 90, 11, '700'); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#1d1e1c'; ctx.fillText(fmt(st.x) + ' M', 164, 30.5);
+    ctx.font = '600 8.5px ' + FONT; ctx.fillStyle = '#f4f2ec'; ctx.fillText(X.metal + ' electrode', 164, 48);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.font = '600 10px ' + FONT; sceneText(ctx, '25 °C', W - 4, 62);
+    fitText(ctx, X.show, 60, 10); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; sceneText(ctx, X.show, fx, 84);
+    // log scale, 10^-40 to 1 M: free metal x (filled) and C (line)
+    var y0 = 130, x0 = 14, x1 = W - 12, P10 = function (l) { return x0 + (x1 - x0) * (l + 40) / 40; };
+    ctx.strokeStyle = '#3f434a'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y0); ctx.stroke();
+    ctx.font = '9px ' + FONT; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillStyle = '#1d1e1c';
+    for (var e = -40; e <= 0; e += 5) { var t = e % 10 === 0; ctx.beginPath(); ctx.moveTo(P10(e), y0 - (t ? 5 : 3)); ctx.lineTo(P10(e), y0 + (t ? 5 : 3)); ctx.stroke(); if (t) ctx.fillText(e === 0 ? '1 M' : '10' + supE(e), P10(e), y0 + 7); }
+    var lc = Math.log10(st.C), lx = Math.max(-40, Math.log10(st.x));
+    ctx.strokeStyle = '#7a1f10'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(P10(lc), y0 - 13); ctx.lineTo(P10(lc), y0 + 3); ctx.stroke();
+    ctx.font = '600 9px ' + FONT; ctx.textBaseline = 'bottom'; sceneText(ctx, 'C', P10(lc), y0 - 14);
+    var mx = P10(lx); ctx.fillStyle = '#1d1e1c'; ctx.beginPath(); ctx.moveTo(mx, y0 - 1); ctx.lineTo(mx - 5, y0 - 11); ctx.lineTo(mx + 5, y0 - 11); ctx.closePath(); ctx.fill();
+    ctx.textBaseline = 'bottom'; sceneText(ctx, 'free ' + X.metal, mx, y0 - 13 - (Math.abs(lx - lc) < 5 ? 11 : 0));   // lifted clear of C's label when the two are close
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.font = '600 8.5px ' + FONT; sceneText(ctx, 'log scale, M', x0, y0 + 18);
+  }
+
+  var panelCv = document.getElementById('panel');
+  function drawPanel() {
+    var cv = sizeCanvas(panelCv); if (!cv) return;
+    var ctx = cv.ctx, W = cv.W, H = cv.H, nw = { w: W - 10, h: H - 16 - 20 };
+    if (PW.w !== nw.w || PW.h !== nw.h) { PW = nw; st.seeded = false; }
+    if (!st.seeded) { seed(); st.seeded = true; }
+    ctx.font = '600 10px ' + FONT; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = C('fg'); ctx.fillText('A simulated sketch, not to scale', 5, 3);
+    ctx.save(); ctx.translate(5, 16);
+    ctx.fillStyle = C('win-bg'); ctx.fillRect(0, 0, PW.w, PW.h); ctx.strokeStyle = C('rule'); ctx.lineWidth = 1; ctx.strokeRect(0.5, 0.5, PW.w - 1, PW.h - 1);
+    ctx.beginPath(); ctx.rect(0, 0, PW.w, PW.h); ctx.clip();
+    st.parts.forEach(function (p) { if (p.k === 'L') ligand(ctx, p.x, p.y, p.a); });
+    st.parts.forEach(function (p) { if (p.k === 'CX') complex(ctx, p.x, p.y, p.a); });
+    st.parts.forEach(function (p) { if (p.k === 'M') { metal(ctx, p.x, p.y); ctx.strokeStyle = C('fg'); ctx.lineWidth = 1.4; ctx.setLineDash([2, 2]); ctx.beginPath(); ctx.arc(p.x, p.y, 8, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]); } });
+    ctx.restore();
+    var y = H - 9, x = 14; ctx.font = '10px ' + FONT; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+    complex(ctx, x + 4, y - 1, 0); ctx.fillStyle = C('fg'); ctx.fillText(X.show + ' (' + count('CX') + ')', x + 16, y); x += 16 + ctx.measureText(X.show + ' (00)').width + 10;
+    ligand(ctx, x, y, 0); ctx.fillStyle = C('fg'); ctx.fillText('free ' + X.lig + ' (' + count('L') + ')', x + 8, y); x += 8 + ctx.measureText('free ' + X.lig + ' (00)').width + 10;
+    metal(ctx, x, y); ctx.fillStyle = C('fg'); ctx.fillText('free ' + X.metal + ' (' + count('M') + ')', x + 8, y);
+  }
+
+  // ===========================================================================
+  // Text (written only when it changes: the Safari fix)
+  // ===========================================================================
+  var el = function (id) { return document.getElementById(id); };
+  function setText(id, t) { var e = el(id); if (e.textContent !== t) e.textContent = t; }
+  function readout() {
+    return X.show + '; C ' + fmt(st.C) + ' M; L ' + fmt(st.L) + ' M; Kf ' + X.Ks + '; Kd ' + fmt(1 / X.Kf) + '; free ' + X.metal + ' ' + fmt(st.x) + ' M; ' + fmt(st.C / st.x) + ' times smaller than C' + (st.x < ONE_ION ? '; less than one free ion per liter' : '') + '.';
+  }
+  function statusText() {
+    var out = fmt(st.C) + ' M ' + X.show + ' with ' + fmt(st.L) + ' M ' + X.lig + ' left.';
+    if (!st.running && !isReduced()) out += st.started ? ' Paused.' : ' Paused. Press Play to watch.';
+    return out;
+  }
+  function describeScene() {
+    return spoken('A flask at 25 °C holding ' + X.show + ' with a ' + X.metal + ' electrode reading ' + fmt(st.x) + ' M. Below it, a log scale from 10⁻⁴⁰ to 1 M marks the free ' + X.metal +
+      ' at ' + fmt(st.x) + ' M and C at ' + fmt(st.C) + ' M. ' + readout());
+  }
+  function describePanel() {
+    return spoken('A sketch, not to scale: ' + count('CX') + ' complex ions, each a ' + X.metal + ' ion held by ' + X.n + ' ' + X.lig + ' ligands through their lone pairs; ' + count('L') + ' free ' + X.lig +
+      ' ligands; ' + count('M') + ' free ' + X.metal + ' ions, drawn with a dashed ring.');
+  }
+  var live = el('live');
+  function say(msg) { live.textContent = ''; setTimeout(function () { live.textContent = spoken(msg); }, 30); }
+  function updateText() {
+    setText('title', 'Complex ions: ' + X.show + ', 25 °C');
+    setText('rCx', X.show); setText('rC', fmt(st.C) + ' M'); setText('rL', fmt(st.L) + ' M'); setText('rKf', X.Ks); setText('rKd', fmt(1 / X.Kf));
+    setText('lX', 'x, free ' + X.metal); setText('rX', fmt(st.x) + ' M'); setText('rT', fmt(st.C / st.x));
+    setText('oneIon', st.x < ONE_ION ? 'x is less than one free ion per liter (one ion per liter is 1.7 × 10⁻²⁴ M).' : '');
+    setText('status', statusText()); setText('descScene', describeScene()); setText('descPanel', describePanel());
+    var lt = ligTarget();
+    setText('caption', 'Particles represent ensembles; not to scale; spectator ions not depicted; motion slowed for clarity. Free metal ions are drawn in proportion to x ÷ C, so below 1 in 100 they appear only now and then' + (lt.capped ? '; free ligand capped at ' + LIG_CAP : '') + '.');
+    setText('quick', 'Quick start: press Play; Add ligand or move the C and L sliders; choose a complex from the menu.');
+    setText('play', st.running ? 'Pause' : 'Play'); var pd = isReduced(); if (el('play').disabled !== pd) el('play').disabled = pd;
+    if (el('cx').value !== st.key) el('cx').value = st.key;
+    [['sC', st.C, 'vC'], ['sL', st.L, 'vL']].forEach(function (p) { var e = el(p[0]), v = Math.log10(p[1]); if (Math.abs(Number(e.value) - v) > 1e-9) e.value = String(v); setText(p[2], fmt(p[1]) + ' M'); var vt = spoken(fmt(p[1]) + ' M'); if (e.getAttribute('aria-valuetext') !== vt) e.setAttribute('aria-valuetext', vt); });
+    setText('lsL', 'L, ' + X.lig + ' left');
+  }
+
+  // ===========================================================================
+  // Loop
+  // ===========================================================================
+  var rafId = null, lastT = 0;
+  function render() { drawScene(); drawPanel(); updateText(); }
+  function frame(t) { rafId = null; var dt = Math.min(0.05, Math.max(0, (t - lastT) / 1000)); lastT = t; tick(dt); render(); schedule(); }
+  function schedule() { if (st.running && !isReduced() && !rafId) rafId = requestAnimationFrame(frame); }
+  function start() { st.lastInput = performance.now(); st.started = true; if (isReduced()) { render(); return; } if (!st.running) { st.running = true; lastT = performance.now(); } schedule(); render(); }
+  function stop() { st.running = false; if (rafId) { cancelAnimationFrame(rafId); rafId = null; } render(); }
+
+  // ===========================================================================
+  // Controls
+  // ===========================================================================
+  var restTimer = null;
+  function changed(msg) {
+    st.x = freeMetal(); st.lastInput = performance.now(); if (st.seeded) reconcile(); render();
+    if (restTimer) clearTimeout(restTimer); restTimer = setTimeout(function () { restTimer = null; say((msg ? msg + ' ' : '') + readout()); }, 500);
+  }
+  function slider(id, lo, hi, field) {   // powers of ten; arrows a tenth of a power, Page keys a whole power, Home and End the ends
+    var e = el(id); e.min = String(Math.log10(lo)); e.max = String(Math.log10(hi));
+    function set(x) { x = Math.max(Math.log10(lo), Math.min(Math.log10(hi), x)); var v = x <= Math.log10(lo) + 1e-9 ? lo : x >= Math.log10(hi) - 1e-9 ? hi : round2(Math.pow(10, x)); if (v === st[field]) { render(); return; } st[field] = v; if (field === 'C') st.seeded = false; changed(''); }
+    e.addEventListener('input', function () { set(Number(e.value)); });
+    e.addEventListener('keydown', function (ev) {
+      var x = Math.log10(st[field]), k = ev.key, sh = function (y) { return fmtN(Math.pow(10, y), 2); };
+      if (k === 'ArrowUp' || k === 'ArrowRight' || k === 'ArrowDown' || k === 'ArrowLeft') { var up = k === 'ArrowUp' || k === 'ArrowRight', y = up ? Math.floor(x * 10 + 1e-6) / 10 : Math.ceil(x * 10 - 1e-6) / 10; for (var i = 0; i < 4; i++) { y = Math.round((y + (up ? 0.1 : -0.1)) * 10) / 10; if (sh(y) !== sh(x)) break; } x = y; }
+      else if (k === 'PageUp') x += 1; else if (k === 'PageDown') x -= 1; else if (k === 'Home') x = Math.log10(lo); else if (k === 'End') x = Math.log10(hi); else return;
+      ev.preventDefault(); set(x);
+    });
+    return set;
+  }
+  slider('sC', C_MIN, C_MAX, 'C'); var setL = slider('sL', L_MIN, L_MAX, 'L');
+  el('addL').addEventListener('click', function () { if (st.L >= L_MAX) return; var x = Math.log10(st.L), y = Math.floor(x * 10 + 1e-6) / 10; for (var i = 0; i < 4; i++) { y = Math.round((y + 0.1) * 10) / 10; if (fmtN(Math.pow(10, y), 2) !== fmtN(st.L, 2)) break; } setL(y); say('Ligand added. ' + readout()); });
+  Object.keys(CX).forEach(function (k) { var o = document.createElement('option'); o.value = k; o.textContent = CX[k].show; el('cx').appendChild(o); });
+  el('cx').addEventListener('change', function () { var k = el('cx').value; if (!CX[k]) return; st.key = k; X = CX[k]; st.seeded = false; changed('Now showing ' + X.show + '.'); });
+  el('play').addEventListener('click', function () { if (st.running) stop(); else start(); });
+  el('reset').addEventListener('click', function () { stop(); initState(); render(); say('Reset. ' + readout()); });
+
+  applyTheme();
+  if (darkQ && themeParam !== 'light' && themeParam !== 'dark') { var cw = function () { applyTheme(); render(); }; if (darkQ.addEventListener) darkQ.addEventListener('change', cw); else if (darkQ.addListener) darkQ.addListener(cw); }
+  if (reduceQ) { var rc = function () { if (st.running && isReduced()) stop(); render(); }; if (reduceQ.addEventListener) reduceQ.addEventListener('change', rc); else if (reduceQ.addListener) reduceQ.addListener(rc); }
+  initState();
+  if (window.ResizeObserver) new ResizeObserver(function () { render(); }).observe(document.body); else window.addEventListener('resize', render);
+  render();
+})();
+</script>
+</body>
+</html>

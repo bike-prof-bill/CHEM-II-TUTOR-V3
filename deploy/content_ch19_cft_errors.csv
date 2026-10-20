@@ -1,0 +1,6 @@
+﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
+D_COUNT_FROM_GROUP,"They took the group number as the d count, forgetting the oxidation state.",How many electrons has the metal lost?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+SPIN_STATE_WRONG,Their unpaired count fits the other spin state.,Is the ligand weak-field or strong-field? Compare Δ with P.,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+NM_NOT_CONVERTED,They used λ in nm without converting to m.,What unit must λ be in for E = hc/λ?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+NA_OMITTED,They left the energy per ion and only divided by 1000.,The answer is per mole. What converts per ion to per mole?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
+J_FOR_KJ,They left the molar energy in joules.,The answer is in kJ/mol. What do you divide by?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"

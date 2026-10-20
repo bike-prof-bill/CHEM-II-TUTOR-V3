@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Galvanic cell</title>
+<!--
+  DRAFT: not for students until the instructor approves it.
+  Date: 18 Oct 2026. Built by Simulation_Claude to 01_BRIEF_cell_page.md (SCENARIO_CLAUDE, 18 Oct 2026) on buffer_simulator.html
+    (98b62a53: shell, colour tokens, fonts, readings table, captions, guarded setters, Play) and complex_simulator.html (25646c2b:
+    log sliders), with the instructor's answers of 18 Oct (circuit switch with a real current in both settings; readouts as
+    written, labels and flow as they happen; NaNO₃ bridge with both ions migrating; real solution colours; H₂ on Pt).
+  Brief (one line): ch17, opens at the meaning question: two half-cells joined by a wire and a salt bridge; E°cell = E°cathode −
+    E°anode; E = E°cell − (0.0592 V ÷ n) log Q; ΔG° = −nFE°cell; K = 10^(nE°cell ÷ 0.0592). No verdict, direction or reason words.
+  Data source: the brief's table only, Appendix L (OpenStax): E° (V) and electrons per ion. F = 96 485 C/mol; 0.0592 V at 298 K.
+  Model:
+    The cell as written: left is the anode, right the cathode. n = lcm(electrons left, electrons right) (the same metal: a
+    concentration cell, E°cell = 0). Q = [left ion]^(n·a/e) ÷ [right ion]^(n·a/e), with a ions per half-reaction (2 for H⁺) and
+    H₂ at 1 atm. E°cell exact in 0.0001 V; E = E°cell − (0.0592 ÷ n) log₁₀ Q; readouts rounded half away from zero.
+    The current: I = E ÷ R, through a voltmeter (R = 10 MΩ, typical of a digital meter) or a lamp (R = 10 Ω; drawing value);
+    internal resistance neglected, so the meter reads E in both settings. While Play runs, the charge I·dt moves the
+    concentrations (each solution 0.100 L; drawing value) the way the reaction actually runs, and stops exactly where E = 0
+    (Q = K). With the voltmeter, 9000 s pass for each second shown; with the lamp, each second closes the gap to E = 0 in
+    log₁₀[ion reduced] by 1 − e^(−0.5), and the simulated time is the charge ÷ the current, so Time run stays true.
+  URL parameters:
+    left, right  one of the ids in METALS (Ag Cu Zn Cr Fe Ni Pb Mg Al Sn Co Cd Au H2). Defaults Zn and Cu.
+    cl, cr       M, 0.0010 to 2.0. Default 1.0. Outside: the nearer end, with a notice.
+    circuit      voltmeter | lamp. Default voltmeter. (Added; not in the brief.)
+    theme        light | dark. Default: the system setting.
+  Drawing choices (not data): ions in each solution drawn by a log rule, 1 + 4 (log₁₀ c + 3): 1 at 0.0010 M, 13 at 1 M; motion
+    of electrons and bridge ions drawn at a speed set by the current on a log scale; electrodes thin or thicken with the metal
+    lost or gained (not to scale). Solution colours: Cu²⁺ blue, Ni²⁺ green, Co²⁺ pink, Cr³⁺ blue-violet, Fe²⁺ pale green, Au³⁺
+    yellow; the rest colourless. Salt bridge NaNO₃ (OpenStax Figure 17.3): Na⁺ migrates toward the cathode, NO₃⁻ toward the anode.
+  Nothing is fetched, stored, or sent. Nothing moves until the student presses Play.
+-->
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #faf9f6; --fg: #1d1e1c; --muted: #4b4d49; --rule: #7f8378; --grid: #e2e3dd; --control-bg: #ffffff; --focus: #7a3a10;
+    --win-bg: #f1f2ee; --curve: #3b3f45; --glass: #eef1f2; --water: #dfe8ec; --wire: #3b3f45; --electron: #e0a100; --lamp: #ffd54a;
+    --above: rgba(178, 58, 43, 0.10); --below: rgba(47, 122, 60, 0.12);
+    --notice-bg: #fff3d1; --notice-fg: #3d2c00; --notice-rule: #8a6a00;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #18191b; --fg: #e9eaec; --muted: #b6bac0; --rule: #8d949d; --grid: #303338; --control-bg: #222428; --focus: #ffb38a;
+    --win-bg: #202226; --curve: #e9eaec; --glass: #23272b; --water: #24323a; --wire: #c9ccd1; --electron: #ffd54a; --lamp: #ffe08a;
+    --above: rgba(255, 115, 102, 0.14); --below: rgba(92, 196, 106, 0.14);
+    --notice-bg: #3a3010; --notice-fg: #ffe9a8; --notice-rule: #c9a63a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--fg); }
+  body { font: 14px/1.35 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; padding: 8px 12px; max-width: 640px; }
+  h1 { font-size: 0.95rem; font-weight: 600; margin: 0 0 4px; }
+  .notice { margin: 0 0 6px; padding: 5px 9px; background: var(--notice-bg); color: var(--notice-fg); border-left: 4px solid var(--notice-rule); font-size: 0.85rem; }
+  .top { display: flex; gap: 10px; align-items: stretch; }
+  canvas { display: block; }
+  #scene { width: 286px; height: 180px; flex: 0 0 286px; border: 1px solid var(--grid); border-radius: 4px; }
+  .readings { flex: 1 1 auto; min-width: 0; }
+  .readings h2 { font-size: 0.8rem; font-weight: 600; margin: 0 0 2px; color: var(--muted); }
+  .readings table { border-collapse: collapse; width: 100%; }
+  .readings td { padding: 0; line-height: 1.2; font-size: 0.76rem; white-space: nowrap; }
+  .readings td.v { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; padding-left: 6px; }
+  .status { margin: 3px 0; font-size: 0.86rem; font-weight: 600; min-height: 2.4em; }
+  .row { display: flex; align-items: center; gap: 4px 5px; flex-wrap: wrap; margin: 3px 0; }
+  .lab { font-size: 0.86rem; }
+  button { font: inherit; font-size: 0.82rem; color: var(--fg); background: var(--control-bg); border: 1px solid var(--rule); border-radius: 4px; padding: 3px 7px; cursor: pointer; touch-action: manipulation; }
+  select { font: inherit; font-size: 0.82rem; color: var(--fg); background: var(--control-bg); border: 1px solid var(--rule); border-radius: 4px; padding: 2px 4px; }
+  button:disabled { opacity: 0.55; cursor: default; }
+  .sl { display: flex; align-items: center; gap: 8px; margin: 2px 0; }
+  .sl label { font-size: 0.84rem; min-width: 92px; }
+  .sl input { flex: 1 1 auto; min-width: 110px; margin: 0; accent-color: var(--focus); }
+  .sl .val { font-size: 0.84rem; font-weight: 600; font-variant-numeric: tabular-nums; min-width: 92px; text-align: right; white-space: nowrap; }
+  #panel { width: 100%; height: 94px; border: 1px solid var(--grid); margin-top: 2px; }
+  .small { margin: 2px 0 0; font-size: 0.76rem; color: var(--muted); }
+  [hidden] { display: none !important; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+</style>
+</head>
+<body>
+  <h1 id="title">Galvanic cell</h1>
+  <p class="notice" id="notice" role="status" hidden></p>
+
+  <div class="top">
+    <canvas id="scene" role="img" aria-label="Two half-cells joined by a wire and a salt bridge, with a meter or lamp. A text description follows." aria-describedby="descScene"></canvas>
+    <div class="readings">
+      <h2>Readings, 298 K</h2>
+      <table>
+        <tr><td>E°cell</td><td class="v" id="rE0"></td></tr>
+        <tr><td>n</td><td class="v" id="rN"></td></tr>
+        <tr><td>Q</td><td class="v" id="rQ"></td></tr>
+        <tr><td>E</td><td class="v" id="rE"></td></tr>
+        <tr><td>ΔG°</td><td class="v" id="rG"></td></tr>
+        <tr><td>K</td><td class="v" id="rK"></td></tr>
+        <tr><td>Current</td><td class="v" id="rI"></td></tr>
+        <tr><td>Time run</td><td class="v" id="rT"></td></tr>
+      </table>
+    </div>
+  </div>
+  <p class="status" id="status"></p>
+
+  <div class="row">
+    <button type="button" id="play">Play</button>
+    <label for="left" class="lab">Left</label><select id="left"></select>
+    <label for="right" class="lab">Right</label><select id="right"></select>
+    <label for="circuit" class="lab">Circuit</label>
+    <select id="circuit"><option value="voltmeter">voltmeter</option><option value="lamp">lamp</option></select>
+  </div>
+  <div class="sl"><label for="cl" id="clLab"></label><input type="range" id="cl" min="-300" max="30" step="1"><span class="val" id="vcl" aria-hidden="true"></span></div>
+  <div class="sl"><label for="cr" id="crLab"></label><input type="range" id="cr" min="-300" max="30" step="1"><span class="val" id="vcr" aria-hidden="true"></span></div>
+  <canvas id="panel" role="img" aria-label="E against log Q, with Q = K and the slider positions marked. A text description follows." aria-describedby="descPanel"></canvas>
+  <p class="small" id="caption"></p>
+  <p class="small" id="caption2"></p>
+  <p class="small" id="quick"></p>
+
+  <div class="sr-only" id="descScene"></div>
+  <div class="sr-only" id="descPanel"></div>
+  <div class="sr-only" id="live" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ===========================================================================
+  // DATA: the brief's table (Appendix L). E in 0.0001 V (integers, so E°cell is exact); e = electrons per half-reaction;
+  // a = ions per half-reaction (2 H⁺ for H₂). col = solution colour (null: colourless); metal = electrode colour.
+  // ===========================================================================
+  var METALS = [
+    ['Ag', 'Ag⁺', 7996, 1, 1, null, '#c0c2c8'], ['Cu', 'Cu²⁺', 3370, 2, 1, '#2f6fd0', '#c26a3a'], ['Zn', 'Zn²⁺', -7618, 2, 1, null, '#9aa3ad'],
+    ['Cr', 'Cr³⁺', -7440, 3, 1, '#6a58c9', '#a7b0b8'], ['Fe', 'Fe²⁺', -4470, 2, 1, '#9fcf73', '#7b7f86'], ['Ni', 'Ni²⁺', -2570, 2, 1, '#2e9a50', '#b3b09a'],
+    ['Pb', 'Pb²⁺', -1262, 2, 1, null, '#6e7380'], ['Mg', 'Mg²⁺', -23720, 2, 1, null, '#c9cbd0'], ['Al', 'Al³⁺', -16620, 3, 1, null, '#cfd3d8'],
+    ['Sn', 'Sn²⁺', -1375, 2, 1, null, '#bfc3c7'], ['Co', 'Co²⁺', -2800, 2, 1, '#e07aa0', '#8a8f99'], ['Cd', 'Cd²⁺', -4030, 2, 1, null, '#a3a9b1'],
+    ['Au', 'Au³⁺', 14980, 3, 1, '#e0c02a', '#d4af37'], ['H2', 'H⁺', 0, 2, 2, null, '#d9d9d9']
+  ].map(function (r) { return { id: r[0], ion: r[1], E: r[2], e: r[3], a: r[4], col: r[5], metal: r[6] }; });
+  var byId = {}; METALS.forEach(function (m) { byId[m.id] = m; });
+  var F = 96485, K59 = 0.0592, R_VM = 1.0e7, R_LAMP = 10, VOL = 0.100, TSCALE = 9000, CMIN = 0.001, CMAX = 2.0, IDLE_STOP_S = 120;
+
+  // ===========================================================================
+  // Arithmetic
+  // ===========================================================================
+  function gcd(a, b) { return b ? gcd(b, a % b) : a; }
+  function nOf(L, R) { return L.id === R.id ? L.e : L.e * R.e / gcd(L.e, R.e); }
+  function e0int(L, R) { return L.id === R.id ? 0 : R.E - L.E; }   // E°cell in 0.0001 V
+  function logQ(L, R, cl, cr) { var n = nOf(L, R); return n * L.a / L.e * Math.log10(cl) - n * R.a / R.e * Math.log10(cr); }
+  function Ecell(L, R, cl, cr) { if (cl <= 0) return Infinity; if (cr <= 0) return -Infinity; return e0int(L, R) / 1e4 - K59 / nOf(L, R) * logQ(L, R, cl, cr); }
+  function rnd(x, d) { var p = Math.pow(10, d); var v = Math.round(Math.abs(x) * p + 1e-9) / p; return (x < 0 && v !== 0 ? '−' : '') + v.toFixed(d); }
+  function sup(n) { return String(n).replace(/-/g, '⁻').replace(/[0-9]/g, function (c) { return '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]; }); }
+  function sciL(l) {   // a number given by its log₁₀, 3 significant figures; plain between 0.001 and 9999
+    if (!isFinite(l)) return l > 0 ? '∞' : '0';
+    var e = Math.floor(l), m = Math.pow(10, l - e); m = Math.round(m * 100) / 100; if (m >= 10) { m /= 10; e += 1; }
+    if (e >= -3 && e <= 3) { var v = Math.pow(10, l), d = Math.max(0, 2 - Math.floor(Math.log10(v) + 1e-12)); return (Math.round(v * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d); }
+    return m.toFixed(2) + ' × 10' + sup(e);
+  }
+  function sig3(v) { return v === 0 ? '0' : sciL(Math.log10(v)); }
+
+  // ===========================================================================
+  // URL parameters
+  // ===========================================================================
+  var params = new URLSearchParams(window.location.search), notices = [];
+  function isPlaceholder(v) { return /^\{.*\}$/.test(v || ''); }
+  function readMetal(key, def) {
+    var v = (params.get(key) || '').trim(); if (!v) return def;
+    if (byId[v]) return v; notices.push(isPlaceholder(v) ? 'No ' + key + ' half-cell given; showing ' + def + '.' : 'No data for “' + v.slice(0, 20) + '”; showing ' + def + '.'); return def;
+  }
+  function readConc(key) {
+    if (!params.has(key)) return 1.0; var raw = params.get(key), v = parseFloat(raw);
+    if (!isFinite(v) || v <= 0) { notices.push(isPlaceholder(raw) ? 'No ' + key + ' given; using 1.0 M.' : 'Could not read ' + key + '; using 1.0 M.'); return 1.0; }
+    if (v < CMIN || v > CMAX) { var c = v < CMIN ? CMIN : CMAX; notices.push(key + ' = ' + raw.slice(0, 12) + ' M is outside 0.0010 to 2.0 M; using ' + c + ' M.'); return c; }
+    return v;
+  }
+  var st = { left: readMetal('left', 'Zn'), right: readMetal('right', 'Cu'), cl: readConc('cl'), cr: readConc('cr'), circuit: params.get('circuit') === 'lamp' ? 'lamp' : 'voltmeter',
+    running: false, started: false, lastInput: 0, t: 0, gainL: 0, gainR: 0 };   // gain: mol of metal gained (+) or lost (−) at each electrode
+  var notice = document.getElementById('notice');
+  if (notices.length) { notice.textContent = notices.join(' '); notice.hidden = false; }
+  var themeParam = (params.get('theme') || '').trim().toLowerCase();
+  var darkQ = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  var reduceQ = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var colours = null;
+  function applyTheme() { var t = (themeParam === 'light' || themeParam === 'dark') ? themeParam : (darkQ && darkQ.matches ? 'dark' : 'light'); document.documentElement.setAttribute('data-theme', t); colours = null; }
+  function isReduced() { return !!(reduceQ && reduceQ.matches); }
+
+  // ===========================================================================
+  // Helpers (labels and attributes written only when they change: the Safari fix)
+  // ===========================================================================
+  var el = function (id) { return document.getElementById(id); };
+  function setText(id, t) { var e = typeof id === 'string' ? el(id) : id; if (e.textContent !== t) e.textContent = t; }
+  function setAttr(e, n, v) { if (e.getAttribute(n) !== v) e.setAttribute(n, v); }
+  function setDisabled(id, d) { var e = el(id); if (e.disabled !== d) e.disabled = d; }
+  function spoken(t) {
+    return t.replace(/( × )?10([⁻]?)([⁰¹²³⁴⁵⁶⁷⁸⁹]+)/g, function (a, x, m, d) { return (x ? ' times ' : '') + '10 to the ' + (m ? 'minus ' : '') + d.split('').map(function (c) { return '⁰¹²³⁴⁵⁶⁷⁸⁹'.indexOf(c); }).join(''); })
+      .replace(/−(\d)/g, 'minus $1').replace(/E°cell/g, 'E standard cell').replace(/ΔG°/g, 'delta G standard').replace(/(\d) V\b/g, '$1 volts').replace(/(\d) kJ\b/g, '$1 kilojoules').replace(/(\d) M\b/g, '$1 molar').replace(/(\d) A\b/g, '$1 amperes');
+  }
+  var live = el('live');
+  function say(msg) { live.textContent = ''; setTimeout(function () { live.textContent = spoken(msg); }, 30); }
+  var FONT = 'system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif';
+  function C(n) { if (!colours) colours = {}; if (!(n in colours)) colours[n] = getComputedStyle(document.documentElement).getPropertyValue('--' + n).trim(); return colours[n]; }
+  function drawE(ctx, x, y, r) { ctx.beginPath(); ctx.arc(x, y, r, 0, 6.283); ctx.fillStyle = C('bg'); ctx.fill(); ctx.strokeStyle = C('fg'); ctx.lineWidth = 0.8; ctx.stroke(); ctx.beginPath(); ctx.moveTo(x - r * 0.55, y + 0.25); ctx.lineTo(x + r * 0.55, y + 0.25); ctx.stroke(); }   // an electron: open circle with a minus sign
+  function sizeCanvas(cv, bg) {
+    var w = cv.clientWidth, h = cv.clientHeight, dpr = window.devicePixelRatio || 1; if (!w || !h) return null;
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    var ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = bg || C('bg'); ctx.fillRect(0, 0, w, h); return { ctx: ctx, W: w, H: h };
+  }
+  function Lm() { return byId[st.left]; } function Rm() { return byId[st.right]; }
+  function E() { return Ecell(Lm(), Rm(), st.cl, st.cr); }
+  function shownZero() { return Math.abs(E()) < 0.00005; }   // decided at the shown precision (4 decimals)
+  function current() { return E() / (st.circuit === 'lamp' ? R_LAMP : R_VM); }   // A; sign as written (+: electrons leave the left electrode)
+  function halfLabel(m) { return m.id === 'H2' ? 'Pt(s) | H₂(g, 1 atm)' : m.id + '(s)'; }
+  function notation() {
+    var L = Lm(), R = Rm();
+    return (L.id === 'H2' ? 'Pt(s) | H₂(g) | ' : L.id + '(s) | ') + L.ion + '(aq, ' + sig3(st.cl) + ' M) || ' + R.ion + '(aq, ' + sig3(st.cr) + ' M)' + (R.id === 'H2' ? ' | H₂(g) | Pt(s)' : ' | ' + R.id + '(s)');
+  }
+
+  // ===========================================================================
+  // Running the cell: the charge I·dt moves the concentrations the way the reaction runs, never past E = 0
+  // ===========================================================================
+  // With the voltmeter, real time is compressed a fixed 9000 times. With the lamp, each second on screen closes the gap in
+  // log₁₀[ion being reduced] between now and E = 0 by 1 − e^(−0.5): the simulated time for each step is its charge ÷ the current,
+  // so "Time run" stays true; a cell with a small current is simply shown faster.
+  function advance(dtReal) {
+    var L = Lm(), R = Rm(), e = E(); if (shownZero()) return;
+    var s = e > 0 ? 1 : -1, an = s > 0 ? L : R, cat = s > 0 ? R : L, x0 = s > 0 ? st.cl : st.cr, y0 = s > 0 ? st.cr : st.cl;
+    var ratio = (an.a / an.e) / (cat.a / cat.e);   // anode ions made for each cathode ion used
+    function Ey(y) { var x = x0 + (y0 - y) * ratio; return s > 0 ? Ecell(L, R, x, y) : Ecell(L, R, y, x); }   // E as written, with y the cathode ion
+    var lo = -300, hi = Math.log10(y0);   // log₁₀ y where E = 0: E keeps its sign at y0 and changes it as y → 0
+    for (var k = 0; k < 90; k++) { var mid = (lo + hi) / 2; if (Ey(Math.pow(10, mid)) * e > 0) hi = mid; else lo = mid; }
+    var lyEq = hi, ly0 = Math.log10(y0), ly;
+    if (st.circuit === 'lamp') { ly = ly0 + (lyEq - ly0) * (1 - Math.exp(-0.5 * dtReal)); if (Math.abs(ly - lyEq) < 1e-6) ly = lyEq; }
+    else { var dq = Math.abs(current()) * dtReal * TSCALE / F, dy = dq * cat.a / cat.e / VOL; ly = Math.max(lyEq, Math.log10(Math.max(y0 - dy, 1e-300))); }
+    var y = Math.pow(10, ly), x = x0 + (y0 - y) * ratio, q = (y0 - y) * VOL * cat.e / cat.a;   // mol e⁻ passed
+    var I = Math.abs(current());
+    if (s > 0) { st.cl = x; st.cr = y; } else { st.cr = x; st.cl = y; }
+    if (an.id !== 'H2') { if (s > 0) st.gainL -= q / an.e; else st.gainR -= q / an.e; }
+    if (cat.id !== 'H2') { if (s > 0) st.gainR += q / cat.e; else st.gainL += q / cat.e; }
+    st.t += I > 0 ? q * F / ((I + Math.abs(current())) / 2) : 0;
+  }
+
+  // ===========================================================================
+  // Particles: ions in each solution, electrons in the wire, Na⁺ and NO₃⁻ in the bridge
+  // ===========================================================================
+  var rng = 7; function rand() { rng = (rng + 0x6D2B79F5) | 0; var t = Math.imul(rng ^ (rng >>> 15), 1 | rng); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }
+  var ions = { L: [], R: [] }, bridge = [], wireMarks = [], phase = 0;
+  function ionCount(c) { return Math.max(0, Math.min(16, 1 + Math.round(4 * (Math.log10(Math.max(c, 1e-12)) + 3)))); }
+  function syncIons(box, side, c) {
+    var want = c < CMIN * 0.5 ? (c > 1e-9 ? 1 : 0) : ionCount(c), list = ions[side];
+    while (list.length < want) list.push({ x: box.x + 6 + rand() * (box.w - 12), y: box.y + 6 + rand() * (box.h - 12), vx: rand() - 0.5, vy: rand() - 0.5 });
+    while (list.length > want) list.pop();
+  }
+  (function seedBridge() { for (var i = 0; i < 8; i++) bridge.push({ u: (i + 0.5) / 8, ion: i % 2 ? 'NO3' : 'Na' }); for (i = 0; i < 10; i++) wireMarks.push((i + 0.5) / 10); })();
+  function flowSpeed() { var I = Math.abs(current()); if (shownZero() || I <= 0) return 0; return Math.max(0.04, Math.min(1, (Math.log10(I) + 9) / 8)); }   // log scale: about 0.25 at 10⁻⁷ A, 1 at 0.1 A
+
+  // ===========================================================================
+  // The scene
+  // ===========================================================================
+  var sceneCv = el('scene'), GEO = null;
+  function drawScene() {
+    var cv = sizeCanvas(sceneCv, C('win-bg')); if (!cv) return;
+    var ctx = cv.ctx, W = cv.W, H = cv.H, L = Lm(), R = Rm(), e = E(), zero = shownZero(), leftAnode = e > 0;
+    var bw = 104, bh = 86, by = H - bh - 22, bxL = 8, bxR = W - bw - 8, sy = by + 22;   // beakers; solution from sy down
+    GEO = { L: { x: bxL + 2, y: sy, w: bw - 4, h: by + bh - sy - 2 }, R: { x: bxR + 2, y: sy, w: bw - 4, h: by + bh - sy - 2 } };
+    ctx.font = '10px ' + FONT;
+    // solutions
+    [[bxL, L, st.cl], [bxR, R, st.cr]].forEach(function (b) {
+      ctx.fillStyle = C('water'); ctx.fillRect(b[0] + 1, sy, bw - 2, by + bh - sy - 1);
+      if (b[1].col) { ctx.globalAlpha = Math.max(0.06, Math.min(0.75, 0.12 + 0.18 * (Math.log10(Math.max(b[2], 1e-6)) + 3))); ctx.fillStyle = b[1].col; ctx.fillRect(b[0] + 1, sy, bw - 2, by + bh - sy - 1); ctx.globalAlpha = 1; }
+      ctx.strokeStyle = C('rule'); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(b[0], by); ctx.lineTo(b[0], by + bh); ctx.lineTo(b[0] + bw, by + bh); ctx.lineTo(b[0] + bw, by); ctx.stroke();
+    });
+    // ions in the solutions
+    syncIons(GEO.L, 'L', st.cl); syncIons(GEO.R, 'R', st.cr);
+    [['L', L], ['R', R]].forEach(function (s) {
+      ions[s[0]].forEach(function (p) { ctx.beginPath(); ctx.arc(p.x, p.y, 3.2, 0, 6.283); ctx.fillStyle = s[1].col || C('muted'); ctx.fill(); ctx.strokeStyle = C('fg'); ctx.lineWidth = 0.7; ctx.stroke(); ctx.fillStyle = C('fg'); ctx.font = '700 7px ' + FONT; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('+', p.x + 4.5, p.y - 4); });
+    });
+    // electrodes (thicken or thin with metal gained or lost; not to scale)
+    var exL = bxL + 26, exR = bxR + bw - 26, etop = by - 18, ebot = by + bh - 10;
+    function electrode(x, m, gain) {
+      var w = m.id === 'H2' ? 8 : Math.max(4, Math.min(20, 10 + gain * 40));
+      ctx.fillStyle = m.metal; ctx.fillRect(x - w / 2, etop, w, ebot - etop); ctx.strokeStyle = C('fg'); ctx.lineWidth = 0.8; ctx.strokeRect(x - w / 2 + 0.5, etop + 0.5, w - 1, ebot - etop - 1);
+      if (m.id === 'H2') { ctx.strokeStyle = C('muted'); ctx.beginPath(); ctx.moveTo(x - 7, etop - 4); ctx.lineTo(x - 7, ebot - 20); ctx.lineTo(x + 7, ebot - 20); ctx.lineTo(x + 7, etop - 4); ctx.stroke(); for (var i = 0; i < 3; i++) { ctx.beginPath(); ctx.arc(x + 3 - i * 3, ebot - 28 - ((phase * 30 + i * 9) % 30), 1.6, 0, 6.283); ctx.stroke(); } }
+      ctx.fillStyle = C('fg'); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.font = '9px ' + FONT; ctx.fillText(m.id === 'H2' ? 'Pt, H₂' : m.id, x, ebot + 2 > by + bh ? by + bh + 1 : by + bh + 1);
+    }
+    electrode(exL, L, st.gainL); electrode(exR, R, st.gainR);
+    // salt bridge: an inverted U between the beakers
+    var bx0 = bxL + bw - 18, bx1 = bxR + 18, btop = by - 6, bdepth = sy + 22;
+    ctx.strokeStyle = C('rule'); ctx.lineWidth = 9; ctx.lineJoin = 'round'; ctx.beginPath(); ctx.moveTo(bx0, bdepth); ctx.lineTo(bx0, btop); ctx.lineTo(bx1, btop); ctx.lineTo(bx1, bdepth); ctx.stroke();
+    ctx.strokeStyle = C('glass'); ctx.lineWidth = 6; ctx.stroke(); ctx.lineJoin = 'miter';
+    var bl = (bdepth - btop) * 2 + (bx1 - bx0);
+    function bridgeXY(u) { var d = u * bl, a = bdepth - btop; if (d < a) return [bx0, bdepth - d]; d -= a; if (d < bx1 - bx0) return [bx0 + d, btop]; d -= bx1 - bx0; return [bx1, btop + d]; }
+    bridge.forEach(function (b) {   // Na⁺ a purple disc; NO₃⁻ a nitrogen-blue and oxygen-red disc; each with its charge sign
+      var p = bridgeXY(b.u), r = 2.8;
+      if (b.ion === 'Na') { ctx.beginPath(); ctx.arc(p[0], p[1], r, 0, 6.283); ctx.fillStyle = '#8e44ad'; ctx.fill(); }
+      else { ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.arc(p[0], p[1], r, -Math.PI / 2, Math.PI / 6); ctx.closePath(); ctx.fillStyle = '#2f5fd0'; ctx.fill(); ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.arc(p[0], p[1], r, Math.PI / 6, 3 * Math.PI / 2); ctx.closePath(); ctx.fillStyle = '#d13b2a'; ctx.fill(); }
+      ctx.beginPath(); ctx.arc(p[0], p[1], r, 0, 6.283); ctx.strokeStyle = C('fg'); ctx.lineWidth = 0.6; ctx.stroke();
+    });
+    ctx.fillStyle = C('muted'); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.font = '9px ' + FONT; ctx.fillText('NaNO₃', (bx0 + bx1) / 2, btop + 8); ctx.fillText('bridge', (bx0 + bx1) / 2, btop + 18);
+    // wire and meter (or lamp), above
+    var wy = 14, mx = W / 2, mw = 70, mh = 24;
+    ctx.strokeStyle = C('wire'); ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(exL, etop); ctx.lineTo(exL, wy + mh / 2); ctx.lineTo(mx - mw / 2, wy + mh / 2); ctx.moveTo(mx + mw / 2, wy + mh / 2); ctx.lineTo(exR, wy + mh / 2); ctx.lineTo(exR, etop); ctx.stroke();
+    // meter: red (+) lead to the right electrode, black (−) to the left, so it reads E as written
+    ctx.fillStyle = C('bg'); ctx.fillRect(mx - mw / 2, wy, mw, mh); ctx.strokeStyle = C('fg'); ctx.lineWidth = 1; ctx.strokeRect(mx - mw / 2 + 0.5, wy + 0.5, mw - 1, mh - 1);
+    ctx.fillStyle = C('fg'); ctx.font = '600 12px ' + FONT; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(rnd(e, 3) + ' V', mx, wy + mh / 2 + 1);
+    ctx.font = '700 9px ' + FONT; ctx.fillStyle = '#c0392b'; ctx.fillText('+', mx + mw / 2 - 6, wy + 6); ctx.fillStyle = C('fg'); ctx.fillText('−', mx - mw / 2 + 6, wy + 6);
+    if (st.circuit === 'lamp') {   // a lamp across the same terminals; its glow follows the power I²R
+      var lx = mx, ly = wy + mh + 16, P = Math.min(1, Math.pow(current(), 2) * R_LAMP / 0.12);
+      ctx.strokeStyle = C('wire'); ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(mx - mw / 2 - 10, wy + mh / 2); ctx.lineTo(mx - mw / 2 - 10, ly); ctx.lineTo(lx - 7, ly); ctx.moveTo(lx + 7, ly); ctx.lineTo(mx + mw / 2 + 10, ly); ctx.lineTo(mx + mw / 2 + 10, wy + mh / 2); ctx.stroke();
+      if (P > 0.01) { ctx.globalAlpha = 0.25 + 0.6 * P; ctx.fillStyle = C('lamp'); ctx.beginPath(); ctx.arc(lx, ly, 7 + 5 * P, 0, 6.283); ctx.fill(); ctx.globalAlpha = 1; }
+      ctx.beginPath(); ctx.arc(lx, ly, 6.5, 0, 6.283); ctx.strokeStyle = C('fg'); ctx.lineWidth = 1; ctx.stroke(); ctx.beginPath(); ctx.moveTo(lx - 4, ly - 4); ctx.lineTo(lx + 4, ly + 4); ctx.moveTo(lx + 4, ly - 4); ctx.lineTo(lx - 4, ly + 4); ctx.stroke();
+    }
+    // electrons in the wire: from the electrode being oxidized to the one being reduced
+    var path = [[exL, etop], [exL, wy + mh / 2], [exR, wy + mh / 2], [exR, etop]], plen = 0, segs = [];
+    for (var i = 1; i < path.length; i++) { var d = Math.hypot(path[i][0] - path[i - 1][0], path[i][1] - path[i - 1][1]); segs.push(d); plen += d; }
+    function wireXY(u) { var dd = u * plen; for (var j = 0; j < segs.length; j++) { if (dd <= segs[j]) { var f = dd / segs[j]; return [path[j][0] + (path[j + 1][0] - path[j][0]) * f, path[j][1] + (path[j + 1][1] - path[j][1]) * f]; } dd -= segs[j]; } return path[3]; }
+    if (!zero) wireMarks.forEach(function (u) { var p = wireXY(u); if (p[0] > mx - mw / 2 - 2 && p[0] < mx + mw / 2 + 2 && Math.abs(p[1] - (wy + mh / 2)) < 2) return; drawE(ctx, p[0], p[1], 2.8); });
+    // anode and cathode labels: by what actually happens; none where E reads 0
+    ctx.font = '600 9.5px ' + FONT; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillStyle = C('fg');
+    if (!zero) { ctx.fillText(leftAnode ? 'anode (−)' : 'cathode (+)', bxL + bw / 2, by + bh + 10); ctx.fillText(leftAnode ? 'cathode (+)' : 'anode (−)', bxR + bw / 2, by + bh + 10); }
+    else { ctx.fillStyle = C('muted'); ctx.fillText('E = 0', bxL + bw / 2, by + bh + 10); ctx.fillText('E = 0', bxR + bw / 2, by + bh + 10); }
+    ctx.fillStyle = C('muted'); ctx.font = '9px ' + FONT; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('left', bxL, by - 10); ctx.textAlign = 'right'; ctx.fillText('right', bxR + bw, by - 10);
+  }
+  function stepMotion(dt) {
+    var sp = flowSpeed(), dir = E() > 0 ? 1 : -1;
+    phase = (phase + dt * (0.2 + sp)) % 1;
+    for (var i = 0; i < wireMarks.length; i++) wireMarks[i] = ((wireMarks[i] + dir * sp * dt * 0.25) % 1 + 1) % 1;
+    bridge.forEach(function (b) {   // cations toward the cathode, anions toward the anode; the anode is left when E > 0
+      var toRight = (b.ion === 'Na') === (dir > 0); b.u += (toRight ? 1 : -1) * sp * dt * 0.05;
+      if (b.u > 0.98) b.u = 0.02; if (b.u < 0.02) b.u = 0.98;
+    });
+    ['L', 'R'].forEach(function (s) { var box = GEO && GEO[s]; if (!box) return; ions[s].forEach(function (p) { p.x += p.vx * 6 * dt; p.y += p.vy * 6 * dt; if (rand() < 2 * dt) { p.vx = rand() - 0.5; p.vy = rand() - 0.5; }
+      if (p.x < box.x + 4) { p.x = box.x + 4; p.vx = Math.abs(p.vx); } if (p.x > box.x + box.w - 6) { p.x = box.x + box.w - 6; p.vx = -Math.abs(p.vx); }
+      if (p.y < box.y + 4) { p.y = box.y + 4; p.vy = Math.abs(p.vy); } if (p.y > box.y + box.h - 4) { p.y = box.y + box.h - 4; p.vy = -Math.abs(p.vy); } }); });
+  }
+
+  // ===========================================================================
+  // b. E against log Q
+  // ===========================================================================
+  var panelCv = el('panel');
+  function drawPanel() {
+    var cv = sizeCanvas(panelCv); if (!cv) return;
+    var ctx = cv.ctx, W = cv.W, H = cv.H, L = Lm(), R = Rm(), n = nOf(L, R), e0 = e0int(L, R) / 1e4, lq = logQ(L, R, st.cl, st.cr), lk = n * e0 / K59;
+    var lo = Math.min(lq, lk, 0), hi = Math.max(lq, lk, 0), span = Math.max(hi - lo, 4); lo -= span * 0.12; hi += span * 0.12;
+    var px0 = 44, px1 = W - 10, py0 = 18, py1 = H - 22;
+    var f = function (x) { return e0 - K59 / n * x; }, ya = f(lo), yb = f(hi), ymin = Math.min(ya, yb, 0), ymax = Math.max(ya, yb, 0), pad = (ymax - ymin) * 0.1 || 0.1; ymin -= pad; ymax += pad;
+    var X = function (x) { return px0 + (x - lo) / (hi - lo) * (px1 - px0); }, Y = function (v) { return py1 - (v - ymin) / (ymax - ymin) * (py1 - py0); }, zy = Y(0);
+    ctx.fillStyle = C('above'); ctx.fillRect(px0, py0, px1 - px0, zy - py0); ctx.fillStyle = C('below'); ctx.fillRect(px0, zy, px1 - px0, py1 - zy);
+    ctx.strokeStyle = C('rule'); ctx.lineWidth = 1; ctx.strokeRect(px0 + 0.5, py0 + 0.5, px1 - px0, py1 - py0);
+    ctx.font = '600 10px ' + FONT; ctx.fillStyle = C('fg'); ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('b. E in V against log Q', px0, 3);
+    ctx.font = '10px ' + FONT; ctx.fillStyle = C('muted'); ctx.textBaseline = 'middle';
+    var g1 = Y(yb), tl = g1 < py0 + 16; if (zy - py0 > 13) { ctx.textAlign = tl ? 'left' : 'right'; ctx.fillText('E > 0', tl ? px0 + 4 : px1 - 4, py0 + 7); }
+    if (py1 - zy > 13) { ctx.textAlign = tl ? 'right' : 'left'; ctx.fillText('E < 0', tl ? px1 - 4 : px0 + 4, py1 - 7); }
+    ctx.textAlign = 'right'; ctx.fillText('0', px0 - 3, zy);
+    var yt = Math.pow(10, Math.floor(Math.log10(Math.max(Math.abs(ymax), Math.abs(ymin))))), dy = Math.max(0, -Math.floor(Math.log10(yt) + 1e-9)); [ymax, ymin].forEach(function (v) { var t = Math.trunc(v / yt) * yt; if (t !== 0 && Math.abs(Y(t) - zy) > 11) ctx.fillText(rnd(t, dy), px0 - 3, Y(t)); });
+    var stepX = Math.pow(10, Math.floor(Math.log10((hi - lo) / 2))); if ((hi - lo) / stepX > 8) stepX *= 2; if ((hi - lo) / stepX > 8) stepX *= 2.5;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (var v = Math.ceil(lo / stepX) * stepX; v <= hi; v += stepX) { ctx.strokeStyle = C('rule'); ctx.beginPath(); ctx.moveTo(Math.round(X(v)) + 0.5, py1); ctx.lineTo(Math.round(X(v)) + 0.5, py1 + 3); ctx.stroke(); if (X(v) < px1 - 30) { ctx.fillStyle = C('muted'); ctx.fillText(rnd(v, Math.max(0, -Math.floor(Math.log10(stepX) + 1e-9))), X(v), py1 + 4); } }
+    ctx.textAlign = 'right'; ctx.fillText('log Q', px1, py1 + 4 > H - 12 ? H - 12 : py1 + 4);
+    ctx.strokeStyle = C('fg'); ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(px0, Math.round(zy) + 0.5); ctx.lineTo(px1, Math.round(zy) + 0.5); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = C('curve'); ctx.lineWidth = 1.8; ctx.beginPath(); ctx.moveTo(X(lo), Y(ya)); ctx.lineTo(X(hi), Y(yb)); ctx.stroke();
+    ctx.strokeStyle = C('fg'); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(X(lk), zy, 5, 0, 6.283); ctx.stroke();
+    var kl = X(lk) > px1 - 50; ctx.fillStyle = C('fg'); ctx.textAlign = kl ? 'right' : 'left'; ctx.textBaseline = 'middle'; ctx.fillText('Q = K', X(lk) + (kl ? -8 : 8), zy + 11);
+    var xm = X(lq), ym = Y(f(lq));
+    ctx.strokeStyle = C('focus'); ctx.lineWidth = 1; ctx.setLineDash([2, 3]); ctx.beginPath(); ctx.moveTo(Math.round(xm) + 0.5, py0); ctx.lineTo(Math.round(xm) + 0.5, py1); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = C('focus'); ctx.beginPath(); ctx.arc(xm, ym, 3.8, 0, 6.283); ctx.fill();
+  }
+
+  // ===========================================================================
+  // Sliders: powers of ten, 0.0010 to 2.0 M; arrows a tenth of a power, Page keys a whole power
+  // ===========================================================================
+  function posFromVal(v) { return Math.max(-300, Math.min(30, Math.round(Math.log10(v) * 100))); }
+  function valFromPos(p) { var v = Math.pow(10, p / 100), e = Math.floor(Math.log10(v)); return Math.min(CMAX, Math.round(v / Math.pow(10, e - 2)) * Math.pow(10, e - 2)); }
+  function wireSlider(id, key) {
+    var inp = el(id);
+    inp.addEventListener('input', function () { st[key] = valFromPos(parseInt(inp.value, 10)); resetRun(); changed(''); });
+    inp.addEventListener('keydown', function (e) {
+      var p = posFromVal(st[key]), ok = true;
+      switch (e.key) { case 'ArrowRight': case 'ArrowUp': p += 10; break; case 'ArrowLeft': case 'ArrowDown': p -= 10; break; case 'PageUp': p += 100; break; case 'PageDown': p -= 100; break; case 'Home': p = -300; break; case 'End': p = 30; break; default: ok = false; }
+      if (ok) { e.preventDefault(); st[key] = valFromPos(Math.max(-300, Math.min(30, p))); resetRun(); changed(''); }
+    });
+  }
+  function resetRun() { st.t = 0; st.gainL = 0; st.gainR = 0; }
+
+  // ===========================================================================
+  // Text
+  // ===========================================================================
+  function readout() { return notation() + '. E ' + rnd(E(), 4) + ' V; E°cell ' + rnd(e0int(Lm(), Rm()) / 1e4, 4) + ' V; current ' + sig3(Math.abs(current())) + ' A.'; }
+  var lastSliderWrite = 0;
+  function updateText() {
+    var L = Lm(), R = Rm(), n = nOf(L, R), e0 = e0int(L, R) / 1e4, lq = logQ(L, R, st.cl, st.cr), e = E(), I = current(), zero = shownZero();
+    setText('rE0', rnd(e0, 4) + ' V'); setText('rN', String(n)); setText('rQ', sciL(lq)); setText('rE', rnd(e, 4) + ' V');
+    setText('rG', rnd(-n * F * e0 / 1000, 1) + ' kJ'); setText('rK', sciL(n * e0 / K59));
+    setText('rI', zero ? '0 A' : sig3(Math.abs(I)) + ' A'); setText('rT', st.t > 0 ? sig3(st.t / 3600) + ' h' : '0 h');
+    setText('clLab', '[' + L.ion + '], left'); setText('crLab', '[' + R.ion + '], right');
+    var now = performance.now(), sliderTurn = !st.running || now - lastSliderWrite > 400; if (sliderTurn) lastSliderWrite = now;
+    if (sliderTurn) [['cl', 'vcl', st.cl], ['cr', 'vcr', st.cr]].forEach(function (s) {
+      var inp = el(s[0]), p = String(posFromVal(s[2])); if (inp.value !== p) inp.value = p;
+      var txt = sig3(s[2]) + ' M'; setText(s[1], txt); setAttr(inp, 'aria-valuetext', spoken(txt));
+    });
+    if (el('left').value !== st.left) el('left').value = st.left; if (el('right').value !== st.right) el('right').value = st.right;
+    if (el('circuit').value !== st.circuit) el('circuit').value = st.circuit;
+    var out = notation() + '. ' + (st.running && !zero ? 'Readings are changing.' : 'Readings are steady.');
+    if (!st.running && !isReduced()) out += st.started ? ' Paused.' : ' Paused. Press Play to watch.';
+    setText('status', out);
+    setText('play', st.running ? 'Pause' : 'Play');
+    setText('caption', 'a. Not to scale. Left is the anode as written; the meter (red + lead right) reads E as written. Labels, electrons (e⁻, open circles) and the bridge’s Na⁺ (purple) and NO₃⁻ (blue and red) follow what happens, at speeds set by the current (log scale). Voltmeter 10 MΩ, lamp 10 Ω, 0.100 L each; Play compresses time; Time run gives the hours.');
+    setText('caption2', 'b. E = E°cell − (0.0592 V ÷ n) log Q, simulated; ring at Q = K; marked point at the slider positions. Ions drawn 1 at 0.0010 M, 13 at 1 M.');
+    setText('quick', 'Quick start: press Play, pick the half-cells and the circuit, and move the sliders.');
+    setText('descScene', spoken(notation() + '. The meter reads ' + rnd(e, 3) + ' V. ' + (zero ? 'E reads zero: no current, no labels.' : 'The ' + (e > 0 ? 'left' : 'right') + ' electrode is labelled anode and the ' + (e > 0 ? 'right' : 'left') + ' cathode; electrons move in the wire from the ' + (e > 0 ? 'left' : 'right') + ' electrode to the ' + (e > 0 ? 'right' : 'left') + ', Na⁺ in the bridge toward the cathode and NO₃⁻ toward the anode. Current ' + sig3(Math.abs(I)) + ' A through the ' + st.circuit + '.')));
+    setText('descPanel', spoken('Plot of E against log Q: a straight line through E°cell = ' + rnd(e0, 4) + ' V at log Q = 0, crossing zero at log Q = log K = ' + rnd(n * e0 / K59, 2) + ', ringed. The marked point at the slider positions: log Q = ' + rnd(lq, 2) + ', E = ' + rnd(e, 4) + ' V, ' + (zero ? 'on' : e > 0 ? 'above' : 'below') + ' the zero line.'));
+  }
+
+  // ===========================================================================
+  // Loop
+  // ===========================================================================
+  var rafId = null, lastT = 0, stepAcc = 0;
+  function render() { drawScene(); drawPanel(); updateText(); }
+  function frame(t) {
+    rafId = null; var dt = Math.min(0.05, Math.max(0, (t - lastT) / 1000)); lastT = t;
+    advance(dt); stepMotion(dt); render();
+    if ((performance.now() - st.lastInput) / 1000 > IDLE_STOP_S) { stop(); say('Paused after two minutes without input.'); return; }
+    schedule();
+  }
+  function schedule() { if (st.running && !rafId) { if (isReduced()) { setTimeout(function () { if (!st.running) return; advance(1); render(); schedule(); }, 1000); } else rafId = requestAnimationFrame(frame); } }
+  function start() { st.lastInput = performance.now(); st.started = true; if (!st.running) { st.running = true; lastT = performance.now(); } schedule(); render(); }
+  function stop() { st.running = false; if (rafId) { cancelAnimationFrame(rafId); rafId = null; } render(); say(readout()); }
+
+  // ===========================================================================
+  // Controls
+  // ===========================================================================
+  var restTimer = null;
+  function changed(msg) { st.lastInput = performance.now(); render(); if (restTimer) clearTimeout(restTimer); restTimer = setTimeout(function () { restTimer = null; say((msg ? msg + ' ' : '') + readout()); }, 500); }
+  [el('left'), el('right')].forEach(function (sel) { METALS.forEach(function (m) { var o = document.createElement('option'); o.value = m.id; o.textContent = m.id === 'H2' ? 'H⁺/H₂ (Pt)' : m.ion + '/' + m.id; sel.appendChild(o); }); });
+  el('left').addEventListener('change', function () { st.left = el('left').value; st.cl = 1.0; resetRun(); ions.L = []; changed('Left half-cell ' + Lm().ion + ', 1.0 M.'); });
+  el('right').addEventListener('change', function () { st.right = el('right').value; st.cr = 1.0; resetRun(); ions.R = []; changed('Right half-cell ' + Rm().ion + ', 1.0 M.'); });
+  el('circuit').addEventListener('change', function () { st.circuit = el('circuit').value; changed('Circuit: ' + st.circuit + '.'); });
+  el('play').addEventListener('click', function () { if (st.running) stop(); else start(); });
+  wireSlider('cl', 'cl'); wireSlider('cr', 'cr');
+
+  // ===========================================================================
+  // Start: paused
+  // ===========================================================================
+  applyTheme();
+  if (darkQ && themeParam !== 'light' && themeParam !== 'dark') { var cw = function () { applyTheme(); render(); }; if (darkQ.addEventListener) darkQ.addEventListener('change', cw); else if (darkQ.addListener) darkQ.addListener(cw); }
+  if (window.ResizeObserver) new ResizeObserver(function () { render(); }).observe(document.body); else window.addEventListener('resize', render);
+  render();
+})();
+</script>
+</body>
+</html>

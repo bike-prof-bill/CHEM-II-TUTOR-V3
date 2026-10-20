@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Clausius-Clapeyron Human-Friendly Lab</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 15px; background: #f8fafc; color: #1e293b; }
+    .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.07); }
+    .controls { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; align-items: center; }
+    button.action-btn { background: #2563eb; color: white; border: none; padding: 9px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px; }
+    button.action-btn:hover { background: #1d4ed8; }
+    select, input[type=range] { padding: 5px; border: 1px solid #cbd5e1; border-radius: 4px; }
+    .chart-container { display: flex; gap: 14px; margin-top: 12px; flex-wrap: wrap; }
+    .chart-box { flex: 1; min-width: 300px; background: #ffffff; border: 1px solid #e2e8f0; padding: 10px; border-radius: 8px; }
+    .output-box { background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 8px; padding: 16px; margin-top: 16px; }
+    .eq-pill { font-size: 1.15rem; font-family: "Courier New", Courier, monospace; font-weight: bold; background: #ffffff; border: 1px solid #bbf7d0; padding: 6px 12px; border-radius: 6px; display: inline-block; margin: 6px 0; color: #166534; }
+    .param-list { margin: 8px 0; font-size: 0.95rem; line-height: 1.5; color: #334155; }
+    .copy-btn { background: #15803d; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; margin-top: 10px; font-size: 14px; }
+    .copy-btn:hover { background: #166534; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h3 style="margin-top:0; color:#0f172a; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px;">
+    ⚗️ Clausius-Clapeyron Interactive Lab
+  </h3>
+  
+  <div class="controls">
+    <button class="action-btn" onclick="randomCC()">🎲 Generate Random Unknown</button>
+    <label><b>Liquid:</b> 
+      <select id="presetSelect" onchange="applyCCPreset()">
+        <option value="custom">Custom / Random Unknown</option>
+        <option value="water">Water (H₂O)</option>
+        <option value="ethanol">Ethanol (C₂H₅OH)</option>
+        <option value="acetone">Acetone (C₃H₆O)</option>
+      </select>
+    </label>
+    <label><b>ΔH_vap:</b> <span id="dhVal">40.7</span> kJ/mol 
+      <input type="range" id="dhSlider" min="25" max="55" step="0.1" value="40.7" oninput="updateCC()">
+    </label>
+    <label><b>Normal B.P.:</b> <span id="tbVal">100.0</span> °C 
+      <input type="range" id="tbSlider" min="35" max="120" step="0.1" value="100.0" oninput="updateCC()">
+    </label>
+  </div>
+
+  <div class="chart-container">
+    <div class="chart-box"><canvas id="linearChart"></canvas></div>
+    <div class="chart-box"><canvas id="expChart"></canvas></div>
+  </div>
+
+  <div class="output-box">
+    <div style="font-weight: bold; color: #166534; font-size: 1.05rem;">🧪 Your Experimental Equation:</div>
+    <div class="eq-pill" id="humanEqDisplay">ln(P) = (-4185.30 K) · (1/T) + 18.82</div>
+    
+    <div class="param-list">
+      • <b>Slope (m):</b> <code id="slopeDisplay" style="background:#dcfce7; padding:2px 5px; border-radius:3px;">-4185.30 K</code> <span style="color:#64748b;">(corresponds to -ΔH_vap / R)</span><br>
+      • <b>y-Intercept (b):</b> <code id="interceptDisplay" style="background:#dcfce7; padding:2px 5px; border-radius:3px;">18.82</code> <span style="color:#64748b;">(constant of integration C)</span><br>
+      • <b>Axes:</b> y = ln(P in torr), &nbsp; x = 1/T (in K⁻¹)
+    </div>
+
+    <button class="copy-btn" id="ccCopyBtn" onclick="copyActivationPrompt()">
+      📋 1-Click Copy Problem for Socratic Tutor
+    </button>
+  </div>
+</div>
+
+<script>
+const R = 8.31446, P_ATM = 760.0;
+let linearChart, expChart, currentSlope = 0, currentIntercept = 0, currentLiquid = "Random Unknown";
+const presets = {
+  water: { dh: 40.66, tb: 100.0, name: "Water (H₂O)" },
+  ethanol: { dh: 38.56, tb: 78.37, name: "Ethanol (C₂H₅OH)" },
+  acetone: { dh: 31.30, tb: 56.05, name: "Acetone (C₃H₆O)" }
+};
+
+function initCC() {
+  const ctx1 = document.getElementById('linearChart').getContext('2d');
+  linearChart = new Chart(ctx1, {
+    type: 'scatter',
+    data: { 
+      datasets: [
+        { label: 'Experimental Data Points', data: [], backgroundColor: '#2563eb', pointRadius: 5 },
+        { label: 'Linear Fit Line', data: [], type: 'line', borderColor: '#dc2626', borderDash: [5, 5], fill: false, pointRadius: 0 }
+      ] 
+    },
+    options: { 
+      responsive: true, 
+      plugins: { title: { display: true, text: 'Linear Form: ln(P) vs 1/T' } }, 
+      scales: { 
+        x: { title: { display: true, text: 'Inverse Temperature: 1 / T (K⁻¹)' } }, 
+        y: { title: { display: true, text: 'ln(Vapor Pressure [torr])' } } 
+      } 
+    }
+  });
+
+  const ctx2 = document.getElementById('expChart').getContext('2d');
+  expChart = new Chart(ctx2, {
+    type: 'scatter',
+    data: { 
+      datasets: [
+        { label: 'Measured Vapor Pressures', data: [], backgroundColor: '#0e7490', pointRadius: 5 },
+        { label: 'Exponential Vapor Curve', data: [], type: 'line', borderColor: '#0e7490', fill: false, pointRadius: 0 }
+      ] 
+    },
+    options: { 
+      responsive: true, 
+      plugins: { title: { display: true, text: 'Vapor Pressure vs Temperature' } }, 
+      scales: { 
+        x: { title: { display: true, text: 'Temperature T (°C)' } }, 
+        y: { title: { display: true, text: 'Vapor Pressure P (torr)' } } 
+      } 
+    }
+  });
+}
+
+function updateCC() {
+  const dh = parseFloat(document.getElementById('dhSlider').value);
+  const tb = parseFloat(document.getElementById('tbSlider').value);
+  document.getElementById('dhVal').innerText = dh.toFixed(1);
+  document.getElementById('tbVal').innerText = tb.toFixed(1);
+  
+  const true_slope = -(dh * 1000.0) / R;
+  const true_intercept = Math.log(P_ATM) - (true_slope * (1.0 / (tb + 273.15)));
+  
+  let inv_t = [], p_arr = [], pts_lin = [], pts_exp = [];
+  for(let i = 0; i < 6; i++) {
+    let tc = (tb - 35.0) + (i * 7.0), tk = tc + 273.15, inv = 1.0 / tk;
+    let lnp = true_slope * inv + true_intercept + (Math.random() - 0.5) * 0.02;
+    pts_lin.push({ x: inv, y: lnp });
+    pts_exp.push({ x: tc, y: Math.exp(lnp) });
+    inv_t.push(inv);
+    p_arr.push(lnp);
+  }
+  
+  let n = inv_t.length, s_x = inv_t.reduce((a,b)=>a+b,0), s_y = p_arr.reduce((a,b)=>a+b,0);
+  let s_xy = inv_t.reduce((acc, x, i)=>acc + x * p_arr[i], 0), s_xx = inv_t.reduce((acc, x)=>acc + x*x, 0);
+  currentSlope = (n * s_xy - s_x * s_y) / (n * s_xx - s_x * s_x);
+  currentIntercept = (sum_y = p_arr.reduce((a,b)=>a+b,0), (sum_y - currentSlope * s_x) / n);
+  
+  // Human-Friendly Display
+  document.getElementById('humanEqDisplay').innerText = `ln(P) = (${currentSlope.toFixed(1)} K) · (1/T) + ${currentIntercept.toFixed(2)}`;
+  document.getElementById('slopeDisplay').innerText = `${currentSlope.toFixed(1)} K`;
+  document.getElementById('interceptDisplay').innerText = currentIntercept.toFixed(2);
+
+  linearChart.data.datasets[0].data = pts_lin;
+  linearChart.data.datasets[1].data = [
+    { x: Math.min(...inv_t), y: currentSlope * Math.min(...inv_t) + currentIntercept },
+    { x: Math.max(...inv_t), y: currentSlope * Math.max(...inv_t) + currentIntercept }
+  ];
+  linearChart.update();
+
+  expChart.data.datasets[0].data = pts_exp;
+  let curve = [];
+  for(let t = tb - 40; t <= tb + 5; t += 2) {
+    curve.push({ x: t, y: Math.exp(currentSlope * (1.0 / (t + 273.15)) + currentIntercept) });
+  }
+  expChart.data.datasets[1].data = curve;
+  expChart.update();
+}
+
+function applyCCPreset() {
+  const v = document.getElementById('presetSelect').value;
+  if(v !== 'custom') {
+    document.getElementById('dhSlider').value = presets[v].dh;
+    document.getElementById('tbSlider').value = presets[v].tb;
+    currentLiquid = presets[v].name;
+  } else currentLiquid = "Random Unknown";
+  updateCC();
+}
+
+function randomCC() {
+  document.getElementById('presetSelect').value = 'custom';
+  currentLiquid = "Random Unknown Liquid #" + Math.floor(Math.random() * 900 + 100);
+  document.getElementById('dhSlider').value = (Math.random() * (50 - 28) + 28).toFixed(1);
+  document.getElementById('tbSlider').value = (Math.random() * (95 - 45) + 45).toFixed(1);
+  updateCC();
+}
+
+function copyActivationPrompt() {
+  const activationText = `SYSTEM ACTIVATION: Begin Socratic Tutoring Session for Chapter 10 (Clausius-Clapeyron).
+
+EXPERIMENTAL DATA FROM MY SCREEN:
+- Sample: ${currentLiquid}
+- Clausius-Clapeyron Linear Equation: ln(P) = (${currentSlope.toFixed(1)} K) · (1/T) + ${currentIntercept.toFixed(2)}
+- Experimental Slope (m) = ${currentSlope.toFixed(1)} K
+- y-Intercept (b) = ${currentIntercept.toFixed(2)}
+- Units: Pressure P is in torr, Temperature T is in Kelvin (K)
+
+INSTRUCTION TO TUTOR:
+I have my dual plots visible on the left side of my screen. Please initiate Milestone 1: ask me how my slope (${currentSlope.toFixed(1)} K) relates to the molar heat of vaporization (ΔH_vap) and the gas constant R, then guide me through finding ΔH_vap (in kJ/mol) and my liquid's normal boiling point in °C. Never calculate final numbers for me.`;
+  
+  navigator.clipboard.writeText(activationText).then(() => {
+    const b = document.getElementById('ccCopyBtn');
+    b.innerText = "✅ Copied to Clipboard!";
+    setTimeout(() => { b.innerText = "📋 1-Click Copy Problem for Socratic Tutor"; }, 2500);
+  });
+}
+
+window.onload = function() { initCC(); randomCC(); };
+</script>
+</body>
+</html>

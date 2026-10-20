@@ -1,0 +1,10 @@
+# Netlify settings for the static tutor page. Publish the folder itself; nothing to build.
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    Cache-Control = "no-cache"

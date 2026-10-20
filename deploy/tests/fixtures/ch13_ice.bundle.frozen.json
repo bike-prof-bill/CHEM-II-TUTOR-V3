@@ -1,0 +1,7199 @@
+{
+ "contract": 3,
+ "archetype_id": "ch13_ice",
+ "title": "ICE tables and equilibrium concentrations",
+ "relation": "K = [products]^coefficients / [reactants]^coefficients, at equilibrium",
+ "notebook_url": "https://notebook.google.com/notebook/6458f208-db32-496a-8088-fe0c1c6cd539",
+ "kinds": [
+  "haber_setup",
+  "wgs_equilibrium"
+ ],
+ "mechanism_words": [
+  "molecul",
+  "particl",
+  "atom",
+  "ion",
+  "collid",
+  "collis",
+  "forward",
+  "reverse",
+  "rate",
+  "recombin",
+  "decompos",
+  "dissociat",
+  "associat",
+  "equal",
+  "same pace",
+  "both direction",
+  "energ",
+  "bond",
+  "swap",
+  "break apart"
+ ],
+ "equation_picks": [
+  {
+   "id": "eq_k",
+   "text": "K = [C]^c [D]^d / ( [A]^a [B]^b )",
+   "fits": [
+    "haber_setup",
+    "wgs_equilibrium"
+   ]
+  },
+  {
+   "id": "eq_kp",
+   "text": "Kp = Kc (RT)^Δn",
+   "fits": []
+  },
+  {
+   "id": "eq_q",
+   "text": "Q = [C]₀^c [D]₀^d / ( [A]₀^a [B]₀^b )",
+   "fits": []
+  },
+  {
+   "id": "eq_g",
+   "text": "ΔG° = −RT ln K",
+   "fits": []
+  },
+  {
+   "id": "eq_r",
+   "text": "rate = k [A]^m [B]^n",
+   "fits": []
+  },
+  {
+   "id": "eq_ph",
+   "text": "pH = −log[H₃O⁺]",
+   "fits": []
+  }
+ ],
+ "trap_notes": {
+  "EXCEEDS_INITIAL": {
+   "note": "Their x is larger than the amount that could react, so a concentration went below zero.",
+   "ask": "Compare your x with the amount you started with. Can more react away than was there?"
+  },
+  "EQ_COEFF_NOT_EXPONENT": {
+   "note": "Their expression holds only with every exponent read as 1: the coefficients are in the table but not used as exponents.",
+   "ask": "The coefficients do double duty. What is the exponent for H2? For NH3?"
+  },
+  "EQ_EXPONENT_NOT_IN_TABLE": {
+   "note": "Their expression holds only with the change row read as ±x for every species: the exponents are there, the table's multiples are not.",
+   "ask": "The 3 in 3H2 is an exponent here. Is it also in the change row?"
+  },
+  "CHANGE_COEFF_IGNORED": {
+   "note": "The change row ignores the coefficients: x, or 1x, under H2 or NH3.",
+   "ask": "If hydrogen is used or made three times as fast as nitrogen, should its change just be x?"
+  },
+  "COEFF_NOT_EXPONENT": {
+   "note": "The coefficients are in the table but not used as exponents: (1.20 - 3x) with no cube, or (2x) with no square.",
+   "ask": "The coefficients do double duty. What is the exponent for H2? For NH3?"
+  },
+  "EXPONENT_NOT_IN_TABLE": {
+   "note": "The exponents are there but the table's multiples are not: (1.20 - x)^3, or x^2 on top.",
+   "ask": "The 3 in 3H2 is an exponent here. Is it also in the change row?"
+  },
+  "START_ZERO_MISSING": {
+   "note": "The initial row leaves out a species that starts at zero, or gives it a value though none was put in.",
+   "ask": "Was any of that species put in the vessel? Then what is its starting concentration?"
+  },
+  "CHANGE_SIGNS_REVERSED": {
+   "note": "The change row's signs go the opposite way from the shift (e.g. -x, -3x, +2x when the mixture starts with ammonia only).",
+   "ask": "Which way did you predict the reaction would go? Do the signs in your change row agree?"
+  },
+  "MOLES_NOT_CONCENTRATION": {
+   "note": "Moles put into the expression when the vessel is not 1.00 L.",
+   "ask": "Kc uses concentrations. Is your vessel 1.00 L?"
+  }
+ },
+ "trap_notes_by_opener": {
+  "The Martian Fuel Factory": {
+   "PHANTOM_ROOT": {
+    "note": "x is the root that makes a concentration negative (for the instructor's numbers, x = 1.00).",
+    "ask": "Put that x into the equilibrium row. What concentration of carbon monoxide does it leave?"
+   },
+   "SQRT_ON_NONSQUARE": {
+    "note": "The square root used when the starting amounts differ, so the expression is not a perfect square.",
+    "ask": "Is the bottom of your expression one thing times itself? Check the two starting concentrations."
+   },
+   "SQRT_ONE_SIDE": {
+    "note": "The square root taken of only one side (for the instructor's numbers, x = 0.400).",
+    "ask": "Did you take the square root of both sides, K included?"
+   },
+   "LEFTOVER_FOR_PRODUCT": {
+    "note": "The leftover reactant given as the hydrogen, or x given as the leftover (for the instructor's numbers, 0.167 and 0.333 swapped).",
+    "ask": "Is x what reacted, or what is left?"
+   }
+  }
+ },
+ "equation_symbols": {
+  "x": [
+   "x"
+  ],
+  "K": [
+   "Kc",
+   "K_c",
+   "Keq",
+   "K"
+  ]
+ },
+ "equation_constants": {},
+ "openers": [
+  {
+   "title": "The Haber-Bosch Harvest",
+   "question": "About half the nitrogen in your body passed through a factory. Inside a steel reactor, nitrogen from the air meets hydrogen gas at 500 °C. Ammonia forms. But the reactor never turns all of the gas into ammonia. Some nitrogen and hydrogen are always left over. What are the molecules doing that keeps the reaction from going all the way?",
+   "model_answer": "Nitrogen and hydrogen molecules collide and react to form ammonia. At the same time, ammonia molecules break apart into nitrogen and hydrogen again. As ammonia builds up, the reverse reaction speeds up and the forward reaction slows. When the two rates are equal, the amounts stop changing, but both reactions keep running. So some nitrogen and hydrogen are always left.",
+   "target": "Dynamic equilibrium: forward and reverse rates become equal, amounts stop changing, and the reaction does not go to completion",
+   "keywords": [
+    "forward",
+    "reverse",
+    "rate",
+    "equal",
+    "collide",
+    "break apart",
+    "both directions",
+    "forward reaction",
+    "reverse reaction",
+    "rates",
+    "constant",
+    "no longer change",
+    "proceed"
+   ],
+   "liquids": [
+    "H1",
+    "H2",
+    "H3",
+    "H4",
+    "H5",
+    "H6"
+   ],
+   "kinds": [
+    "haber_setup"
+   ],
+   "fits": [
+    "H1",
+    "H2",
+    "H3",
+    "H4",
+    "H5",
+    "H6"
+   ],
+   "media": {
+    "image_with_question": "ch13_ice/Haber_initial.jpg",
+    "image_after_account": "ch13_ice/Haber_final.jpg",
+    "image_alt": "Before the account: a painted farm landscape. On the left, a steel factory with tanks and pipes stands under a sign reading AMMONIUM NITRATE FACTORY; a faint white cloud drifts from it across the sky toward the fields. Cows graze on green hills. On the right, a smiling farmer in overalls checks a tall corn plant beside a field of wheat; a family walks in the distance. After the account: the same landscape titled THE NITROGEN HARVEST & THE HABER-BOSCH CYCLE. On the left, labelled HABER-BOSCH PROCESS, the equation N2(g) + 3H2(g) ⇌ 2NH3(g), one nitrogen molecule (two blue atoms, labelled N2) and three hydrogen molecules (pairs of white atoms, labelled 3 H2) arrowing into a highlighted reactor vessel. Ammonia molecules, one blue nitrogen with three white hydrogens, stream from the reactor along a path labelled AMMONIA (NH3) AS FERTILIZER to the fields, where arrows show soil uptake into corn roots and the words Proteins & DNA. A caption reads: Biological uptake: turning atmospheric gas into the food that feeds billions.",
+    "simulation": "ch13_ice/haber_simulator.html?nN2={nN2}&nH2={nH2}&nNH3={nNH3}&V={V}&theme={theme}",
+    "simulation_opens": "meaning",
+    "credit": "AI image made by the instructor with Google Gemini"
+   },
+   "label_words": [
+    "equilibrium",
+    "reversible",
+    "Le Chatelier",
+    "dynamic equilibrium"
+   ],
+   "role": "exam",
+   "items": {
+    "add": [],
+    "remove": []
+   }
+  },
+  {
+   "title": "The Martian Fuel Factory",
+   "question": "Astronauts on Mars will need fuel to fly home. A robot fills a sealed steel chamber with carbon monoxide and steam and heats it to 800 K. Hydrogen fuel starts to form. A gas analyzer shows the hydrogen rising, then holding steady, while some carbon monoxide is still inside. The pressure gauge never moves at all. What are the molecules doing once the analyzer reading stops changing?",
+   "model_answer": "Carbon monoxide and water molecules collide and swap atoms to make carbon dioxide and hydrogen. At the same time, carbon dioxide and hydrogen molecules collide and swap back. When the two happen at the same rate, the amounts stop changing, but both reactions keep running. Each swap trades two molecules for two, so the number of molecules, and the pressure, never changes.",
+   "target": "Dynamic equilibrium: forward and reverse rates become equal, amounts stop changing, and the reaction does not go to completion",
+   "keywords": [
+    "forward",
+    "reverse",
+    "rate",
+    "equal",
+    "collide",
+    "swap",
+    "both directions",
+    "same",
+    "forward reaction",
+    "reverse reaction",
+    "rates",
+    "constant",
+    "no longer change",
+    "proceed"
+   ],
+   "liquids": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "kinds": [
+    "wgs_equilibrium"
+   ],
+   "fits": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "media": {
+    "image_with_question": "ch13_ice/Martian_Fuel_Initial.jpg",
+    "image_after_account": "",
+    "image_alt": "A Mars landscape in rusty orange. In the distance, an atmospheric intake, an ice-drilling rig and pipelines lead to a steel reactor; a six-wheeled rover is connected to it by hoses. A cut-away of the reactor, labelled 800 K REACTOR VESSEL, fills the right side, with gauges and a blank display. Labels show CO INPUT and H2O INPUT going in, and H2 OUTPUT and CO2 OUTPUT coming out. A rocket stands at the far right.",
+    "simulation": "ch13_ice/martian_fuel_simulator.html?nCO={nCO}&nH2O={nH2O}&nCO2={nCO2}&nH2={nH2}&V={V}&theme={theme}",
+    "simulation_opens": "meaning",
+    "credit": "AI image made by the instructor with Google Gemini"
+   },
+   "label_words": [
+    "equilibrium",
+    "reversible",
+    "Le Chatelier",
+    "dynamic equilibrium"
+   ],
+   "role": "worked",
+   "items": {
+    "add": [],
+    "remove": []
+   }
+  }
+ ],
+ "moves": {
+  "account_given": {
+   "state": "account_given",
+   "stage": "opening",
+   "label_when_done": "Particle account given",
+   "switch_ask": "If you could watch the two reactions, forward and reverse, what would you see happening to how fast each runs as the mixture settles?",
+   "notebook_prompt": "I am working on an ICE-table equilibrium problem. Explain, in terms of what particles are doing, why concentrations stop changing at equilibrium even though reactions continue in both directions. Do not solve any problem. Then ask me one short question and wait for my answer.",
+   "return_ask": "In your own words, what did the notebook show you about what the particles are doing?",
+   "status": "approved (edited V2 text; instructor, 13 Oct 2026)"
+  },
+  "relation_chosen": {
+   "state": "relation_chosen",
+   "stage": "setup",
+   "label_when_done": "Equilibrium expression chosen",
+   "ask": "Open the Equations list and pick the form that relates the equilibrium concentrations to K.",
+   "switch_ask": "Which quantities in this problem are measured, and which one is being inferred from them?",
+   "notebook_prompt": "I am working on an ICE-table equilibrium problem. Explain how the equilibrium-constant expression is built from a balanced equation: what goes on top, what on the bottom, and where the coefficients go. Do not solve any problem. Then ask me one short question and wait for my answer.",
+   "return_ask": "What did the notebook show you about building the expression?",
+   "status": "approved (edited V2 text; instructor, 13 Oct 2026)"
+  },
+  "approach": {
+   "state": "approach",
+   "stage": "setup",
+   "label_when_done": "Approach chosen",
+   "ask": "In this problem, is K the thing you know, or the thing you are after?",
+   "switch_ask": "Look at the numbers you were given. Which of them describes the mixture at equilibrium, and which describes the start?",
+   "notebook_prompt": "I am working on an ICE-table equilibrium problem. Explain the difference between finding K from measured equilibrium concentrations and finding equilibrium concentrations from a known K. Do not solve any problem. Then ask me one short question and wait for my answer.",
+   "return_ask": "What did the notebook show you about the two kinds of problem?",
+   "status": "approved (edited V2 text; instructor, 13 Oct 2026)"
+  },
+  "table": {
+   "state": "table",
+   "stage": "table",
+   "label_when_done": "ICE table set up",
+   "ask": "Set up the ICE table: one column per species, rows for initial, change and equilibrium. Write the change row in terms of one x.",
+   "switch_ask": "If one reaction event happens, how many of each particle disappear and how many appear? Write that as the change row.",
+   "notebook_prompt": "I am working on an ICE-table equilibrium problem. Explain why every change in an ICE table can be written with a single x, and how the coefficients set the multiples of x. Do not solve any problem. Then ask me one short question and wait for my answer.",
+   "return_ask": "What did the notebook show you about the change row?",
+   "status": "approved (edited V2 text; instructor, 13 Oct 2026)"
+  },
+  "method": {
+   "state": "method",
+   "stage": "solve",
+   "label_when_done": "Solving method chosen",
+   "ask": "Look at your equilibrium expression with the table substituted. How will you solve it for x?",
+   "switch_ask": "Is the expression a perfect square on both sides, or not? What does that decide about the algebra?",
+   "notebook_prompt": "I am working on an ICE-table equilibrium problem. Explain when an equilibrium expression can be solved by taking the square root of both sides and when the quadratic formula is needed. Do not solve any problem. Then ask me one short question and wait for my answer.",
+   "return_ask": "What did the notebook show you about choosing the method?",
+   "status": "approved (edited V2 text; instructor, 13 Oct 2026)"
+  },
+  "expression_set": {
+   "state": "expression_set",
+   "stage": "solve",
+   "label_when_done": "Expression written in x",
+   "ask": "Write the equilibrium expression with the equilibrium row of your table substituted in, on one line, with brackets around every numerator and denominator.",
+   "switch_ask": "Read your equilibrium row aloud, species by species. Which of those entries belong on top of the expression and which on the bottom?",
+   "notebook_prompt": "I am working on an ICE-table equilibrium problem. Explain how the equilibrium row of an ICE table is substituted into the K expression, and why brackets around a denominator matter when the expression is typed. Do not solve any problem. Then ask me one short question and wait for my answer.",
+   "return_ask": "What did the notebook show you about substituting the table?",
+   "status": "approved (edited V2 text; instructor, 13 Oct 2026)"
+  },
+  "x_found": {
+   "state": "x_found",
+   "stage": "solve",
+   "label_when_done": "x found",
+   "ask": "Solve for x. State it with its units.",
+   "switch_ask": "Before solving, what is the largest value x could possibly have in this problem, and why?",
+   "notebook_prompt": "I am working on an ICE-table equilibrium problem. Explain what x represents in an ICE table and what limits its size. Do not solve any problem. Then ask me one short question and wait for my answer.",
+   "return_ask": "What did the notebook show you about x?",
+   "status": "approved (edited V2 text; instructor, 13 Oct 2026)"
+  },
+  "value_found": {
+   "state": "value_found",
+   "stage": "solve",
+   "label_when_done": "Answer found",
+   "ask": "Now the quantity the problem asks for, with its units.",
+   "switch_ask": "Which entry in your equilibrium row is the one the question asks about, and what is it in terms of x?",
+   "notebook_prompt": "I am working on an ICE-table equilibrium problem. Explain how the equilibrium concentrations follow from x once the change row is known. Do not solve any problem. Then ask me one short question and wait for my answer.",
+   "return_ask": "What did the notebook show you about going from x to the answer?",
+   "status": "approved (edited V2 text; instructor, 13 Oct 2026)"
+  },
+  "meaning_given": {
+   "state": "meaning_given",
+   "stage": "meaning",
+   "label_when_done": "Meaning stated",
+   "ask": "Compare the equilibrium concentrations you found with what you started with. What does that comparison show about how far the reaction went before the forward and reverse rates matched?",
+   "switch_ask": "If you could see the particles at equilibrium, roughly what fraction of the original reactant would still be intact, and what is the rest doing?",
+   "notebook_prompt": "I am working on an ICE-table equilibrium problem. Explain what the size of K does and does not tell you about how far a reaction goes, and why the starting concentrations also matter. Do not solve any problem. Then ask me one short question and wait for my answer.",
+   "return_ask": "What did the notebook show you about extent of reaction?",
+   "status": "approved (edited V2 text; instructor, 13 Oct 2026)"
+  },
+  "reflection": {
+   "state": "reflection",
+   "stage": "close",
+   "label_when_done": "Reflection written",
+   "ask": "Which step was hardest for you? In one sentence, what would you tell a friend who is stuck there?",
+   "status": "approved (edited V2 text; instructor, 13 Oct 2026)"
+  },
+  "conc_found": {
+   "state": "conc_found",
+   "stage": "units",
+   "label_when_done": "Starting concentrations found",
+   "ask": "The vessel is not 1.00 L. Turn each amount into a concentration. Type them with their units.",
+   "switch_ask": "Concentration is amount per volume. What do you divide the moles by?",
+   "notebook_prompt": "Explain how to turn moles of gas in a vessel into molarity, and why an equilibrium expression needs concentrations, not moles. Use numbers different from mine. Do not solve my problem. Then ask me one short question and wait for my answer.",
+   "return_ask": "What do you divide by to get a concentration?",
+   "park_text": "Concentration = moles ÷ volume in liters.",
+   "status": "approved"
+  },
+  "Q_found": {
+   "state": "Q_found",
+   "stage": "setup",
+   "label_when_done": "Q found",
+   "ask": "Before anything reacts, put the starting concentrations into the same expression. What is Q at the start? Type its value.",
+   "switch_ask": "Which species are in the vessel at the start, and which are not? What does a zero do to the expression?",
+   "notebook_prompt": "Explain what the reaction quotient Q is and how it differs from K. Use a reaction other than making ammonia. Do not solve my problem. Then ask me one short question and wait for my answer.",
+   "return_ask": "What is the difference between Q and K?",
+   "park_text": "Put each starting concentration into the expression. A species that starts at zero makes its part of the expression zero.",
+   "status": "approved"
+  },
+  "shift_predicted": {
+   "state": "shift_predicted",
+   "stage": "setup",
+   "label_when_done": "Shift predicted",
+   "ask": "Compare Q with K. Which way must the reaction go to reach equilibrium: toward more ammonia, toward less ammonia, or neither? Pick one.",
+   "switch_ask": "Look at what is in the vessel at the start. If one side of the reaction is missing entirely, which reaction is the only one that can run?",
+   "notebook_prompt": "I need to predict which way a reaction will shift by comparing Q with K. Explain the rule and what the molecules are doing in each case. Use a reaction other than mine. Do not solve my problem. Then ask me one short question and wait for my answer.",
+   "return_ask": "What did the notebook show you about comparing Q and K?",
+   "park_text": "If Q is smaller than K, the reaction shifts right, toward more ammonia. If Q is larger, it shifts left. If they are equal, it is already at equilibrium.",
+   "status": "approved"
+  }
+ },
+ "moves_by_opener": {
+  "The Martian Fuel Factory": {
+   "K_confirmed": {
+    "state": "K_confirmed",
+    "stage": "check",
+    "label_when_done": "K confirmed",
+    "ask": "Step 4: put your equilibrium concentrations back into Kc. What value do you get? Type it.",
+    "switch_ask": "Use the equilibrium row, not the starting row. Which concentrations go on top, and which on the bottom?",
+    "notebook_prompt": "Explain why chemists check an equilibrium answer by putting the concentrations back into K, and what it means if the result does not match. Use a reaction different from mine. Do not solve my problem. Then ask me one short question and wait for my answer.",
+    "return_ask": "What should you get when you put equilibrium concentrations back into Kc?",
+    "park_text": "Put the equilibrium concentrations into \\(K_c = \\dfrac{[CO_2][H_2]}{[CO][H_2O]}\\). The result should match K, within rounding.",
+    "status": "approved",
+    "show": "Step 4 is the check. Put your equilibrium concentrations back into \\(K_c\\). You should get K back, within rounding. Type the value."
+   },
+   "account_given": {
+    "state": "account_given",
+    "stage": "opening",
+    "label_when_done": "Particle account given",
+    "switch_ask": "The analyzer shows hydrogen holding steady while carbon monoxide is still there. Is the reaction over, or is something still happening between the molecules?",
+    "notebook_prompt": "I am learning why a reaction in a sealed chamber stops changing before it uses up its reactants. Explain what the molecules are doing once the amounts hold steady. Use a reaction other than mine. Do not solve any problem for me. Then ask me one short question and wait for my answer.",
+    "return_ask": "In your own words, what did the notebook show you about the molecules once the amounts hold steady?",
+    "park_text": "Carbon monoxide and steam keep making carbon dioxide and hydrogen, and those keep swapping back. When both happen at the same rate, the amounts stop changing. The reaction still runs both ways.",
+    "status": "approved"
+   },
+   "table": {
+    "state": "table",
+    "stage": "table",
+    "label_when_done": "ICE table set up",
+    "switch_ask": "Look at the balanced equation. Each time one CO molecule is used, how many H2O molecules go with it, and how many CO2 and H2 form?",
+    "park_text": "Every coefficient is 1. If the reaction shifts right: -x, -x, +x, +x. If it shifts left: +x, +x, -x, -x. Equilibrium row: the start plus the change.",
+    "status": "approved"
+   },
+   "method": {
+    "state": "method",
+    "stage": "solve",
+    "label_when_done": "Solving method chosen",
+    "ask": "Before you multiply anything out, look at the shape of your expression. Is the top a perfect square? Is the bottom? Pick one: square root of both sides, the quadratic formula, or a graph or computer solver.",
+    "switch_ask": "If the top is x times x, and the bottom is one thing times itself, how could you write each as a single square?",
+    "notebook_prompt": "Explain how to tell, before doing any algebra, whether an equilibrium expression is a perfect square that can be solved by taking a square root. Show one that is and one that is not. Use reactions different from mine. Do not solve my problem. Then ask me one short question and wait for my answer.",
+    "return_ask": "How can you tell whether the square root will work?",
+    "park_text": "If the top and the bottom are both perfect squares, take the square root of both sides. If not, multiply out and use the quadratic formula.",
+    "status": "approved"
+   },
+   "x_found": {
+    "state": "x_found",
+    "stage": "solve",
+    "label_when_done": "x found",
+    "ask": "Solve for x. Type its value.",
+    "switch_ask": "A square root has two signs, plus and minus. Which value of x leaves every concentration positive?",
+    "notebook_prompt": "Show me how to solve an equation like x/(a - x) = b for x. Use numbers different from mine. Do not solve my problem. Then give me one short practice problem and wait for my answer.",
+    "return_ask": "What is x, in words, for this chamber?",
+    "park_text": "Take the square root of both sides, or use the quadratic formula. Keep the x that leaves every concentration at zero or above.",
+    "status": "approved"
+   },
+   "other_root_checked": {
+    "state": "other_root_checked",
+    "stage": "solve",
+    "label_when_done": "Other root checked",
+    "ask": "Your equation has a second answer for x. Find it. Why must the chamber reject it?",
+    "switch_ask": "Put the second x into the equilibrium row. What concentration do you get for carbon monoxide?",
+    "return_ask": "What is wrong with a negative concentration?",
+    "park_text": "The second root makes at least one concentration negative. A chamber cannot hold less than nothing, so that root is thrown out.",
+    "status": "approved"
+   },
+   "value_found": {
+    "state": "value_found",
+    "stage": "solve",
+    "label_when_done": "Answer found",
+    "ask": "Use x to find the hydrogen concentration at equilibrium. Type it with its unit.",
+    "switch_ask": "x is how much reacted. How does the hydrogen row of your table use x?",
+    "return_ask": "Which row of the table gives the equilibrium concentrations?",
+    "park_text": "Read the hydrogen column of the equilibrium row: its start plus its change.",
+    "status": "approved"
+   },
+   "leftover_found": {
+    "state": "leftover_found",
+    "stage": "solve",
+    "label_when_done": "Leftover found",
+    "ask": "How much carbon monoxide is left in the chamber at equilibrium? Type it with its unit.",
+    "switch_ask": "x is how much carbon monoxide reacted. How much did it start with?",
+    "return_ask": "What is the difference between x and what is left over?",
+    "park_text": "Leftover carbon monoxide = its starting concentration minus x (or plus x, if the reaction shifted left).",
+    "status": "approved"
+   },
+   "meaning_given": {
+    "state": "meaning_given",
+    "stage": "meaning",
+    "label_when_done": "Meaning stated",
+    "ask": "Would leaving the chamber sealed longer make more hydrogen? What are the molecules doing that answers that?",
+    "switch_ask": "If you could watch one hydrogen molecule in the chamber now, what might happen to it?",
+    "status": "approved"
+   },
+   "account_given@v:equal": {
+    "state": "account_given",
+    "status": "approved",
+    "show": "Carbon monoxide and steam molecules collide and swap atoms to form carbon dioxide and hydrogen, and those collide and swap back. When the forward and reverse reactions run at equal rates, the concentrations no longer change, though both reactions keep going. Now say it back in your own words: what are the molecules doing?",
+    "version": "equal"
+   },
+   "approach@v:equal": {
+    "state": "approach",
+    "status": "approved",
+    "show": "You know K and the starting amounts. You are asked for amounts at equilibrium. Pick the approach that goes from a known K to unknown concentrations.",
+    "version": "equal"
+   },
+   "relation_chosen@v:equal": {
+    "state": "relation_chosen",
+    "status": "approved",
+    "show": "The equilibrium constant puts products over reactants, each raised to its coefficient: \\(K_c = \\dfrac{[CO_2][H_2]}{[CO][H_2O]}\\). Pick it from the Equations list.",
+    "version": "equal"
+   },
+   "conc_found@v:equal": {
+    "state": "conc_found",
+    "status": "approved",
+    "show": "Concentration is moles divided by liters. Divide each starting amount by the chamber's volume. Type the concentrations with M.",
+    "version": "equal"
+   },
+   "Q_found@v:equal": {
+    "state": "Q_found",
+    "status": "approved",
+    "show": "Step 1 is the direction. No products are present at the start, so the top of the reaction quotient is zero, and \\(Q_c = 0\\). Type Q.",
+    "version": "equal"
+   },
+   "shift_predicted@v:equal": {
+    "state": "shift_predicted",
+    "status": "approved",
+    "show": "Q is smaller than K, so the reaction proceeds to the right, toward the products. Pick that direction.",
+    "version": "equal"
+   },
+   "table@v:equal": {
+    "state": "table",
+    "status": "approved",
+    "show": "Step 2 is the ICE table. Initial: your starting concentrations, and 0 for both products. Change: \\(-x\\) for CO and H2O, \\(+x\\) for CO2 and H2, because every coefficient is 1. Equilibrium: initial plus change. Fill in the table.",
+    "version": "equal"
+   },
+   "expression_set@v:equal": {
+    "state": "expression_set",
+    "status": "approved",
+    "show": "Put the equilibrium row into \\(K_c\\): \\(K_c = \\dfrac{(x)(x)}{([CO]_0 - x)([H_2O]_0 - x)}\\). Here the two starting concentrations are equal. Type it with your numbers.",
+    "version": "equal"
+   },
+   "method@v:equal": {
+    "state": "method",
+    "status": "approved",
+    "show": "Look at the shape before multiplying anything out. The top is \\(x^2\\), and because CO and H2O start equal, the bottom is \\(([CO]_0 - x)^2\\). Both are perfect squares, so take the square root of both sides. This shortcut works only because the two starting concentrations are equal. Pick that method.",
+    "version": "equal"
+   },
+   "x_found@v:equal": {
+    "state": "x_found",
+    "status": "approved",
+    "show": "Taking the positive square root gives \\(\\sqrt{K_c} = \\dfrac{x}{[CO]_0 - x}\\). Solve that for x. Type x.",
+    "version": "equal"
+   },
+   "other_root_checked@v:equal": {
+    "state": "other_root_checked",
+    "status": "approved",
+    "show": "A square root also has a negative value: \\(-\\sqrt{K_c} = \\dfrac{x}{[CO]_0 - x}\\). Solve it, and put that x into the equilibrium row. A root is physically meaningful only if every concentration comes out zero or positive. Say which root the chamber rejects, and why.",
+    "version": "equal"
+   },
+   "value_found@v:equal": {
+    "state": "value_found",
+    "status": "approved",
+    "show": "Step 3 ends with the equilibrium row: \\([H_2] = x\\). Type it with M.",
+    "version": "equal"
+   },
+   "leftover_found@v:equal": {
+    "state": "leftover_found",
+    "status": "approved",
+    "show": "Carbon monoxide at equilibrium is its starting concentration minus x. Type it with M.",
+    "version": "equal"
+   },
+   "offer@v:equal": {
+    "state": "offer",
+    "stage": "close",
+    "status": "approved",
+    "show": "That shortcut needed equal starting concentrations. Would you like to see this same problem worked with less steam, so the two start unequal? Then the bottom is not a perfect square, and the quadratic formula takes over.",
+    "version": "equal"
+   },
+   "expression_set@v:unequal": {
+    "state": "expression_set",
+    "status": "approved",
+    "show": "Put the equilibrium row into \\(K_c\\): \\(K_c = \\dfrac{x^2}{([CO]_0 - x)([H_2O]_0 - x)}\\). This time the two starting concentrations differ. Type it with your numbers.",
+    "version": "unequal"
+   },
+   "method@v:unequal": {
+    "state": "method",
+    "status": "approved",
+    "show": "Look at the shape before multiplying anything out. The top is \\(x^2\\), but the bottom has two different factors, so it is not a perfect square, and the square root will not work. Multiply out, collect the terms into \\(ax^2 + bx + c = 0\\), and use the quadratic formula. Pick that method.",
+    "version": "unequal"
+   },
+   "x_found@v:unequal": {
+    "state": "x_found",
+    "status": "approved",
+    "show": "The quadratic formula, \\(x = \\dfrac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}\\), gives two roots. Keep the one that leaves every concentration zero or positive. Type x.",
+    "version": "unequal"
+   },
+   "other_root_checked@v:unequal": {
+    "state": "other_root_checked",
+    "status": "approved",
+    "show": "Put the other root into the equilibrium row. It is larger than one of the starting concentrations, so a reactant comes out negative. Say why the chamber rejects it.",
+    "version": "unequal"
+   },
+   "shift_predicted": {
+    "state": "shift_predicted",
+    "ask": "Compare Q with K. Which way must the reaction go to reach equilibrium: toward more hydrogen, toward less hydrogen, or neither? Pick one.",
+    "status": "approved (instructor, 13 Oct 2026)"
+   }
+  },
+  "The Haber-Bosch Harvest": {
+   "account_given": {
+    "state": "account_given",
+    "stage": "opening",
+    "label_when_done": "Particle account given",
+    "switch_ask": "A gauge on the reactor shows the pressure falling at first, then holding steady while the heat stays on. What are the molecules doing once it holds steady?",
+    "notebook_prompt": "I am learning why a reaction in a closed vessel stops short of using up its reactants. Explain what the molecules are doing when the amounts stop changing, even though the reactions continue. Use a reaction other than making ammonia. Do not solve any problem for me. Then ask me one short question and wait for my answer.",
+    "return_ask": "In your own words, what did the notebook show you about the molecules at equilibrium?",
+    "park_text": "Nitrogen and hydrogen keep forming ammonia, and ammonia keeps breaking apart. When both happen at the same rate, the amounts stop changing. The reaction still runs both ways.",
+    "status": "approved"
+   },
+   "table": {
+    "state": "table",
+    "stage": "table",
+    "label_when_done": "ICE table set up",
+    "switch_ask": "Look at the balanced equation and the way the reaction shifts. Each time one N2 molecule is used or made, how many H2 and how many NH3 go with it?",
+    "park_text": "The change row follows the coefficients 1 : 3 : 2. If the reaction shifts right: -x, -3x, +2x. If it shifts left: +x, +3x, -2x. Equilibrium row: the start plus the change.",
+    "status": "approved"
+   },
+   "expression_set": {
+    "state": "expression_set",
+    "stage": "solve",
+    "label_when_done": "Expression written in x",
+    "switch_ask": "The coefficients do double duty. They multiply x in the table, and they become exponents in Kc. What exponent does each term need?",
+    "park_text": "Put the equilibrium row into Kc = [NH3]^2 / ([N2][H2]^3). Each term keeps its exponent.",
+    "status": "approved"
+   },
+   "method": {
+    "state": "method",
+    "stage": "solve",
+    "label_when_done": "Solving method chosen",
+    "ask": "Look at your expression. If you multiplied out the bottom, what is the highest power of x? How would you solve it? Pick one: square root of both sides, the quadratic formula, or a graph or computer solver.",
+    "switch_ask": "An x times an x^3 makes what power of x? Can the quadratic formula handle that?",
+    "notebook_prompt": "Explain why an equation with x to the fourth power cannot be solved with the quadratic formula, and how chemists solve such equations with a graph or a computer solver. Use an equation different from mine. Do not solve my problem. Then ask me one short question and wait for my answer.",
+    "return_ask": "What tool would a chemist use for this equation?",
+    "park_text": "The bottom has an x times an x^3, so the equation has x^4 in it. The quadratic formula cannot solve it. Chemists use a graphing calculator or a computer solver.",
+    "status": "approved"
+   },
+   "meaning_given": {
+    "state": "meaning_given",
+    "stage": "meaning",
+    "label_when_done": "Meaning stated",
+    "ask": "Your table shows that no species runs out at equilibrium. What does that tell you about the molecules once the amounts stop changing?",
+    "switch_ask": "Is the reaction still running at equilibrium? If you could follow one ammonia molecule, what might you see happen to it?",
+    "status": "approved"
+   }
+  }
+ },
+ "variants": [
+  {
+   "kind": "haber_setup",
+   "fixed_id": "H1",
+   "version": "",
+   "context": {
+    "reaction": "haber_ammonia",
+    "family": "A",
+    "direction": 1
+   },
+   "text": "Inside a steel reactor at 500 °C, nitrogen and hydrogen make ammonia: N2(g) + 3H2(g) ⇌ 2NH3(g). At this temperature, Kc = 0.060. A chemist tests a 1.00 L pilot vessel. She puts in 0.80 mol of nitrogen gas and 1.20 mol of hydrogen gas. Set up the ICE table. Then write Kc in terms of x.",
+   "givens": {
+    "n_N2": {
+     "value": 0.8,
+     "unit": "mol"
+    },
+    "n_H2": {
+     "value": 1.2,
+     "unit": "mol"
+    },
+    "V": {
+     "value": 1.0,
+     "unit": "L"
+    },
+    "Kc": {
+     "value": 0.06,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium expression chosen"
+    },
+    {
+     "state": "approach",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "options": [
+      {
+       "id": "approach:findK",
+       "text": "Equilibrium amounts are measured; find K from them."
+      },
+      {
+       "id": "approach:solveX",
+       "text": "K is known; find the equilibrium amounts from it."
+      }
+     ],
+     "right": [
+      "approach:solveX"
+     ],
+     "id": "approach",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Approach chosen"
+    },
+    {
+     "state": "Q_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "approach"
+     ],
+     "explicit": true,
+     "id": "Q_found",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Q found"
+    },
+    {
+     "state": "shift_predicted",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "Q_found"
+     ],
+     "options": [
+      {
+       "id": "direction:more",
+       "text": "toward more ammonia"
+      },
+      {
+       "id": "direction:less",
+       "text": "toward less ammonia"
+      },
+      {
+       "id": "direction:neither",
+       "text": "neither: it is already at equilibrium"
+      }
+     ],
+     "right": [
+      "direction:more"
+     ],
+     "id": "shift_predicted",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Shift predicted"
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "shift_predicted"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "table",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written in x"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      },
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting amount: drop it from the denominator."
+      }
+     ],
+     "right": [
+      "method:solver"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Solving method chosen"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "method"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [],
+   "table": {
+    "species": [
+     "N2",
+     "H2",
+     "NH3"
+    ],
+    "rows": {
+     "I": [
+      "0.800",
+      "1.200",
+      "0.000"
+     ],
+     "C": [
+      "-x",
+      "-3x",
+      "+2x"
+     ],
+     "E": [
+      "0.800 - x",
+      "1.200 - 3x",
+      "2x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_COEFF_IGNORED",
+      "row": "C",
+      "cells": [
+       "-x",
+       "-x",
+       "+x"
+      ]
+     },
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "+3x",
+       "-2x"
+      ]
+     }
+    ],
+    "zero_species": [
+     2
+    ]
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.06,
+       "K": 0.0183370833
+      },
+      {
+       "x": 0.14,
+       "K": 0.250315832
+      },
+      {
+       "x": 0.22,
+       "K": 2.11980582
+      }
+     ],
+     "alt": [],
+     "bent": {
+      "EQ_COEFF_NOT_EXPONENT": [
+       {
+        "x": 0.06,
+        "K": 0.158982512
+       },
+       {
+        "x": 0.14,
+        "K": 0.543900544
+       },
+       {
+        "x": 0.22,
+        "K": 1.40485313
+       }
+      ],
+      "EQ_EXPONENT_NOT_IN_TABLE": [
+       {
+        "x": 0.06,
+        "K": 0.00328364521
+       },
+       {
+        "x": 0.14,
+        "K": 0.0249341484
+       },
+       {
+        "x": 0.22,
+        "K": 0.0886623302
+       }
+      ]
+     },
+     "literal_for": {
+      "K": 0.06
+     },
+     "park_text": "0.060 = (2x)^2 / ( (0.800 - x) · (1.200 - 3x)^3 )"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "nN2": 0.8,
+    "nH2": 1.2,
+    "nNH3": 0.0,
+    "V": 1.0
+   },
+   "expected": [
+    {
+     "id": "Q_at_the_start",
+     "role": "intermediate",
+     "dim": {},
+     "state": "Q_found",
+     "label": "Q at the start",
+     "value": 0.0,
+     "unit": "",
+     "abs_tol": 0.0001,
+     "require_unit": false,
+     "after": "approach"
+    },
+    {
+     "id": "g_n_N2",
+     "state": null,
+     "role": "given",
+     "label": "n_N2",
+     "value": 0.8,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 8.01e-07
+    },
+    {
+     "id": "g_n_H2",
+     "state": null,
+     "role": "given",
+     "label": "n_H2",
+     "value": 1.2,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 1.2e-06
+    },
+    {
+     "id": "g_V",
+     "state": null,
+     "role": "given",
+     "label": "V",
+     "value": 1.0,
+     "unit": "L",
+     "dim": {
+      "L": 1
+     },
+     "abs_tol": 1e-06
+    },
+    {
+     "id": "g_Kc",
+     "state": null,
+     "role": "given",
+     "label": "Kc",
+     "value": 0.06,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 6.1e-08
+    }
+   ],
+   "variant_id": "ch13_ice:1",
+   "archetype_id": "ch13_ice",
+   "seed": 1,
+   "opener_index": 0
+  },
+  {
+   "kind": "haber_setup",
+   "fixed_id": "H2",
+   "version": "",
+   "context": {
+    "reaction": "haber_ammonia",
+    "family": "A",
+    "direction": 1
+   },
+   "text": "Inside a steel reactor at 500 °C, nitrogen and hydrogen make ammonia: N2(g) + 3H2(g) ⇌ 2NH3(g). At this temperature, Kc = 0.060. A chemist tests a 2.00 L pilot vessel. She puts in 1.00 mol of nitrogen gas and 3.00 mol of hydrogen gas. Set up the ICE table. Then write Kc in terms of x.",
+   "givens": {
+    "n_N2": {
+     "value": 1.0,
+     "unit": "mol"
+    },
+    "n_H2": {
+     "value": 3.0,
+     "unit": "mol"
+    },
+    "V": {
+     "value": 2.0,
+     "unit": "L"
+    },
+    "Kc": {
+     "value": 0.06,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium expression chosen"
+    },
+    {
+     "state": "approach",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "options": [
+      {
+       "id": "approach:findK",
+       "text": "Equilibrium amounts are measured; find K from them."
+      },
+      {
+       "id": "approach:solveX",
+       "text": "K is known; find the equilibrium amounts from it."
+      }
+     ],
+     "right": [
+      "approach:solveX"
+     ],
+     "id": "approach",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Approach chosen"
+    },
+    {
+     "state": "conc_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "approach"
+     ],
+     "rule": "all",
+     "pin": true,
+     "explicit": true,
+     "id": "conc_found",
+     "stage": "units",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Starting concentrations found"
+    },
+    {
+     "state": "Q_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "conc_found"
+     ],
+     "explicit": true,
+     "id": "Q_found",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Q found"
+    },
+    {
+     "state": "shift_predicted",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "Q_found"
+     ],
+     "options": [
+      {
+       "id": "direction:more",
+       "text": "toward more ammonia"
+      },
+      {
+       "id": "direction:less",
+       "text": "toward less ammonia"
+      },
+      {
+       "id": "direction:neither",
+       "text": "neither: it is already at equilibrium"
+      }
+     ],
+     "right": [
+      "direction:more"
+     ],
+     "id": "shift_predicted",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Shift predicted"
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "shift_predicted"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "table",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written in x"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      },
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting amount: drop it from the denominator."
+      }
+     ],
+     "right": [
+      "method:solver"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Solving method chosen"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "method"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [],
+   "table": {
+    "species": [
+     "N2",
+     "H2",
+     "NH3"
+    ],
+    "rows": {
+     "I": [
+      "0.500",
+      "1.500",
+      "0.000"
+     ],
+     "C": [
+      "-x",
+      "-3x",
+      "+2x"
+     ],
+     "E": [
+      "0.500 - x",
+      "1.500 - 3x",
+      "2x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_COEFF_IGNORED",
+      "row": "C",
+      "cells": [
+       "-x",
+       "-x",
+       "+x"
+      ]
+     },
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "+3x",
+       "-2x"
+      ]
+     },
+     {
+      "id": "MOLES_NOT_CONCENTRATION",
+      "row": "I",
+      "cells": [
+       "1.000",
+       "3.000",
+       "0.000"
+      ]
+     }
+    ],
+    "zero_species": [
+     2
+    ]
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.075,
+       "K": 0.0255424783
+      },
+      {
+       "x": 0.175,
+       "K": 0.406666952
+      },
+      {
+       "x": 0.275,
+       "K": 4.37151067
+      }
+     ],
+     "alt": [],
+     "bent": {
+      "EQ_COEFF_NOT_EXPONENT": [
+       {
+        "x": 0.075,
+        "K": 0.276816609
+       },
+       {
+        "x": 0.175,
+        "K": 1.10453649
+       },
+       {
+        "x": 0.275,
+        "K": 3.62139918
+       }
+      ],
+      "EQ_EXPONENT_NOT_IN_TABLE": [
+       {
+        "x": 0.075,
+        "K": 0.00457392463
+       },
+       {
+        "x": 0.175,
+        "K": 0.0405084011
+       },
+       {
+        "x": 0.275,
+        "K": 0.182841428
+       }
+      ]
+     },
+     "literal_for": {
+      "K": 0.06
+     },
+     "park_text": "0.060 = (2x)^2 / ( (0.500 - x) · (1.500 - 3x)^3 )"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "nN2": 1.0,
+    "nH2": 3.0,
+    "nNH3": 0.0,
+    "V": 2.0
+   },
+   "expected": [
+    {
+     "id": "starting_N2",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [N2]",
+     "value": 0.5,
+     "unit": "M",
+     "abs_tol": 0.01,
+     "require_unit": true
+    },
+    {
+     "id": "starting_H2",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [H2]",
+     "value": 1.5,
+     "unit": "M",
+     "abs_tol": 0.03,
+     "require_unit": true
+    },
+    {
+     "id": "starting_NH3",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [NH3]",
+     "value": 0.0,
+     "unit": "M",
+     "abs_tol": 0.0001,
+     "require_unit": true
+    },
+    {
+     "id": "Q_at_the_start",
+     "role": "intermediate",
+     "dim": {},
+     "state": "Q_found",
+     "label": "Q at the start",
+     "value": 0.0,
+     "unit": "",
+     "abs_tol": 0.0001,
+     "require_unit": false,
+     "after": "conc_found"
+    },
+    {
+     "id": "g_n_N2",
+     "state": null,
+     "role": "given",
+     "label": "n_N2",
+     "value": 1.0,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 1e-06
+    },
+    {
+     "id": "g_n_H2",
+     "state": null,
+     "role": "given",
+     "label": "n_H2",
+     "value": 3.0,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 3e-06
+    },
+    {
+     "id": "g_V",
+     "state": null,
+     "role": "given",
+     "label": "V",
+     "value": 2.0,
+     "unit": "L",
+     "dim": {
+      "L": 1
+     },
+     "abs_tol": 2e-06
+    },
+    {
+     "id": "g_Kc",
+     "state": null,
+     "role": "given",
+     "label": "Kc",
+     "value": 0.06,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 6.1e-08
+    }
+   ],
+   "variant_id": "ch13_ice:2",
+   "archetype_id": "ch13_ice",
+   "seed": 2,
+   "opener_index": 0
+  },
+  {
+   "kind": "haber_setup",
+   "fixed_id": "H3",
+   "version": "",
+   "context": {
+    "reaction": "haber_ammonia",
+    "family": "B",
+    "direction": -1
+   },
+   "text": "Inside a steel reactor at 500 °C, nitrogen and hydrogen make ammonia: N2(g) + 3H2(g) ⇌ 2NH3(g). At this temperature, Kc = 0.060. A chemist tests a 1.00 L pilot vessel. She puts in 0.50 mol of ammonia gas. Set up the ICE table. Then write Kc in terms of x.",
+   "givens": {
+    "n_NH3": {
+     "value": 0.5,
+     "unit": "mol"
+    },
+    "V": {
+     "value": 1.0,
+     "unit": "L"
+    },
+    "Kc": {
+     "value": 0.06,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium expression chosen"
+    },
+    {
+     "state": "approach",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "options": [
+      {
+       "id": "approach:findK",
+       "text": "Equilibrium amounts are measured; find K from them."
+      },
+      {
+       "id": "approach:solveX",
+       "text": "K is known; find the equilibrium amounts from it."
+      }
+     ],
+     "right": [
+      "approach:solveX"
+     ],
+     "id": "approach",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Approach chosen"
+    },
+    {
+     "state": "shift_predicted",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "approach"
+     ],
+     "options": [
+      {
+       "id": "direction:more",
+       "text": "toward more ammonia"
+      },
+      {
+       "id": "direction:less",
+       "text": "toward less ammonia"
+      },
+      {
+       "id": "direction:neither",
+       "text": "neither: it is already at equilibrium"
+      }
+     ],
+     "right": [
+      "direction:less"
+     ],
+     "id": "shift_predicted",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Shift predicted"
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "shift_predicted"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "table",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written in x"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      },
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting amount: drop it from the denominator."
+      }
+     ],
+     "right": [
+      "method:solver"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Solving method chosen"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "method"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [],
+   "table": {
+    "species": [
+     "N2",
+     "H2",
+     "NH3"
+    ],
+    "rows": {
+     "I": [
+      "0.000",
+      "0.000",
+      "0.500"
+     ],
+     "C": [
+      "+x",
+      "+3x",
+      "-2x"
+     ],
+     "E": [
+      "x",
+      "3x",
+      "0.500 - 2x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_COEFF_IGNORED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "+x",
+       "-x"
+      ]
+     },
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "-x",
+       "-3x",
+       "+2x"
+      ]
+     }
+    ],
+    "zero_species": [
+     0,
+     1
+    ]
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.0375,
+       "K": 3382.89895
+      },
+      {
+       "x": 0.0875,
+       "K": 66.7376248
+      },
+      {
+       "x": 0.1375,
+       "K": 5.24554334
+      }
+     ],
+     "alt": [],
+     "bent": {
+      "EQ_COEFF_NOT_EXPONENT": [
+       {
+        "x": 0.0375,
+        "K": 100.740741
+       },
+       {
+        "x": 0.0875,
+        "K": 14.1496599
+       },
+       {
+        "x": 0.1375,
+        "K": 3.96694215
+       }
+      ],
+      "EQ_EXPONENT_NOT_IN_TABLE": [
+       {
+        "x": 0.0375,
+        "K": 108167.901
+       },
+       {
+        "x": 0.0875,
+        "K": 2902.7905
+       },
+       {
+        "x": 0.1375,
+        "K": 367.625162
+       }
+      ]
+     },
+     "literal_for": {
+      "K": 0.06
+     },
+     "park_text": "0.060 = (0.500 - 2x)^2 / ( x · (3x)^3 )"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "nN2": 0.0,
+    "nH2": 0.0,
+    "nNH3": 0.5,
+    "V": 1.0
+   },
+   "expected": [
+    {
+     "id": "g_n_NH3",
+     "state": null,
+     "role": "given",
+     "label": "n_NH3",
+     "value": 0.5,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 5.01e-07
+    },
+    {
+     "id": "g_V",
+     "state": null,
+     "role": "given",
+     "label": "V",
+     "value": 1.0,
+     "unit": "L",
+     "dim": {
+      "L": 1
+     },
+     "abs_tol": 1e-06
+    },
+    {
+     "id": "g_Kc",
+     "state": null,
+     "role": "given",
+     "label": "Kc",
+     "value": 0.06,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 6.1e-08
+    }
+   ],
+   "variant_id": "ch13_ice:3",
+   "archetype_id": "ch13_ice",
+   "seed": 3,
+   "opener_index": 0
+  },
+  {
+   "kind": "haber_setup",
+   "fixed_id": "H4",
+   "version": "",
+   "context": {
+    "reaction": "haber_ammonia",
+    "family": "B",
+    "direction": -1
+   },
+   "text": "Inside a steel reactor at 500 °C, nitrogen and hydrogen make ammonia: N2(g) + 3H2(g) ⇌ 2NH3(g). At this temperature, Kc = 0.060. A chemist tests a 5.00 L pilot vessel. She puts in 1.00 mol of ammonia gas. Set up the ICE table. Then write Kc in terms of x.",
+   "givens": {
+    "n_NH3": {
+     "value": 1.0,
+     "unit": "mol"
+    },
+    "V": {
+     "value": 5.0,
+     "unit": "L"
+    },
+    "Kc": {
+     "value": 0.06,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium expression chosen"
+    },
+    {
+     "state": "approach",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "options": [
+      {
+       "id": "approach:findK",
+       "text": "Equilibrium amounts are measured; find K from them."
+      },
+      {
+       "id": "approach:solveX",
+       "text": "K is known; find the equilibrium amounts from it."
+      }
+     ],
+     "right": [
+      "approach:solveX"
+     ],
+     "id": "approach",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Approach chosen"
+    },
+    {
+     "state": "conc_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "approach"
+     ],
+     "rule": "all",
+     "pin": true,
+     "explicit": true,
+     "id": "conc_found",
+     "stage": "units",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Starting concentrations found"
+    },
+    {
+     "state": "shift_predicted",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "conc_found"
+     ],
+     "options": [
+      {
+       "id": "direction:more",
+       "text": "toward more ammonia"
+      },
+      {
+       "id": "direction:less",
+       "text": "toward less ammonia"
+      },
+      {
+       "id": "direction:neither",
+       "text": "neither: it is already at equilibrium"
+      }
+     ],
+     "right": [
+      "direction:less"
+     ],
+     "id": "shift_predicted",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Shift predicted"
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "shift_predicted"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "table",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written in x"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      },
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting amount: drop it from the denominator."
+      }
+     ],
+     "right": [
+      "method:solver"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Solving method chosen"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "method"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [],
+   "table": {
+    "species": [
+     "N2",
+     "H2",
+     "NH3"
+    ],
+    "rows": {
+     "I": [
+      "0.000",
+      "0.000",
+      "0.200"
+     ],
+     "C": [
+      "+x",
+      "+3x",
+      "-2x"
+     ],
+     "E": [
+      "x",
+      "3x",
+      "0.200 - 2x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_COEFF_IGNORED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "+x",
+       "-x"
+      ]
+     },
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "-x",
+       "-3x",
+       "+2x"
+      ]
+     },
+     {
+      "id": "MOLES_NOT_CONCENTRATION",
+      "row": "I",
+      "cells": [
+       "0.000",
+       "0.000",
+       "1.000"
+      ]
+     }
+    ],
+    "zero_species": [
+     0,
+     1
+    ]
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.015,
+       "K": 21143.1184
+      },
+      {
+       "x": 0.035,
+       "K": 417.110155
+      },
+      {
+       "x": 0.055,
+       "K": 32.7846459
+      }
+     ],
+     "alt": [],
+     "bent": {
+      "EQ_COEFF_NOT_EXPONENT": [
+       {
+        "x": 0.015,
+        "K": 251.851852
+       },
+       {
+        "x": 0.035,
+        "K": 35.3741497
+       },
+       {
+        "x": 0.055,
+        "K": 9.91735537
+       }
+      ],
+      "EQ_EXPONENT_NOT_IN_TABLE": [
+       {
+        "x": 0.015,
+        "K": 676049.383
+       },
+       {
+        "x": 0.035,
+        "K": 18142.4406
+       },
+       {
+        "x": 0.055,
+        "K": 2297.65726
+       }
+      ]
+     },
+     "literal_for": {
+      "K": 0.06
+     },
+     "park_text": "0.060 = (0.200 - 2x)^2 / ( x · (3x)^3 )"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "nN2": 0.0,
+    "nH2": 0.0,
+    "nNH3": 1.0,
+    "V": 5.0
+   },
+   "expected": [
+    {
+     "id": "starting_N2",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [N2]",
+     "value": 0.0,
+     "unit": "M",
+     "abs_tol": 0.0001,
+     "require_unit": true
+    },
+    {
+     "id": "starting_H2",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [H2]",
+     "value": 0.0,
+     "unit": "M",
+     "abs_tol": 0.0001,
+     "require_unit": true
+    },
+    {
+     "id": "starting_NH3",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [NH3]",
+     "value": 0.2,
+     "unit": "M",
+     "abs_tol": 0.004,
+     "require_unit": true
+    },
+    {
+     "id": "g_n_NH3",
+     "state": null,
+     "role": "given",
+     "label": "n_NH3",
+     "value": 1.0,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 1e-06
+    },
+    {
+     "id": "g_V",
+     "state": null,
+     "role": "given",
+     "label": "V",
+     "value": 5.0,
+     "unit": "L",
+     "dim": {
+      "L": 1
+     },
+     "abs_tol": 5e-06
+    },
+    {
+     "id": "g_Kc",
+     "state": null,
+     "role": "given",
+     "label": "Kc",
+     "value": 0.06,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 6.1e-08
+    }
+   ],
+   "variant_id": "ch13_ice:4",
+   "archetype_id": "ch13_ice",
+   "seed": 4,
+   "opener_index": 0
+  },
+  {
+   "kind": "haber_setup",
+   "fixed_id": "H5",
+   "version": "",
+   "context": {
+    "reaction": "haber_ammonia",
+    "family": "C (Q > K)",
+    "direction": -1
+   },
+   "text": "Inside a steel reactor at 500 °C, nitrogen and hydrogen make ammonia: N2(g) + 3H2(g) ⇌ 2NH3(g). At this temperature, Kc = 0.060. A chemist tests a 1.00 L pilot vessel. She puts in 0.50 mol of nitrogen gas, 0.50 mol of hydrogen gas and 0.50 mol of ammonia gas. Set up the ICE table. Then write Kc in terms of x.",
+   "givens": {
+    "n_N2": {
+     "value": 0.5,
+     "unit": "mol"
+    },
+    "n_H2": {
+     "value": 0.5,
+     "unit": "mol"
+    },
+    "n_NH3": {
+     "value": 0.5,
+     "unit": "mol"
+    },
+    "V": {
+     "value": 1.0,
+     "unit": "L"
+    },
+    "Kc": {
+     "value": 0.06,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium expression chosen"
+    },
+    {
+     "state": "approach",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "options": [
+      {
+       "id": "approach:findK",
+       "text": "Equilibrium amounts are measured; find K from them."
+      },
+      {
+       "id": "approach:solveX",
+       "text": "K is known; find the equilibrium amounts from it."
+      }
+     ],
+     "right": [
+      "approach:solveX"
+     ],
+     "id": "approach",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Approach chosen"
+    },
+    {
+     "state": "Q_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "approach"
+     ],
+     "explicit": true,
+     "id": "Q_found",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Q found"
+    },
+    {
+     "state": "shift_predicted",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "Q_found"
+     ],
+     "options": [
+      {
+       "id": "direction:more",
+       "text": "toward more ammonia"
+      },
+      {
+       "id": "direction:less",
+       "text": "toward less ammonia"
+      },
+      {
+       "id": "direction:neither",
+       "text": "neither: it is already at equilibrium"
+      }
+     ],
+     "right": [
+      "direction:less"
+     ],
+     "id": "shift_predicted",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Shift predicted"
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "shift_predicted"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "table",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written in x"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      },
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting amount: drop it from the denominator."
+      }
+     ],
+     "right": [
+      "method:solver"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Solving method chosen"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "method"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [],
+   "table": {
+    "species": [
+     "N2",
+     "H2",
+     "NH3"
+    ],
+    "rows": {
+     "I": [
+      "0.500",
+      "0.500",
+      "0.500"
+     ],
+     "C": [
+      "+x",
+      "+3x",
+      "-2x"
+     ],
+     "E": [
+      "0.500 + x",
+      "0.500 + 3x",
+      "0.500 - 2x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_COEFF_IGNORED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "+x",
+       "-x"
+      ]
+     },
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "-x",
+       "-3x",
+       "+2x"
+      ]
+     }
+    ],
+    "zero_species": []
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.0375,
+       "K": 1.46245029
+      },
+      {
+       "x": 0.0875,
+       "K": 0.405545239
+      },
+      {
+       "x": 0.1375,
+       "K": 0.10451683
+      }
+     ],
+     "alt": [],
+     "bent": {
+      "EQ_COEFF_NOT_EXPONENT": [
+       {
+        "x": 0.0375,
+        "K": 1.29093498
+       },
+       {
+        "x": 0.0875,
+        "K": 0.725497035
+       },
+       {
+        "x": 0.1375,
+        "K": 0.386784851
+       }
+      ],
+      "EQ_EXPONENT_NOT_IN_TABLE": [
+       {
+        "x": 0.0375,
+        "K": 2.56276981
+       },
+       {
+        "x": 0.0875,
+        "K": 1.42829009
+       },
+       {
+        "x": 0.1375,
+        "K": 0.795600899
+       }
+      ]
+     },
+     "literal_for": {
+      "K": 0.06
+     },
+     "park_text": "0.060 = (0.500 - 2x)^2 / ( (0.500 + x) · (0.500 + 3x)^3 )"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "nN2": 0.5,
+    "nH2": 0.5,
+    "nNH3": 0.5,
+    "V": 1.0
+   },
+   "expected": [
+    {
+     "id": "Q_at_the_start",
+     "role": "intermediate",
+     "dim": {},
+     "state": "Q_found",
+     "label": "Q at the start",
+     "value": 4.0,
+     "unit": "",
+     "abs_tol": 0.08,
+     "require_unit": false,
+     "after": "approach"
+    },
+    {
+     "id": "g_n_N2",
+     "state": null,
+     "role": "given",
+     "label": "n_N2",
+     "value": 0.5,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 5.01e-07
+    },
+    {
+     "id": "g_n_H2",
+     "state": null,
+     "role": "given",
+     "label": "n_H2",
+     "value": 0.5,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 5.01e-07
+    },
+    {
+     "id": "g_n_NH3",
+     "state": null,
+     "role": "given",
+     "label": "n_NH3",
+     "value": 0.5,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 5.01e-07
+    },
+    {
+     "id": "g_V",
+     "state": null,
+     "role": "given",
+     "label": "V",
+     "value": 1.0,
+     "unit": "L",
+     "dim": {
+      "L": 1
+     },
+     "abs_tol": 1e-06
+    },
+    {
+     "id": "g_Kc",
+     "state": null,
+     "role": "given",
+     "label": "Kc",
+     "value": 0.06,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 6.1e-08
+    }
+   ],
+   "variant_id": "ch13_ice:5",
+   "archetype_id": "ch13_ice",
+   "seed": 5,
+   "opener_index": 0
+  },
+  {
+   "kind": "haber_setup",
+   "fixed_id": "H6",
+   "version": "",
+   "context": {
+    "reaction": "haber_ammonia",
+    "family": "C (Q < K)",
+    "direction": 1
+   },
+   "text": "Inside a steel reactor at 500 °C, nitrogen and hydrogen make ammonia: N2(g) + 3H2(g) ⇌ 2NH3(g). At this temperature, Kc = 0.060. A chemist tests a 1.00 L pilot vessel. She puts in 0.50 mol of nitrogen gas, 1.00 mol of hydrogen gas and 0.10 mol of ammonia gas. Set up the ICE table. Then write Kc in terms of x.",
+   "givens": {
+    "n_N2": {
+     "value": 0.5,
+     "unit": "mol"
+    },
+    "n_H2": {
+     "value": 1.0,
+     "unit": "mol"
+    },
+    "n_NH3": {
+     "value": 0.1,
+     "unit": "mol"
+    },
+    "V": {
+     "value": 1.0,
+     "unit": "L"
+    },
+    "Kc": {
+     "value": 0.06,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium expression chosen"
+    },
+    {
+     "state": "approach",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "options": [
+      {
+       "id": "approach:findK",
+       "text": "Equilibrium amounts are measured; find K from them."
+      },
+      {
+       "id": "approach:solveX",
+       "text": "K is known; find the equilibrium amounts from it."
+      }
+     ],
+     "right": [
+      "approach:solveX"
+     ],
+     "id": "approach",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Approach chosen"
+    },
+    {
+     "state": "Q_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "approach"
+     ],
+     "explicit": true,
+     "id": "Q_found",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Q found"
+    },
+    {
+     "state": "shift_predicted",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "Q_found"
+     ],
+     "options": [
+      {
+       "id": "direction:more",
+       "text": "toward more ammonia"
+      },
+      {
+       "id": "direction:less",
+       "text": "toward less ammonia"
+      },
+      {
+       "id": "direction:neither",
+       "text": "neither: it is already at equilibrium"
+      }
+     ],
+     "right": [
+      "direction:more"
+     ],
+     "id": "shift_predicted",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Shift predicted"
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "shift_predicted"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "table",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written in x"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      },
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting amount: drop it from the denominator."
+      }
+     ],
+     "right": [
+      "method:solver"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Solving method chosen"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "method"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [],
+   "table": {
+    "species": [
+     "N2",
+     "H2",
+     "NH3"
+    ],
+    "rows": {
+     "I": [
+      "0.500",
+      "1.000",
+      "0.100"
+     ],
+     "C": [
+      "-x",
+      "-3x",
+      "+2x"
+     ],
+     "E": [
+      "0.500 - x",
+      "1.000 - 3x",
+      "0.100 + 2x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_COEFF_IGNORED",
+      "row": "C",
+      "cells": [
+       "-x",
+       "-x",
+       "+x"
+      ]
+     },
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "+3x",
+       "-2x"
+      ]
+     }
+    ],
+    "zero_species": []
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.05,
+       "K": 0.144740711
+      },
+      {
+       "x": 0.116666667,
+       "K": 1.05545771
+      },
+      {
+       "x": 0.183333333,
+       "K": 7.54698818
+      }
+     ],
+     "alt": [],
+     "bent": {
+      "EQ_COEFF_NOT_EXPONENT": [
+       {
+        "x": 0.05,
+        "K": 0.522875817
+       },
+       {
+        "x": 0.116666667,
+        "K": 1.33779264
+       },
+       {
+        "x": 0.183333333,
+        "K": 3.2748538
+       }
+      ],
+      "EQ_EXPONENT_NOT_IN_TABLE": [
+       {
+        "x": 0.05,
+        "K": 0.058317539
+       },
+       {
+        "x": 0.116666667,
+        "K": 0.177678042
+       },
+       {
+        "x": 0.183333333,
+        "K": 0.465434426
+       }
+      ]
+     },
+     "literal_for": {
+      "K": 0.06
+     },
+     "park_text": "0.060 = (0.100 + 2x)^2 / ( (0.500 - x) · (1.000 - 3x)^3 )"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "nN2": 0.5,
+    "nH2": 1.0,
+    "nNH3": 0.1,
+    "V": 1.0
+   },
+   "expected": [
+    {
+     "id": "Q_at_the_start",
+     "role": "intermediate",
+     "dim": {},
+     "state": "Q_found",
+     "label": "Q at the start",
+     "value": 0.02,
+     "unit": "",
+     "abs_tol": 0.0004,
+     "require_unit": false,
+     "after": "approach"
+    },
+    {
+     "id": "g_n_N2",
+     "state": null,
+     "role": "given",
+     "label": "n_N2",
+     "value": 0.5,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 5.01e-07
+    },
+    {
+     "id": "g_n_H2",
+     "state": null,
+     "role": "given",
+     "label": "n_H2",
+     "value": 1.0,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 1e-06
+    },
+    {
+     "id": "g_n_NH3",
+     "state": null,
+     "role": "given",
+     "label": "n_NH3",
+     "value": 0.1,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 1.01e-07
+    },
+    {
+     "id": "g_V",
+     "state": null,
+     "role": "given",
+     "label": "V",
+     "value": 1.0,
+     "unit": "L",
+     "dim": {
+      "L": 1
+     },
+     "abs_tol": 1e-06
+    },
+    {
+     "id": "g_Kc",
+     "state": null,
+     "role": "given",
+     "label": "Kc",
+     "value": 0.06,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 6.1e-08
+    }
+   ],
+   "variant_id": "ch13_ice:6",
+   "archetype_id": "ch13_ice",
+   "seed": 6,
+   "opener_index": 0
+  },
+  {
+   "kind": "wgs_equilibrium",
+   "fixed_id": "M1",
+   "version": "equal",
+   "context": {
+    "reaction": "wgs",
+    "family": "A equal",
+    "direction": 1
+   },
+   "text": "On Mars, a rover fills a sealed 10.0 L steel chamber with 5.00 mol of carbon monoxide and 5.00 mol of steam and heats it to 800 K. Inside, CO(g) + H2O(g) ⇌ CO2(g) + H2(g), and Kc = 4.00. What is the concentration of hydrogen at equilibrium? How much carbon monoxide is left?",
+   "givens": {
+    "n_CO": {
+     "value": 5.0,
+     "unit": "mol"
+    },
+    "n_H2O": {
+     "value": 5.0,
+     "unit": "mol"
+    },
+    "V": {
+     "value": 10.0,
+     "unit": "L"
+    },
+    "Kc": {
+     "value": 4.0,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium expression chosen"
+    },
+    {
+     "state": "approach",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "options": [
+      {
+       "id": "approach:findK",
+       "text": "Equilibrium amounts are measured; find K from them."
+      },
+      {
+       "id": "approach:solveX",
+       "text": "K is known; find the equilibrium amounts from it."
+      }
+     ],
+     "right": [
+      "approach:solveX"
+     ],
+     "id": "approach",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Approach chosen"
+    },
+    {
+     "state": "conc_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "approach"
+     ],
+     "rule": "all",
+     "pin": true,
+     "explicit": true,
+     "id": "conc_found",
+     "stage": "units",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Starting concentrations found"
+    },
+    {
+     "state": "Q_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "conc_found"
+     ],
+     "explicit": true,
+     "id": "Q_found",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Q found"
+    },
+    {
+     "state": "shift_predicted",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "Q_found"
+     ],
+     "options": [
+      {
+       "id": "direction:more",
+       "text": "toward more hydrogen"
+      },
+      {
+       "id": "direction:less",
+       "text": "toward less hydrogen"
+      },
+      {
+       "id": "direction:neither",
+       "text": "neither: it is already at equilibrium"
+      }
+     ],
+     "right": [
+      "direction:more"
+     ],
+     "id": "shift_predicted",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Shift predicted"
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "shift_predicted"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "table",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written in x"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      },
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting amount: drop it from the denominator."
+      }
+     ],
+     "right": [
+      "method:sqrt"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Solving method chosen"
+    },
+    {
+     "state": "x_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "method"
+     ],
+     "explicit": true,
+     "id": "x_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "x found"
+    },
+    {
+     "state": "other_root_checked",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "x_found"
+     ],
+     "explicit": true,
+     "id": "other_root_checked",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Other root checked"
+    },
+    {
+     "state": "value_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "other_root_checked"
+     ],
+     "explicit": true,
+     "id": "value_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Answer found"
+    },
+    {
+     "state": "leftover_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "value_found"
+     ],
+     "explicit": true,
+     "id": "leftover_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Leftover found"
+    },
+    {
+     "state": "K_confirmed",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "leftover_found"
+     ],
+     "explicit": true,
+     "id": "K_confirmed",
+     "stage": "check",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "K confirmed"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "K_confirmed"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "PHANTOM_ROOT",
+     "state": "x_found",
+     "value": 1.0,
+     "unit": "",
+     "abs_tol": 0.02
+    },
+    {
+     "id": "LEFTOVER_FOR_PRODUCT",
+     "state": "value_found",
+     "value": 0.16667,
+     "unit": "M",
+     "abs_tol": 0.00333
+    },
+    {
+     "id": "LEFTOVER_FOR_PRODUCT",
+     "state": "leftover_found",
+     "value": 0.33333,
+     "unit": "M",
+     "abs_tol": 0.00667
+    },
+    {
+     "id": "MOLES_NOT_CONCENTRATION",
+     "state": "value_found",
+     "value": 3.3333,
+     "unit": "M",
+     "abs_tol": 0.0667
+    },
+    {
+     "id": "SQRT_ONE_SIDE",
+     "state": "x_found",
+     "value": 0.4,
+     "unit": "",
+     "abs_tol": 0.008
+    },
+    {
+     "id": "EXCEEDS_INITIAL",
+     "state": "x_found",
+     "above": 0.51,
+     "unit": ""
+    }
+   ],
+   "table": {
+    "species": [
+     "CO",
+     "H2O",
+     "CO2",
+     "H2"
+    ],
+    "rows": {
+     "I": [
+      "0.500",
+      "0.500",
+      "0.000",
+      "0.000"
+     ],
+     "C": [
+      "-x",
+      "-x",
+      "+x",
+      "+x"
+     ],
+     "E": [
+      "0.500 - x",
+      "0.500 - x",
+      "x",
+      "x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_COEFF_IGNORED",
+      "row": "C",
+      "cells": [
+       "-x",
+       "-x",
+       "+x",
+       "+x"
+      ]
+     },
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "+x",
+       "-x",
+       "-x"
+      ]
+     },
+     {
+      "id": "MOLES_NOT_CONCENTRATION",
+      "row": "I",
+      "cells": [
+       "5.000",
+       "5.000",
+       "0.000",
+       "0.000"
+      ]
+     }
+    ],
+    "zero_species": [
+     2,
+     3
+    ]
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.075,
+       "K": 0.0311418685
+      },
+      {
+       "x": 0.175,
+       "K": 0.289940828
+      },
+      {
+       "x": 0.275,
+       "K": 1.49382716
+      }
+     ],
+     "alt": [],
+     "bent": {},
+     "literal_for": {
+      "K": 4.0
+     },
+     "park_text": "4.000 = x · x / ( (0.500 - x) · (0.500 - x) )"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "nCO": 5.0,
+    "nH2O": 5.0,
+    "nCO2": 0.0,
+    "nH2": 0.0,
+    "V": 10.0
+   },
+   "expected": [
+    {
+     "id": "starting_CO",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [CO]",
+     "value": 0.5,
+     "unit": "M",
+     "abs_tol": 0.01,
+     "require_unit": true
+    },
+    {
+     "id": "starting_H2O",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [H2O]",
+     "value": 0.5,
+     "unit": "M",
+     "abs_tol": 0.01,
+     "require_unit": true
+    },
+    {
+     "id": "starting_CO2",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [CO2]",
+     "value": 0.0,
+     "unit": "M",
+     "abs_tol": 0.0001,
+     "require_unit": true
+    },
+    {
+     "id": "starting_H2",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [H2]",
+     "value": 0.0,
+     "unit": "M",
+     "abs_tol": 0.0001,
+     "require_unit": true
+    },
+    {
+     "id": "Q_at_the_start",
+     "role": "intermediate",
+     "dim": {},
+     "state": "Q_found",
+     "label": "Q at the start",
+     "value": 0.0,
+     "unit": "",
+     "abs_tol": 0.0001,
+     "require_unit": false,
+     "after": "conc_found"
+    },
+    {
+     "id": "x",
+     "role": "intermediate",
+     "dim": {},
+     "state": "x_found",
+     "label": "x",
+     "value": 0.333333,
+     "unit": "",
+     "abs_tol": 0.00667,
+     "require_unit": false
+    },
+    {
+     "id": "the_other_root",
+     "role": "intermediate",
+     "dim": {},
+     "state": "other_root_checked",
+     "label": "the other root",
+     "value": 1.0,
+     "unit": "",
+     "abs_tol": 0.02,
+     "require_unit": false,
+     "after": "x_found",
+     "also": []
+    },
+    {
+     "id": "key_value_found",
+     "role": "key",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "value_found",
+     "label": "equilibrium [H2]",
+     "value": 0.333333,
+     "unit": "M",
+     "abs_tol": 0.00667,
+     "require_unit": true
+    },
+    {
+     "id": "equilibrium_CO",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "leftover_found",
+     "label": "equilibrium [CO]",
+     "value": 0.166667,
+     "unit": "M",
+     "abs_tol": 0.00333,
+     "require_unit": true
+    },
+    {
+     "id": "Kc_from_the_equilibrium_row",
+     "role": "intermediate",
+     "dim": {},
+     "state": "K_confirmed",
+     "label": "Kc from the equilibrium row",
+     "value": 4.0,
+     "unit": "",
+     "abs_tol": 0.12,
+     "require_unit": false,
+     "after": "leftover_found"
+    },
+    {
+     "id": "g_n_CO",
+     "state": null,
+     "role": "given",
+     "label": "n_CO",
+     "value": 5.0,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 5e-06
+    },
+    {
+     "id": "g_n_H2O",
+     "state": null,
+     "role": "given",
+     "label": "n_H2O",
+     "value": 5.0,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 5e-06
+    },
+    {
+     "id": "g_V",
+     "state": null,
+     "role": "given",
+     "label": "V",
+     "value": 10.0,
+     "unit": "L",
+     "dim": {
+      "L": 1
+     },
+     "abs_tol": 1e-05
+    },
+    {
+     "id": "g_Kc",
+     "state": null,
+     "role": "given",
+     "label": "Kc",
+     "value": 4.0,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 4e-06
+    }
+   ],
+   "variant_id": "ch13_ice:7",
+   "archetype_id": "ch13_ice",
+   "seed": 7,
+   "opener_index": 1
+  },
+  {
+   "kind": "wgs_equilibrium",
+   "fixed_id": "M2",
+   "version": "equal",
+   "context": {
+    "reaction": "wgs",
+    "family": "A equal",
+    "direction": 1
+   },
+   "text": "On Mars, a rover fills a sealed 2.00 L steel chamber with 2.00 mol of carbon monoxide and 2.00 mol of steam and heats it to 800 K. Inside, CO(g) + H2O(g) ⇌ CO2(g) + H2(g), and Kc = 4.00. What is the concentration of hydrogen at equilibrium? How much carbon monoxide is left?",
+   "givens": {
+    "n_CO": {
+     "value": 2.0,
+     "unit": "mol"
+    },
+    "n_H2O": {
+     "value": 2.0,
+     "unit": "mol"
+    },
+    "V": {
+     "value": 2.0,
+     "unit": "L"
+    },
+    "Kc": {
+     "value": 4.0,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium expression chosen"
+    },
+    {
+     "state": "approach",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "options": [
+      {
+       "id": "approach:findK",
+       "text": "Equilibrium amounts are measured; find K from them."
+      },
+      {
+       "id": "approach:solveX",
+       "text": "K is known; find the equilibrium amounts from it."
+      }
+     ],
+     "right": [
+      "approach:solveX"
+     ],
+     "id": "approach",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Approach chosen"
+    },
+    {
+     "state": "conc_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "approach"
+     ],
+     "rule": "all",
+     "pin": true,
+     "explicit": true,
+     "id": "conc_found",
+     "stage": "units",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Starting concentrations found"
+    },
+    {
+     "state": "Q_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "conc_found"
+     ],
+     "explicit": true,
+     "id": "Q_found",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Q found"
+    },
+    {
+     "state": "shift_predicted",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "Q_found"
+     ],
+     "options": [
+      {
+       "id": "direction:more",
+       "text": "toward more hydrogen"
+      },
+      {
+       "id": "direction:less",
+       "text": "toward less hydrogen"
+      },
+      {
+       "id": "direction:neither",
+       "text": "neither: it is already at equilibrium"
+      }
+     ],
+     "right": [
+      "direction:more"
+     ],
+     "id": "shift_predicted",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Shift predicted"
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "shift_predicted"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "table",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written in x"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      },
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting amount: drop it from the denominator."
+      }
+     ],
+     "right": [
+      "method:sqrt"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Solving method chosen"
+    },
+    {
+     "state": "x_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "method"
+     ],
+     "explicit": true,
+     "id": "x_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "x found"
+    },
+    {
+     "state": "other_root_checked",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "x_found"
+     ],
+     "explicit": true,
+     "id": "other_root_checked",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Other root checked"
+    },
+    {
+     "state": "value_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "other_root_checked"
+     ],
+     "explicit": true,
+     "id": "value_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Answer found"
+    },
+    {
+     "state": "leftover_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "value_found"
+     ],
+     "explicit": true,
+     "id": "leftover_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Leftover found"
+    },
+    {
+     "state": "K_confirmed",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "leftover_found"
+     ],
+     "explicit": true,
+     "id": "K_confirmed",
+     "stage": "check",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "K confirmed"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "K_confirmed"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "PHANTOM_ROOT",
+     "state": "x_found",
+     "value": 2.0,
+     "unit": "",
+     "abs_tol": 0.04
+    },
+    {
+     "id": "LEFTOVER_FOR_PRODUCT",
+     "state": "value_found",
+     "value": 0.33333,
+     "unit": "M",
+     "abs_tol": 0.00667
+    },
+    {
+     "id": "LEFTOVER_FOR_PRODUCT",
+     "state": "leftover_found",
+     "value": 0.66667,
+     "unit": "M",
+     "abs_tol": 0.0133
+    },
+    {
+     "id": "MOLES_NOT_CONCENTRATION",
+     "state": "value_found",
+     "value": 1.3333,
+     "unit": "M",
+     "abs_tol": 0.0267
+    },
+    {
+     "id": "SQRT_ONE_SIDE",
+     "state": "x_found",
+     "value": 0.8,
+     "unit": "",
+     "abs_tol": 0.016
+    },
+    {
+     "id": "EXCEEDS_INITIAL",
+     "state": "x_found",
+     "above": 1.02,
+     "unit": ""
+    }
+   ],
+   "table": {
+    "species": [
+     "CO",
+     "H2O",
+     "CO2",
+     "H2"
+    ],
+    "rows": {
+     "I": [
+      "1.000",
+      "1.000",
+      "0.000",
+      "0.000"
+     ],
+     "C": [
+      "-x",
+      "-x",
+      "+x",
+      "+x"
+     ],
+     "E": [
+      "1.000 - x",
+      "1.000 - x",
+      "x",
+      "x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_COEFF_IGNORED",
+      "row": "C",
+      "cells": [
+       "-x",
+       "-x",
+       "+x",
+       "+x"
+      ]
+     },
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "+x",
+       "-x",
+       "-x"
+      ]
+     },
+     {
+      "id": "MOLES_NOT_CONCENTRATION",
+      "row": "I",
+      "cells": [
+       "2.000",
+       "2.000",
+       "0.000",
+       "0.000"
+      ]
+     }
+    ],
+    "zero_species": [
+     2,
+     3
+    ]
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.15,
+       "K": 0.0311418685
+      },
+      {
+       "x": 0.35,
+       "K": 0.289940828
+      },
+      {
+       "x": 0.55,
+       "K": 1.49382716
+      }
+     ],
+     "alt": [],
+     "bent": {},
+     "literal_for": {
+      "K": 4.0
+     },
+     "park_text": "4.000 = x · x / ( (1.000 - x) · (1.000 - x) )"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "nCO": 2.0,
+    "nH2O": 2.0,
+    "nCO2": 0.0,
+    "nH2": 0.0,
+    "V": 2.0
+   },
+   "expected": [
+    {
+     "id": "starting_CO",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [CO]",
+     "value": 1.0,
+     "unit": "M",
+     "abs_tol": 0.02,
+     "require_unit": true
+    },
+    {
+     "id": "starting_H2O",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [H2O]",
+     "value": 1.0,
+     "unit": "M",
+     "abs_tol": 0.02,
+     "require_unit": true
+    },
+    {
+     "id": "starting_CO2",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [CO2]",
+     "value": 0.0,
+     "unit": "M",
+     "abs_tol": 0.0001,
+     "require_unit": true
+    },
+    {
+     "id": "starting_H2",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [H2]",
+     "value": 0.0,
+     "unit": "M",
+     "abs_tol": 0.0001,
+     "require_unit": true
+    },
+    {
+     "id": "Q_at_the_start",
+     "role": "intermediate",
+     "dim": {},
+     "state": "Q_found",
+     "label": "Q at the start",
+     "value": 0.0,
+     "unit": "",
+     "abs_tol": 0.0001,
+     "require_unit": false,
+     "after": "conc_found"
+    },
+    {
+     "id": "x",
+     "role": "intermediate",
+     "dim": {},
+     "state": "x_found",
+     "label": "x",
+     "value": 0.666667,
+     "unit": "",
+     "abs_tol": 0.0133,
+     "require_unit": false
+    },
+    {
+     "id": "the_other_root",
+     "role": "intermediate",
+     "dim": {},
+     "state": "other_root_checked",
+     "label": "the other root",
+     "value": 2.0,
+     "unit": "",
+     "abs_tol": 0.04,
+     "require_unit": false,
+     "after": "x_found",
+     "also": []
+    },
+    {
+     "id": "key_value_found",
+     "role": "key",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "value_found",
+     "label": "equilibrium [H2]",
+     "value": 0.666667,
+     "unit": "M",
+     "abs_tol": 0.0133,
+     "require_unit": true
+    },
+    {
+     "id": "equilibrium_CO",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "leftover_found",
+     "label": "equilibrium [CO]",
+     "value": 0.333333,
+     "unit": "M",
+     "abs_tol": 0.00667,
+     "require_unit": true
+    },
+    {
+     "id": "Kc_from_the_equilibrium_row",
+     "role": "intermediate",
+     "dim": {},
+     "state": "K_confirmed",
+     "label": "Kc from the equilibrium row",
+     "value": 4.0,
+     "unit": "",
+     "abs_tol": 0.12,
+     "require_unit": false,
+     "after": "leftover_found"
+    },
+    {
+     "id": "g_n_CO",
+     "state": null,
+     "role": "given",
+     "label": "n_CO",
+     "value": 2.0,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 2e-06
+    },
+    {
+     "id": "g_n_H2O",
+     "state": null,
+     "role": "given",
+     "label": "n_H2O",
+     "value": 2.0,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 2e-06
+    },
+    {
+     "id": "g_V",
+     "state": null,
+     "role": "given",
+     "label": "V",
+     "value": 2.0,
+     "unit": "L",
+     "dim": {
+      "L": 1
+     },
+     "abs_tol": 2e-06
+    },
+    {
+     "id": "g_Kc",
+     "state": null,
+     "role": "given",
+     "label": "Kc",
+     "value": 4.0,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 4e-06
+    }
+   ],
+   "variant_id": "ch13_ice:8",
+   "archetype_id": "ch13_ice",
+   "seed": 8,
+   "opener_index": 1
+  },
+  {
+   "kind": "wgs_equilibrium",
+   "fixed_id": "M3",
+   "version": "unequal",
+   "context": {
+    "reaction": "wgs",
+    "family": "B unequal",
+    "direction": 1
+   },
+   "text": "On Mars, a rover fills a sealed 2.00 L steel chamber with 1.00 mol of carbon monoxide and 0.60 mol of steam and heats it to 800 K. Inside, CO(g) + H2O(g) ⇌ CO2(g) + H2(g), and Kc = 4.00. What is the concentration of hydrogen at equilibrium? How much carbon monoxide is left?",
+   "givens": {
+    "n_CO": {
+     "value": 1.0,
+     "unit": "mol"
+    },
+    "n_H2O": {
+     "value": 0.6,
+     "unit": "mol"
+    },
+    "V": {
+     "value": 2.0,
+     "unit": "L"
+    },
+    "Kc": {
+     "value": 4.0,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium expression chosen"
+    },
+    {
+     "state": "approach",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "options": [
+      {
+       "id": "approach:findK",
+       "text": "Equilibrium amounts are measured; find K from them."
+      },
+      {
+       "id": "approach:solveX",
+       "text": "K is known; find the equilibrium amounts from it."
+      }
+     ],
+     "right": [
+      "approach:solveX"
+     ],
+     "id": "approach",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Approach chosen"
+    },
+    {
+     "state": "conc_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "approach"
+     ],
+     "rule": "all",
+     "pin": true,
+     "explicit": true,
+     "id": "conc_found",
+     "stage": "units",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Starting concentrations found"
+    },
+    {
+     "state": "Q_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "conc_found"
+     ],
+     "explicit": true,
+     "id": "Q_found",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Q found"
+    },
+    {
+     "state": "shift_predicted",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "Q_found"
+     ],
+     "options": [
+      {
+       "id": "direction:more",
+       "text": "toward more hydrogen"
+      },
+      {
+       "id": "direction:less",
+       "text": "toward less hydrogen"
+      },
+      {
+       "id": "direction:neither",
+       "text": "neither: it is already at equilibrium"
+      }
+     ],
+     "right": [
+      "direction:more"
+     ],
+     "id": "shift_predicted",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Shift predicted"
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "shift_predicted"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "table",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written in x"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      },
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting amount: drop it from the denominator."
+      }
+     ],
+     "right": [
+      "method:quadratic"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Solving method chosen"
+    },
+    {
+     "state": "x_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "method"
+     ],
+     "explicit": true,
+     "id": "x_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "x found"
+    },
+    {
+     "state": "other_root_checked",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "x_found"
+     ],
+     "explicit": true,
+     "id": "other_root_checked",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Other root checked"
+    },
+    {
+     "state": "value_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "other_root_checked"
+     ],
+     "explicit": true,
+     "id": "value_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Answer found"
+    },
+    {
+     "state": "leftover_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "value_found"
+     ],
+     "explicit": true,
+     "id": "leftover_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Leftover found"
+    },
+    {
+     "state": "K_confirmed",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "leftover_found"
+     ],
+     "explicit": true,
+     "id": "K_confirmed",
+     "stage": "check",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "K confirmed"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "K_confirmed"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "PHANTOM_ROOT",
+     "state": "x_found",
+     "value": 0.82393,
+     "unit": "",
+     "abs_tol": 0.0165
+    },
+    {
+     "id": "MOLES_NOT_CONCENTRATION",
+     "state": "value_found",
+     "value": 0.48548,
+     "unit": "M",
+     "abs_tol": 0.00971
+    },
+    {
+     "id": "SQRT_ON_NONSQUARE",
+     "state": "x_found",
+     "value": 0.33333,
+     "unit": "",
+     "abs_tol": 0.00667
+    },
+    {
+     "id": "SQRT_ON_NONSQUARE",
+     "state": "x_found",
+     "value": 0.2,
+     "unit": "",
+     "abs_tol": 0.004
+    },
+    {
+     "id": "EXCEEDS_INITIAL",
+     "state": "x_found",
+     "above": 0.306,
+     "unit": ""
+    }
+   ],
+   "table": {
+    "species": [
+     "CO",
+     "H2O",
+     "CO2",
+     "H2"
+    ],
+    "rows": {
+     "I": [
+      "0.500",
+      "0.300",
+      "0.000",
+      "0.000"
+     ],
+     "C": [
+      "-x",
+      "-x",
+      "+x",
+      "+x"
+     ],
+     "E": [
+      "0.500 - x",
+      "0.300 - x",
+      "x",
+      "x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_COEFF_IGNORED",
+      "row": "C",
+      "cells": [
+       "-x",
+       "-x",
+       "+x",
+       "+x"
+      ]
+     },
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "+x",
+       "-x",
+       "-x"
+      ]
+     },
+     {
+      "id": "MOLES_NOT_CONCENTRATION",
+      "row": "I",
+      "cells": [
+       "1.000",
+       "0.600",
+       "0.000",
+       "0.000"
+      ]
+     }
+    ],
+    "zero_species": [
+     2,
+     3
+    ]
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.045,
+       "K": 0.0174531351
+      },
+      {
+       "x": 0.105,
+       "K": 0.143135346
+      },
+      {
+       "x": 0.165,
+       "K": 0.60199005
+      }
+     ],
+     "alt": [],
+     "bent": {},
+     "literal_for": {
+      "K": 4.0
+     },
+     "park_text": "4.000 = x · x / ( (0.500 - x) · (0.300 - x) )"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "nCO": 1.0,
+    "nH2O": 0.6,
+    "nCO2": 0.0,
+    "nH2": 0.0,
+    "V": 2.0
+   },
+   "expected": [
+    {
+     "id": "starting_CO",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [CO]",
+     "value": 0.5,
+     "unit": "M",
+     "abs_tol": 0.01,
+     "require_unit": true
+    },
+    {
+     "id": "starting_H2O",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [H2O]",
+     "value": 0.3,
+     "unit": "M",
+     "abs_tol": 0.006,
+     "require_unit": true
+    },
+    {
+     "id": "starting_CO2",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [CO2]",
+     "value": 0.0,
+     "unit": "M",
+     "abs_tol": 0.0001,
+     "require_unit": true
+    },
+    {
+     "id": "starting_H2",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [H2]",
+     "value": 0.0,
+     "unit": "M",
+     "abs_tol": 0.0001,
+     "require_unit": true
+    },
+    {
+     "id": "Q_at_the_start",
+     "role": "intermediate",
+     "dim": {},
+     "state": "Q_found",
+     "label": "Q at the start",
+     "value": 0.0,
+     "unit": "",
+     "abs_tol": 0.0001,
+     "require_unit": false,
+     "after": "conc_found"
+    },
+    {
+     "id": "x",
+     "role": "intermediate",
+     "dim": {},
+     "state": "x_found",
+     "label": "x",
+     "value": 0.24274,
+     "unit": "",
+     "abs_tol": 0.00485,
+     "require_unit": false
+    },
+    {
+     "id": "the_other_root",
+     "role": "intermediate",
+     "dim": {},
+     "state": "other_root_checked",
+     "label": "the other root",
+     "value": 0.823927,
+     "unit": "",
+     "abs_tol": 0.0165,
+     "require_unit": false,
+     "after": "x_found",
+     "also": []
+    },
+    {
+     "id": "key_value_found",
+     "role": "key",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "value_found",
+     "label": "equilibrium [H2]",
+     "value": 0.24274,
+     "unit": "M",
+     "abs_tol": 0.00485,
+     "require_unit": true
+    },
+    {
+     "id": "equilibrium_CO",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "leftover_found",
+     "label": "equilibrium [CO]",
+     "value": 0.25726,
+     "unit": "M",
+     "abs_tol": 0.00515,
+     "require_unit": true
+    },
+    {
+     "id": "Kc_from_the_equilibrium_row",
+     "role": "intermediate",
+     "dim": {},
+     "state": "K_confirmed",
+     "label": "Kc from the equilibrium row",
+     "value": 4.0,
+     "unit": "",
+     "abs_tol": 0.12,
+     "require_unit": false,
+     "after": "leftover_found"
+    },
+    {
+     "id": "g_n_CO",
+     "state": null,
+     "role": "given",
+     "label": "n_CO",
+     "value": 1.0,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 1e-06
+    },
+    {
+     "id": "g_n_H2O",
+     "state": null,
+     "role": "given",
+     "label": "n_H2O",
+     "value": 0.6,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 6.01e-07
+    },
+    {
+     "id": "g_V",
+     "state": null,
+     "role": "given",
+     "label": "V",
+     "value": 2.0,
+     "unit": "L",
+     "dim": {
+      "L": 1
+     },
+     "abs_tol": 2e-06
+    },
+    {
+     "id": "g_Kc",
+     "state": null,
+     "role": "given",
+     "label": "Kc",
+     "value": 4.0,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 4e-06
+    }
+   ],
+   "variant_id": "ch13_ice:9",
+   "archetype_id": "ch13_ice",
+   "seed": 9,
+   "opener_index": 1
+  },
+  {
+   "kind": "wgs_equilibrium",
+   "fixed_id": "M4",
+   "version": "unequal",
+   "context": {
+    "reaction": "wgs",
+    "family": "B unequal",
+    "direction": 1
+   },
+   "text": "On Mars, a rover fills a sealed 5.00 L steel chamber with 2.00 mol of carbon monoxide and 1.00 mol of steam and heats it to 800 K. Inside, CO(g) + H2O(g) ⇌ CO2(g) + H2(g), and Kc = 4.00. What is the concentration of hydrogen at equilibrium? How much carbon monoxide is left?",
+   "givens": {
+    "n_CO": {
+     "value": 2.0,
+     "unit": "mol"
+    },
+    "n_H2O": {
+     "value": 1.0,
+     "unit": "mol"
+    },
+    "V": {
+     "value": 5.0,
+     "unit": "L"
+    },
+    "Kc": {
+     "value": 4.0,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium expression chosen"
+    },
+    {
+     "state": "approach",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "options": [
+      {
+       "id": "approach:findK",
+       "text": "Equilibrium amounts are measured; find K from them."
+      },
+      {
+       "id": "approach:solveX",
+       "text": "K is known; find the equilibrium amounts from it."
+      }
+     ],
+     "right": [
+      "approach:solveX"
+     ],
+     "id": "approach",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Approach chosen"
+    },
+    {
+     "state": "conc_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "approach"
+     ],
+     "rule": "all",
+     "pin": true,
+     "explicit": true,
+     "id": "conc_found",
+     "stage": "units",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Starting concentrations found"
+    },
+    {
+     "state": "Q_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "conc_found"
+     ],
+     "explicit": true,
+     "id": "Q_found",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Q found"
+    },
+    {
+     "state": "shift_predicted",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "Q_found"
+     ],
+     "options": [
+      {
+       "id": "direction:more",
+       "text": "toward more hydrogen"
+      },
+      {
+       "id": "direction:less",
+       "text": "toward less hydrogen"
+      },
+      {
+       "id": "direction:neither",
+       "text": "neither: it is already at equilibrium"
+      }
+     ],
+     "right": [
+      "direction:more"
+     ],
+     "id": "shift_predicted",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Shift predicted"
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "shift_predicted"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "table",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written in x"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      },
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting amount: drop it from the denominator."
+      }
+     ],
+     "right": [
+      "method:quadratic"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Solving method chosen"
+    },
+    {
+     "state": "x_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "method"
+     ],
+     "explicit": true,
+     "id": "x_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "x found"
+    },
+    {
+     "state": "other_root_checked",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "x_found"
+     ],
+     "explicit": true,
+     "id": "other_root_checked",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Other root checked"
+    },
+    {
+     "state": "value_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "other_root_checked"
+     ],
+     "explicit": true,
+     "id": "value_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Answer found"
+    },
+    {
+     "state": "leftover_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "value_found"
+     ],
+     "explicit": true,
+     "id": "leftover_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Leftover found"
+    },
+    {
+     "state": "K_confirmed",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "leftover_found"
+     ],
+     "explicit": true,
+     "id": "K_confirmed",
+     "stage": "check",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "K confirmed"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "K_confirmed"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "PHANTOM_ROOT",
+     "state": "x_found",
+     "value": 0.63094,
+     "unit": "",
+     "abs_tol": 0.0126
+    },
+    {
+     "id": "LEFTOVER_FOR_PRODUCT",
+     "state": "value_found",
+     "value": 0.23094,
+     "unit": "M",
+     "abs_tol": 0.00462
+    },
+    {
+     "id": "LEFTOVER_FOR_PRODUCT",
+     "state": "leftover_found",
+     "value": 0.16906,
+     "unit": "M",
+     "abs_tol": 0.00338
+    },
+    {
+     "id": "MOLES_NOT_CONCENTRATION",
+     "state": "value_found",
+     "value": 0.8453,
+     "unit": "M",
+     "abs_tol": 0.0169
+    },
+    {
+     "id": "SQRT_ON_NONSQUARE",
+     "state": "x_found",
+     "value": 0.26667,
+     "unit": "",
+     "abs_tol": 0.00533
+    },
+    {
+     "id": "SQRT_ON_NONSQUARE",
+     "state": "x_found",
+     "value": 0.13333,
+     "unit": "",
+     "abs_tol": 0.00267
+    },
+    {
+     "id": "EXCEEDS_INITIAL",
+     "state": "x_found",
+     "above": 0.204,
+     "unit": ""
+    }
+   ],
+   "table": {
+    "species": [
+     "CO",
+     "H2O",
+     "CO2",
+     "H2"
+    ],
+    "rows": {
+     "I": [
+      "0.400",
+      "0.200",
+      "0.000",
+      "0.000"
+     ],
+     "C": [
+      "-x",
+      "-x",
+      "+x",
+      "+x"
+     ],
+     "E": [
+      "0.400 - x",
+      "0.200 - x",
+      "x",
+      "x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_COEFF_IGNORED",
+      "row": "C",
+      "cells": [
+       "-x",
+       "-x",
+       "+x",
+       "+x"
+      ]
+     },
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "+x",
+       "-x",
+       "-x"
+      ]
+     },
+     {
+      "id": "MOLES_NOT_CONCENTRATION",
+      "row": "I",
+      "cells": [
+       "2.000",
+       "1.000",
+       "0.000",
+       "0.000"
+      ]
+     }
+    ],
+    "zero_species": [
+     2,
+     3
+    ]
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.03,
+       "K": 0.0143084261
+      },
+      {
+       "x": 0.07,
+       "K": 0.114219114
+      },
+      {
+       "x": 0.11,
+       "K": 0.463601533
+      }
+     ],
+     "alt": [],
+     "bent": {},
+     "literal_for": {
+      "K": 4.0
+     },
+     "park_text": "4.000 = x · x / ( (0.400 - x) · (0.200 - x) )"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "nCO": 2.0,
+    "nH2O": 1.0,
+    "nCO2": 0.0,
+    "nH2": 0.0,
+    "V": 5.0
+   },
+   "expected": [
+    {
+     "id": "starting_CO",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [CO]",
+     "value": 0.4,
+     "unit": "M",
+     "abs_tol": 0.008,
+     "require_unit": true
+    },
+    {
+     "id": "starting_H2O",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [H2O]",
+     "value": 0.2,
+     "unit": "M",
+     "abs_tol": 0.004,
+     "require_unit": true
+    },
+    {
+     "id": "starting_CO2",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [CO2]",
+     "value": 0.0,
+     "unit": "M",
+     "abs_tol": 0.0001,
+     "require_unit": true
+    },
+    {
+     "id": "starting_H2",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [H2]",
+     "value": 0.0,
+     "unit": "M",
+     "abs_tol": 0.0001,
+     "require_unit": true
+    },
+    {
+     "id": "Q_at_the_start",
+     "role": "intermediate",
+     "dim": {},
+     "state": "Q_found",
+     "label": "Q at the start",
+     "value": 0.0,
+     "unit": "",
+     "abs_tol": 0.0001,
+     "require_unit": false,
+     "after": "conc_found"
+    },
+    {
+     "id": "x",
+     "role": "intermediate",
+     "dim": {},
+     "state": "x_found",
+     "label": "x",
+     "value": 0.16906,
+     "unit": "",
+     "abs_tol": 0.00338,
+     "require_unit": false
+    },
+    {
+     "id": "the_other_root",
+     "role": "intermediate",
+     "dim": {},
+     "state": "other_root_checked",
+     "label": "the other root",
+     "value": 0.63094,
+     "unit": "",
+     "abs_tol": 0.0126,
+     "require_unit": false,
+     "after": "x_found",
+     "also": []
+    },
+    {
+     "id": "key_value_found",
+     "role": "key",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "value_found",
+     "label": "equilibrium [H2]",
+     "value": 0.16906,
+     "unit": "M",
+     "abs_tol": 0.00338,
+     "require_unit": true
+    },
+    {
+     "id": "equilibrium_CO",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "leftover_found",
+     "label": "equilibrium [CO]",
+     "value": 0.23094,
+     "unit": "M",
+     "abs_tol": 0.00462,
+     "require_unit": true
+    },
+    {
+     "id": "Kc_from_the_equilibrium_row",
+     "role": "intermediate",
+     "dim": {},
+     "state": "K_confirmed",
+     "label": "Kc from the equilibrium row",
+     "value": 4.0,
+     "unit": "",
+     "abs_tol": 0.12,
+     "require_unit": false,
+     "after": "leftover_found"
+    },
+    {
+     "id": "g_n_CO",
+     "state": null,
+     "role": "given",
+     "label": "n_CO",
+     "value": 2.0,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 2e-06
+    },
+    {
+     "id": "g_n_H2O",
+     "state": null,
+     "role": "given",
+     "label": "n_H2O",
+     "value": 1.0,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 1e-06
+    },
+    {
+     "id": "g_V",
+     "state": null,
+     "role": "given",
+     "label": "V",
+     "value": 5.0,
+     "unit": "L",
+     "dim": {
+      "L": 1
+     },
+     "abs_tol": 5e-06
+    },
+    {
+     "id": "g_Kc",
+     "state": null,
+     "role": "given",
+     "label": "Kc",
+     "value": 4.0,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 4e-06
+    }
+   ],
+   "variant_id": "ch13_ice:10",
+   "archetype_id": "ch13_ice",
+   "seed": 10,
+   "opener_index": 1
+  },
+  {
+   "kind": "wgs_equilibrium",
+   "fixed_id": "M5",
+   "version": "products",
+   "context": {
+    "reaction": "wgs",
+    "family": "C products",
+    "direction": -1
+   },
+   "text": "On Mars, a rover fills a sealed 2.00 L steel chamber with 1.00 mol of carbon dioxide and 1.00 mol of hydrogen and heats it to 800 K. Inside, CO(g) + H2O(g) ⇌ CO2(g) + H2(g), and Kc = 4.00. What is the concentration of hydrogen at equilibrium? How much carbon monoxide is in the chamber at equilibrium?",
+   "givens": {
+    "n_CO2": {
+     "value": 1.0,
+     "unit": "mol"
+    },
+    "n_H2": {
+     "value": 1.0,
+     "unit": "mol"
+    },
+    "V": {
+     "value": 2.0,
+     "unit": "L"
+    },
+    "Kc": {
+     "value": 4.0,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium expression chosen"
+    },
+    {
+     "state": "approach",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "options": [
+      {
+       "id": "approach:findK",
+       "text": "Equilibrium amounts are measured; find K from them."
+      },
+      {
+       "id": "approach:solveX",
+       "text": "K is known; find the equilibrium amounts from it."
+      }
+     ],
+     "right": [
+      "approach:solveX"
+     ],
+     "id": "approach",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Approach chosen"
+    },
+    {
+     "state": "conc_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "approach"
+     ],
+     "rule": "all",
+     "pin": true,
+     "explicit": true,
+     "id": "conc_found",
+     "stage": "units",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Starting concentrations found"
+    },
+    {
+     "state": "shift_predicted",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "conc_found"
+     ],
+     "options": [
+      {
+       "id": "direction:more",
+       "text": "toward more hydrogen"
+      },
+      {
+       "id": "direction:less",
+       "text": "toward less hydrogen"
+      },
+      {
+       "id": "direction:neither",
+       "text": "neither: it is already at equilibrium"
+      }
+     ],
+     "right": [
+      "direction:less"
+     ],
+     "id": "shift_predicted",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Shift predicted"
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "shift_predicted"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "table",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written in x"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      },
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting amount: drop it from the denominator."
+      }
+     ],
+     "right": [
+      "method:sqrt"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Solving method chosen"
+    },
+    {
+     "state": "x_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "method"
+     ],
+     "explicit": true,
+     "id": "x_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "x found"
+    },
+    {
+     "state": "other_root_checked",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "x_found"
+     ],
+     "explicit": true,
+     "id": "other_root_checked",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Other root checked"
+    },
+    {
+     "state": "value_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "other_root_checked"
+     ],
+     "explicit": true,
+     "id": "value_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Answer found"
+    },
+    {
+     "state": "leftover_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "value_found"
+     ],
+     "explicit": true,
+     "id": "leftover_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Leftover found"
+    },
+    {
+     "state": "K_confirmed",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "leftover_found"
+     ],
+     "explicit": true,
+     "id": "K_confirmed",
+     "stage": "check",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "K confirmed"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "K_confirmed"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "PHANTOM_ROOT",
+     "state": "x_found",
+     "value": 0.5,
+     "unit": "",
+     "abs_tol": 0.01
+    },
+    {
+     "id": "LEFTOVER_FOR_PRODUCT",
+     "state": "value_found",
+     "value": 0.16667,
+     "unit": "M",
+     "abs_tol": 0.00333
+    },
+    {
+     "id": "LEFTOVER_FOR_PRODUCT",
+     "state": "leftover_found",
+     "value": 0.33333,
+     "unit": "M",
+     "abs_tol": 0.00667
+    },
+    {
+     "id": "MOLES_NOT_CONCENTRATION",
+     "state": "value_found",
+     "value": 0.66667,
+     "unit": "M",
+     "abs_tol": 0.0133
+    },
+    {
+     "id": "EXCEEDS_INITIAL",
+     "state": "x_found",
+     "above": 0.51,
+     "unit": ""
+    }
+   ],
+   "table": {
+    "species": [
+     "CO",
+     "H2O",
+     "CO2",
+     "H2"
+    ],
+    "rows": {
+     "I": [
+      "0.000",
+      "0.000",
+      "0.500",
+      "0.500"
+     ],
+     "C": [
+      "+x",
+      "+x",
+      "-x",
+      "-x"
+     ],
+     "E": [
+      "x",
+      "x",
+      "0.500 - x",
+      "0.500 - x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_COEFF_IGNORED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "+x",
+       "-x",
+       "-x"
+      ]
+     },
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "-x",
+       "-x",
+       "+x",
+       "+x"
+      ]
+     },
+     {
+      "id": "MOLES_NOT_CONCENTRATION",
+      "row": "I",
+      "cells": [
+       "0.000",
+       "0.000",
+       "1.000",
+       "1.000"
+      ]
+     }
+    ],
+    "zero_species": [
+     0,
+     1
+    ]
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.075,
+       "K": 32.1111111
+      },
+      {
+       "x": 0.175,
+       "K": 3.44897959
+      },
+      {
+       "x": 0.275,
+       "K": 0.669421488
+      }
+     ],
+     "alt": [],
+     "bent": {},
+     "literal_for": {
+      "K": 4.0
+     },
+     "park_text": "4.000 = (0.500 - x) · (0.500 - x) / ( x · x )"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "nCO": 0.0,
+    "nH2O": 0.0,
+    "nCO2": 1.0,
+    "nH2": 1.0,
+    "V": 2.0
+   },
+   "expected": [
+    {
+     "id": "starting_CO",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [CO]",
+     "value": 0.0,
+     "unit": "M",
+     "abs_tol": 0.0001,
+     "require_unit": true
+    },
+    {
+     "id": "starting_H2O",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [H2O]",
+     "value": 0.0,
+     "unit": "M",
+     "abs_tol": 0.0001,
+     "require_unit": true
+    },
+    {
+     "id": "starting_CO2",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [CO2]",
+     "value": 0.5,
+     "unit": "M",
+     "abs_tol": 0.01,
+     "require_unit": true
+    },
+    {
+     "id": "starting_H2",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [H2]",
+     "value": 0.5,
+     "unit": "M",
+     "abs_tol": 0.01,
+     "require_unit": true
+    },
+    {
+     "id": "x",
+     "role": "intermediate",
+     "dim": {},
+     "state": "x_found",
+     "label": "x",
+     "value": 0.166667,
+     "unit": "",
+     "abs_tol": 0.00333,
+     "require_unit": false
+    },
+    {
+     "id": "the_other_root",
+     "role": "intermediate",
+     "dim": {},
+     "state": "other_root_checked",
+     "label": "the other root",
+     "value": -0.5,
+     "unit": "",
+     "abs_tol": 0.01,
+     "require_unit": false,
+     "after": "x_found",
+     "also": [
+      {
+       "value": 0.5,
+       "unit": "",
+       "abs_tol": 0.01
+      }
+     ]
+    },
+    {
+     "id": "key_value_found",
+     "role": "key",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "value_found",
+     "label": "equilibrium [H2]",
+     "value": 0.333333,
+     "unit": "M",
+     "abs_tol": 0.00667,
+     "require_unit": true
+    },
+    {
+     "id": "equilibrium_CO",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "leftover_found",
+     "label": "equilibrium [CO]",
+     "value": 0.166667,
+     "unit": "M",
+     "abs_tol": 0.00333,
+     "require_unit": true
+    },
+    {
+     "id": "Kc_from_the_equilibrium_row",
+     "role": "intermediate",
+     "dim": {},
+     "state": "K_confirmed",
+     "label": "Kc from the equilibrium row",
+     "value": 4.0,
+     "unit": "",
+     "abs_tol": 0.12,
+     "require_unit": false,
+     "after": "leftover_found"
+    },
+    {
+     "id": "g_n_CO2",
+     "state": null,
+     "role": "given",
+     "label": "n_CO2",
+     "value": 1.0,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 1e-06
+    },
+    {
+     "id": "g_n_H2",
+     "state": null,
+     "role": "given",
+     "label": "n_H2",
+     "value": 1.0,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 1e-06
+    },
+    {
+     "id": "g_V",
+     "state": null,
+     "role": "given",
+     "label": "V",
+     "value": 2.0,
+     "unit": "L",
+     "dim": {
+      "L": 1
+     },
+     "abs_tol": 2e-06
+    },
+    {
+     "id": "g_Kc",
+     "state": null,
+     "role": "given",
+     "label": "Kc",
+     "value": 4.0,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 4e-06
+    }
+   ],
+   "variant_id": "ch13_ice:11",
+   "archetype_id": "ch13_ice",
+   "seed": 11,
+   "opener_index": 1
+  },
+  {
+   "kind": "wgs_equilibrium",
+   "fixed_id": "M6",
+   "version": "all",
+   "context": {
+    "reaction": "wgs",
+    "family": "D all four",
+    "direction": 1
+   },
+   "text": "On Mars, a rover fills a sealed 5.00 L steel chamber with 1.00 mol each of carbon monoxide, steam, carbon dioxide and hydrogen and heats it to 800 K. Inside, CO(g) + H2O(g) ⇌ CO2(g) + H2(g), and Kc = 4.00. What is the concentration of hydrogen at equilibrium? How much carbon monoxide is left?",
+   "givens": {
+    "n_CO": {
+     "value": 1.0,
+     "unit": "mol"
+    },
+    "n_H2O": {
+     "value": 1.0,
+     "unit": "mol"
+    },
+    "n_CO2": {
+     "value": 1.0,
+     "unit": "mol"
+    },
+    "n_H2": {
+     "value": 1.0,
+     "unit": "mol"
+    },
+    "V": {
+     "value": 5.0,
+     "unit": "L"
+    },
+    "Kc": {
+     "value": 4.0,
+     "unit": ""
+    }
+   },
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "opening",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "relation_chosen",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "options_from": "equation_picks",
+     "pin": true,
+     "id": "relation_chosen",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Equilibrium expression chosen"
+    },
+    {
+     "state": "approach",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "relation_chosen"
+     ],
+     "options": [
+      {
+       "id": "approach:findK",
+       "text": "Equilibrium amounts are measured; find K from them."
+      },
+      {
+       "id": "approach:solveX",
+       "text": "K is known; find the equilibrium amounts from it."
+      }
+     ],
+     "right": [
+      "approach:solveX"
+     ],
+     "id": "approach",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Approach chosen"
+    },
+    {
+     "state": "conc_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "approach"
+     ],
+     "rule": "all",
+     "pin": true,
+     "explicit": true,
+     "id": "conc_found",
+     "stage": "units",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Starting concentrations found"
+    },
+    {
+     "state": "Q_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "conc_found"
+     ],
+     "explicit": true,
+     "id": "Q_found",
+     "stage": "setup",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Q found"
+    },
+    {
+     "state": "shift_predicted",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "Q_found"
+     ],
+     "options": [
+      {
+       "id": "direction:more",
+       "text": "toward more hydrogen"
+      },
+      {
+       "id": "direction:less",
+       "text": "toward less hydrogen"
+      },
+      {
+       "id": "direction:neither",
+       "text": "neither: it is already at equilibrium"
+      }
+     ],
+     "right": [
+      "direction:more"
+     ],
+     "id": "shift_predicted",
+     "stage": "setup",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Shift predicted"
+    },
+    {
+     "state": "table",
+     "kind": "table",
+     "register": "symbolic",
+     "requires": [
+      "shift_predicted"
+     ],
+     "pin": true,
+     "explicit": true,
+     "id": "table",
+     "stage": "table",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "ICE table set up"
+    },
+    {
+     "state": "expression_set",
+     "kind": "equation",
+     "register": "symbolic",
+     "requires": [
+      "table"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "expression_set",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Expression written in x"
+    },
+    {
+     "state": "method",
+     "kind": "pick",
+     "register": "symbolic",
+     "requires": [
+      "expression_set"
+     ],
+     "options": [
+      {
+       "id": "method:sqrt",
+       "text": "Both sides are perfect squares: take the square root of both."
+      },
+      {
+       "id": "method:quadratic",
+       "text": "Clear the denominator and use the quadratic formula."
+      },
+      {
+       "id": "method:solver",
+       "text": "The equation is quartic: a graph or a computer solver."
+      },
+      {
+       "id": "method:smallx",
+       "text": "x is small next to the starting amount: drop it from the denominator."
+      }
+     ],
+     "right": [
+      "method:sqrt"
+     ],
+     "id": "method",
+     "stage": "solve",
+     "face": "choice",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Solving method chosen"
+    },
+    {
+     "state": "x_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "method"
+     ],
+     "explicit": true,
+     "id": "x_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "x found"
+    },
+    {
+     "state": "other_root_checked",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "x_found"
+     ],
+     "explicit": true,
+     "id": "other_root_checked",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Other root checked"
+    },
+    {
+     "state": "value_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "other_root_checked"
+     ],
+     "explicit": true,
+     "id": "value_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Answer found"
+    },
+    {
+     "state": "leftover_found",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "value_found"
+     ],
+     "explicit": true,
+     "id": "leftover_found",
+     "stage": "solve",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "Leftover found"
+    },
+    {
+     "state": "K_confirmed",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "leftover_found"
+     ],
+     "explicit": true,
+     "id": "K_confirmed",
+     "stage": "check",
+     "face": "check",
+     "branch": null,
+     "pin": false,
+     "credit_gate": false,
+     "label_when_done": "K confirmed"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "K_confirmed"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "close",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "PHANTOM_ROOT",
+     "state": "x_found",
+     "value": 0.6,
+     "unit": "",
+     "abs_tol": 0.012
+    },
+    {
+     "id": "LEFTOVER_FOR_PRODUCT",
+     "state": "value_found",
+     "value": 0.13333,
+     "unit": "M",
+     "abs_tol": 0.00267
+    },
+    {
+     "id": "LEFTOVER_FOR_PRODUCT",
+     "state": "leftover_found",
+     "value": 0.26667,
+     "unit": "M",
+     "abs_tol": 0.00533
+    },
+    {
+     "id": "MOLES_NOT_CONCENTRATION",
+     "state": "value_found",
+     "value": 1.3333,
+     "unit": "M",
+     "abs_tol": 0.0267
+    },
+    {
+     "id": "EXCEEDS_INITIAL",
+     "state": "x_found",
+     "above": 0.204,
+     "unit": ""
+    }
+   ],
+   "table": {
+    "species": [
+     "CO",
+     "H2O",
+     "CO2",
+     "H2"
+    ],
+    "rows": {
+     "I": [
+      "0.200",
+      "0.200",
+      "0.200",
+      "0.200"
+     ],
+     "C": [
+      "-x",
+      "-x",
+      "+x",
+      "+x"
+     ],
+     "E": [
+      "0.200 - x",
+      "0.200 - x",
+      "0.200 + x",
+      "0.200 + x"
+     ]
+    },
+    "named": [
+     {
+      "id": "CHANGE_COEFF_IGNORED",
+      "row": "C",
+      "cells": [
+       "-x",
+       "-x",
+       "+x",
+       "+x"
+      ]
+     },
+     {
+      "id": "CHANGE_SIGNS_REVERSED",
+      "row": "C",
+      "cells": [
+       "+x",
+       "+x",
+       "-x",
+       "-x"
+      ]
+     },
+     {
+      "id": "MOLES_NOT_CONCENTRATION",
+      "row": "I",
+      "cells": [
+       "1.000",
+       "1.000",
+       "1.000",
+       "1.000"
+      ]
+     }
+    ],
+    "zero_species": []
+   },
+   "eq_checks": [
+    {
+     "state": "expression_set",
+     "unknown": "K",
+     "true": [
+      {
+       "x": 0.03,
+       "K": 1.83044983
+      },
+      {
+       "x": 0.07,
+       "K": 4.31360947
+      },
+      {
+       "x": 0.11,
+       "K": 11.8641975
+      }
+     ],
+     "alt": [],
+     "bent": {},
+     "literal_for": {
+      "K": 4.0
+     },
+     "park_text": "4.000 = (0.200 + x) · (0.200 + x) / ( (0.200 - x) · (0.200 - x) )"
+    }
+   ],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "nCO": 1.0,
+    "nH2O": 1.0,
+    "nCO2": 1.0,
+    "nH2": 1.0,
+    "V": 5.0
+   },
+   "expected": [
+    {
+     "id": "starting_CO",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [CO]",
+     "value": 0.2,
+     "unit": "M",
+     "abs_tol": 0.004,
+     "require_unit": true
+    },
+    {
+     "id": "starting_H2O",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [H2O]",
+     "value": 0.2,
+     "unit": "M",
+     "abs_tol": 0.004,
+     "require_unit": true
+    },
+    {
+     "id": "starting_CO2",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [CO2]",
+     "value": 0.2,
+     "unit": "M",
+     "abs_tol": 0.004,
+     "require_unit": true
+    },
+    {
+     "id": "starting_H2",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "conc_found",
+     "label": "starting [H2]",
+     "value": 0.2,
+     "unit": "M",
+     "abs_tol": 0.004,
+     "require_unit": true
+    },
+    {
+     "id": "Q_at_the_start",
+     "role": "intermediate",
+     "dim": {},
+     "state": "Q_found",
+     "label": "Q at the start",
+     "value": 1.0,
+     "unit": "",
+     "abs_tol": 0.02,
+     "require_unit": false,
+     "after": "conc_found"
+    },
+    {
+     "id": "x",
+     "role": "intermediate",
+     "dim": {},
+     "state": "x_found",
+     "label": "x",
+     "value": 0.0666667,
+     "unit": "",
+     "abs_tol": 0.00133,
+     "require_unit": false
+    },
+    {
+     "id": "the_other_root",
+     "role": "intermediate",
+     "dim": {},
+     "state": "other_root_checked",
+     "label": "the other root",
+     "value": 0.6,
+     "unit": "",
+     "abs_tol": 0.012,
+     "require_unit": false,
+     "after": "x_found",
+     "also": []
+    },
+    {
+     "id": "key_value_found",
+     "role": "key",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "value_found",
+     "label": "equilibrium [H2]",
+     "value": 0.266667,
+     "unit": "M",
+     "abs_tol": 0.00533,
+     "require_unit": true
+    },
+    {
+     "id": "equilibrium_CO",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "L": -1
+     },
+     "state": "leftover_found",
+     "label": "equilibrium [CO]",
+     "value": 0.133333,
+     "unit": "M",
+     "abs_tol": 0.00267,
+     "require_unit": true
+    },
+    {
+     "id": "Kc_from_the_equilibrium_row",
+     "role": "intermediate",
+     "dim": {},
+     "state": "K_confirmed",
+     "label": "Kc from the equilibrium row",
+     "value": 4.0,
+     "unit": "",
+     "abs_tol": 0.12,
+     "require_unit": false,
+     "after": "leftover_found"
+    },
+    {
+     "id": "g_n_CO",
+     "state": null,
+     "role": "given",
+     "label": "n_CO",
+     "value": 1.0,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 1e-06
+    },
+    {
+     "id": "g_n_H2O",
+     "state": null,
+     "role": "given",
+     "label": "n_H2O",
+     "value": 1.0,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 1e-06
+    },
+    {
+     "id": "g_n_CO2",
+     "state": null,
+     "role": "given",
+     "label": "n_CO2",
+     "value": 1.0,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 1e-06
+    },
+    {
+     "id": "g_n_H2",
+     "state": null,
+     "role": "given",
+     "label": "n_H2",
+     "value": 1.0,
+     "unit": "mol",
+     "dim": {
+      "mol": 1
+     },
+     "abs_tol": 1e-06
+    },
+    {
+     "id": "g_V",
+     "state": null,
+     "role": "given",
+     "label": "V",
+     "value": 5.0,
+     "unit": "L",
+     "dim": {
+      "L": 1
+     },
+     "abs_tol": 5e-06
+    },
+    {
+     "id": "g_Kc",
+     "state": null,
+     "role": "given",
+     "label": "Kc",
+     "value": 4.0,
+     "unit": "",
+     "dim": {},
+     "abs_tol": 4e-06
+    }
+   ],
+   "variant_id": "ch13_ice:12",
+   "archetype_id": "ch13_ice",
+   "seed": 12,
+   "opener_index": 1
+  }
+ ],
+ "content_version": "972b9cf0cc"
+}

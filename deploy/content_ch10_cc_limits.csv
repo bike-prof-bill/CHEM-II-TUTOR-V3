@@ -1,0 +1,19 @@
+﻿opener,liquid,known point (boiling point | temperature),"known temperature, low (°C)","known temperature, high (°C)","other temperature, low (°C)","other temperature, high (°C)",other is an offset from the known (yes | no),minimum gap (°C),other set by (temperature | depth),depth low (m),depth high (m),depth step (m),status
+The Syringe Boiling Trick,diethyl ether,boiling point,,,-30.0,24.6,no,8,temperature,,,,approved 10 Oct 2026
+The Syringe Boiling Trick,pentane,boiling point,,,-30.0,26.1,no,8,temperature,,,,approved 10 Oct 2026
+The Syringe Boiling Trick,dichloromethane,boiling point,,,-27.3,29.9,no,8,temperature,,,,"approved 10 Oct 2026 (bp 39.9 °C, ΔHvap 28.06 kJ/mol)"
+The Syringe Boiling Trick,acetone,boiling point,,,-15.3,46.2,no,8,temperature,,,,approved 10 Oct 2026
+The Syringe Boiling Trick,hexane,boiling point,,,-8.0,58.8,no,8,temperature,,,,approved 10 Oct 2026
+The Syringe Boiling Trick,methanol,boiling point,,,0.4,54.6,no,8,temperature,,,,approved 10 Oct 2026
+The Syringe Boiling Trick,ethyl acetate,boiling point,,,1.2,60.0,no,8,temperature,,,,approved 10 Oct 2026
+The Syringe Boiling Trick,ethanol,boiling point,,,14.3,60.0,no,8,temperature,,,,approved 10 Oct 2026
+The Syringe Boiling Trick,water,boiling point,,,31.5,60.0,no,8,temperature,,,,approved 10 Oct 2026
+The Syringe Boiling Trick,2-propanol,boiling point,,,18.9,60.0,no,8,temperature,,,,approved 10 Oct 2026
+The Drinking Bird,dichloromethane,temperature,20.0,28.0,-6.0,-2.0,yes,2,temperature,,,,approved 10 Oct 2026
+The Drinking Bird,diethyl ether,temperature,20.0,28.0,-6.0,-2.0,yes,2,temperature,,,,approved 10 Oct 2026
+The Drinking Bird,pentane,temperature,20.0,28.0,-6.0,-2.0,yes,2,temperature,,,,approved 10 Oct 2026
+The Drinking Bird,acetone,temperature,20.0,28.0,-6.0,-2.0,yes,2,temperature,,,,approved 10 Oct 2026
+The Drinking Bird,ethanol,temperature,20.0,28.0,-6.0,-2.0,yes,2,temperature,,,,approved 10 Oct 2026
+The Drinking Bird,CFC-11,temperature,20.0,28.0,-6.0,-2.0,yes,2,temperature,,,,approved 10 Oct 2026
+The Drinking Bird,HFE-7000,temperature,20.0,28.0,-6.0,-2.0,yes,2,temperature,,,,approved 10 Oct 2026
+The Deep-Sea Vent,water,boiling point,,,,,no,2,depth,10,2000,10,approved 10 Oct 2026 (the model's growing error with depth is intended)
