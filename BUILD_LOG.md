@@ -451,3 +451,9 @@ Shell `bb174cdf`, `CODE_VERSION 9d1709f9`; content per the generate line.
   listed as both removed and added). Cause: `comm` compares in the shell's collation, and on his Mac that differs from the order
   Python writes the snapshot. `scripts/check_content.sh` now compares the two files as sets in Python; it still fails on a real
   edit (checked by altering one baseline line). No content changed; the baseline is untouched.
+- 20 Oct (late): build stamp fixed (instructor). `BUILD_STAMP` (one line, V3-0.1-YYYYMMDD-NN) is the only place it is set;
+  `run.py` checks its form and writes it into `gas/Shell_version.gs`; `Code.gs` reads it through `stamp_()`, which reports
+  "Shell_version not pasted" rather than failing. Shell fingerprint unchanged (a819f89c); Code.gs hash f3f8ed41. Now
+  `V3-0.1-20261020-01`. `docs/31`. The release routine in `docs/29` sets the stamp first.
+- 20 Oct (late): on the list (instructor): clasp for sending `gas/` in one command; a release-check script comparing the alive
+  reply with the bundles. Recorded in `docs/29`, What is open, item 7.

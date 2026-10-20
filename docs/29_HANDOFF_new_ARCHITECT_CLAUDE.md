@@ -70,7 +70,7 @@ runs in CHM 212 and collects data; V3 (this repository) runs behind a faculty pr
   checks). `make baseline` re-snapshots approved text; do it only when approved text changed on his word.
 
 ## The release routine
-1. Build here, `make test` green.
+1. Set the file `BUILD_STAMP` to the release (V3-0.1-YYYYMMDD-NN; NN counts releases that day). Build here, `make test` green.
 2. Give him: the repository zip (he drops it into CHEM-II-TUTOR-V3 and runs `sh scripts/retire_stale_files.sh` and `make test`
    himself; his green run is the proof the folder matches), the paste set (every non-test `gas/*.gs`, with a checklist naming
    each new or replace and the alive reply to expect), the page if it changed, the media zip if media changed.
@@ -93,6 +93,10 @@ file; a copied archetype file kept its old content; student mode shown because c
 5. **His talk** (two weeks from 16 Oct): the deck is a Slides artifact in this project; the demo script and handout are in
    `docs/talks/`.
 6. **Grant:** the HEPC STaR draft is in `docs/grants/`; Encova was set aside until spring.
+
+7. **On the list (instructor, 20 Oct):** (a) clasp, Google's command-line tool for Apps Script, to send `gas/` in one command
+   instead of pasting; (b) a release-check script that reads the /exec alive reply and compares archetypes, content versions,
+   shell version and build stamp with the bundles.
 
 ## Content versions at handoff
 - ch10_cc: 3c7a971cb6

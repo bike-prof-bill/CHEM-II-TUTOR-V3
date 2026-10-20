@@ -3,7 +3,8 @@
 // ONE-TIME SET-UP: paste every file from the gas/ folder into a NEW Apps Script project, run setupV3() once, read the log it
 // prints, add GEMINI_API_KEY under Project Settings > Script properties, then Deploy > Web app (execute as me, anyone).
 
-var BUILD_STAMP    = "V3-0.1-20260919-01";        // project-version-date-sequence. Change on every deploy.
+// BUILD_STAMP (project-version-date-sequence) lives in Shell_version.gs, written by run.py from the file BUILD_STAMP (20 Oct 2026).
+function stamp_() { return (typeof BUILD_STAMP !== "undefined") ? BUILD_STAMP : "Shell_version not pasted"; }
 var PRIMARY_MODEL  = "gemini-3.6-flash";          // as V2
 var FALLBACK_MODEL = "gemini-3.5-flash";
 
@@ -34,7 +35,7 @@ function checkModels() {
 
 function doGet() { var expected = (typeof SHELL_VERSION !== "undefined") ? SHELL_VERSION : "not pasted", actual = CORE.shellFingerprint();
   // a stale paste shows as shell_ok false
-  return json_({ alive: true, build: BUILD_STAMP, shell_expected: expected, shell_actual: actual, shell_ok: expected === actual, archetypes: Object.keys(ARCHETYPES).map(function (k) { return { id: k, title: ARCHETYPES[k].title, kinds: ARCHETYPES[k].kinds, content_version: ARCHETYPES[k].content_version, openers: ARCHETYPES[k].openers.map(function (o) { return o.title; }) }; }) }); }
+  return json_({ alive: true, build: stamp_(), shell_expected: expected, shell_actual: actual, shell_ok: expected === actual, archetypes: Object.keys(ARCHETYPES).map(function (k) { return { id: k, title: ARCHETYPES[k].title, kinds: ARCHETYPES[k].kinds, content_version: ARCHETYPES[k].content_version, openers: ARCHETYPES[k].openers.map(function (o) { return o.title; }) }; }) }); }
 
 function doPost(e) {
   var t0 = Date.now();
@@ -133,7 +134,7 @@ function geminiBatch_(props, reqs, meta) {
 }
 
 function log_(props, row, sid, student, studentText, reply, meta, serverMs) {
-  row.ts = new Date(); row.build_stamp = BUILD_STAMP; row.session_id = sid; row.student_id = student; row.student_text = studentText;
+  row.ts = new Date(); row.build_stamp = stamp_(); row.session_id = sid; row.student_id = student; row.student_text = studentText;
   row.reply_text = reply; row.model_name = meta.model; row.model_ms = meta.ms; row.server_ms = serverMs;
   append_(props, "Log", LOG_HEADERS.slice(0, -2).map(function (h) { return row[h] === undefined ? "" : row[h]; }));   // the queue adds queued, queue_ms
 }
@@ -163,7 +164,7 @@ function saveRung_(props, student, archId, rec) {
 }
 function mastery_(props, student, arch, S, outcome) {
   if (!isGuest_(student)) { var rec = rungRecord_(props, student, S.archetypeId); if (rec) { CORE.advance(rec, { rung: S.rung, role: S.role, clean: S.clean, finished: outcome === "finished", extra: S.extra }); saveRung_(props, student, S.archetypeId, rec); } }
-  append_(props, "Mastery", [new Date(), student, S.archetypeId, S.variantId, arch.variants[S.variantIndex].kind, S.attemptId, S.turns, S.clean, S.credit, outcome, BUILD_STAMP, arch.content_version, S.rung || "", S.role || "", S.version || "", !!S.extra]);
+  append_(props, "Mastery", [new Date(), student, S.archetypeId, S.variantId, arch.variants[S.variantIndex].kind, S.attemptId, S.turns, S.clean, S.credit, outcome, stamp_(), arch.content_version, S.rung || "", S.role || "", S.version || "", !!S.extra]);
 }
 // The log never loses a row (step 6a): a row that cannot get the lock in 3 s is kept in script properties and written by the next
 // request that does; every row carries queued (0/1) and queue_ms. Run flushLog() from the editor to write anything still pending.
