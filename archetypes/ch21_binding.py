@@ -1,6 +1,6 @@
 """Chapter 21, Nuclear binding energy. A sheet-driven archetype (SCENARIO_CLAUDE's design and sheet, approved 18 Oct 2026; archetypes/data/sheets/ch21_binding.json).
 Tolerance ±1 % on the numbers (instructor); counts are exact. test_ch19_21.py re-derives the numbers from the sentences."""
-import math
+import math, re
 from engine import round_sig
 from _sheet import *
 
@@ -36,6 +36,6 @@ def PICK_OPTIONS(P, st, right):
 def TOLERANCE(P, st, value, unit):
     if st in ("Z_found", "N_found"): return 0.1
     return max(0.01 * abs(value), 1e-30)                                                  # ±1 % (instructor)
-SIM = lambda P: {}
+SIM = lambda P: clean_params({'nuclide': nuclide_of(P['text'])})
 def make_fixed(rng, fid): return make_fixed_from_sheet(ID, PROBLEMS, fid, STEPS, PICK_NAMED, SIM, pick_options=PICK_OPTIONS, tolerance=TOLERANCE)
 def render_text(*a): raise NotImplementedError

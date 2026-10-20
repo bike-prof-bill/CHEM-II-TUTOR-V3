@@ -2,7 +2,7 @@
 values, named mistakes and right picks (archetypes/data/sheets/ch16_spontaneity.json); this file gives the step order, the pick options and the
 registers. test_ch16.py re-derives the numbers from each problem sentence. Picks are `direction` items whose option texts begin with the
 bare word the student may type."""
-import math
+import math, re
 from engine import round_sig
 from _sheet import *
 
@@ -32,6 +32,6 @@ PROBLEMS = load(ID)
 FIXED = [{"id": p["id"], "kind": p["kind"], "version": "", "status": p["status"], "text": p["text"]} for p in PROBLEMS]
 STEPS = ['case_pick', 'Tcross_found', 'dG_found', 'verdict', 'perturb_1']
 PICK_NAMED = {'case_pick': 'CASE_WRONG'}
-SIM = lambda P: {'reaction': P['id'], 'T': 298}
+SIM = lambda P: clean_params({'reaction': reaction_for_page(P, 'free_energy'), 'T': temperature_K(P['text'])})
 def make_fixed(rng, fid): return make_fixed_from_sheet(ID, PROBLEMS, fid, STEPS, PICK_NAMED, SIM)
 def render_text(*a): raise NotImplementedError

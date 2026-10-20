@@ -46,6 +46,6 @@ def PICK_OPTIONS(P, st, right): return None
 def TOLERANCE(P, st, value, unit):
     if unit == "g": return 0.005 * abs(value)                                            # masses within 0.5 % (instructor, 18 Oct)
     return None
-SIM = lambda P: {'ion': (_re.search(r'from (\S+?)\(aq\)', P['text']) or [None, ''])[1] if _re.search(r'from (\S+?)\(aq\)', P['text']) else '', 'mode': P['kind']}
+SIM = lambda P: electrolysis_params(P)
 def make_fixed(rng, fid): return make_fixed_from_sheet(ID, PROBLEMS, fid, STEPS, PICK_NAMED, SIM, pick_options=PICK_OPTIONS, tolerance=TOLERANCE)
 def render_text(*a): raise NotImplementedError

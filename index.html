@@ -337,7 +337,9 @@ $("studentId").value = store.get("v3_student"); $("studentId").onchange = () => 
 // the archetype and kind menus come from the server's alive reply; nothing about any chapter is written into this page
 async function fillMenus() {
   try { const r = await fetch(cfg.url); const j = await r.json(); const A = (j.archetypes || []).map(a => typeof a === "string" ? { id: a, title: a, kinds: [] } : a);
-    $("arch").innerHTML = ""; A.forEach(a => { const o = document.createElement("option"); o.value = a.id; o.textContent = a.title; $("arch").appendChild(o); });
+    const chap = (a) => { const m = /^ch(\d+)/.exec(a.id || ""); return m ? parseInt(m[1], 10) : 99; };   // the chapter number in front of each entry, in chapter order (instructor, 20 Oct)
+    A.sort((a, b) => chap(a) - chap(b) || 0);
+    $("arch").innerHTML = ""; A.forEach(a => { const o = document.createElement("option"); o.value = a.id; o.textContent = (chap(a) < 99 ? "Ch " + chap(a) + " · " : "") + a.title; $("arch").appendChild(o); });
     const kinds = () => { const a = A.find(x => x.id === $("arch").value) || { kinds: [], openers: [] }; $("kind").innerHTML = '<option value="">any kind</option>'; (a.kinds || []).forEach(k => { const o = document.createElement("option"); o.value = k; o.textContent = k; $("kind").appendChild(o); });
       $("opener").innerHTML = '<option value="">any scenario</option>'; (a.openers || []).forEach((t, i) => { const o = document.createElement("option"); o.value = i; o.textContent = t; $("opener").appendChild(o); });
       if (a.content_version) $("build").title = "content " + a.content_version; };

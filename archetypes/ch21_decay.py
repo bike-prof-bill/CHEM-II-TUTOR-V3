@@ -1,6 +1,6 @@
 """Chapter 21, Radioactive decay and half-life. A sheet-driven archetype (SCENARIO_CLAUDE's design and sheet, approved 18 Oct 2026; archetypes/data/sheets/ch21_decay.json).
 Tolerance ±1 % on the numbers (instructor); counts are exact. test_ch19_21.py re-derives the numbers from the sentences."""
-import math
+import math, re
 from engine import round_sig
 from _sheet import *
 
@@ -32,6 +32,6 @@ PICK_NAMED = {}
 
 def PICK_OPTIONS(P, st, right): return None
 def TOLERANCE(P, st, value, unit): return max(0.01 * abs(value), 1e-30)                  # ±1 % (instructor)
-SIM = lambda P: {'mode': P['kind']}
+SIM = lambda P: clean_params({'isotope': isotope_of(P['text']), 'mode': {'fraction': 'decay', 'time': 'dating', 'dating': 'dating', 'rock': 'rock'}[P['kind']], 't': first_number(P['text'], r'after ([0-9.]+(?:e[+-]?\d+)?) ') or next((e['value'] for e in P['expected'] if e['state'] == 'time_found'), None), 'ratio': next((e['value'] for e in P['expected'] if e['state'] == 'ratio_found'), None), 'm0': first_number(P['text'], r'([0-9.]+) g sample') or first_number(P['text'], r'sample of ([0-9.]+) g') or first_number(P['text'], r'starts with ([0-9.]+) g'), 'parent': (re.search(r'(U-238|Rb-87)', P['text']) or [None, ''])[1] if re.search(r'(U-238|Rb-87)', P['text']) else '', 'gp': first_number(P['text'], r'([0-9.]+(?:e[+-]?\d+)?) g of (?:U-238|Rb-87)'), 'gd': first_number(P['text'], r'([0-9.]+(?:e[+-]?\d+)?) g of (?:Pb-206|Sr-87)')})
 def make_fixed(rng, fid): return make_fixed_from_sheet(ID, PROBLEMS, fid, STEPS, PICK_NAMED, SIM, pick_options=PICK_OPTIONS, tolerance=TOLERANCE)
 def render_text(*a): raise NotImplementedError

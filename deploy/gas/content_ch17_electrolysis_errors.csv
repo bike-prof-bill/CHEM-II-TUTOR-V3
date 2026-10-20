@@ -1,4 +1,0 @@
-﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
-TIME_NOT_CONVERTED,They multiplied the current by minutes or hours instead of seconds.,A coulomb is an ampere times a second. Is your time in seconds?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
-N_NOT_DIVIDED,They took moles of metal equal to moles of electrons.,How many electrons does each ion take up?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
-N_MULTIPLIED,They multiplied the moles of electrons by the ion's charge instead of dividing.,"Does one electron make one ion, or does one ion need several electrons?",,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"

@@ -366,6 +366,32 @@
    "class": "hydrofluoroether",
    "density_g_mL": 1.4,
    "density_temperature_C": 25.0
+  },
+  "propane": {
+   "formula": "C₃H₈",
+   "melting_point_C": -187.7,
+   "boiling_point_C": -42.1,
+   "dHvap_at_Tb_kJ_mol": 19.04,
+   "class": "alkane",
+   "source": {
+    "melting_point_C": "the instructor's values, supplied 2026-10-20 (as used in V2); NIST Chemistry WebBook as for the other liquids",
+    "boiling_point_C": "the instructor's values, supplied 2026-10-20 (as used in V2); NIST Chemistry WebBook as for the other liquids",
+    "dHvap_at_Tb_kJ_mol": "the instructor's values, supplied 2026-10-20 (as used in V2); NIST Chemistry WebBook as for the other liquids",
+    "formula": "standard"
+   }
+  },
+  "butane": {
+   "formula": "C₄H₁₀",
+   "melting_point_C": -138.3,
+   "boiling_point_C": -0.5,
+   "dHvap_at_Tb_kJ_mol": 22.44,
+   "class": "alkane",
+   "source": {
+    "melting_point_C": "the instructor's values, supplied 2026-10-20 (as used in V2); NIST Chemistry WebBook as for the other liquids",
+    "boiling_point_C": "the instructor's values, supplied 2026-10-20 (as used in V2); NIST Chemistry WebBook as for the other liquids",
+    "dHvap_at_Tb_kJ_mol": "the instructor's values, supplied 2026-10-20 (as used in V2); NIST Chemistry WebBook as for the other liquids",
+    "formula": "standard"
+   }
   }
  }
 }

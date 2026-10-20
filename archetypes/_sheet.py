@@ -2,7 +2,7 @@
 expected value with its unit, every named mistake's value and step, and every right pick; scripts/sheet_to_problems.py turns a sheet
 into archetypes/data/sheets/<id>.json and the archetype reads it. The archetype supplies the step order, the pick options and the
 registers; the test re-derives the chemistry from the problem sentence where it can. Nothing here knows the chemistry."""
-import json, os, math
+import json, os, math, re
 from engine import round_sig
 
 NOTEBOOK_URL = "https://notebook.google.com/notebook/6458f208-db32-496a-8088-fe0c1c6cd539"   # INSTRUCTOR: the course notebook
@@ -28,6 +28,9 @@ OPTION_SETS = [
   (("doubles", "halves", "unchanged"), [("doubles", "doubles: twice the reaction, twice the value"), ("halves", "halves: half the value"), ("unchanged", "unchanged: the same value")]),
   (("rises", "falls", "unchanged"), [("rises", "rises: the value goes up"), ("falls", "falls: the value goes down"), ("unchanged", "unchanged: the value stays the same")]),
   (("positive", "negative", "zero"), [("positive", "positive"), ("negative", "negative"), ("zero", "zero")]),
+  (("zero", "first", "second"), [("zero", "zero: the rate does not depend on the concentration"), ("first", "first: the rate is proportional to the concentration"), ("second", "second: the rate goes with the concentration squared")]),
+  (("into", "out", "neither"), [("into", "into: water flows into the cell"), ("out", "out: water flows out of the cell"), ("neither", "neither: no net flow")]),
+  (("disappearing", "appearing"), [("disappearing", "disappearing: a reactant, its concentration falls"), ("appearing", "appearing: a product, its concentration rises")]),
 ]
 def options_for(right, named_wrong=None):
     for tags, opts in OPTION_SETS:
@@ -57,7 +60,8 @@ def make_fixed_from_sheet(ID, problems, fid, step_order, pick_named=None, sim_pa
             for e in exp_by[st]:
                 role = "intermediate" if no_key else ("key" if st == (key_state or last_number) else "intermediate")
                 unit = UNIT_OF_SHEET.get(e["unit"], e["unit"])   # a reaction's kJ is kJ per mole of reaction, the unit the student types as kJ
-                tol = tolerance(P, st, e["value"], unit) if tolerance else None
+                tol = sheet_tolerance(P, e["value"])
+                if tol is None and tolerance: tol = tolerance(P, st, e["value"], unit)
                 if tol is None: tol = max(0.02 * abs(e["value"]), e.get("half_ulp", 0), 0.3 if unit == "degC" else 0, 0.5 if unit == "K" else 0)
                 label = e["label"] or st
                 if any(x["label"] == label for x in expected): label = f"{label} ({e['unit'] or st})"     # two items with one label (binding energy in J and in MeV) stay distinct
@@ -93,7 +97,7 @@ def make_fixed_from_sheet(ID, problems, fid, step_order, pick_named=None, sim_pa
             traps.append({"id": t["id"], "state": t["state"], "value": round_sig(t["value"], 5), "unit": unit_of.get(t["state"], ""), "abs_tol": tol})
     return {"kind": P["kind"], "fixed_id": fid, "version": "", "status": P["status"], "context": {"scenario": P["scenario"], "picks": P["picks"]}, "text": P["text"],
             "givens": {}, "board": board, "targets": expected, "traps": traps, "table": None, "words": {}, "eq_checks": [], "reveal_with_problem": None, "sim": None,
-            "sim_params": (sim_params(P) if sim_params else {})}
+            "sim_params": dict(sim_params(P) if sim_params else {}, **(P.get("sim") or {}))}   # the sheet's own values, when it has them, win (20 Oct)
 
 TRAP_NOTES_CH19_21 = {
   "D_COUNT_FROM_GROUP": {"note": "Their d count is the metal's group number, ignoring the oxidation state.", "ask": "How many electrons did the metal lose to reach this oxidation state?"},
@@ -146,3 +150,153 @@ TRAP_NOTES_CH16 = {   # fallbacks only; the approved asks are in each archetype'
   "EXTENSIVE_IGNORED": {"note": "They predicted no change in ΔG when the equation was doubled.", "ask": "If twice as much reacts, what happens to the energy change?"},
   "CASE_WRONG": {"note": "They picked the wrong sign case.", "ask": "What are the signs of ΔH and ΔS here, and which term wins at high temperature?"},
 }
+
+# ---------- simulation parameters from a problem's own sentence (19-20 Oct 2026: "simulations need to be active") ----------
+SIM_IDS = json.load(open(os.path.join(os.path.dirname(__file__), "data", "sim_ids.json"), encoding="utf-8"))
+_SUBD = str.maketrans("₀₁₂₃₄₅₆₇₈₉", "0123456789")
+_F = r"[A-Za-z0-9₀-₉()⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻]+?"
+_PH = r"\((s|l|g|aq)(?:,\s*([a-z]+))?\)"
+def _tok(formula, phase, tag):
+    f = re.sub(r"[⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻]", "", formula).translate(_SUBD).replace("(", "").replace(")", "")
+    return f + phase + ((tag or "")[:4])
+def _side_tokens(side):
+    return [_tok(m.group(2), m.group(3), m.group(4)) for m in re.finditer(r"(?:^|\+)\s*(\d*)\s*(" + _F + ")" + _PH, side)]
+def reaction_of(text):
+    """'... CaCO₃(s) → CaO(s) + CO₂(g) ...' -> (['CaCO3s'], ['CaOs', 'CO2g']); ions lose their charges (Ag⁺(aq) -> Agaq); a tag is kept (C(s, graphite) -> Csgrap)."""
+    unit = r"\d*\s*" + _F + r"\((?:s|l|g|aq)(?:,\s*[a-z]+)?\)"
+    m = re.search(r"((?:" + unit + r"\s*\+\s*)*" + unit + r")\s*(?:→|⇌|->)\s*((?:" + unit + r"(?:\s*\+\s*)?)+)", text)
+    if not m: return None
+    return _side_tokens(m.group(1)), _side_tokens(m.group(2))
+ALIASES = {("H2Os",): {("H2Ol",): "ice_melting"}}
+def match_reaction(text, ids):
+    rx = reaction_of(text)
+    if not rx: return ""
+    L, R = rx
+    al = ALIASES.get(tuple(L), {}).get(tuple(R))
+    if al and al in ids: return al
+    def fits(page_side, ours):
+        toks = page_side.split("_")
+        if len(toks) != len(ours): return False
+        ok = lambda a, b: a == b or a.startswith(b) or b.startswith(a)
+        return all(any(ok(t, o) for t in toks) for o in ours) and all(any(ok(t, o) for o in ours) for t in toks)
+    for i in ids:
+        if "_to_" not in i: continue
+        a, b = i.split("_to_", 1)
+        if fits(a, L) and fits(b, R): return i
+    return ""
+def first_number(text, pattern):
+    m = re.search(pattern, text)
+    return float(m.group(1)) if m else None
+def all_reactions(text):
+    unit = r"\d*\s*" + _F + r"\((?:s|l|g|aq)(?:,\s*[a-z]+)?\)"
+    out = []
+    for m in re.finditer(r"((?:" + unit + r"\s*\+\s*)*" + unit + r")\s*(?:→|⇌|->)\s*((?:" + unit + r"(?:\s*\+\s*)?)+)", text):
+        out.append((_side_tokens(m.group(1)), _side_tokens(m.group(2))))
+    return out
+def match_coupled(text, ids):
+    """Two reactions added (a coupled reaction): species on both sides cancel; the overall is matched against the page's ids."""
+    rs = all_reactions(text)
+    if len(rs) < 2: return ""
+    L, R = [], []
+    for a, b in rs[:2]: L += a; R += b
+    for t in list(L):
+        if t in R: L.remove(t); R.remove(t)
+    fake = " + ".join(L) + " → " + " + ".join(R)
+    def fits(page_side, ours):
+        toks = page_side.split("_")
+        ok = lambda a, b: a == b or a.startswith(b) or b.startswith(a)
+        return len(toks) == len(ours) and all(any(ok(t, o) for t in toks) for o in ours) and all(any(ok(t, o) for o in ours) for t in toks)
+    for i in ids:
+        if "_to_" in i:
+            a, b = i.split("_to_", 1)
+            if fits(a, sorted(set(L))) and fits(b, sorted(set(R))): return i
+    return ""
+def temperature_K(text, default=298):
+    m = re.search(r"(?:at|of|to)\s+([0-9]+(?:\.[0-9]+)?)\s*K\b", text)
+    if m: return float(m.group(1))
+    m = re.search(r"(?:at|of)\s+(-?[0-9]+(?:\.[0-9]+)?)\s*°C", text)
+    return round(float(m.group(1)) + 273.15, 2) if m else default
+def reaction_for_page(P, key):
+    """The page's reaction id for a problem: a coupled problem's overall (stated last, or summed) first, then its first reaction."""
+    ids = SIM_IDS[key]
+    if P.get("kind") == "coupled":
+        rs = all_reactions(P["text"])
+        if rs:
+            L, R = rs[-1]; fake = " + ".join(f"{x}" for x in L)
+        for txt in [P["text"].split("Reaction 2:")[-1]] if "Reaction 2:" in P["text"] else []:
+            pass
+        last = re.findall(r"[^.]*?(?:→|⇌)[^.]*", P["text"])
+        for seg in reversed(last):
+            r = match_reaction(seg, ids)
+            if r: return r
+        r = match_coupled(P["text"], ids)
+        if r: return r
+    return match_reaction(P["text"], ids)
+_SUP = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789"); _SUB = str.maketrans("₀₁₂₃₄₅₆₇₈₉", "0123456789")
+ELEMENT_NAMES = {"cobalt": "Co", "strontium": "Sr", "radon": "Rn", "phosphorus": "P", "iodine": "I", "sodium": "Na", "technetium": "Tc", "fluorine": "F", "carbon": "C", "uranium": "U", "rubidium": "Rb"}
+def isotope_of(text):
+    m = re.search(r"\b(Cobalt|Strontium|Radon|Phosphorus|Iodine|Sodium|Technetium|Fluorine|Carbon|Uranium|Rubidium)-(\d+m?)", text, re.I)
+    if m: return f"{ELEMENT_NAMES[m.group(1).lower()]}-{m.group(2)}"
+    m = re.search(r"\b([A-Z][a-z]?)-(\d+m?)\b", text)
+    return f"{m.group(1)}-{m.group(2)}" if m else ""
+def nuclide_of(text):
+    m = re.search(r"([⁰¹²³⁴⁵⁶⁷⁸⁹]+)[₀₁₂₃₄₅₆₇₈₉]*([A-Z][a-z]?)", text)
+    return f"{m.group(2)}-{m.group(1).translate(_SUP)}" if m else ""
+def cell_metals(text):
+    """From a cell reaction 'M(s) + N⁺(aq) → ...': the metal oxidised (left, the anode) and the metal deposited (right, the cathode)."""
+    rs = all_reactions(text)
+    if rs:
+        L, R = rs[0]
+        anode = next((t[:-1] for t in L if t.endswith("s") and re.fullmatch(r"[A-Z][a-z]?", t[:-1])), "")
+        if not anode and "H2g" in L: anode = "H2"
+        cath = next((t[:-1] for t in R if t.endswith("s") and re.fullmatch(r"[A-Z][a-z]?", t[:-1])), "")
+        if not cath and "H2g" in R: cath = "H2"
+        return anode, cath
+    return "", ""
+def ion_conc(text, metal):
+    m = re.search(r"\[" + re.escape(metal) + r"[⁰¹²³⁴⁵⁶⁷⁸⁹⁺]*\]\s*=\s*([0-9.]+(?:e-?\d+)?)", text) or re.search(r"([0-9.]+)\s*M\s+" + re.escape(metal) + r"[⁰¹²³⁴⁵⁶⁷⁸⁹⁺]", text)
+    return float(m.group(1)) if m else None
+def clean_params(d):
+    return {k: (round(v, 6) if isinstance(v, float) else v) for k, v in d.items() if v not in ("", None)}
+def cell_notation(text):
+    """'Zn(s) | Zn²⁺(aq, 0.1 M) || Zn²⁺(aq, 0.5 M) | Zn(s)' or 'Pt | H₂(g, 1 atm) | H⁺(aq, x M) || ...' -> (left, right, cl, cr)."""
+    if "||" not in text: return None
+    a, b = text.split("||", 1)
+    def metal(seg, first):
+        found = re.findall(r"\b([A-Z][a-z]?)(?:₂)?\((?:s|g)", seg)
+        if not found: return ""
+        m = found[0] if first else found[-1]
+        return "H2" if m == "H" else m
+    def conc(seg, first):
+        cs = re.findall(r"\(aq,\s*([0-9.]+(?:e-?\d+)?)\s*M\)", seg)
+        return float(cs[-1] if first else cs[0]) if cs else None
+    l, r = metal(a, True), metal(b, False)
+    cl, cr = conc(a, True), conc(b, False)
+    ph = re.search(r"pH\s+([0-9.]+)", text)
+    if cl is None and ph and l == "H2": cl = 10 ** (-float(ph.group(1)))
+    return l, r, cl, cr
+def nernst_params(P):
+    t = P["text"]; cn = cell_notation(t)
+    if cn: l, r, cl, cr = cn
+    else:
+        l, r = cell_metals(t); cl = ion_conc(t, l) if l else None; cr = ion_conc(t, r) if r else None
+    return clean_params({"left": l, "right": r, "cl": cl, "cr": cr})
+def electrolysis_params(P):
+    t = P["text"]; ion = ""
+    for pat in (r"from (?:molten )?([A-Z][a-z]?)[⁰¹²³⁴⁵⁶⁷⁸⁹]*[⁺]", r"deposits? (?:[0-9.]+ (?:g|kg) of )?([A-Z][a-z]?)\b", r"produces ([A-Z][a-z]?)\b"):
+        mm = re.search(pat, t)
+        if mm and mm.group(1) in SIM_IDS["electrolysis_ions"]: ion = mm.group(1); break
+    mt = re.search(r"for ([0-9.]+) (h|min|s)\b", t)
+    secs = float(mt.group(1)) * {"h": 3600, "min": 60, "s": 1}[mt.group(2)] if mt else next((e["value"] for e in P["expected"] if e["state"] == "time_found"), None)
+    return clean_params({"ion": ion, "I": first_number(t, r"current of ([0-9.]+) A"), "t": secs, "mode": P["kind"], "m": first_number(t, r"deposit ([0-9.]+) g")})
+
+def sheet_tolerance(P, value):
+    """The sheet's `tolerance` column for this problem: '±1 %' -> 1 % of the value; '±0.01 V' or '0.5 g' -> that amount; 'exact' -> a
+    hair; blank -> None (the archetype's rule, then the default 2 % or half a unit in the last written place)."""
+    t = (P.get("tolerance") or "").strip().lower().replace("±", "").replace("+/-", "").strip()
+    if not t: return None
+    if t.startswith("exact"): return 1e-9 + 1e-6 * abs(value)
+    m_ = re.match(r"([0-9.]+)\s*%", t)
+    if m_: return float(m_.group(1)) / 100 * abs(value)
+    m_ = re.match(r"([0-9.]+(?:e-?\d+)?)", t)
+    return float(m_.group(1)) if m_ else None

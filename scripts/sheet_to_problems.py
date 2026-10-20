@@ -53,7 +53,7 @@ out = []
 for r in rows:
     out.append({"id": r["id"], "scenario": r["scenario"], "kind": r["kind"], "text": r["problem sentence (as the student sees it)"],
                 "constants": r.get("constants and their sources", ""), "expected": items(r["expected, item by item"]), "traps": traps(r["trap values (named mistakes)"]),
-                "picks": picks(r["right picks"]), "coeffs": coeffs(r["expected, item by item"]), "tolerance": r.get("tolerance", ""), "status": r["status"]})
+                "picks": picks(r["right picks"]), "coeffs": coeffs(r["expected, item by item"]), "tolerance": r.get("tolerance", ""), "sim": dict(kv.split("=", 1) for kv in [x.strip() for x in (r.get("simulation parameters") or "").split(";")] if "=" in kv), "status": r["status"]})
 json.dump({"archetype": arch, "source_sheet": sheet.split("/")[-1], "problems": out}, open(f"archetypes/data/sheets/{arch}.json", "w", encoding="utf-8"), indent=1, ensure_ascii=False)
 bad = [p["id"] for p in out if not p["expected"]]
 print(f"{arch}: {len(out)} problems, {sum(len(p['expected']) for p in out)} expected items, {sum(len(p['traps']) for p in out)} traps; no expected parsed for: {bad}")

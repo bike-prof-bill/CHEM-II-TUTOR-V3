@@ -36,6 +36,8 @@ LIQUIDS = [  # name, coldest degC a problem uses
   ("dichloromethane",       -30.0),   # added 10 Oct 2026 for The Syringe Boiling Trick (instructor approved)
   ("CFC-11",                -30.0),   # added 10 Oct 2026 for The Drinking Bird (instructor approved)
   ("HFE-7000",              -30.0),
+  ("propane",               -80.0),   # added 20 Oct 2026 (the instructor's values, as in V2); coldest 40 °C below its boiling point until a scenario's limits say otherwise
+  ("butane",                -40.0),   # added 20 Oct 2026, likewise
 ]
 # the table this file works from: (name, dHvap kJ/mol at Tb, normal bp degC, coldest degC a problem uses, normal mp degC)
 SUBSTANCES = [(n, *_subs.get(n, "dHvap_at_Tb_kJ_mol", "boiling_point_C"), cold, _subs.get(n, "melting_point_C")) for n, cold in LIQUIDS]

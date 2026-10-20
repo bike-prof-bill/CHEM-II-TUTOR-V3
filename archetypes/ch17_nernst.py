@@ -49,6 +49,6 @@ def TOLERANCE(P, st, value, unit):
     if st == "n_found": return 0.1
     if unit == "V": return 0.01
     return None
-SIM = lambda P: {}
+SIM = lambda P: nernst_params(P)
 def make_fixed(rng, fid): return make_fixed_from_sheet(ID, PROBLEMS, fid, STEPS, PICK_NAMED, SIM, pick_options=PICK_OPTIONS, tolerance=TOLERANCE)
 def render_text(*a): raise NotImplementedError

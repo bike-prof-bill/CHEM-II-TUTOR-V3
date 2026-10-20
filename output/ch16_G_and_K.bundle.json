@@ -817,7 +817,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "SK1"
+    "reaction": "AgCls_to_Agaq_Claq"
    },
    "expected": [
     {
@@ -1072,7 +1072,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "SK2"
+    "reaction": "AgCls_to_Agaq_Claq"
    },
    "expected": [
     {
@@ -1338,7 +1338,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "SK3"
+    "reaction": "H2Ol_to_Haq_OHaq"
    },
    "expected": [
     {
@@ -1616,7 +1616,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "SK4"
+    "reaction": "KCls_to_Kaq_Claq"
    },
    "expected": [
     {
@@ -1901,7 +1901,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "SK5"
+    "reaction": "NOg_O2g_to_NO2g"
    },
    "expected": [
     {
@@ -2155,9 +2155,7 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {
-    "reaction": "SK6"
-   },
+   "sim_params": {},
    "expected": [
     {
      "id": "key_dG0_found",
@@ -2429,7 +2427,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "HR1"
+    "reaction": "N2g_H2g_to_NH3g"
    },
    "expected": [
     {
@@ -2714,7 +2712,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "HR2"
+    "reaction": "SO2g_O2g_to_SO3g"
    },
    "expected": [
     {
@@ -2999,7 +2997,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "HR3"
+    "reaction": "NO2g_to_N2O4g"
    },
    "expected": [
     {
@@ -3277,7 +3275,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "HR4"
+    "reaction": "PCl5g_to_PCl3g_Cl2g"
    },
    "expected": [
     {
@@ -3562,7 +3560,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "HR5"
+    "reaction": "N2g_O2g_to_NOg"
    },
    "expected": [
     {
@@ -3847,7 +3845,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "HR6"
+    "reaction": "H2g_Cl2g_to_HClg"
    },
    "expected": [
     {
@@ -4125,7 +4123,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "WC1"
+    "reaction": "H2Ol_to_Haq_OHaq"
    },
    "expected": [
     {
@@ -4380,7 +4378,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "WC2"
+    "reaction": "H2Ol_to_Haq_OHaq"
    },
    "expected": [
     {
@@ -4646,7 +4644,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "WC3"
+    "reaction": "KCls_to_Kaq_Claq"
    },
    "expected": [
     {
@@ -4924,7 +4922,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "WC4"
+    "reaction": "NaCls_to_Naaq_Claq"
    },
    "expected": [
     {
@@ -5178,9 +5176,7 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {
-    "reaction": "WC5"
-   },
+   "sim_params": {},
    "expected": [
     {
      "id": "key_dG0_found",
@@ -5400,7 +5396,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "WC6"
+    "reaction": "N2O4g_to_NO2g"
    },
    "expected": [
     {
@@ -5673,7 +5669,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "OZ1"
+    "reaction": "O2g_to_O3g"
    },
    "expected": [
     {
@@ -5958,7 +5954,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "OZ2"
+    "reaction": "O3g_to_O2g"
    },
    "expected": [
     {
@@ -6236,7 +6232,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "OZ3"
+    "reaction": "Csdiam_to_Csgrap"
    },
    "expected": [
     {
@@ -6521,7 +6517,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "OZ4"
+    "reaction": "H2Og_to_H2g_O2g"
    },
    "expected": [
     {
@@ -6776,7 +6772,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "OZ5"
+    "reaction": "N2O4g_to_NO2g"
    },
    "expected": [
     {
@@ -7019,7 +7015,7 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "reaction": "OZ6"
+    "reaction": "PCl5g_to_PCl3g_Cl2g"
    },
    "expected": [
     {
@@ -7057,5 +7053,5 @@
    "opener_index": 3
   }
  ],
- "content_version": "e6708e9d04"
+ "content_version": "dfbe04700f"
 }

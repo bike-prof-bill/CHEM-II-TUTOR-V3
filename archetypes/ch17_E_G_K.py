@@ -48,6 +48,6 @@ def TOLERANCE(P, st, value, unit):
     if unit == "V": return 0.01
     if st == "K_found" and abs(value) > 0 and abs(math.log10(abs(value))) >= 15: return 0.75 * abs(value)   # very large or small K: a power of ten counts (instructor, 18 Oct)
     return None
-SIM = lambda P: {}
+SIM = lambda P: clean_params({'left': cell_metals(P['text'])[0], 'right': cell_metals(P['text'])[1]})
 def make_fixed(rng, fid): return make_fixed_from_sheet(ID, PROBLEMS, fid, STEPS, PICK_NAMED, SIM, pick_options=PICK_OPTIONS, tolerance=TOLERANCE)
 def render_text(*a): raise NotImplementedError

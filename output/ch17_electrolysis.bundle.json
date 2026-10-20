@@ -841,7 +841,9 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "Ag⁺",
+    "ion": "Ag",
+    "I": 10.23,
+    "t": 3600.0,
     "mode": "mass"
    },
    "expected": [
@@ -1149,7 +1151,9 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "Cu²⁺",
+    "ion": "Cu",
+    "I": 10.23,
+    "t": 3600.0,
     "mode": "mass"
    },
    "expected": [
@@ -1457,7 +1461,9 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "Ni²⁺",
+    "ion": "Ni",
+    "I": 5.0,
+    "t": 1800.0,
     "mode": "mass"
    },
    "expected": [
@@ -1765,7 +1771,9 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "Au³⁺",
+    "ion": "Au",
+    "I": 2.0,
+    "t": 7200.0,
     "mode": "mass"
    },
    "expected": [
@@ -2073,7 +2081,9 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "Cr³⁺",
+    "ion": "Cr",
+    "I": 25.0,
+    "t": 2700.0,
     "mode": "mass"
    },
    "expected": [
@@ -2381,7 +2391,9 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "Zn²⁺",
+    "ion": "Zn",
+    "I": 15.0,
+    "t": 1200.0,
     "mode": "mass"
    },
    "expected": [
@@ -2675,7 +2687,9 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "Ag⁺",
+    "ion": "Ag",
+    "I": 3.5,
+    "t": 1500.0,
     "mode": "mass"
    },
    "expected": [
@@ -2983,7 +2997,9 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "Cu²⁺",
+    "ion": "Cu",
+    "I": 8.0,
+    "t": 5400.0,
     "mode": "mass"
    },
    "expected": [
@@ -3291,7 +3307,9 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "Ni²⁺",
+    "ion": "Ni",
+    "I": 12.0,
+    "t": 2400.0,
     "mode": "mass"
    },
    "expected": [
@@ -3599,7 +3617,9 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "Sn²⁺",
+    "ion": "Sn",
+    "I": 6.0,
+    "t": 3000.0,
     "mode": "mass"
    },
    "expected": [
@@ -3907,7 +3927,9 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "Cd²⁺",
+    "ion": "Cd",
+    "I": 4.0,
+    "t": 7200.0,
     "mode": "mass"
    },
    "expected": [
@@ -4215,7 +4237,9 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "Pb²⁺",
+    "ion": "Pb",
+    "I": 10.0,
+    "t": 900.0,
     "mode": "mass"
    },
    "expected": [
@@ -4523,7 +4547,9 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "",
+    "ion": "Al",
+    "I": 100000.0,
+    "t": 86400.0,
     "mode": "mass"
    },
    "expected": [
@@ -4831,7 +4857,9 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "",
+    "ion": "Al",
+    "I": 250000.0,
+    "t": 3600.0,
     "mode": "mass"
    },
    "expected": [
@@ -5125,7 +5153,9 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "",
+    "ion": "Na",
+    "I": 50000.0,
+    "t": 28800.0,
     "mode": "mass"
    },
    "expected": [
@@ -5433,7 +5463,8 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "",
+    "I": 100000.0,
+    "t": 43200.0,
     "mode": "mass"
    },
    "expected": [
@@ -5741,7 +5772,9 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "",
+    "ion": "Al",
+    "I": 300000.0,
+    "t": 1800.0,
     "mode": "mass"
    },
    "expected": [
@@ -6035,7 +6068,9 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "",
+    "ion": "Na",
+    "I": 20000.0,
+    "t": 3600.0,
     "mode": "mass"
    },
    "expected": [
@@ -6352,8 +6387,11 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "Cr³⁺",
-    "mode": "time"
+    "ion": "Cr",
+    "I": 33.46,
+    "t": 39430.0,
+    "mode": "time",
+    "m": 237.0
    },
    "expected": [
     {
@@ -6668,8 +6706,11 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "Ag⁺",
-    "mode": "time"
+    "ion": "Ag",
+    "I": 2.0,
+    "t": 2236.0,
+    "mode": "time",
+    "m": 5.0
    },
    "expected": [
     {
@@ -6999,8 +7040,11 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "Cu²⁺",
-    "mode": "time"
+    "ion": "Cu",
+    "I": 3.0,
+    "t": 10120.0,
+    "mode": "time",
+    "m": 10.0
    },
    "expected": [
     {
@@ -7330,8 +7374,11 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "Au³⁺",
-    "mode": "time"
+    "ion": "Au",
+    "I": 0.5,
+    "t": 2939.0,
+    "mode": "time",
+    "m": 1.0
    },
    "expected": [
     {
@@ -7661,8 +7708,11 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "Ni²⁺",
-    "mode": "time"
+    "ion": "Ni",
+    "I": 10.0,
+    "t": 8220.0,
+    "mode": "time",
+    "m": 25.0
    },
    "expected": [
     {
@@ -7992,8 +8042,11 @@
    "reveal_with_problem": null,
    "sim": null,
    "sim_params": {
-    "ion": "Zn²⁺",
-    "mode": "time"
+    "ion": "Zn",
+    "I": 50.0,
+    "t": 5903.0,
+    "mode": "time",
+    "m": 100.0
    },
    "expected": [
     {
@@ -8095,5 +8148,5 @@
    "opener_index": 3
   }
  ],
- "content_version": "59239a7f8e"
+ "content_version": "4f77e232eb"
 }

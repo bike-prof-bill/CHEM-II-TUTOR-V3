@@ -877,7 +877,10 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "Fe",
+    "right": "Ag"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -1220,7 +1223,10 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "Fe",
+    "right": "Cu"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -1563,7 +1569,10 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "Zn",
+    "right": "Ni"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -1906,7 +1915,10 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "Cu",
+    "right": "Ag"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -2249,7 +2261,10 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "Al",
+    "right": "Cu"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -2592,7 +2607,10 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "Zn",
+    "right": "Cd"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -2935,7 +2953,10 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "Au",
+    "right": "H2"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -3278,7 +3299,10 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "Cu",
+    "right": "H2"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -3621,7 +3645,10 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "Ag",
+    "right": "H2"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -3964,7 +3991,10 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "Zn",
+    "right": "H2"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -4307,7 +4337,10 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "Mg",
+    "right": "H2"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -4650,7 +4683,10 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "Al",
+    "right": "H2"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -4993,7 +5029,9 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "Pb"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -5336,7 +5374,9 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "Zn"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -5679,7 +5719,9 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "Zn"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -6022,7 +6064,9 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "Fe"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -6365,7 +6409,9 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "Zn"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -6708,7 +6754,10 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "Zn",
+    "right": "Cu"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -7051,7 +7100,9 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "H2"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -7394,7 +7445,9 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "H2"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -7737,7 +7790,9 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "H2"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -8080,7 +8135,9 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "H2"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -8423,7 +8480,9 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "H2"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -8766,7 +8825,9 @@
    "eq_checks": [],
    "reveal_with_problem": null,
    "sim": null,
-   "sim_params": {},
+   "sim_params": {
+    "left": "H2"
+   },
    "expected": [
     {
      "id": "n_moles_of_electrons_transferred",
@@ -8850,5 +8911,5 @@
    "opener_index": 3
   }
  ],
- "content_version": "b042cc2273"
+ "content_version": "d203bc65e3"
 }

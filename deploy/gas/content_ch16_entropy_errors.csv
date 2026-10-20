@@ -1,8 +1,0 @@
-﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
-PRODUCTS_REACTANTS_SWAPPED,They subtracted products from reactants: the sign is reversed.,Which comes first in the subtraction: products or reactants?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
-COEFFICIENTS_DROPPED,They added the table values without multiplying by the coefficients.,Each value is per mole. How many moles of each species are in the equation?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
-KJ_NOT_CONVERTED,They left ΔH (or ΔG°) in kJ where J were needed.,ΔS is in J/K and R is in J. What must ΔH or ΔG° be in?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
-SURROUNDINGS_SIGN,Their ΔS(surr) has the wrong sign: +ΔH ÷ T instead of −ΔH ÷ T.,"If the system gives off heat, do the surroundings gain or lose entropy?",,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
-CELSIUS_FOR_KELVIN,They used the temperature in °C instead of K.,Thermodynamic temperatures must be absolute. What is this temperature in kelvins?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
-SIGN_PICK_WRONG,They predicted the wrong sign of ΔS(sys).,"Count moles of gas, and look at the phases. Does the matter spread out or gather?",,wrong pick at sign_pick,"approved (instructor, 18 Oct 2026)"
-SPONTANEITY_FROM_SYSTEM,"Their verdict follows the system's entropy alone, not the universe's.",The second law is about the universe. What is the sign of ΔS(univ)?,,wrong pick at verdict when the signs of ΔS(sys) and ΔS(univ) differ,"approved (instructor, 18 Oct 2026)"

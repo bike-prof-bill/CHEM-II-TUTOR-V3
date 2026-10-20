@@ -55,6 +55,6 @@ def PICK_OPTIONS(P, st, right):
     if st == "perturb_1" and right == "changes sign": return [{"id": "changes sign", "text": "changes sign: the same size, the other way"}, {"id": "stays", "text": "stays the same"}, {"id": "doubles", "text": "doubles"}]
     return None
 def TOLERANCE(P, st, value, unit): return 0.01 if unit == "V" else None
-SIM = lambda P: {'left': (_metals(P) + ['', ''])[0], 'right': (_metals(P) + ['', ''])[1], 'cl': 1, 'cr': 1}
+SIM = lambda P: clean_params({'left': cell_metals(P['text'])[0] or P['picks'].get('anode_pick', ''), 'right': cell_metals(P['text'])[1] or next((m for m in _metals(P) if m != P['picks'].get('anode_pick')), ''), 'cl': 1, 'cr': 1})
 def make_fixed(rng, fid): return make_fixed_from_sheet(ID, PROBLEMS, fid, STEPS, PICK_NAMED, SIM, pick_options=PICK_OPTIONS, tolerance=TOLERANCE)
 def render_text(*a): raise NotImplementedError

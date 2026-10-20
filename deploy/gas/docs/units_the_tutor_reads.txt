@@ -1,2 +1,0 @@
-Units the tutor reads (the first spelling of each; other spellings are in units.json):
-, 1/K, A, C, J/(mol·K), J/K, J/mol, K, L, M, M/min, M/s, MeV, M⁻² s⁻¹, M⁻¹ min⁻¹, M⁻¹ s⁻¹, V, amu, atm, d, degC, d⁻¹, g, g/L, g/mol, h, h⁻¹, kC, kJ/(mol·K), kJ/K, kJ/mol, kPa, kg, km, m, mA, mL, mM, mV, mg, mg/L, min, min⁻¹, mol, mol/kg, s, s⁻¹, torr, y, y⁻¹

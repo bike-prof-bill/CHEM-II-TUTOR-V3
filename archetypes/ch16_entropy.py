@@ -2,7 +2,7 @@
 values, named mistakes and right picks (archetypes/data/sheets/ch16_entropy.json); this file gives the step order, the pick options and the
 registers. test_ch16.py re-derives the numbers from each problem sentence. Picks are `direction` items whose option texts begin with the
 bare word the student may type."""
-import math
+import math, re
 from engine import round_sig
 from _sheet import *
 
@@ -32,6 +32,6 @@ PROBLEMS = load(ID)
 FIXED = [{"id": p["id"], "kind": p["kind"], "version": "", "status": p["status"], "text": p["text"]} for p in PROBLEMS]
 STEPS = ['dSsys_found', 'sign_pick', 'dSsurr_found', 'dSuniv_found', 'verdict', 'perturb_1']
 PICK_NAMED = {'sign_pick': 'SIGN_PICK_WRONG', 'verdict': 'SPONTANEITY_FROM_SYSTEM'}
-SIM = lambda P: {'process': P['id'], 'T': 298}
+SIM = lambda P: clean_params({'process': match_reaction(P['text'], SIM_IDS['entropy']), 'T': temperature_K(P['text'])})
 def make_fixed(rng, fid): return make_fixed_from_sheet(ID, PROBLEMS, fid, STEPS, PICK_NAMED, SIM)
 def render_text(*a): raise NotImplementedError

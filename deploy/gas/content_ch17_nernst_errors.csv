@@ -1,5 +1,0 @@
-﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
-Q_INVERTED,Their Q is reactants over products.,Which ions go on top of Q?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
-LN_FOR_LOG,They used e (or ln) where the relation uses 10 (or log).,The 0.0592 V form uses base 10. Which key is that?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
-N_DROPPED,They left n out of the Nernst equation.,What is 0.0592 V divided by?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
-NERNST_SIGN,They added the correction term instead of subtracting it.,Look at the sign in front of (0.0592 ÷ n) log Q.,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"

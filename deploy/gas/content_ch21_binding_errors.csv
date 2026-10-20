@@ -1,5 +1,0 @@
-﻿error id,note (what the tutor is told),"ask (if no model, the question asked)",opener (blank = every scenario),detectable form,status
-ELECTRONS_OMITTED,They left out the electrons when summing the particles.,Does the atomic mass include the electrons?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
-AMU_NOT_CONVERTED,They used the mass defect in amu in E = mc² without converting to kg.,What unit must the mass be in to get joules?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
-DIVIDED_BY_Z,"They divided by the number of protons, not by the number of nucleons.",How many nucleons are there?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"
-EV_FOR_MEV,They converted to eV instead of MeV.,1 MeV is how many eV?,,a value (see the problem sheet's trap values),"approved (instructor, 18 Oct 2026)"

@@ -424,3 +424,30 @@ Shell `bb174cdf`, `CODE_VERSION 9d1709f9`; content per the generate line.
 - Tests: `test_ch17.py` (every balanced equation checked atom by atom and in charge, lowest whole numbers; ΔG° = −nFE°; log K = nE°/0.0592; Nernst; It, Q/F, molar masses; 204 independent checks); `test_ch19_21.py` (hc/λ and Nₐ; d count = group − oxidation state; t₂g, e_g and unpaired from the spin state; λ = ln2/t½, e^(−λt), t = −ln(ratio)/λ; Z and N from the nuclide; the mass defect, E = Δmc², 931.5 MeV/amu, per nucleon; 198 independent checks); harness walks 151 and 97; random-clicker over 23 archetypes (69 checks). Chapter 10 unchanged (600/600, the same rejects). Baseline re-snapshotted (7995 strings).
 - Release: `docs/25_RELEASE_chapters_14_to_21.md` (36 script files, 19 of them new archetypes; the expected alive reply; Netlify). Shell version a819f89c.
 - Open: chapter 16 and 21 simulation addresses carry placeholder parameters (the problem id as process or reaction; decay `mode` only, without `m0`) until the pages' parameter values per problem are known; the electrolysis page gets `ion` and `mode` but not `I`, `t`, `m`.
+- 20 Oct: rulings recorded (19 Oct): a bare "C" is the coulomb; simulation parameters for ch16/17/21 wait for the instructor's larger plan. `docs/26_HANDOFF_new_SCENARIO_CLAUDE_2026-10-20.md` (DRAFT): the state of all 23 archetypes, the next work (chapters 11 and 12, eight archetypes in the sheet format), the format, the settled rules and the lessons; `docs/units_the_tutor_reads.txt`.
+
+## 20 Oct 2026: the instructor's scenario targets; simulations active; chapter numbers in the menu
+
+- Targets (instructor): at least 4 scenarios per archetype; at least 6 in chapters 10–13, 7 for Clausius-Clapeyron; chapters 10–13 first, this week. `run.py` reports each archetype's scenarios against its target (ch10_cc 4 of 7; ch13_eq 5 of 6; chapters 14–21 at 4 of 4; chapters 11 and 12 not yet built).
+- Page: the archetype menu shows "Ch N ·" before each title, sorted by chapter (`index.html`; no Apps Script change).
+- Simulations active (instructor): every chapter 16, 17 and 21 problem now sends its page the values it reads, taken from the problem's own sentence (`_sheet.py`: reactions matched to the pages' ids, coupled reactions summed, cell notation and cell reactions read for anode, cathode and concentrations, electrolysis ion, current, time, mass and mode, decay isotope, mode, time, ratio, starting mass, rock masses, binding nuclide). The pages' known ids are recorded in `archetypes/data/sim_ids.json`, so a build does not need the media folder. Sheets may now carry a `simulation parameters` column (key=value; ...), which wins. `tests/regression/sim_addresses.py`: 585 problems with a page; 16 problems name data the pages lack (listed in docs/27) and open the default with a notice; any new gap fails.
+- Design: `docs/27_CHAPTERS_10_to_13_six_scenarios_and_chapters_11_12_design.md` (kinds, steps, perturbations and mistakes for the eight chapter 11 and 12 archetypes; what chapters 10 and 13 need). Handoff `docs/26` rewritten with the targets, the design and the simulation rule.
+- 20 Oct: SCENARIO_CLAUDE's questions answered (docs/28): units mol/kg, M/s, M/min, M⁻¹ s⁻¹, M⁻¹ min⁻¹, M⁻² s⁻¹ added; option sets zero/first/second, into/out/neither, disappearing/appearing built in; the sheet's tolerance column is read per problem (±x %, ±value, exact; blank = default); chapter 13 keeps its own sheet format plus simulation parameters; chapter 10 materials sent. Gap count corrected to 17 in docs/27.
+- 20 Oct: `docs/29_HANDOFF_new_ARCHITECT_CLAUDE.md` written at the instructor's request; Fable retires.
+- 20 Oct: propane (bp −42.1 °C, ΔHvap 19.04 kJ/mol, mp −187.7 °C) and butane (−0.5 °C, 22.44 kJ/mol, −138.3 °C) added to substances.json and ch10_cc LIQUIDS from the instructor's values (as used in V2), for the new chapter 10 scenarios; no existing scenario changes. `docs/APPROVED_DATA_all_chapters.csv`: one table of every approved constant the problems so far rest on (liquids, reactions, Kw, Ka, Kb, Ksp, molar masses, Kf), with sources.
+
+## 20 Oct 2026 (night): new ARCHITECT_CLAUDE; the instructor's folder brought to the 20 Oct state
+
+- The instructor's folder (sent as `Archive.zip`) held the 19 Oct source: 20 hand-written files older than the 20 Oct zip, and
+  `sim_ids.json`, `tests/regression/sim_addresses.py`, `scripts/make_gallery.py`, `docs/26` to `docs/29` and two data documents absent.
+  The 20 Oct zip laid over a copy of it passes `make test`; its media builds the site with 119 of 119 files present.
+- `scripts/retire_stale_files.sh` also removes two stray files found there: `scripts/]pwd.py` (a mistyped copy of `make_gallery.py`)
+  and `tmp` (keystrokes).
+- `docs/30_RELEASE_2026-10-20.md`: the drop, twelve Apps Script files (eleven archetypes and Units), the page.
+- Open for the instructor: the nine option texts of the three new pick sets in `_sheet.py` (zero/first/second; into/out/neither;
+  disappearing/appearing) are Fable's wording without a recorded approval. No archetype uses them yet; treated as DRAFT until he rules.
+  Whether `deploy/` was left out of his archive on purpose.
+- 20 Oct (later): the instructor's `make test` failed the content check on one unchanged line (`λ = 0.693/t½; ln(Nₜ/N₀) = −λt`,
+  listed as both removed and added). Cause: `comm` compares in the shell's collation, and on his Mac that differs from the order
+  Python writes the snapshot. `scripts/check_content.sh` now compares the two files as sets in Python; it still fails on a real
+  edit (checked by altering one baseline line). No content changed; the baseline is untouched.

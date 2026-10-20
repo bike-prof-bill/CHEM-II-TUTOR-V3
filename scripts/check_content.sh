@@ -9,8 +9,15 @@ if [ ! -f content/BASELINE_authored.txt ]; then
   exit 1
 fi
 python3 scripts/snapshot_content.py content/CURRENT_authored.txt
-missing=$(comm -23 content/BASELINE_authored.txt content/CURRENT_authored.txt)
-added=$(comm -13 content/BASELINE_authored.txt content/CURRENT_authored.txt)
+# Compared as sets in Python, not with comm: comm needs both files sorted in the shell's own collation, and on a Mac with a
+# UTF-8 locale that is not the order Python writes, so an unchanged line could be reported as both removed and added (20 Oct).
+diffpy='import sys
+b = set(open("content/BASELINE_authored.txt", encoding="utf-8").read().splitlines())
+c = set(open("content/CURRENT_authored.txt", encoding="utf-8").read().splitlines())
+d = (b - c) if sys.argv[1] == "missing" else (c - b)
+sys.stdout.write("\n".join(sorted(d)))'
+missing=$(python3 -c "$diffpy" missing)
+added=$(python3 -c "$diffpy" added)
 if [ -n "$added" ]; then
   echo "content-check: $(printf '%s\n' "$added" | wc -l | tr -d ' ') authored string(s) ADDED since baseline (allowed, listed):"
   printf '%s\n' "$added" | head -30

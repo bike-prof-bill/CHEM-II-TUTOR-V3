@@ -131,6 +131,34 @@
    "dim": {
     "MeV": 1
    }
+  },
+  "molality": {
+   "canonical": "mol/kg",
+   "dim": {
+    "mol": 1,
+    "kg": -1
+   }
+  },
+  "rate": {
+   "canonical": "M/s",
+   "dim": {
+    "M": 1,
+    "s": -1
+   }
+  },
+  "k_second": {
+   "canonical": "M⁻¹ s⁻¹",
+   "dim": {
+    "M": -1,
+    "s": -1
+   }
+  },
+  "k_third": {
+   "canonical": "M⁻² s⁻¹",
+   "dim": {
+    "M": -2,
+    "s": -1
+   }
   }
  },
  "units": {
@@ -608,6 +636,75 @@
     "MeV/nucleon",
     "MeV per nucleon",
     "MeV nucleon⁻¹"
+   ]
+  },
+  "mol/kg": {
+   "dimension": "molality",
+   "factor": 1,
+   "offset": 0,
+   "aliases": [
+    "mol/kg",
+    "mol kg⁻¹",
+    "mol kg^-1",
+    "molal"
+   ]
+  },
+  "M/s": {
+   "dimension": "rate",
+   "factor": 1,
+   "offset": 0,
+   "aliases": [
+    "M/s",
+    "M s⁻¹",
+    "M s^-1",
+    "M·s⁻¹",
+    "mol/(L·s)",
+    "mol L⁻¹ s⁻¹"
+   ]
+  },
+  "M/min": {
+   "dimension": "rate",
+   "factor": 0.016666666666666666,
+   "offset": 0,
+   "aliases": [
+    "M/min",
+    "M min⁻¹",
+    "M min^-1"
+   ]
+  },
+  "M⁻¹ s⁻¹": {
+   "dimension": "k_second",
+   "factor": 1,
+   "offset": 0,
+   "aliases": [
+    "M⁻¹ s⁻¹",
+    "M^-1 s^-1",
+    "M⁻¹s⁻¹",
+    "M⁻¹·s⁻¹",
+    "L/(mol·s)",
+    "L mol⁻¹ s⁻¹",
+    "1/(M·s)"
+   ]
+  },
+  "M⁻¹ min⁻¹": {
+   "dimension": "k_second",
+   "factor": 0.016666666666666666,
+   "offset": 0,
+   "aliases": [
+    "M⁻¹ min⁻¹",
+    "M^-1 min^-1"
+   ]
+  },
+  "M⁻² s⁻¹": {
+   "dimension": "k_third",
+   "factor": 1,
+   "offset": 0,
+   "aliases": [
+    "M⁻² s⁻¹",
+    "M^-2 s^-1",
+    "M⁻²s⁻¹",
+    "L²/(mol²·s)",
+    "L² mol⁻² s⁻¹"
    ]
   }
  }
