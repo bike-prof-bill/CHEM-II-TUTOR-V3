@@ -1,0 +1,140 @@
+﻿table,name,quantity,value,unit,source
+chapter 10 liquids,water,boiling_point_C,100.0,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,water,dHvap_at_Tb_kJ_mol,40.66,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,water,melting_point_C,0.0,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,water,dHvap_at_25C_kJ_mol,44.01,kJ/mol,"OpenStax Chemistry 2e, Chapter 10 (water's enthalpy of vaporization at 25 °C); approved by the instructor 2026-10-12 as a second trigger for the WATER_DH_USED named error"
+chapter 10 liquids,water,density_g_mL,0.998,g/mL,"NIST reference data, supplied by the instructor 2026-10-10"
+chapter 10 liquids,methanol,boiling_point_C,64.6,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,methanol,dHvap_at_Tb_kJ_mol,35.2,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,methanol,melting_point_C,-97.2,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,ethanol,boiling_point_C,78.4,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,ethanol,dHvap_at_Tb_kJ_mol,38.6,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,ethanol,melting_point_C,-114.2,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,ethanol,density_g_mL,0.789,g/mL,"NIST reference data, supplied by the instructor 2026-10-10"
+chapter 10 liquids,1-propanol,boiling_point_C,97.2,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,1-propanol,dHvap_at_Tb_kJ_mol,41.4,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,1-propanol,melting_point_C,-126.2,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,2-propanol,boiling_point_C,82.4,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,2-propanol,dHvap_at_Tb_kJ_mol,40.0,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,2-propanol,melting_point_C,-89.5,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,1-butanol,boiling_point_C,117.5,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,1-butanol,dHvap_at_Tb_kJ_mol,43.3,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,1-butanol,melting_point_C,-89.6,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,acetone,boiling_point_C,56.2,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,acetone,dHvap_at_Tb_kJ_mol,29.1,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,acetone,melting_point_C,-95.4,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,acetone,density_g_mL,0.791,g/mL,"NIST reference data, supplied by the instructor 2026-10-10"
+chapter 10 liquids,diethyl ether,boiling_point_C,34.6,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,diethyl ether,dHvap_at_Tb_kJ_mol,26.5,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,diethyl ether,melting_point_C,-116.3,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,diethyl ether,density_g_mL,0.713,g/mL,"NIST reference data, supplied by the instructor 2026-10-10"
+chapter 10 liquids,pentane,boiling_point_C,36.1,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,pentane,dHvap_at_Tb_kJ_mol,25.8,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,pentane,melting_point_C,-129.8,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,pentane,density_g_mL,0.626,g/mL,"NIST reference data, supplied by the instructor 2026-10-10"
+chapter 10 liquids,hexane,boiling_point_C,68.8,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,hexane,dHvap_at_Tb_kJ_mol,28.9,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,hexane,melting_point_C,-95.4,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,heptane,boiling_point_C,98.4,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,heptane,dHvap_at_Tb_kJ_mol,32.0,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,heptane,melting_point_C,-90.6,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,cyclohexane,boiling_point_C,80.8,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,cyclohexane,dHvap_at_Tb_kJ_mol,29.6,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,cyclohexane,melting_point_C,6.6,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,benzene,boiling_point_C,80.1,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,benzene,dHvap_at_Tb_kJ_mol,30.8,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,benzene,melting_point_C,5.5,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,toluene,boiling_point_C,110.7,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,toluene,dHvap_at_Tb_kJ_mol,33.2,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,toluene,melting_point_C,-95.0,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,chloroform,boiling_point_C,61.2,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,chloroform,dHvap_at_Tb_kJ_mol,29.2,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,chloroform,melting_point_C,-63.6,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,carbon tetrachloride,boiling_point_C,76.7,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,carbon tetrachloride,dHvap_at_Tb_kJ_mol,30.0,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,carbon tetrachloride,melting_point_C,-22.9,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,ethyl acetate,boiling_point_C,77.1,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,ethyl acetate,dHvap_at_Tb_kJ_mol,31.0,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,ethyl acetate,melting_point_C,-83.6,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,2-butanol,boiling_point_C,98.9,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,2-butanol,dHvap_at_Tb_kJ_mol,40.8,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,2-butanol,melting_point_C,-114.7,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,isobutyl alcohol,boiling_point_C,107.7,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,isobutyl alcohol,dHvap_at_Tb_kJ_mol,41.8,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,isobutyl alcohol,melting_point_C,-108.0,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,tert-butyl alcohol,boiling_point_C,82.4,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,tert-butyl alcohol,dHvap_at_Tb_kJ_mol,39.1,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,tert-butyl alcohol,melting_point_C,25.1,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-09"
+chapter 10 liquids,dichloromethane,boiling_point_C,39.9,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-10; 313 ± 1 K, average of 12 evaluated determinations; rounded to 39.9 °C (instructor, 10 Oct 2026)"
+chapter 10 liquids,dichloromethane,dHvap_at_Tb_kJ_mol,28.06,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-10; Majer and Svoboda (1985), at 313 K"
+chapter 10 liquids,dichloromethane,melting_point_C,-96.5,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-10; NIST lists 176.65 K (Timmermans) to 178.2 K; lower value taken"
+chapter 10 liquids,dichloromethane,density_g_mL,1.326,g/mL,"NIST reference data, supplied by the instructor 2026-10-10"
+chapter 10 liquids,CFC-11,boiling_point_C,23.8,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-10"
+chapter 10 liquids,CFC-11,dHvap_at_Tb_kJ_mol,25.2,kJ/mol,"NIST Chemistry WebBook, supplied by the instructor 2026-10-10"
+chapter 10 liquids,CFC-11,melting_point_C,-111.0,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-10"
+chapter 10 liquids,CFC-11,density_g_mL,1.488,g/mL,"NIST reference data, supplied by the instructor 2026-10-10"
+chapter 10 liquids,HFE-7000,boiling_point_C,34.2,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-10"
+chapter 10 liquids,HFE-7000,dHvap_at_Tb_kJ_mol,28.4,kJ/mol,"manufacturer's data sheet, supplied by the instructor 2026-10-10; 142 J/g × 200.05 g/mol"
+chapter 10 liquids,HFE-7000,melting_point_C,-122.5,°C,"NIST Chemistry WebBook, supplied by the instructor 2026-10-10"
+chapter 10 liquids,HFE-7000,density_g_mL,1.4,g/mL,"manufacturer's data sheet, supplied by the instructor 2026-10-10 (about 1.41 g/mL at 20 °C)"
+chapter 10 liquids,propane,boiling_point_C,-42.1,°C,"the instructor's values, supplied 2026-10-20 (as used in V2); NIST Chemistry WebBook as for the other liquids"
+chapter 10 liquids,propane,dHvap_at_Tb_kJ_mol,19.04,kJ/mol,"the instructor's values, supplied 2026-10-20 (as used in V2); NIST Chemistry WebBook as for the other liquids"
+chapter 10 liquids,propane,melting_point_C,-187.7,°C,"the instructor's values, supplied 2026-10-20 (as used in V2); NIST Chemistry WebBook as for the other liquids"
+chapter 10 liquids,butane,boiling_point_C,-0.5,°C,"the instructor's values, supplied 2026-10-20 (as used in V2); NIST Chemistry WebBook as for the other liquids"
+chapter 10 liquids,butane,dHvap_at_Tb_kJ_mol,22.44,kJ/mol,"the instructor's values, supplied 2026-10-20 (as used in V2); NIST Chemistry WebBook as for the other liquids"
+chapter 10 liquids,butane,melting_point_C,-138.3,°C,"the instructor's values, supplied 2026-10-20 (as used in V2); NIST Chemistry WebBook as for the other liquids"
+chapter 13 reactions,haber_ammonia,Kc,0.06,,"{'Kc': ""instructor, 10 Oct 2026: derived from NIST ΔG values; the course's rule-of-thumb value. Under the 13 Oct rule (OpenStax first), check Chapter 13 for a stated Kc at this temperature before any new problem uses it."", 'dH_sign': ""exothermic forward: dH_kJ_mol = −91.8 (SCENARIO_CLAUDE's kit, approved 14 Oct 2026)"", 'dH_kJ_mol': ""NIST ΔHf° of NH3(g), −45.9 kJ/mol, times 2 (instructor, 13 Oct 2026) (approved with the ch13_eq kit, 14 Oct). OpenStax-first rule: the text's value, if Chapter 13 states one, replaces this on the instructor's word.""}"
+chapter 13 reactions,wgs,Kc,4.0,,"{'Kc': 'based on NIST thermodynamic values (instructor, 11 Oct 2026). Under the 13 Oct rule (OpenStax first), check the text before any new problem uses it.', 'dH_sign': 'exothermic forward; OpenStax first (check the text), else NIST (ΔH° ≈ −41 kJ/mol); instructor confirms'}"
+chapter 13 reactions,agcl_dissolution,Kc,1.6e-10,,"{'Kc': 'OpenStax Chemistry 2e, Appendix J, Table J1: Ksp at 25 °C, two significant figures (instructor, 13 Oct 2026). Written Kc as the chapter does.', 'dH_sign': 'instructor, 13 Oct 2026: dissolving takes in heat (rule of thumb; no value used).'}"
+chapter 13 reactions,agbr_dissolution,Kc,5e-13,,"{'Kc': 'OpenStax Chemistry 2e, Appendix J, Table J1: Ksp at 25 °C, two significant figures (instructor, 13 Oct 2026). Written Kc as the chapter does.', 'dH_sign': 'instructor, 13 Oct 2026: dissolving takes in heat (rule of thumb; no value used).'}"
+chapter 13 reactions,agi_dissolution,Kc,1.5e-16,,"{'Kc': 'OpenStax Chemistry 2e, Appendix J, Table J1: Ksp at 25 °C, two significant figures (instructor, 13 Oct 2026). Written Kc as the chapter does.', 'dH_sign': 'instructor, 13 Oct 2026: dissolving takes in heat (rule of thumb; no value used).'}"
+chapter 13 reactions,hi_formation,Kc,50.0,,"{'Kc': ""OpenStax Chemistry 2e, section 13.3 (Effect of a Change in Concentration): Kc = 50.0 at 400 °C (instructor, 14 Oct 2026). The sketch's 450 °C is replaced by the text's 400 °C."", 'dH_sign': 'instructor, 14 Oct 2026: forming hydrogen iodide gives off a little heat (rule of thumb; no value used).'}"
+chapter 13 reactions,no2_dimerization,Kc,160.0,,"{'Kc': 'OpenStax Chemistry 2e, Example 13.2: Kc = 1.6 × 10² at 25 °C (instructor, 14 Oct 2026).', 'dH_sign': 'OpenStax Chemistry 2e, section 13.3: N2O4(g) ⇌ 2NO2(g), ΔH = +57.20 kJ, so the dimerization written here gives off heat.'}"
+chapter 14,water,Kw,1e-14,,"OpenStax Chemistry 2e, 14.1 (Kw = 1.0 × 10⁻¹⁴ at 25 °C)"
+chapter 14 acids,acetic acid (CH3COOH),Ka,1.8e-05,,"OpenStax Appendix H (1.8 × 10⁻⁵) (confirmed against the appendix, 16 Oct)"
+chapter 14 acids,hydrofluoric acid (HF),Ka,0.00064,,"OpenStax Appendix H (6.4 × 10⁻⁴), confirmed against the appendix the instructor supplied, 16 Oct"
+chapter 14 acids,nitrous acid (HNO2),Ka,0.00046,,"OpenStax Appendix H (4.6 × 10⁻⁴), confirmed 16 Oct"
+chapter 14 acids,hypochlorous acid (HOCl),Ka,2.9e-08,,"OpenStax Appendix H (2.9 × 10⁻⁸) (confirmed against the appendix, 16 Oct)"
+chapter 14 acids,formic acid (HCOOH),Ka,0.00018,,OpenStax Appendix H
+chapter 14 acids,ammonium ion (NH4+),Ka,5.6e-10,,Ka = Kw / Kb(NH3) = 5.6 × 10⁻¹⁰ (OpenStax 14.3; Kb from Appendix I); approved 17 Oct
+chapter 14 acids,dihydrogen phosphate ion (H2PO4-),Ka,6.2e-08,,OpenStax Appendix H (6.2 × 10⁻⁸); approved 17 Oct
+chapter 14 acids,carbonic acid (body temperature) (H2CO3),Ka,7.943282347242822e-07,,"OpenStax 14.6, How Sciences Interconnect: The Buffer System in Blood (pKa 6.1 at body temperature; [H₂CO₃] about 0.0012 M, [HCO₃⁻] about 0.024 M). Kept separate from Appendix H's 4.3 × 10⁻⁷ at 25 °C. Approved 17 Oct"
+chapter 14 acids,lactic acid (CH3CH(OH)COOH),Ka,0.000136,,OpenStax Exercise 63 (1.36 × 10⁻⁴); approved 17 Oct
+chapter 14 bases,ammonia (NH3),Kb,1.8e-05,,"OpenStax Appendix I (1.8 × 10⁻⁵) (confirmed against the appendix, 16 Oct)"
+chapter 14 bases,methylamine (CH3NH2),Kb,0.00044,,"OpenStax Appendix I (4.4 × 10⁻⁴) (confirmed against the appendix, 16 Oct)"
+chapter 14 bases,trimethylamine ((CH3)3N),Kb,6.3e-05,,OpenStax Appendix I
+chapter 14 bases,dimethylamine ((CH3)2NH),Kb,0.00059,,OpenStax Appendix I
+chapter 14 bases,hypochlorite ion (ClO-),Kb,3.448275862068965e-07,,Kb = Kw / Ka(HOCl) = 3.4 × 10⁻⁷ (Appendix H; 14.3); approved 17 Oct
+chapter 14 bases,acetate ion (CH3COO-),Kb,5.555555555555555e-10,,Kb = Kw / Ka(acetic) = 5.6 × 10⁻¹⁰ (Appendix H; 14.3); approved 17 Oct
+chapter 15 salts,silver chloride (AgCl),Ksp,1.6e-10,,"OpenStax Appendix J (1.6 × 10⁻¹⁰), as used in chapter 13; confirmed 17 Oct"
+chapter 15 salts,silver chloride (AgCl),molar mass,143.32,g/mol,
+chapter 15 salts,silver bromide (AgBr),Ksp,5e-13,,"OpenStax Appendix J (5.0 × 10⁻¹³), as used in chapter 13; confirmed 17 Oct"
+chapter 15 salts,silver bromide (AgBr),molar mass,187.77,g/mol,
+chapter 15 salts,barium sulfate (BaSO4),Ksp,2.3e-08,,"OpenStax Appendix J; confirmed by SCENARIO_CLAUDE against the instructor's appendix, 17 Oct"
+chapter 15 salts,barium sulfate (BaSO4),molar mass,233.39,g/mol,
+chapter 15 salts,calcium fluoride (CaF2),Ksp,4e-11,,"OpenStax Appendix J; confirmed by SCENARIO_CLAUDE against the instructor's appendix, 17 Oct"
+chapter 15 salts,calcium fluoride (CaF2),molar mass,78.07,g/mol,
+chapter 15 salts,magnesium hydroxide (Mg(OH)2),Ksp,8.9e-12,,"OpenStax Appendix J; confirmed by SCENARIO_CLAUDE against the instructor's appendix, 17 Oct"
+chapter 15 salts,magnesium hydroxide (Mg(OH)2),molar mass,58.32,g/mol,
+chapter 15 salts,lead(II) iodide (PbI2),Ksp,1.4e-08,,"OpenStax Appendix J; confirmed by SCENARIO_CLAUDE against the instructor's appendix, 17 Oct"
+chapter 15 salts,lead(II) iodide (PbI2),molar mass,461.01,g/mol,
+chapter 15 salts,silver chromate (Ag2CrO4),Ksp,9e-12,,"OpenStax Appendix J; confirmed by SCENARIO_CLAUDE against the instructor's appendix, 17 Oct"
+chapter 15 salts,silver chromate (Ag2CrO4),molar mass,331.73,g/mol,
+chapter 15 salts,calcium carbonate (CaCO3),Ksp,8.7e-09,,"OpenStax Appendix J; confirmed by SCENARIO_CLAUDE against the instructor's appendix, 17 Oct"
+chapter 15 salts,calcium carbonate (CaCO3),molar mass,100.09,g/mol,
+chapter 15 salts,calcium oxalate (CaC2O4),Ksp,1.96e-09,,"OpenStax Appendix J (as the monohydrate, 1.96 × 10⁻⁹); confirmed by SCENARIO_CLAUDE against the instructor's appendix, 17 Oct"
+chapter 15 salts,calcium oxalate (CaC2O4),molar mass,146.11,g/mol,
+chapter 15 salts,silver iodide (AgI),Ksp,1.5e-16,,OpenStax Appendix J (1.5 × 10⁻¹⁶); confirmed 17 Oct
+chapter 15 salts,silver iodide (AgI),molar mass,234.77,g/mol,
+chapter 15 salts,calcium hydroxide (Ca(OH)2),Ksp,1.3e-06,,OpenStax Appendix J (1.3 × 10⁻⁶); confirmed 17 Oct
+chapter 15 salts,calcium hydroxide (Ca(OH)2),molar mass,74.09,g/mol,
+chapter 15 salts,silver carbonate (Ag2CO3),Ksp,8.1e-12,,OpenStax Appendix J (8.1 × 10⁻¹²); confirmed 17 Oct
+chapter 15 salts,silver carbonate (Ag2CO3),molar mass,275.75,g/mol,
+chapter 15 salts,barium fluoride (BaF2),Ksp,2.4e-05,,OpenStax Appendix J (2.4 × 10⁻⁵); confirmed 17 Oct
+chapter 15 salts,barium fluoride (BaF2),molar mass,175.32,g/mol,
+chapter 15 complexes,diamminesilver(I) ion (Ag(NH3)2+),Kf,17000000.0,,OpenStax 15.2 (1.7 × 10⁷); confirmed 17 Oct
+chapter 15 complexes,tetraamminecopper(II) ion (Cu(NH3)4^2+),Kf,17000000000000.0,,"OpenStax Appendix K (1.7 × 10¹³); corrected from Fable's 1.1 × 10¹³ on SCENARIO_CLAUDE's check, 17 Oct"
+chapter 15 complexes,tetraamminezinc(II) ion (Zn(NH3)4^2+),Kf,2900000000.0,,not in OpenStax Appendix K; unconfirmed and unused (keep out of problems until a source is found)
+chapter 15 complexes,thiocyanatoiron(III) ion (Fe(SCN)^2+),Kf,890.0,,OpenStax Appendix K (8.9 × 10²); confirmed 17 Oct; unused so far
+chapter 15 complexes,bis(thiosulfato)argentate(I) ion (Ag(S2O3)2^3-),Kf,47000000000000.0,,"OpenStax 15.3, Example 15.16 (4.7 × 10¹³); confirmed 17 Oct"
+chapter 15 complexes,tetrahydroxoaluminate ion (Al(OH)4-),Kf,1.1e+33,,OpenStax 15.3 (1.1 × 10³³); confirmed 17 Oct

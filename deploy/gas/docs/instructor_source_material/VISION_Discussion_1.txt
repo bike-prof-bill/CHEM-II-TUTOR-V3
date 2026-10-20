@@ -1,0 +1,81 @@
+VISION:
+
+A) The archetype problem sets
+
+	I. Each Archetype problem set will ultimately have 6 scenarios 
+		a) A student will have to complete 3 scenarios, with 3 different variables solved for, to earn credit 
+		b) On scenario will be common for all students and appear on the EXAM - The Correspondance GRADER
+		C) For development, only two scenarios for each archetype will populate the matrix.
+
+	II. Each Archetype will begin with a scenario, without equations or numbers, that students would be expected to have some familiarity with or would find surprising, curious or useful. A submicroscopic analysis question
+		a) Each initial scenario will have a graphic or short video attached to stimulate 
+		b) A **submicroscopic analysis question** a correct reply by the student reveals.
+		c) two fails 
+			i)  student receives prompt for NOTEBOOKLM instruction
+			ii) student returns to window with self-written sentence explaining **submicroscopic analysis question**
+			iii) Fails again, finished with no credit.
+	
+	III. A related mock experimental scenario stating  
+		a) the  unknown (with desired units) 
+		b) quantitative values ((with units) for knowns 
+		c) Student selects the **equation** that appropriately represents the physical scenario
+		d) two fails 
+			i) student receives prompt for NOTEBOOKLM instruction
+			ii) student returns to window with self-written sentence explaining **equation** relationships
+			iii) Fails again, finished with no credit.
+
+	IV) The student demonstrates **rearranging the equation and solves for the unknown** (correct units)
+ 		a) must pass both equation & answer
+		b) two fails 
+			i) student receives prompt for NOTEBOOKLM instruction
+			ii) student returns to window with self-written sentence explaining **rearranging the equation and solves for the unknown**
+			iii) Fails again, finished with no credit.
+
+	V) student receives **Inference Question** (what if) related to the scenario.
+		a) student is correct Simulation appears  
+		b) two fails 
+			i) student receives prompt for NOTEBOOKLM instruction
+			ii) student returns to window with self-written sentence explaining **Inference Question**
+			iii) Fails again, finished with no credit.
+
+	VI) student receives final “metacognitive” question
+	
+B) AI Language - Restrain AI from repetitive replies of encouragement such as “spot on”
+
+C) NOTEBOOKLM 
+	I) Prompt generator: include a window for the student to ask a question and have it turned into a prompt for querying NOTEBOOKLM on specific topics or algorithms.
+	II) Administer student generated practice quizzes from designed by NOTEBOOKLM
+
+D) WCAG 2.1 Level AA technical standards
+
+E) Tutor led flow & Student led flow. I would like this choice to be a variable for pedagogical publication purposes. 
+	I) the instructor chooses
+		a) Student led flow only
+		b) Tutor Led only
+		c) Student chooses
+	II) Student choses
+		a)  Unconditional
+		b) if flailing Tutor mode turns on
+
+F) Data collected
+	I) Analysis of individual student performance
+	II) Entire Class statistics
+	iii) Gathering data 
+		a) Grant Proposals
+		b) System Implementation Queries
+
+F) Design flow:
+	I) FABLE
+		a) Architect/Engineer Overall Structure with two archetypes of two scenarios each
+		b) Design and implement window C) NOTEBOOKLM as outlined above.
+		b) data output and analysis structure
+		c) Consultant for Grant proposals
+		b) Consultant for OPUS
+	ii) OPUS
+		a) Filling in all the archetypes 
+		b)  Cleanup
+	III) ME
+		a) overall FYIDE
+		b) create scenarios and follow ups
+		c) testing
+		d) grants and proposals

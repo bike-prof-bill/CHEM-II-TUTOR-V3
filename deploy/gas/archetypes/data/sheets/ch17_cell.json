@@ -1,0 +1,917 @@
+{
+ "archetype": "ch17_cell",
+ "source_sheet": "ch17_cell_problems.csv",
+ "problems": [
+  {
+   "id": "DN1",
+   "scenario": "The Daniell Cell",
+   "kind": "cell",
+   "text": "A galvanic cell joins a Zn electrode in 1 M Zn²⁺ to a Cu electrode in 1 M Cu²⁺ through a salt bridge. Which metal is the anode, which way do electrons flow in the wire, and toward which electrode do anions move in the salt bridge? Find E°cell from Appendix L.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 1.099,
+     "unit": "V",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.099
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": -0.4248
+    }
+   ],
+   "picks": {
+    "anode_pick": "Zn",
+    "electron_pick": "from Zn to Cu",
+    "bridge_pick": "toward Zn",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "DN2",
+   "scenario": "The Daniell Cell",
+   "kind": "cell",
+   "text": "A galvanic cell joins a Cr electrode in 1 M Cr³⁺ to a Cu electrode in 1 M Cu²⁺ through a salt bridge. Which metal is the anode, which way do electrons flow in the wire, and toward which electrode do anions move in the salt bridge? Find E°cell from Appendix L.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 1.081,
+     "unit": "V",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.081
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": -0.407
+    },
+    {
+     "id": "E_MULTIPLIED",
+     "state": "Ecell_found",
+     "value": 1.755
+    }
+   ],
+   "picks": {
+    "anode_pick": "Cr",
+    "electron_pick": "from Cr to Cu",
+    "bridge_pick": "toward Cr",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "DN3",
+   "scenario": "The Daniell Cell",
+   "kind": "cell",
+   "text": "A galvanic cell joins a Zn electrode in 1 M Zn²⁺ to a Ag electrode in 1 M Ag⁺ through a salt bridge. Which metal is the anode, which way do electrons flow in the wire, and toward which electrode do anions move in the salt bridge? Find E°cell from Appendix L.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 1.561,
+     "unit": "V",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.561
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": 0.0378
+    },
+    {
+     "id": "E_MULTIPLIED",
+     "state": "Ecell_found",
+     "value": 2.361
+    }
+   ],
+   "picks": {
+    "anode_pick": "Zn",
+    "electron_pick": "from Zn to Ag",
+    "bridge_pick": "toward Zn",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "DN4",
+   "scenario": "The Daniell Cell",
+   "kind": "cell",
+   "text": "A galvanic cell joins a Ni electrode in 1 M Ni²⁺ to a Cu electrode in 1 M Cu²⁺ through a salt bridge. Which metal is the anode, which way do electrons flow in the wire, and toward which electrode do anions move in the salt bridge? Find E°cell from Appendix L.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 0.594,
+     "unit": "V",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -0.594
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": 0.08
+    }
+   ],
+   "picks": {
+    "anode_pick": "Ni",
+    "electron_pick": "from Ni to Cu",
+    "bridge_pick": "toward Ni",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "DN5",
+   "scenario": "The Daniell Cell",
+   "kind": "cell",
+   "text": "A galvanic cell joins a Fe electrode in 1 M Fe²⁺ to a Ag electrode in 1 M Ag⁺ through a salt bridge. Which metal is the anode, which way do electrons flow in the wire, and toward which electrode do anions move in the salt bridge? Find E°cell from Appendix L.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 1.247,
+     "unit": "V",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.247
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": 0.3526
+    },
+    {
+     "id": "E_MULTIPLIED",
+     "state": "Ecell_found",
+     "value": 2.046
+    }
+   ],
+   "picks": {
+    "anode_pick": "Fe",
+    "electron_pick": "from Fe to Ag",
+    "bridge_pick": "toward Fe",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "DN6",
+   "scenario": "The Daniell Cell",
+   "kind": "cell",
+   "text": "A galvanic cell joins a Al electrode in 1 M Al³⁺ to a Cu electrode in 1 M Cu²⁺ through a salt bridge. Which metal is the anode, which way do electrons flow in the wire, and toward which electrode do anions move in the salt bridge? Find E°cell from Appendix L.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 1.999,
+     "unit": "V",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.999
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": -1.325
+    },
+    {
+     "id": "E_MULTIPLIED",
+     "state": "Ecell_found",
+     "value": 2.673
+    }
+   ],
+   "picks": {
+    "anode_pick": "Al",
+    "electron_pick": "from Al to Cu",
+    "bridge_pick": "toward Al",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "SF1",
+   "scenario": "The Science Fair Battery",
+   "kind": "cell",
+   "text": "A galvanic cell joins a Mg electrode in 1 M Mg²⁺ to a Cu electrode in 1 M Cu²⁺ through a salt bridge. Which metal is the anode, which way do electrons flow in the wire, and toward which electrode do anions move in the salt bridge? Find E°cell from Appendix L.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 2.709,
+     "unit": "V",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -2.709
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": -2.035
+    }
+   ],
+   "picks": {
+    "anode_pick": "Mg",
+    "electron_pick": "from Mg to Cu",
+    "bridge_pick": "toward Mg",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "SF2",
+   "scenario": "The Science Fair Battery",
+   "kind": "cell",
+   "text": "A galvanic cell joins a Pb electrode in 1 M Pb²⁺ to a Ag electrode in 1 M Ag⁺ through a salt bridge. Which metal is the anode, which way do electrons flow in the wire, and toward which electrode do anions move in the salt bridge? Find E°cell from Appendix L.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 0.9258,
+     "unit": "V",
+     "half_ulp": 5e-05
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -0.9258
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": 0.6734
+    },
+    {
+     "id": "E_MULTIPLIED",
+     "state": "Ecell_found",
+     "value": 1.725
+    }
+   ],
+   "picks": {
+    "anode_pick": "Pb",
+    "electron_pick": "from Pb to Ag",
+    "bridge_pick": "toward Pb",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "SF3",
+   "scenario": "The Science Fair Battery",
+   "kind": "cell",
+   "text": "A galvanic cell joins a Sn electrode in 1 M Sn²⁺ to a Cu electrode in 1 M Cu²⁺ through a salt bridge. Which metal is the anode, which way do electrons flow in the wire, and toward which electrode do anions move in the salt bridge? Find E°cell from Appendix L.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 0.4745,
+     "unit": "V",
+     "half_ulp": 5e-05
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -0.4745
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": 0.1995
+    }
+   ],
+   "picks": {
+    "anode_pick": "Sn",
+    "electron_pick": "from Sn to Cu",
+    "bridge_pick": "toward Sn",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "SF4",
+   "scenario": "The Science Fair Battery",
+   "kind": "cell",
+   "text": "A galvanic cell joins a Cd electrode in 1 M Cd²⁺ to a Ni electrode in 1 M Ni²⁺ through a salt bridge. Which metal is the anode, which way do electrons flow in the wire, and toward which electrode do anions move in the salt bridge? Find E°cell from Appendix L.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 0.146,
+     "unit": "V",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -0.146
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": -0.66
+    }
+   ],
+   "picks": {
+    "anode_pick": "Cd",
+    "electron_pick": "from Cd to Ni",
+    "bridge_pick": "toward Cd",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "SF5",
+   "scenario": "The Science Fair Battery",
+   "kind": "cell",
+   "text": "A galvanic cell joins a Al electrode in 1 M Al³⁺ to a Ni electrode in 1 M Ni²⁺ through a salt bridge. Which metal is the anode, which way do electrons flow in the wire, and toward which electrode do anions move in the salt bridge? Find E°cell from Appendix L.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 1.405,
+     "unit": "V",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.405
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": -1.919
+    },
+    {
+     "id": "E_MULTIPLIED",
+     "state": "Ecell_found",
+     "value": 0.891
+    }
+   ],
+   "picks": {
+    "anode_pick": "Al",
+    "electron_pick": "from Al to Ni",
+    "bridge_pick": "toward Al",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "SF6",
+   "scenario": "The Science Fair Battery",
+   "kind": "cell",
+   "text": "A galvanic cell joins a Co electrode in 1 M Co²⁺ to a Ag electrode in 1 M Ag⁺ through a salt bridge. Which metal is the anode, which way do electrons flow in the wire, and toward which electrode do anions move in the salt bridge? Find E°cell from Appendix L.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 1.08,
+     "unit": "V",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.08
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": 0.5196
+    },
+    {
+     "id": "E_MULTIPLIED",
+     "state": "Ecell_found",
+     "value": 1.879
+    }
+   ],
+   "picks": {
+    "anode_pick": "Co",
+    "electron_pick": "from Co to Ag",
+    "bridge_pick": "toward Co",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "SL1",
+   "scenario": "The Statue of Liberty",
+   "kind": "reaction",
+   "text": "Will Fe metal placed in 1 M Cu²⁺ react on its own: Fe(s) + Cu²⁺(aq) → Fe²⁺(aq) + Cu(s) (unbalanced)? Which metal would be oxidized? Find E°cell for the reaction as written, from Appendix L, and decide.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell (as written)",
+     "value": 0.784,
+     "unit": "V",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -0.784
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": -0.11
+    }
+   ],
+   "picks": {
+    "anode_pick": "Fe",
+    "verdict": "yes",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "SL2",
+   "scenario": "The Statue of Liberty",
+   "kind": "reaction",
+   "text": "Will Cu metal placed in 1 M Fe²⁺ react on its own: Cu(s) + Fe²⁺(aq) → Cu²⁺(aq) + Fe(s) (unbalanced)? Which metal would be oxidized? Find E°cell for the reaction as written, from Appendix L, and decide.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell (as written)",
+     "value": -0.784,
+     "unit": "V",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": 0.784
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": -0.11
+    }
+   ],
+   "picks": {
+    "anode_pick": "Cu",
+    "verdict": "no",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "SL3",
+   "scenario": "The Statue of Liberty",
+   "kind": "reaction",
+   "text": "Will Al metal placed in 1 M Fe²⁺ react on its own: Al(s) + Fe²⁺(aq) → Al³⁺(aq) + Fe(s) (unbalanced)? Which metal would be oxidized? Find E°cell for the reaction as written, from Appendix L, and decide.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell (as written)",
+     "value": 1.215,
+     "unit": "V",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.215
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": -2.109
+    }
+   ],
+   "picks": {
+    "anode_pick": "Al",
+    "verdict": "yes",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "SL4",
+   "scenario": "The Statue of Liberty",
+   "kind": "reaction",
+   "text": "Will Fe metal placed in 1 M Sn²⁺ react on its own: Fe(s) + Sn²⁺(aq) → Fe²⁺(aq) + Sn(s) (unbalanced)? Which metal would be oxidized? Find E°cell for the reaction as written, from Appendix L, and decide.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell (as written)",
+     "value": 0.3095,
+     "unit": "V",
+     "half_ulp": 5e-05
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -0.3095
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": -0.5845
+    }
+   ],
+   "picks": {
+    "anode_pick": "Fe",
+    "verdict": "yes",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "SL5",
+   "scenario": "The Statue of Liberty",
+   "kind": "reaction",
+   "text": "Will Sn metal placed in 1 M Fe²⁺ react on its own: Sn(s) + Fe²⁺(aq) → Sn²⁺(aq) + Fe(s) (unbalanced)? Which metal would be oxidized? Find E°cell for the reaction as written, from Appendix L, and decide.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell (as written)",
+     "value": -0.3095,
+     "unit": "V",
+     "half_ulp": 5e-05
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": 0.3095
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": -0.5845
+    }
+   ],
+   "picks": {
+    "anode_pick": "Sn",
+    "verdict": "no",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "SL6",
+   "scenario": "The Statue of Liberty",
+   "kind": "reaction",
+   "text": "Will Cr metal placed in 1 M Fe²⁺ react on its own: Cr(s) + Fe²⁺(aq) → Cr³⁺(aq) + Fe(s) (unbalanced)? Which metal would be oxidized? Find E°cell for the reaction as written, from Appendix L, and decide.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell (as written)",
+     "value": 0.297,
+     "unit": "V",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -0.297
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": -1.191
+    }
+   ],
+   "picks": {
+    "anode_pick": "Cr",
+    "verdict": "yes",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "CC1",
+   "scenario": "The Silver Tree",
+   "kind": "reaction",
+   "text": "Will Cu metal placed in 1 M Ag⁺ react on its own: Cu(s) + Ag⁺(aq) → Cu²⁺(aq) + Ag(s) (unbalanced)? Which metal would be oxidized? Find E°cell for the reaction as written, from Appendix L, and decide.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell (as written)",
+     "value": 0.4626,
+     "unit": "V",
+     "half_ulp": 5e-05
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -0.4626
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": 1.137
+    }
+   ],
+   "picks": {
+    "anode_pick": "Cu",
+    "verdict": "yes",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "CC2",
+   "scenario": "The Silver Tree",
+   "kind": "reaction",
+   "text": "Will Ag metal placed in 1 M Cu²⁺ react on its own: Ag(s) + Cu²⁺(aq) → Ag⁺(aq) + Cu(s) (unbalanced)? Which metal would be oxidized? Find E°cell for the reaction as written, from Appendix L, and decide.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell (as written)",
+     "value": -0.4626,
+     "unit": "V",
+     "half_ulp": 5e-05
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": 0.4626
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": 1.137
+    }
+   ],
+   "picks": {
+    "anode_pick": "Ag",
+    "verdict": "no",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "CC3",
+   "scenario": "The Silver Tree",
+   "kind": "reaction",
+   "text": "Will Zn metal placed in 1 M Pb²⁺ react on its own: Zn(s) + Pb²⁺(aq) → Zn²⁺(aq) + Pb(s) (unbalanced)? Which metal would be oxidized? Find E°cell for the reaction as written, from Appendix L, and decide.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell (as written)",
+     "value": 0.6356,
+     "unit": "V",
+     "half_ulp": 5e-05
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -0.6356
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": -0.888
+    }
+   ],
+   "picks": {
+    "anode_pick": "Zn",
+    "verdict": "yes",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "CC4",
+   "scenario": "The Silver Tree",
+   "kind": "reaction",
+   "text": "Will Pb metal placed in 1 M Zn²⁺ react on its own: Pb(s) + Zn²⁺(aq) → Pb²⁺(aq) + Zn(s) (unbalanced)? Which metal would be oxidized? Find E°cell for the reaction as written, from Appendix L, and decide.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell (as written)",
+     "value": -0.6356,
+     "unit": "V",
+     "half_ulp": 5e-05
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": 0.6356
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": -0.888
+    }
+   ],
+   "picks": {
+    "anode_pick": "Pb",
+    "verdict": "no",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "CC5",
+   "scenario": "The Silver Tree",
+   "kind": "reaction",
+   "text": "Will Mg metal placed in 1 M Zn²⁺ react on its own: Mg(s) + Zn²⁺(aq) → Mg²⁺(aq) + Zn(s) (unbalanced)? Which metal would be oxidized? Find E°cell for the reaction as written, from Appendix L, and decide.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell (as written)",
+     "value": 1.61,
+     "unit": "V",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.61
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": -3.134
+    }
+   ],
+   "picks": {
+    "anode_pick": "Mg",
+    "verdict": "yes",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "CC6",
+   "scenario": "The Silver Tree",
+   "kind": "reaction",
+   "text": "Will Cu metal placed in 1 M Zn²⁺ react on its own: Cu(s) + Zn²⁺(aq) → Cu²⁺(aq) + Zn(s) (unbalanced)? Which metal would be oxidized? Find E°cell for the reaction as written, from Appendix L, and decide.",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "Ecell_found",
+     "label": "E°cell (as written)",
+     "value": -1.099,
+     "unit": "V",
+     "half_ulp": 0.0005
+    }
+   ],
+   "traps": [
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": 1.099
+    },
+    {
+     "id": "POTENTIALS_ADDED",
+     "state": "Ecell_found",
+     "value": -0.4248
+    }
+   ],
+   "picks": {
+    "anode_pick": "Cu",
+    "verdict": "no",
+    "perturb_1": "changes sign"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  }
+ ]
+}

@@ -1,0 +1,1590 @@
+{
+ "archetype": "ch17_E_G_K",
+ "source_sheet": "ch17_E_G_K_problems.csv",
+ "problems": [
+  {
+   "id": "AF1",
+   "scenario": "Silver and Iron",
+   "kind": "egk",
+   "text": "For 2Ag⁺(aq) + Fe(s) → 2Ag(s) + Fe²⁺(aq) (OpenStax Example 17.6), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 1.247,
+     "unit": "V",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -240.6,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 1.303e+42,
+     "unit": "",
+     "half_ulp": 5e+38
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -240600.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -120.3
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 1.951e+18
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.247
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "AF2",
+   "scenario": "Silver and Iron",
+   "kind": "egk",
+   "text": "For Cu²⁺(aq) + Fe(s) → Cu(s) + Fe²⁺(aq), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 0.784,
+     "unit": "V",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -151.3,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 3.065e+26,
+     "unit": "",
+     "half_ulp": 5e+22
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -151300.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -75.64
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 318400000000.0
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -0.784
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "AF3",
+   "scenario": "Silver and Iron",
+   "kind": "egk",
+   "text": "For Ni²⁺(aq) + Zn(s) → Ni(s) + Zn²⁺(aq), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 0.5048,
+     "unit": "V",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -97.41,
+     "unit": "kJ",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 1.133e+17,
+     "unit": "",
+     "half_ulp": 50000000000000.0
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -97410.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -48.71
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 25500000.0
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -0.5048
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "AF4",
+   "scenario": "Silver and Iron",
+   "kind": "egk",
+   "text": "For 2Ag⁺(aq) + Cu(s) → 2Ag(s) + Cu²⁺(aq), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 0.4626,
+     "unit": "V",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -89.27,
+     "unit": "kJ",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 4250000000000000.0,
+     "unit": "",
+     "half_ulp": 500000000000.0
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -89270.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -44.63
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 6128000.0
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -0.4626
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "AF5",
+   "scenario": "Silver and Iron",
+   "kind": "egk",
+   "text": "For 3Cu²⁺(aq) + 2Al(s) → 3Cu(s) + 2Al³⁺(aq), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 1.999,
+     "unit": "V",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -1157.0,
+     "unit": "kJ",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 3.993e+202,
+     "unit": "",
+     "half_ulp": 5e+198
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -1157000.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -192.9
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 9.742e+87
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.999
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "AF6",
+   "scenario": "Silver and Iron",
+   "kind": "egk",
+   "text": "For Cd²⁺(aq) + Zn(s) → Cd(s) + Zn²⁺(aq), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 0.3588,
+     "unit": "V",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -69.24,
+     "unit": "kJ",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 1323000000000.0,
+     "unit": "",
+     "half_ulp": 500000000.0
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -69240.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -34.62
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 183800.0
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -0.3588
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "GG1",
+   "scenario": "Why Gold Stays Gold",
+   "kind": "egk",
+   "text": "For 2Au(s) + 6H⁺(aq) → 2Au³⁺(aq) + 3H₂(g), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": -1.498,
+     "unit": "V",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": 867.2,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 1.499e-152,
+     "unit": "",
+     "half_ulp": 5e-156
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": 867200.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": 144.5
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 1.158e-66
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": 1.498
+    }
+   ],
+   "picks": {
+    "favored": "reactants",
+    "perturb_1": "rises"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "GG2",
+   "scenario": "Why Gold Stays Gold",
+   "kind": "egk",
+   "text": "For Cu(s) + 2H⁺(aq) → Cu²⁺(aq) + H₂(g), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": -0.337,
+     "unit": "V",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": 65.03,
+     "unit": "kJ",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 4.12e-12,
+     "unit": "",
+     "half_ulp": 5e-16
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": 65030.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": 32.52
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 1.136e-05
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": 0.337
+    }
+   ],
+   "picks": {
+    "favored": "reactants",
+    "perturb_1": "rises"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "GG3",
+   "scenario": "Why Gold Stays Gold",
+   "kind": "egk",
+   "text": "For 2Ag(s) + 2H⁺(aq) → 2Ag⁺(aq) + H₂(g), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": -0.7996,
+     "unit": "V",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": 154.3,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 9.694e-28,
+     "unit": "",
+     "half_ulp": 5e-32
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": 154300.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": 77.15
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 1.854e-12
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": 0.7996
+    }
+   ],
+   "picks": {
+    "favored": "reactants",
+    "perturb_1": "rises"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "GG4",
+   "scenario": "Why Gold Stays Gold",
+   "kind": "egk",
+   "text": "For Zn(s) + 2H⁺(aq) → Zn²⁺(aq) + H₂(g), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 0.7618,
+     "unit": "V",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -147.0,
+     "unit": "kJ",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 5.451e+25,
+     "unit": "",
+     "half_ulp": 5e+21
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -147000.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -73.5
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 150400000000.0
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -0.7618
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "GG5",
+   "scenario": "Why Gold Stays Gold",
+   "kind": "egk",
+   "text": "For Mg(s) + 2H⁺(aq) → Mg²⁺(aq) + H₂(g), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 2.372,
+     "unit": "V",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -457.7,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 1.365e+80,
+     "unit": "",
+     "half_ulp": 5e+76
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -457700.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -228.9
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 6.342e+34
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -2.372
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "GG6",
+   "scenario": "Why Gold Stays Gold",
+   "kind": "egk",
+   "text": "For 2Al(s) + 6H⁺(aq) → 2Al³⁺(aq) + 3H₂(g), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 6.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 1.662,
+     "unit": "V",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -962.1,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 2.792e+168,
+     "unit": "",
+     "half_ulp": 5e+164
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -962100.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -160.4
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 1.429e+73
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.662
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "LA1",
+   "scenario": "The Lead–Acid Battery",
+   "kind": "egk",
+   "text": "For Pb(s) + PbO₂(s) + 2SO₄²⁻(aq) + 4H⁺(aq) → 2PbSO₄(s) + 2H₂O(l) (the lead–acid battery), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 2.04,
+     "unit": "V",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -393.8,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 8.626e+68,
+     "unit": "",
+     "half_ulp": 5e+64
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -393800.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -196.9
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 8.678e+29
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -2.04
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "LA2",
+   "scenario": "The Lead–Acid Battery",
+   "kind": "egk",
+   "text": "For 2Zn(s) + O₂(g) + 2H₂O(l) → 2Zn(OH)₂(s) (the zinc–air battery), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 4.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 1.646,
+     "unit": "V",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -635.3,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 1.645e+111,
+     "unit": "",
+     "half_ulp": 5e+107
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -635300.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -158.8
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 1.998e+48
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.646
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "LA3",
+   "scenario": "The Lead–Acid Battery",
+   "kind": "egk",
+   "text": "For Zn(s) + MnO₂(s) + 2H₂O(l) → Zn(OH)₂(s) + Mn(OH)₂(s) (an alkaline cell, from Appendix L's half-reactions), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 1.195,
+     "unit": "V",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -230.6,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 2.353e+40,
+     "unit": "",
+     "half_ulp": 5e+36
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -230600.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -115.3
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 3.413e+17
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.195
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "LA4",
+   "scenario": "The Lead–Acid Battery",
+   "kind": "egk",
+   "text": "For Fe(s) + NiO₂(s) + 2H₂O(l) → Fe(OH)₂(s) + Ni(OH)₂(s) (the Edison cell), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 1.37,
+     "unit": "V",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -264.4,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 1.922e+46,
+     "unit": "",
+     "half_ulp": 5e+42
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -264400.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -132.2
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 1.261e+20
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.37
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "LA5",
+   "scenario": "The Lead–Acid Battery",
+   "kind": "egk",
+   "text": "For Zn(s) + NiO₂(s) + 2H₂O(l) → Zn(OH)₂(s) + Ni(OH)₂(s) (the nickel–zinc cell), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 1.735,
+     "unit": "V",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -334.8,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 4.12e+58,
+     "unit": "",
+     "half_ulp": 5e+54
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -334800.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -167.4
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 2.858e+25
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.735
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "LA6",
+   "scenario": "The Lead–Acid Battery",
+   "kind": "egk",
+   "text": "For Zn(s) + Cu²⁺(aq) → Zn²⁺(aq) + Cu(s) (the Daniell cell), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 1.099,
+     "unit": "V",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -212.0,
+     "unit": "kJ",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 1.323e+37,
+     "unit": "",
+     "half_ulp": 5e+33
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -212000.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -106.0
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 1.323e+16
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.099
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "FC1",
+   "scenario": "The Hydrogen Fuel Cell",
+   "kind": "egk",
+   "text": "For 2H₂(g) + O₂(g) → 2H₂O(l) (the acid fuel cell), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 4.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 1.229,
+     "unit": "V",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -474.3,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 1.098e+83,
+     "unit": "",
+     "half_ulp": 5e+79
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -474300.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -118.6
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 1.159e+36
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.229
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "FC2",
+   "scenario": "The Hydrogen Fuel Cell",
+   "kind": "egk",
+   "text": "For 2H₂(g) + O₂(g) → 2H₂O(l) (the alkaline fuel cell: O₂/OH⁻ and H₂O/H₂ half-reactions), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 4.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 1.229,
+     "unit": "V",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -474.2,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 1.048e+83,
+     "unit": "",
+     "half_ulp": 5e+79
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -474200.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -118.6
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 1.136e+36
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.229
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "FC3",
+   "scenario": "The Hydrogen Fuel Cell",
+   "kind": "egk",
+   "text": "For H₂(g) + Cl₂(g) → 2H⁺(aq) + 2Cl⁻(aq), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 1.358,
+     "unit": "V",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -262.1,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 7.718e+45,
+     "unit": "",
+     "half_ulp": 5e+41
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -262100.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -131.1
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 8.486e+19
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.358
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "FC4",
+   "scenario": "The Hydrogen Fuel Cell",
+   "kind": "egk",
+   "text": "For H₂(g) + Br₂(aq) → 2H⁺(aq) + 2Br⁻(aq), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 1.087,
+     "unit": "V",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -209.8,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 5.409e+36,
+     "unit": "",
+     "half_ulp": 5e+32
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -209800.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -104.9
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 8974000000000000.0
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -1.087
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "FC5",
+   "scenario": "The Hydrogen Fuel Cell",
+   "kind": "egk",
+   "text": "For H₂(g) + I₂(s) → 2H⁺(aq) + 2I⁻(aq), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 0.5355,
+     "unit": "V",
+     "half_ulp": 5e-05
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -103.3,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 1.234e+18,
+     "unit": "",
+     "half_ulp": 500000000000000.0
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -103300.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -51.67
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 71930000.0
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -0.5355
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  },
+  {
+   "id": "FC6",
+   "scenario": "The Hydrogen Fuel Cell",
+   "kind": "egk",
+   "text": "For H₂(g) + F₂(g) → 2H⁺(aq) + 2F⁻(aq), find n, E°cell from Appendix L, ΔG° = −nFE°cell (in kJ), and K = \\( 10^{nE^\\circ_{cell}/0.0592\\,\\text{V}} \\) at 25 °C. Are products or reactants favored?",
+   "constants": "Appendix L (OpenStax); F = 96,485 C/mol; 0.0592 V at 25 °C; molar masses from the OpenStax periodic table. Amounts: SCENARIO_CLAUDE.",
+   "expected": [
+    {
+     "state": "n_found",
+     "label": "n (moles of electrons transferred)",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "Ecell_found",
+     "label": "E°cell",
+     "value": 2.866,
+     "unit": "V",
+     "half_ulp": 0.0005
+    },
+    {
+     "state": "dG_found",
+     "label": "ΔG°",
+     "value": -553.1,
+     "unit": "kJ",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "K_found",
+     "label": "K",
+     "value": 6.673e+96,
+     "unit": "",
+     "half_ulp": 5e+92
+    }
+   ],
+   "traps": [
+    {
+     "id": "J_FOR_KJ",
+     "state": "dG_found",
+     "value": -553100.0
+    },
+    {
+     "id": "N_WRONG",
+     "state": "dG_found",
+     "value": -276.5
+    },
+    {
+     "id": "LN_FOR_LOG",
+     "state": "K_found",
+     "value": 1.123e+42
+    },
+    {
+     "id": "ANODE_CATHODE_SWAPPED",
+     "state": "Ecell_found",
+     "value": -2.866
+    }
+   ],
+   "picks": {
+    "favored": "products",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "status": "approved (instructor, 18 Oct 2026)"
+  }
+ ]
+}
