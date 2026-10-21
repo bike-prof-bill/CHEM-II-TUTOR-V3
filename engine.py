@@ -17,7 +17,7 @@ For each variant the engine:
      generator must guarantee the declaration is unambiguous)
 Standard library only. Same seed -> same problems, always. Units live in units.json, not here.
 """
-import json, math, random, hashlib, csv, os, itertools
+import json, math, random, hashlib, csv, os, itertools, re, glob
 
 # ---------- units as data ----------
 UNITS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "units.json")
@@ -268,13 +268,14 @@ def stamp_board(v, A, moves, opener_title=None):
         seen.add(b["id"])
         if b["kind"] not in KINDS_OF_ITEM: raise RuntimeError(f"{A.ID}: item {b['id']} has unknown kind {b['kind']}")
         row = moves.get(b["id"], {})
-        b["stage"] = (row.get("stage") or "").strip() or b.get("stage") or b["id"]
+        b["stage"] = b["id"] if getattr(A, "STAGE_PER_STEP", False) else ((row.get("stage") or "").strip() or b.get("stage") or b["id"])   # brief 32 archetypes: the ladder counts per step, not per stage
         b["face"] = b.get("face") or FACE_OF_KIND[b["kind"]]
         b.setdefault("requires", []); b.setdefault("branch", None); b.setdefault("pin", False)
         b.setdefault("explicit", False); b.setdefault("credit_gate", False)
         b["label_when_done"] = (row.get("label_when_done") or "").strip() or b.get("label_when_done") or ""
         if b["kind"] in ("pick", "direction") and not b.get("options") and not b.get("options_from"):
             raise RuntimeError(f"{A.ID}: {b['kind']} item {b['id']} declares no options")
+    if getattr(A, "PRECISION_RULE", False): v["precision_rule"] = True       # the student's-own-precision acceptance (instructor, 21 Oct; chapter 11 only while experimental)
     ids = seen
     for b in v["board"]:
         for r in b["requires"]:
@@ -289,8 +290,12 @@ def read_openers(path):
     out = []
     for r in csv.reader(open(path, encoding="utf-8-sig")):
         if len(r) >= 5 and r[1].strip().endswith("?"):
+            kw = r[4]; mech = []
+            if "||" in kw and re.search(r"(?i)particle", kw):                 # brief 32 (21 Oct): "PARTICLE (one needed): a, b || MECHANISM (one needed): c, d" -> two lists, one hit from each
+                parts = [x.split(":", 1)[-1] for x in kw.split("||")]
+                kw = parts[0]; mech = [k.strip() for k in parts[1].replace(";", ",").split(",") if k.strip()] if len(parts) > 1 else []
             out.append({"title": r[0].strip(), "question": r[1].strip(), "model_answer": r[2].strip(),
-                        "target": r[3].strip(), "keywords": [k.strip() for k in r[4].replace(";", ",").split(",") if k.strip()],
+                        "target": r[3].strip(), "keywords": [k.strip() for k in kw.replace(";", ",").split(",") if k.strip()], **({"mechanism": mech} if mech else {}),
                         "liquids": [x.strip() for x in (r[5] if len(r) > 5 else "").split(";") if x.strip()],
                         "kinds":   [x.strip() for x in (r[6] if len(r) > 6 else "").split(";") if x.strip()]})
             out[-1]["fits"] = out[-1]["liquids"]        # what this scenario fits: liquids for one archetype, problem ids for another
@@ -298,7 +303,8 @@ def read_openers(path):
             out[-1]["media"] = {"image_with_question": col(7), "image_after_account": col(8), "image_alt": col(9),
                                 "simulation": col(10), "simulation_opens": (col(11) or "meaning").lower(), "credit": col(13)}   # instructor's pictures and simulation, optional
             out[-1]["label_words"] = [x.strip() for x in col(12).replace(",", ";").split(";") if x.strip()]   # naming without mechanism (SCENARIO_CLAUDE, 9 Oct)
-            out[-1]["role"] = (col(15).lower().strip() or "floater")   # worked | exam | floater (instructor, 12-13 Oct); the exam scenario is served once, unannounced, at Independent
+            out[-1]["role"] = (col(15).lower().strip() or "floater")
+            if col(16) and not col(16).upper().startswith(("APPROVED", "DRAFT")): out[-1]["samples"] = col(16)   # brief 32: sample student answers (test data; never shown)   # worked | exam | floater (instructor, 12-13 Oct); the exam scenario is served once, unannounced, at Independent
             out[-1]["items"] = {"add": [x[1:].strip() for x in col(14).replace(",", ";").split(";") if x.strip().startswith("+")],
                                 "remove": [x[1:].strip() for x in col(14).replace(",", ";").split(";") if x.strip().startswith("-")]}   # per-scenario sub-list (instructor, 10 Oct)
     return out
@@ -313,8 +319,8 @@ def read_moves(path):
         state = r.get("state", "").strip()
         if not state: continue
         opener = next((v.strip() for k, v in r.items() if k and k.lower().startswith("opener") and v), "")
-        row = {("show" if k.lower().startswith("show") else "version" if k.lower().startswith("version") else k): v
-               for k, v in r.items() if k and not k.lower().startswith("opener")}   # long headers carry their rule; the shell sees `show` and `version`
+        row = {("show" if k.lower().startswith("show") else "version" if k.lower().startswith("version") else "pivot_question" if k.lower().startswith("pivot question") else "pivot_keywords" if k.lower().startswith("pivot keywords") else "samples" if k.lower().startswith("sample answers") else k): v
+               for k, v in r.items() if k and not k.lower().startswith("opener")}   # long headers carry their rule; the shell sees `show`, `version`, `pivot_question`, `pivot_keywords`, `openstax` (brief 32)
         ver = next((v.strip().lower() for k, v in r.items() if k and k.lower().startswith("version") and v), "")
         if ver and ver != "both": state = state + "@v:" + ver            # a row for one version of the worked rung (instructor, 12 Oct)
         # two rows for one key (a scenario's wording row and its show row, 13 Oct) merge: a filled cell wins, the first row's kept
@@ -340,10 +346,24 @@ def read_errors(path):
     for r in csv.DictReader(open(path, encoding="utf-8-sig")):
         eid = r.get("error id", "").strip()
         if not eid: continue
-        cells = {k: v for k, v in (("note", r.get("note (what the tutor is told)", "").strip()), ("ask", r.get("ask (if no model, the question asked)", "").strip())) if v}
+        ask = next((v for k, v in r.items() if k and k.lower().startswith("ask")), "") or ""    # "ask (if no model, ...)" or "ask (one question; never names the fix)" (21 Oct)
+        cells = {k: v for k, v in (("note", r.get("note (what the tutor is told)", "").strip()), ("ask", ask.strip()), ("registry", (r.get("registry id") or "").strip())) if v}
         op = r.get("opener (blank = every scenario)", "").strip()
         (by_opener.setdefault(op, {}) if op else base).setdefault(eid, {}).update(cells)
     return base, by_opener
+
+def read_accounts(path):
+    """Brief 32 (21 Oct): the wrong particle accounts the second reader may name, per scenario: id, registry id, what the account amounts
+    to, the tutor's repair question. Rows with the opener column blank apply to every scenario of the archetype."""
+    out = {}
+    if not os.path.exists(path): return out
+    for r in csv.DictReader(open(path, encoding="utf-8-sig")):
+        aid = (r.get("account id") or "").strip()
+        if not aid: continue
+        get = lambda pref: next((v for k, v in r.items() if k and k.lower().startswith(pref)), "") or ""
+        op = get("opener").strip()
+        out.setdefault(op, []).append({"id": aid, "registry": get("registry").strip(), "account": get("the account").strip(), "repair": get("repair").strip()})
+    return out
 
 def read_limits(path):
     """Generator limits per opener and liquid. `known point` is "boiling point" (known state = the normal boiling point, at standard pressure)
@@ -382,10 +402,71 @@ def _merge_trap_notes(notes, errors):
     for eid, cells in errors.items(): out.setdefault(eid, {}).update(cells)
     return out
 
-def build(A, n_per_kind, seed0=1, openers=None, moves=None, errors=None, limits=None, sentences=None):
+# ---------- the textbook, for the "More info" button (brief 32, 21 Oct) ----------
+_TEXTBOOK = {}
+def textbook_file(chapter):
+    fs = sorted(glob.glob(os.path.join(os.path.dirname(__file__), "reference", "openstax", f"Chapter{int(chapter)}_*.md")))
+    return fs[0] if fs else None
+def _clean_passage(lines, cap=1800):
+    out = []
+    for l in lines:
+        if l.startswith("![") or l.startswith("### ") or l.startswith("## "): continue
+        out.append(l.rstrip())
+    text = re.sub(r"\n{3,}", "\n\n", "\n".join(out)).strip()
+    if len(text) > cap:
+        cut = text.rfind("\n\n", 0, cap); text = text[:cut if cut > cap // 2 else cap].rstrip() + " …"
+    return text
+def textbook_passage(ref):
+    """'11.4, Example 11.13 (step 1)' | '11.4, Freezing Point Depression (Figure 11.21)' | '11.4, Colligative Properties of Electrolytes (Table 11.3)'
+    -> {ref, title, text} from the cleaned OpenStax chapter in reference/openstax, or None when the reference does not resolve (the build
+    reports it). The text is the book's, cut to about 1800 characters at a paragraph break; figures become their captions."""
+    ref = (ref or "").strip()
+    m = re.match(r"(\d+)\.(\d+)\s*(?:,\s*(.*))?$", ref)
+    if not m: return None
+    ch, sec, rest = m.group(1), m.group(2), (m.group(3) or "").strip()
+    f = textbook_file(ch)
+    if not f: return None
+    if f not in _TEXTBOOK: _TEXTBOOK[f] = open(f, encoding="utf-8").read().split("\n")
+    L = _TEXTBOOK[f]
+    def block(start):                       # lines from a heading to the next heading of the same or higher level
+        lvl = len(L[start]) - len(L[start].lstrip("#"))
+        end = start + 1
+        while end < len(L) and not (L[end].startswith("#") and (len(L[end]) - len(L[end].lstrip("#"))) <= lvl): end += 1
+        return L[start:end]
+    sec_i = next((i for i, l in enumerate(L) if re.match(rf"## {ch}\.{sec}\b", l)), None)
+    if sec_i is None: return None
+    sec_lines = block(sec_i); sec_title = L[sec_i].lstrip("# ").strip()
+    pieces, titles = [], []
+    ex = re.search(r"Example (\d+\.\d+)", rest)
+    name = re.sub(r"\s*\(.*?\)\s*", " ", rest).strip() if rest else ""
+    name = re.sub(r"^Example \d+\.\d+.*$", "", name).strip()
+    if ex:
+        i = next((j for j, l in enumerate(L) if l.startswith(f"### Example {ex.group(1)} ")), None)
+        if i is not None: pieces.append(_clean_passage(block(i)[1:])); titles.append(L[i].lstrip("# ").strip())
+    if name and not ex:
+        i = next((j for j, l in enumerate(L[:sec_i + len(sec_lines)]) if j > sec_i and l.startswith("### ") and l.lstrip("# ").strip().lower().startswith(name.lower())), None)
+        if i is not None: pieces.append(_clean_passage(block(i)[1:])); titles.append(L[i].lstrip("# ").strip())
+    fig = re.search(r"Figure (\d+\.\d+)", rest)
+    if fig:
+        cap = next((l for l in L if l.startswith(f"**Figure {fig.group(1)}**")), None)
+        if cap: pieces.append(cap.replace("**", ""))
+    tab = re.search(r"Table (\d+\.\d+)", rest)
+    if tab:
+        i = next((j for j, l in enumerate(sec_lines) if f"Table {tab.group(1)}" in l and not l.startswith("### ")), None)
+        if i is not None:
+            rows = [l for l in sec_lines[i:i + 40] if l.startswith("|")][:24]
+            pieces.append(_clean_passage([sec_lines[i]] + rows, cap=2600))
+    if not pieces: pieces.append(_clean_passage(sec_lines[1:], cap=1500)); titles.append(sec_title)
+    return {"ref": ref, "title": titles[0] if titles else sec_title, "section": sec_title, "text": "\n\n".join(p for p in pieces if p)}
+
+def build(A, n_per_kind, seed0=1, openers=None, moves=None, errors=None, limits=None, sentences=None, accounts=None):
     """OPENERS AND VARIANTS ALIGN (instructor, 20 Sept). Problems are made FOR a scenario: each opener names the
     liquids it fits, and every variant is born attached to one opener. No opener, no problem."""
     variants, seed = [], seed0
+    extra = getattr(A, "EXTRA_MOVES", None)                      # brief 32: an archetype's own rows for steps the sheet gives per problem (the instrument task, the gap question)
+    if extra:
+        if moves is None: moves = _Moves({}); moves.by_opener = {}
+        for k, row in extra.items(): moves.setdefault(k, {}); [moves[k].setdefault(a, b) for a, b in row.items() if b]
     fixed_pool = getattr(A, "FIXED", None)                       # a list of fixed problems instead of a generator
     known = [f["id"] for f in fixed_pool] if fixed_pool else [s[0] for s in A.SUBSTANCES]
     if openers:
@@ -413,5 +494,28 @@ def build(A, n_per_kind, seed0=1, openers=None, moves=None, errors=None, limits=
            "equation_picks": A.EQUATION_PICKS, "trap_notes": _merge_trap_notes(A.TRAP_NOTES, (errors or ({}, {}))[0]), "trap_notes_by_opener": (errors or ({}, {}))[1],
            "equation_symbols": A.EQUATION_SYMBOLS, "equation_constants": A.EQUATION_CONSTANTS, "openers": openers or [],
            "moves": dict(moves or {}), "moves_by_opener": getattr(moves, "by_opener", {}) if moves else {}, "variants": variants}
+    for op in out["openers"]:                                   # brief 32: the wrong accounts the reader may name, this scenario's then the archetype's (absent when none: older bundles keep their content version)
+        wa = list((accounts or {}).get(op["title"], [])) + list((accounts or {}).get("", []))
+        if wa: op["wrong_accounts"] = wa
+    # brief 32 (21 Oct): sample student answers are test data and never ship; the textbook anchors become passages for "More info"
+    samples = {"openers": {}, "moves": {}}
+    for op in out["openers"]:
+        if op.get("samples"): samples["openers"][op["title"]] = op.pop("samples")
+    for key, row in list(out["moves"].items()):
+        if isinstance(row, dict) and row.get("samples"): samples["moves"][key] = row.pop("samples")
+    for op_title, rows in out["moves_by_opener"].items():
+        for key, row in rows.items():
+            if isinstance(row, dict) and row.get("samples"): samples["moves"][f"{key}@{op_title}"] = row.pop("samples")
+    out["samples"] = None
+    passages, unresolved = {}, []
+    for key, row in out["moves"].items():
+        ref = row.get("openstax") if isinstance(row, dict) else None
+        if ref:
+            pz = textbook_passage(ref)
+            if pz: passages[key] = pz
+            else: unresolved.append(f"{key}: {ref}")
+    if passages or unresolved: out["passages"] = passages; out["passages_unresolved"] = unresolved
+    out.pop("samples", None)
     out["content_version"] = hashlib.sha1(json.dumps(out, sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:10]
+    out["samples"] = samples
     return out

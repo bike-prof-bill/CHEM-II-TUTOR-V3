@@ -76,7 +76,13 @@ var SECOND_READER = "You are checking one student message for a FALSE statement 
   "Reply strict JSON {\"found\":0|1,\"quote\":\"exact words from the message\",\"why\":\"...\"}. found is 1 only for a statement that is false as chemistry. " +
   "Not for incompleteness, informality, an unstated comparison, or a mechanism left out. If nothing is false, found is 0.";
 // the second reader's input: the scenario, then the message, so a relative claim is read in context (instructor's run, 11 Oct)
-function secondReaderMsg(arch, S, msg) { var o = arch.openers[S.openerIndex]; return "Scenario: " + (o ? o.question : "") + "\n\nStudent message: " + msg; }
+function secondReaderMsg(arch, S, msg) {
+  var o = arch.openers[S.openerIndex], list = (o && o.wrong_accounts) || [];
+  var named = list.length ? "\n\nKnown wrong accounts for this scenario (if the message amounts to one of them, add \"account\":\"<id>\" to your JSON; otherwise \"account\":\"\"):\n" +
+    list.map(function (a) { return "- " + a.id + ": " + a.account; }).join("\n") : "";
+  return "Scenario: " + (o ? o.question : "") + named + "\n\nStudent message: " + msg;
+}
+function wrongAccountFor(arch, S, id) { var o = arch.openers[S.openerIndex]; return ((o && o.wrong_accounts) || []).filter(function (a) { return a.id === id; })[0] || null; }
 
 // The authored fallback: what the student reads when there is no model, the model failed, or every guard failed.
 // Plus the plain hint when words arrived at a checkable item (instructor, 9 Oct).
@@ -115,4 +121,4 @@ function fallbackReply(arch, S, V, ev, p) {
   return reply;
 }
 
-if (typeof module !== "undefined") module.exports = { RULES: RULES, buildSystem: buildSystem, tonePhrasesFor: tonePhrasesFor, completionPhrase: completionPhrase, accountProbeFor: accountProbeFor, SECOND_READER: SECOND_READER, HINT_OF_KIND: HINT_OF_KIND, fallbackReply: fallbackReply, secondReaderMsg: secondReaderMsg, nearMissAsk: nearMissAsk, NEAR_MISS_ASK: NEAR_MISS_ASK };
+if (typeof module !== "undefined") module.exports = { RULES: RULES, wrongAccountFor: wrongAccountFor, buildSystem: buildSystem, tonePhrasesFor: tonePhrasesFor, completionPhrase: completionPhrase, accountProbeFor: accountProbeFor, SECOND_READER: SECOND_READER, HINT_OF_KIND: HINT_OF_KIND, fallbackReply: fallbackReply, secondReaderMsg: secondReaderMsg, nearMissAsk: nearMissAsk, NEAR_MISS_ASK: NEAR_MISS_ASK };

@@ -11,6 +11,7 @@ def load(arch_id):
     return json.load(open(os.path.join(os.path.dirname(__file__), "data", "sheets", arch_id + ".json"), encoding="utf-8"))["problems"]
 
 PH_LIKE = set()
+UNREACHABLE_TRAPS = {}   # archetype -> traps equal to an earlier step's value (never fire under the 11 Oct restatement rule); run.py reports them
 UNIT_OF_SHEET = {"°C": "degC", "deg C": "degC", "kJ": "kJ/mol", "J": "J/mol", "years": "y", "days": "d", "MeV/nucleon": "MeV"}   # the sheet's spelling -> the unit key (a reaction's kJ is kJ per mole of reaction)
 def window(value, unit=""):
     if unit in ("°C", "degC"): return 0.3                                           # a temperature in Celsius: three tenths of a degree
@@ -41,10 +42,17 @@ def options_for(right, named_wrong=None):
             return out
     raise ValueError(f"no option set holds the pick {right!r}")
 
-def make_fixed_from_sheet(ID, problems, fid, step_order, pick_named=None, sim_params=None, registers=None, key_state=None, no_key=False, pick_options=None, tolerance=None, relation=True):
+def make_fixed_from_sheet(ID, problems, fid, step_order, pick_named=None, sim_params=None, registers=None, key_state=None, no_key=False, pick_options=None, tolerance=None, relation=True, sim_student=None, drop_restated=False):
     """step_order: the states in order; a state present in the problem's expected or picks is put on the board, the rest are skipped.
-    pick_named: {pick state: error id named on a wrong option}. sim_params(problem) -> dict for the page's address."""
-    P = [p for p in problems if p["id"] == fid][0]; pick_named = pick_named or {}; registers = registers or {}
+    pick_named: {pick state: error id named on a wrong option}. sim_params(problem) -> dict for the page's address.
+    Brief 32 (21 Oct): a `sim_predict` state is the prediction pick that opens the page (its options and right answer from the sheet's
+    `sim predict` cell; a trap with a pick value names a wrong option); `sim_instrument` is the reading the student takes on the page,
+    checked like any number in the sheet's window; `sim_gap` is the gap question. sim_student maps page placeholders to the student's
+    own values ({"T_student": "T_found", "pred": "sim_predict"}), filled by the shell at the reveal."""
+    P = [p for p in problems if p["id"] == fid][0]; pick_named = dict(pick_named or {}); registers = registers or {}
+    for t in P["traps"]:                                                      # a named wrong pick from the sheet ("PERTURB_I_IGNORED at perturb_1: unchanged")
+        if "pick" in t: pick_named.setdefault(t["state"], {})
+        if "pick" in t and isinstance(pick_named[t["state"]], dict): pick_named[t["state"]][t["pick"]] = t["id"]
     if isinstance(step_order, dict): step_order = step_order[P["kind"]]
     exp_by = {}
     for e in P["expected"]:
@@ -72,32 +80,65 @@ def make_fixed_from_sheet(ID, problems, fid, step_order, pick_named=None, sim_pa
         elif st == "coeffs_found" and P.get("coeffs"):
             cf = P["coeffs"]
             board.append({"state": st, "kind": "coefficients", "register": "symbolic", "requires": [prev], "species": cf["species"], "right": cf["right"], "arrow_after": cf["arrow_after"], "explicit": True, "pin": True}); prev = st
-        elif st in P["picks"]:
-            right = P["picks"][st]
-            opts = (pick_options(P, st, right) if pick_options else None) or options_for(right, pick_named.get(st))
-            if pick_options and pick_named.get(st):
+        elif st in P["picks"] or (st == "sim_predict" and P.get("sim_predict")):
+            right = P["picks"].get(st) or P["sim_predict"]["right"]
+            pn = pick_named.get(st)
+            opts = (pick_options(P, st, right) if pick_options else None) or options_for(right, pn if isinstance(pn, str) else None)
+            if isinstance(pn, dict):                                              # {wrong option: error id}
                 for o in opts:
-                    if o["id"] != right: o["names"] = pick_named[st]
-            board.append({"state": st, "kind": "direction", "register": registers.get(st, "macro"), "requires": [prev], "options": opts, "right": [f"{st}:{right}"], "explicit": True, "pin": True})
+                    if o["id"] in pn: o["names"] = pn[o["id"]]
+            elif pick_options and pn:
+                for o in opts:
+                    if o["id"] != right: o["names"] = pn
+            item = {"state": st, "kind": "direction", "register": registers.get(st, "macro"), "requires": [prev], "options": opts, "right": [f"{st}:{right}"], "explicit": True, "pin": True}
+            if st == "sim_predict":
+                item["opens_sim"] = True; item["register"] = "macro"
+                if sim_student: item["sim_student"] = dict(sim_student)
+            board.append(item)
             for o in board[-1]["options"]: o["id"] = f"{st}:{o['id']}"
             prev = st
             if st.startswith("perturb_"): board.append({"state": st + "_why", "kind": "text", "register": "submicro", "requires": [st]}); prev = st + "_why"
+        elif st == "sim_instrument" and (P.get("sim_instrument") or {}).get("value") is not None:
+            ins = P["sim_instrument"]; u = ins.get("unit", "")
+            expected.append({"state": st, "label": "reading from the page" + (f" ({ins.get('control')})" if ins.get("control") else ""), "value": round_sig(ins["value"], 6), "unit": u,
+                             "abs_tol": round_sig(ins.get("abs_tol") or max(0.02 * abs(ins["value"]), 0.5), 3), "role": "intermediate", "require_unit": bool(u), "after": prev})
+            board.append({"state": st, "kind": "number", "register": "macro", "requires": [prev], "explicit": True, "pin": True,
+                          "instrument": {k: ins.get(k) for k in ("control", "reading", "target", "target_unit") if ins.get(k) is not None}})
+            prev = st
+        elif st == "sim_gap" and P.get("sim_gap"):
+            board.append({"state": st, "kind": "text", "register": "inference", "requires": [prev]}); prev = st
     board += [{"state": "meaning_given", "kind": "text", "register": "inference", "requires": [prev], "credit_gate": True},
               {"state": "reflection", "kind": "reflection", "register": "inference", "requires": ["meaning_given"]}]
     unit_of = {e["state"]: UNIT_OF_SHEET.get(e["unit"], e["unit"]) for e in P["expected"]}
+    dropped_restate = []
     for t in P["traps"]:
-        if t["state"] not in exp_by: continue
+        if "value" not in t or t["state"] not in exp_by: continue
         ttol = tolerance(P, t["state"], t["value"], unit_of.get(t["state"], "")) if tolerance else None
         tol = round_sig(ttol if ttol is not None else max(0.02 * abs(t["value"]), 0.3 if unit_of.get(t["state"], "") in ("°C", "degC") else 0, 0.5 if unit_of.get(t["state"], "") == "K" else 0), 3)
         def _clear(a, e):
             if e["value"] and a and e["abs_tol"] >= 0.5 * abs(e["value"]) and abs(math.log10(abs(e["value"]))) >= 15:                 # an item accepted as a power of ten: clear means a factor of 3 apart, or the other sign
                 return (a > 0) != (e["value"] > 0) or max(abs(a), abs(e["value"])) / min(abs(a), abs(e["value"])) > 3
             return abs(a - e["value"]) > 3 * max(tol, e["abs_tol"])
+        earlier = [e["state"] for e in expected]; earlier = earlier[:earlier.index(t["state"])] if t["state"] in earlier else []   # states established before this one
+        same_as_other = [e for e in expected if e["state"] in earlier and e.get("value") is not None and abs(t["value"] - e["value"]) <= max(tol, e["abs_tol"]) and unit_of.get(t["state"], "") == e.get("unit", "")]
+        if same_as_other:                                                     # the shell reads a restated established value as a restatement, never a wrong try (instructor, 11 Oct): the trap can never fire
+            dropped_restate.append(f"{t['id']} at {t['state']} = {same_as_other[0]['state']}'s value")
+            if drop_restated: continue                                        # brief-32 archetypes drop it; older bundles keep it (and their content version) until the instructor rules
         if all(_clear(t["value"], e) for e in expected if e["state"] == t["state"]):
-            traps.append({"id": t["id"], "state": t["state"], "value": round_sig(t["value"], 5), "unit": unit_of.get(t["state"], ""), "abs_tol": tol})
-    return {"kind": P["kind"], "fixed_id": fid, "version": "", "status": P["status"], "context": {"scenario": P["scenario"], "picks": P["picks"]}, "text": P["text"],
+            traps.append({"id": t["id"], "state": t["state"], "value": round_sig(t["value"], 5), "unit": unit_of.get(t["state"], ""), "abs_tol": tol, **({"registry": t["registry"]} if t.get("registry") else {})})
+    out = {"kind": P["kind"], "fixed_id": fid, "version": "", "status": P["status"], "context": {"scenario": P["scenario"], "picks": P["picks"]}, "text": P["text"],
             "givens": {}, "board": board, "targets": expected, "traps": traps, "table": None, "words": {}, "eq_checks": [], "reveal_with_problem": None, "sim": None,
             "sim_params": dict(sim_params(P) if sim_params else {}, **(P.get("sim") or {}))}   # the sheet's own values, when it has them, win (20 Oct)
+    for k in ("difficulty", "nearest_eoc", "companion", "exam_item", "sim_reveal", "sim_opens_at"):   # brief 32 fields, carried for the shell, the log and the tests
+        if P.get(k): out[k] = P[k]
+    if dropped_restate and drop_restated: out["traps_dropped"] = [f"RESTATEMENT:{x}" for x in dropped_restate]
+    elif dropped_restate: UNREACHABLE_TRAPS.setdefault(ID, set()).update(dropped_restate)   # reported by run.py, not changed
+    ins = P.get("sim_instrument") or {}
+    words = dict(P.get("sim") or {})                                              # the sheet's own slots fill {water_kg}-style placeholders in a moves row
+    if ins.get("target") is not None: words["target"] = f"{ins['target']:.1f}".replace("-", "−"); words["target_unit"] = ins.get("target_unit", "")
+    if P.get("sim_gap"): words["gap_question"] = P["sim_gap"]
+    out["words"] = words
+    return out
 
 TRAP_NOTES_CH19_21 = {
   "D_COUNT_FROM_GROUP": {"note": "Their d count is the metal's group number, ignoring the oxidation state.", "ask": "How many electrons did the metal lose to reach this oxidation state?"},

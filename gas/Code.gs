@@ -8,7 +8,7 @@ function stamp_() { return (typeof BUILD_STAMP !== "undefined") ? BUILD_STAMP : 
 var PRIMARY_MODEL  = "gemini-3.6-flash";          // as V2
 var FALLBACK_MODEL = "gemini-3.5-flash";
 
-var LOG_HEADERS = ["ts", "build_stamp", "content_version", "event_type", "session_id", "student_id", "attempt_id", "archetype_id", "variant_id", "problem_kind", "state", "register", "face", "gate", "entering_done", "leaving_done", "newly", "tries_on_state", "counted_fail", "after_bailout", "seconds_away", "trap_ids", "structured", "model_accept", "second_reader", "guards", "fallback_used", "turn_kind", "clean", "done", "credit", "student_text", "reply_text", "model_name", "model_ms", "server_ms", "verdict_ms", "say_ms", "stage", "tries_on_stage", "near_miss", "repeat", "second_reader_quote", "units_check", "rung", "role", "version", "extra", "demote", "queued", "queue_ms"];   // queued and queue_ms last: the log queue appends them to every row
+var LOG_HEADERS = ["ts", "build_stamp", "content_version", "event_type", "session_id", "student_id", "attempt_id", "archetype_id", "variant_id", "problem_kind", "state", "register", "face", "gate", "entering_done", "leaving_done", "newly", "tries_on_state", "counted_fail", "after_bailout", "seconds_away", "trap_ids", "structured", "model_accept", "second_reader", "guards", "fallback_used", "turn_kind", "clean", "done", "credit", "student_text", "reply_text", "model_name", "model_ms", "server_ms", "verdict_ms", "say_ms", "stage", "tries_on_stage", "near_miss", "repeat", "second_reader_quote", "units_check", "rung", "role", "version", "extra", "demote", "policy", "help_rung", "queued", "queue_ms"];   // queued and queue_ms last: the log queue appends them to every row; policy and help_rung added 21 Oct (add, never rename)
 var MASTERY_HEADERS = ["ts", "student_id", "archetype_id", "variant_id", "problem_kind", "attempt_id", "turns", "clean", "credit", "outcome", "build_stamp", "content_version", "rung", "role", "version", "extra", "queued", "queue_ms"];
 
 function setupV3() {
@@ -71,7 +71,8 @@ function doPost(e) {
       if (!pick) return json_({ error: "no problem matches that opener and kind" });
       if (!isGuest) { if (pick.reset) served = []; served.push(pick.variant_id); props.setProperty(histKey, JSON.stringify(served.slice(-500))); }
       if (pick.reset) log_(props, { event_type: "HISTORY_RESET", archetype_id: arch.archetype_id, content_version: arch.content_version, structured: "all " + served.length + " matching problems served; list reset" }, sid, student, "", "", meta, 0);
-      S = CORE.newSession(arch, { variantIndex: pick.index, rung: rung, extra: extra,
+      var policy = /^[ABC]$/i.test(String(req.policy || "")) ? String(req.policy).toUpperCase() : String(props.getProperty("HELP_POLICY") || "B").toUpperCase();   // the help policy (21 Oct): the page's preview menu, else the script property HELP_POLICY, else B
+      S = CORE.newSession(arch, { variantIndex: pick.index, rung: rung, extra: extra, policy: policy,
         openerIndex: Math.floor(Math.random() * arch.openers.length), stamp: Date.now().toString(36) + Math.floor(Math.random() * 1296).toString(36) });
       if (preview) log_(props, { event_type: "PREVIEW_CLIENT", attempt_id: S.attemptId, archetype_id: arch.archetype_id, variant_id: S.variantId, content_version: arch.content_version, rung: S.rung,
                                  structured: JSON.stringify(req.client || {}) }, sid, student, "", "", meta, 0);   // browser, screen, page address: once per problem in a preview
@@ -82,16 +83,18 @@ function doPost(e) {
       if (!S) return json_({ error: "no session; press New Problem" });
       var rate = parseInt(cache.get("v3rate_" + sid) || "0", 10); if (rate >= 60) return json_({ error: "rate limit reached, please wait" });
       cache.put("v3rate_" + sid, String(rate + 1), 3600);
-      var input = { message: req.message || "", pick: req.pick || null, table: req.table || null, history: (req.history || []).slice(-10), now: Date.now() };
+      var input = { message: req.message || "", pick: req.pick || null, table: req.table || null, history: (req.history || []).slice(-10), now: Date.now(),
+                    help: !!req.help, info: !!req.info };                                             // the More help and More info buttons (21 Oct): deterministic, never a model call
       var model = props.getProperty("GEMINI_API_KEY") ? function (sys, hist, msg) { return gemini_(props, sys, hist, msg, meta); } : null;
       if (model) model.batch = function (reqs) { return geminiBatch_(props, reqs, meta); };          // draft + second reader in one round trip
       if (req.action === "back") res = CORE.processBack(arch, S, Date.now());
       else if (req.action === "verdict") res = CORE.verdict(arch, S, input);                          // Phase A: deterministic, returns at once
       else if (req.action === "say") res = CORE.say(arch, S, input, model);                           // Phase B: the model's sentence
       else res = CORE.processTurn(arch, S, input, model);                                             // both in one call
-      (req.simEvents || []).slice(0, 20).forEach(function (ev) {
-        log_(props, { event_type: "SIM", attempt_id: S.attemptId, archetype_id: S.archetypeId, variant_id: S.variantId, content_version: arch.content_version,
-                      structured: JSON.stringify(ev) }, sid, student, "", "", meta, 0); });
+      (req.simEvents || []).slice(0, 20).forEach(function (ev) {                                       // the chapter 10 probe, and every page's control and reading messages (contract 34)
+        var evt = (ev && ev.kind === "reading") ? "SIM_READING" : (ev && ev.kind === "ready") ? "SIM_READY" : "SIM";
+        log_(props, { event_type: evt, attempt_id: S.attemptId, archetype_id: S.archetypeId, variant_id: S.variantId, content_version: arch.content_version, state: CORE.activeState(S, arch.variants[S.variantIndex]) || "",
+                      structured: JSON.stringify(ev).slice(0, 2000), policy: S.policy || "" }, sid, student, "", "", meta, 0); });
       if (res.log && res.log.done && res.log.event_type !== "BAILOUT_RETURN" && S.done && !S.recorded) { S.recorded = true; mastery_(props, student, arch, S, "finished"); }
       if (res.log && res.log.demote && !isGuest_(student)) { var rd = rungRecord_(props, student, arch.archetype_id); if (rd) { CORE.advance(rd, { rung: S.rung, role: S.role, bailed: true, extra: S.extra }); saveRung_(props, student, arch.archetype_id, rd); } }
     }
@@ -142,6 +145,10 @@ function isGuest_(student) { return /^Guest/.test(student); }
 function sheet_(props, name, headers) {            // a named sheet, created with its headers the first time it is needed
   var ss = SpreadsheetApp.openById(props.getProperty("SHEET_ID")), sh = ss.getSheetByName(name);
   if (!sh) { sh = ss.insertSheet(name); sh.appendRow(headers); }
+  else if (name === "Log" && props.getProperty("LOG_HEADERS_N") !== String(headers.length)) {   // columns were added (21 Oct: policy, help_rung): write the full header row once, so the new cells have names
+    var have = sh.getLastColumn(); if (have < headers.length) sh.getRange(1, 1, 1, headers.length).setValues([headers]);
+    props.setProperty("LOG_HEADERS_N", String(headers.length));
+  }
   return sh;
 }
 // Rungs sheet: one row per student and archetype (student_id, archetype_id, rung assigned by the instructor); the record of progress

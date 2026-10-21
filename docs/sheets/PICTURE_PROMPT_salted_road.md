@@ -1,0 +1,5 @@
+# Picture prompt: The Salted Road (`media/ch11_colligative/salted_road.jpg`). Approved 21 Oct 2026. In the house template.
+
+Create one picture for the chemistry scenario below, to adorn it, not to explain it but to stimulate curiosity. Put the scenario's name as a caption under the picture, exactly as written, with no asterisks or quotation marks. Photorealistic. Any meter's or screen's display is highly visible and shows exactly the reading given. Labels show names only. No hazard symbols, warning pictograms, warning triangles or radiation trefoils anywhere. No brand names or logos on any object, including monitors, beakers and calculators. No other text anywhere except what is described. Nothing glowing except a display.
+
+The Salted Road: a two-lane country road on a winter morning, snowy hills behind; the near half of the road is bare, glassy ice, the far half is wet grey slush with white salt crystals scattered through it; on the shoulder beside the slush, an open white sack labeled "Rock Salt" with crystals spilling from its mouth; a roadside digital thermometer on a post whose highly visible screen reads "−5 °C".

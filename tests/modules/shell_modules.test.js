@@ -36,7 +36,7 @@ ok(M.checkEquation(V.eq_checks[0].park_text, V, ARCH, fresh())[0].verdict === "V
 { const S = fresh(); S.board.account_given = "ticked"; S.board.relation_chosen = "ticked"; S.board.rearranged = "ticked";
   const ev = () => ({ event_type: "TURN", active: "T_in_K", newly: [], traps: [], guards: [], counted_fail: true });
   let r = LD.applyLadder(ARCH, S, V, ev(), { now: 1 }); ok(!r.card && !r.reply && r.switchAsk, "ladder: first fail on a stage offers the switch question");
-  r = LD.applyLadder(ARCH, S, V, ev(), { now: 1 }); ok(r.card && S.bailed.units && S.tries.units === 0, "ladder: second fail on the stage gives the card");
+  r = LD.applyLadder(ARCH, S, V, ev(), { now: 1 }); ok(r.card && S.bailed.units && S.tries.units === 2, "ladder: second fail on the stage gives the card (the stage count keeps climbing, 21 Oct)");
   S.awaitingReturn = null; r = LD.applyLadder(ARCH, S, V, ev(), { now: 1 }); r = LD.applyLadder(ARCH, S, V, ev(), { now: 1 });
   ok(r.reply && S.board.T_in_K === "parked" && S.board.P_same_units === "parked" && !S.clean, "ladder: two more park the whole stage"); }
 

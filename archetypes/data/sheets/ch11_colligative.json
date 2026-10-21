@@ -1,0 +1,774 @@
+{
+ "archetype": "ch11_colligative",
+ "source_sheet": "ch11_colligative_problems_salted_road.csv",
+ "problems": [
+  {
+   "id": "RS1",
+   "scenario": "The Salted Road",
+   "kind": "freezing",
+   "text": "A crew spreads 265 g of sodium chloride (NaCl) on the ice on a road. The salt dissolves in 1.50 kg of meltwater. Assuming complete dissociation and ideal solution behavior, what is the freezing point of the brine? For water, K_f = 1.86 °C·kg/mol.",
+   "constants": "K_f (water) = 1.86 °C·kg/mol: OpenStax Chemistry 2e, Table 11.2 (also Appendix E). Molar masses from Appendix A: Na 22.99, K 39.10, Mg 24.31, Ca 40.08, Cl 35.45 g/mol (Cl from the table figure; the extracted text omits it). NaCl = 58.44 g/mol. Ideal i = 2 (complete dissociation; ruling of 20 Oct).",
+   "expected": [
+    {
+     "state": "mol_found",
+     "label": "moles of NaCl",
+     "value": 4.53,
+     "unit": "mol",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "m_found",
+     "label": "molality",
+     "value": 3.02,
+     "unit": "mol/kg",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "i_found",
+     "label": "van 't Hoff factor",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "dT_found",
+     "label": "freezing point lowering",
+     "value": 11.2,
+     "unit": "°C",
+     "half_ulp": 0.05
+    },
+    {
+     "state": "T_found",
+     "label": "freezing point of the brine",
+     "value": -11.2,
+     "unit": "°C",
+     "half_ulp": 0.05
+    }
+   ],
+   "traps": [
+    {
+     "id": "I_OMITTED",
+     "state": "i_found",
+     "registry": "GC2-M-06",
+     "value": 1.0
+    },
+    {
+     "id": "I_OMITTED",
+     "state": "dT_found",
+     "registry": "GC2-M-06",
+     "value": 5.62
+    },
+    {
+     "id": "SOLUTION_MASS",
+     "state": "m_found",
+     "registry": "GC2-M-07",
+     "value": 2.57
+    },
+    {
+     "id": "GRAMS_FOR_MOLES",
+     "state": "m_found",
+     "value": 177.0
+    },
+    {
+     "id": "DT_SIGNED",
+     "state": "dT_found",
+     "value": -11.2
+    },
+    {
+     "id": "FP_SIGN",
+     "state": "T_found",
+     "registry": "GC2-M-08",
+     "value": 11.2
+    },
+    {
+     "id": "PERTURB_I_IGNORED",
+     "state": "perturb_1",
+     "pick": "unchanged"
+    },
+    {
+     "id": "SIM_PREDICT_SALT",
+     "state": "sim_predict",
+     "pick": "rises"
+    }
+   ],
+   "picks": {
+    "sim_predict": "falls",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "sim": {
+    "salt": "NaCl",
+    "salt_g": "265",
+    "water_kg": "1.50"
+   },
+   "status": "APPROVED (instructor, 21 Oct 2026)",
+   "difficulty": "3 (steps 4, conv 1)",
+   "nearest_eoc": "11.45 (with i; worked model: Example 11.13)",
+   "sim_predict": {
+    "right": "falls",
+    "options": [
+     "rises",
+     "falls",
+     "unchanged"
+    ],
+    "text": "If the crew spread twice as much of the same salt on the same ice, the freezing point of the brine"
+   },
+   "sim_reveal": "The page draws freezing point against grams of this salt in the problem's meltwater (from 0 °C) and marks: pure water at 0 °C; the student's freezing point at the problem's grams; the student's prediction for twice the salt, beside the page's own point for it.",
+   "sim_instrument": {
+    "control": "salt_g",
+    "reading": "Tf_readout",
+    "text": "Move `salt_g` until `Tf_readout` reads −10.0 °C. Report the mass, in grams, of salt the crew must dissolve in the problem's 1.5 kg of meltwater for the brine to stay liquid down to −10.0 °C (read from `salt_g`). Checked value: 235.6 g; accept any whole number of grams from 235 to 236 (the grams at which `Tf_readout` shows −10.0).",
+    "target": -10.0,
+    "target_unit": "°C",
+    "value": 235.5,
+    "unit": "g",
+    "abs_tol": 0.6
+   },
+   "sim_gap": "Where does your point sit against the line, and what about the particles dissolved in the meltwater would explain any distance between them?",
+   "sim_opens_at": "after sim_predict",
+   "exam_item": "not the exam scenario",
+   "companion": "RS5"
+  },
+  {
+   "id": "RS2",
+   "scenario": "The Salted Road",
+   "kind": "freezing",
+   "text": "A crew spreads 310 g of calcium chloride (CaCl₂) on the ice on a sidewalk. The salt dissolves in 2.00 kg of meltwater. Assuming complete dissociation and ideal solution behavior, what is the freezing point of the brine? For water, K_f = 1.86 °C·kg/mol.",
+   "constants": "K_f (water) = 1.86 °C·kg/mol: OpenStax Chemistry 2e, Table 11.2 (also Appendix E). Molar masses from Appendix A: Na 22.99, K 39.10, Mg 24.31, Ca 40.08, Cl 35.45 g/mol (Cl from the table figure; the extracted text omits it). CaCl₂ = 110.98 g/mol. Ideal i = 3 (complete dissociation; ruling of 20 Oct).",
+   "expected": [
+    {
+     "state": "mol_found",
+     "label": "moles of CaCl₂",
+     "value": 2.79,
+     "unit": "mol",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "m_found",
+     "label": "molality",
+     "value": 1.4,
+     "unit": "mol/kg",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "i_found",
+     "label": "van 't Hoff factor",
+     "value": 3.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "dT_found",
+     "label": "freezing point lowering",
+     "value": 7.79,
+     "unit": "°C",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "T_found",
+     "label": "freezing point of the brine",
+     "value": -7.79,
+     "unit": "°C",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "I_OMITTED",
+     "state": "i_found",
+     "registry": "GC2-M-06",
+     "value": 1.0
+    },
+    {
+     "id": "I_OMITTED",
+     "state": "dT_found",
+     "registry": "GC2-M-06",
+     "value": 2.6
+    },
+    {
+     "id": "SOLUTION_MASS",
+     "state": "m_found",
+     "registry": "GC2-M-07",
+     "value": 1.21
+    },
+    {
+     "id": "GRAMS_FOR_MOLES",
+     "state": "m_found",
+     "value": 155.0
+    },
+    {
+     "id": "DT_SIGNED",
+     "state": "dT_found",
+     "value": -7.79
+    },
+    {
+     "id": "FP_SIGN",
+     "state": "T_found",
+     "registry": "GC2-M-08",
+     "value": 7.79
+    },
+    {
+     "id": "PERTURB_I_IGNORED",
+     "state": "perturb_1",
+     "pick": "unchanged"
+    },
+    {
+     "id": "SIM_PREDICT_SALT",
+     "state": "sim_predict",
+     "pick": "rises"
+    }
+   ],
+   "picks": {
+    "sim_predict": "falls",
+    "perturb_1": "rises"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "sim": {
+    "salt": "CaCl2",
+    "salt_g": "310",
+    "water_kg": "2.00"
+   },
+   "status": "APPROVED (instructor, 21 Oct 2026)",
+   "difficulty": "3 (steps 4, conv 1)",
+   "nearest_eoc": "11.45 (with i; worked model: Example 11.13)",
+   "sim_predict": {
+    "right": "falls",
+    "options": [
+     "rises",
+     "falls",
+     "unchanged"
+    ],
+    "text": "If the crew spread twice as much of the same salt on the same ice, the freezing point of the brine"
+   },
+   "sim_reveal": "The page draws freezing point against grams of this salt in the problem's meltwater (from 0 °C) and marks: pure water at 0 °C; the student's freezing point at the problem's grams; the student's prediction for twice the salt, beside the page's own point for it.",
+   "sim_instrument": {
+    "control": "salt_g",
+    "reading": "Tf_readout",
+    "text": "Move `salt_g` until `Tf_readout` reads −10.0 °C. Report the mass, in grams, of salt the crew must dissolve in the problem's 2 kg of meltwater for the brine to stay liquid down to −10.0 °C (read from `salt_g`). Checked value: 397.8 g; accept any whole number of grams from 396 to 399 (the grams at which `Tf_readout` shows −10.0).",
+    "target": -10.0,
+    "target_unit": "°C",
+    "value": 397.5,
+    "unit": "g",
+    "abs_tol": 1.6
+   },
+   "sim_gap": "Where does your point sit against the line, and what about the particles dissolved in the meltwater would explain any distance between them?",
+   "sim_opens_at": "after sim_predict",
+   "exam_item": "not the exam scenario",
+   "companion": "RS6"
+  },
+  {
+   "id": "RS3",
+   "scenario": "The Salted Road",
+   "kind": "freezing",
+   "text": "A crew spreads 180 g of potassium chloride (KCl) on the ice on a driveway. The salt dissolves in 1.25 kg of meltwater. Assuming complete dissociation and ideal solution behavior, what is the freezing point of the brine? For water, K_f = 1.86 °C·kg/mol.",
+   "constants": "K_f (water) = 1.86 °C·kg/mol: OpenStax Chemistry 2e, Table 11.2 (also Appendix E). Molar masses from Appendix A: Na 22.99, K 39.10, Mg 24.31, Ca 40.08, Cl 35.45 g/mol (Cl from the table figure; the extracted text omits it). KCl = 74.55 g/mol. Ideal i = 2 (complete dissociation; ruling of 20 Oct).",
+   "expected": [
+    {
+     "state": "mol_found",
+     "label": "moles of KCl",
+     "value": 2.41,
+     "unit": "mol",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "m_found",
+     "label": "molality",
+     "value": 1.93,
+     "unit": "mol/kg",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "i_found",
+     "label": "van 't Hoff factor",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "dT_found",
+     "label": "freezing point lowering",
+     "value": 7.19,
+     "unit": "°C",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "T_found",
+     "label": "freezing point of the brine",
+     "value": -7.19,
+     "unit": "°C",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "I_OMITTED",
+     "state": "i_found",
+     "registry": "GC2-M-06",
+     "value": 1.0
+    },
+    {
+     "id": "I_OMITTED",
+     "state": "dT_found",
+     "registry": "GC2-M-06",
+     "value": 3.59
+    },
+    {
+     "id": "SOLUTION_MASS",
+     "state": "m_found",
+     "registry": "GC2-M-07",
+     "value": 1.69
+    },
+    {
+     "id": "GRAMS_FOR_MOLES",
+     "state": "m_found",
+     "value": 144.0
+    },
+    {
+     "id": "DT_SIGNED",
+     "state": "dT_found",
+     "value": -7.19
+    },
+    {
+     "id": "FP_SIGN",
+     "state": "T_found",
+     "registry": "GC2-M-08",
+     "value": 7.19
+    },
+    {
+     "id": "PERTURB_I_IGNORED",
+     "state": "perturb_1",
+     "pick": "unchanged"
+    },
+    {
+     "id": "SIM_PREDICT_SALT",
+     "state": "sim_predict",
+     "pick": "rises"
+    }
+   ],
+   "picks": {
+    "sim_predict": "falls",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "sim": {
+    "salt": "KCl",
+    "salt_g": "180",
+    "water_kg": "1.25"
+   },
+   "status": "APPROVED (instructor, 21 Oct 2026)",
+   "difficulty": "3 (steps 4, conv 1)",
+   "nearest_eoc": "11.45 (with i; worked model: Example 11.13)",
+   "sim_predict": {
+    "right": "falls",
+    "options": [
+     "rises",
+     "falls",
+     "unchanged"
+    ],
+    "text": "If the crew spread twice as much of the same salt on the same ice, the freezing point of the brine"
+   },
+   "sim_reveal": "The page draws freezing point against grams of this salt in the problem's meltwater (from 0 °C) and marks: pure water at 0 °C; the student's freezing point at the problem's grams; the student's prediction for twice the salt, beside the page's own point for it.",
+   "sim_instrument": {
+    "control": "salt_g",
+    "reading": "Tf_readout",
+    "text": "Move `salt_g` until `Tf_readout` reads −10.0 °C. Report the mass, in grams, of salt the crew must dissolve in the problem's 1.25 kg of meltwater for the brine to stay liquid down to −10.0 °C (read from `salt_g`). Checked value: 250.5 g; accept any whole number of grams from 250 to 251 (the grams at which `Tf_readout` shows −10.0).",
+    "target": -10.0,
+    "target_unit": "°C",
+    "value": 250.5,
+    "unit": "g",
+    "abs_tol": 0.6
+   },
+   "sim_gap": "Where does your point sit against the line, and what about the particles dissolved in the meltwater would explain any distance between them?",
+   "sim_opens_at": "after sim_predict",
+   "exam_item": "not the exam scenario",
+   "companion": "RS4"
+  },
+  {
+   "id": "RS4",
+   "scenario": "The Salted Road",
+   "kind": "freezing",
+   "text": "A crew spreads 205 g of magnesium chloride (MgCl₂) on the ice on a bridge deck. The salt dissolves in 1.75 kg of meltwater. Assuming complete dissociation and ideal solution behavior, what is the freezing point of the brine? For water, K_f = 1.86 °C·kg/mol.",
+   "constants": "K_f (water) = 1.86 °C·kg/mol: OpenStax Chemistry 2e, Table 11.2 (also Appendix E). Molar masses from Appendix A: Na 22.99, K 39.10, Mg 24.31, Ca 40.08, Cl 35.45 g/mol (Cl from the table figure; the extracted text omits it). MgCl₂ = 95.21 g/mol. Ideal i = 3 (complete dissociation; ruling of 20 Oct).",
+   "expected": [
+    {
+     "state": "mol_found",
+     "label": "moles of MgCl₂",
+     "value": 2.15,
+     "unit": "mol",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "m_found",
+     "label": "molality",
+     "value": 1.23,
+     "unit": "mol/kg",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "i_found",
+     "label": "van 't Hoff factor",
+     "value": 3.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "dT_found",
+     "label": "freezing point lowering",
+     "value": 6.87,
+     "unit": "°C",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "T_found",
+     "label": "freezing point of the brine",
+     "value": -6.87,
+     "unit": "°C",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "I_OMITTED",
+     "state": "i_found",
+     "registry": "GC2-M-06",
+     "value": 1.0
+    },
+    {
+     "id": "I_OMITTED",
+     "state": "dT_found",
+     "registry": "GC2-M-06",
+     "value": 2.29
+    },
+    {
+     "id": "SOLUTION_MASS",
+     "state": "m_found",
+     "registry": "GC2-M-07",
+     "value": 1.1
+    },
+    {
+     "id": "GRAMS_FOR_MOLES",
+     "state": "m_found",
+     "value": 117.0
+    },
+    {
+     "id": "DT_SIGNED",
+     "state": "dT_found",
+     "value": -6.87
+    },
+    {
+     "id": "FP_SIGN",
+     "state": "T_found",
+     "registry": "GC2-M-08",
+     "value": 6.87
+    },
+    {
+     "id": "PERTURB_I_IGNORED",
+     "state": "perturb_1",
+     "pick": "unchanged"
+    },
+    {
+     "id": "SIM_PREDICT_SALT",
+     "state": "sim_predict",
+     "pick": "rises"
+    }
+   ],
+   "picks": {
+    "sim_predict": "falls",
+    "perturb_1": "rises"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "sim": {
+    "salt": "MgCl2",
+    "salt_g": "205",
+    "water_kg": "1.75"
+   },
+   "status": "APPROVED (instructor, 21 Oct 2026)",
+   "difficulty": "3 (steps 4, conv 1)",
+   "nearest_eoc": "11.45 (with i; worked model: Example 11.13)",
+   "sim_predict": {
+    "right": "falls",
+    "options": [
+     "rises",
+     "falls",
+     "unchanged"
+    ],
+    "text": "If the crew spread twice as much of the same salt on the same ice, the freezing point of the brine"
+   },
+   "sim_reveal": "The page draws freezing point against grams of this salt in the problem's meltwater (from 0 °C) and marks: pure water at 0 °C; the student's freezing point at the problem's grams; the student's prediction for twice the salt, beside the page's own point for it.",
+   "sim_instrument": {
+    "control": "salt_g",
+    "reading": "Tf_readout",
+    "text": "Move `salt_g` until `Tf_readout` reads −10.0 °C. Report the mass, in grams, of salt the crew must dissolve in the problem's 1.75 kg of meltwater for the brine to stay liquid down to −10.0 °C (read from `salt_g`). Checked value: 298.6 g; accept any whole number of grams from 298 to 300 (the grams at which `Tf_readout` shows −10.0).",
+    "target": -10.0,
+    "target_unit": "°C",
+    "value": 299.0,
+    "unit": "g",
+    "abs_tol": 1.1
+   },
+   "sim_gap": "Where does your point sit against the line, and what about the particles dissolved in the meltwater would explain any distance between them?",
+   "sim_opens_at": "after sim_predict",
+   "exam_item": "not the exam scenario",
+   "companion": "RS3"
+  },
+  {
+   "id": "RS5",
+   "scenario": "The Salted Road",
+   "kind": "freezing",
+   "text": "A crew spreads 160 g of sodium chloride (NaCl) on the ice on a parking lot. The salt dissolves in 1.10 kg of meltwater. Assuming complete dissociation and ideal solution behavior, what is the freezing point of the brine? For water, K_f = 1.86 °C·kg/mol.",
+   "constants": "K_f (water) = 1.86 °C·kg/mol: OpenStax Chemistry 2e, Table 11.2 (also Appendix E). Molar masses from Appendix A: Na 22.99, K 39.10, Mg 24.31, Ca 40.08, Cl 35.45 g/mol (Cl from the table figure; the extracted text omits it). NaCl = 58.44 g/mol. Ideal i = 2 (complete dissociation; ruling of 20 Oct).",
+   "expected": [
+    {
+     "state": "mol_found",
+     "label": "moles of NaCl",
+     "value": 2.74,
+     "unit": "mol",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "m_found",
+     "label": "molality",
+     "value": 2.49,
+     "unit": "mol/kg",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "i_found",
+     "label": "van 't Hoff factor",
+     "value": 2.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "dT_found",
+     "label": "freezing point lowering",
+     "value": 9.26,
+     "unit": "°C",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "T_found",
+     "label": "freezing point of the brine",
+     "value": -9.26,
+     "unit": "°C",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "I_OMITTED",
+     "state": "i_found",
+     "registry": "GC2-M-06",
+     "value": 1.0
+    },
+    {
+     "id": "I_OMITTED",
+     "state": "dT_found",
+     "registry": "GC2-M-06",
+     "value": 4.63
+    },
+    {
+     "id": "SOLUTION_MASS",
+     "state": "m_found",
+     "registry": "GC2-M-07",
+     "value": 2.17
+    },
+    {
+     "id": "GRAMS_FOR_MOLES",
+     "state": "m_found",
+     "value": 145.0
+    },
+    {
+     "id": "DT_SIGNED",
+     "state": "dT_found",
+     "value": -9.26
+    },
+    {
+     "id": "FP_SIGN",
+     "state": "T_found",
+     "registry": "GC2-M-08",
+     "value": 9.26
+    },
+    {
+     "id": "PERTURB_I_IGNORED",
+     "state": "perturb_1",
+     "pick": "unchanged"
+    },
+    {
+     "id": "SIM_PREDICT_SALT",
+     "state": "sim_predict",
+     "pick": "rises"
+    }
+   ],
+   "picks": {
+    "sim_predict": "falls",
+    "perturb_1": "falls"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "sim": {
+    "salt": "NaCl",
+    "salt_g": "160",
+    "water_kg": "1.10"
+   },
+   "status": "APPROVED (instructor, 21 Oct 2026)",
+   "difficulty": "3 (steps 4, conv 1)",
+   "nearest_eoc": "11.45 (with i; worked model: Example 11.13)",
+   "sim_predict": {
+    "right": "falls",
+    "options": [
+     "rises",
+     "falls",
+     "unchanged"
+    ],
+    "text": "If the crew spread twice as much of the same salt on the same ice, the freezing point of the brine"
+   },
+   "sim_reveal": "The page draws freezing point against grams of this salt in the problem's meltwater (from 0 °C) and marks: pure water at 0 °C; the student's freezing point at the problem's grams; the student's prediction for twice the salt, beside the page's own point for it.",
+   "sim_instrument": {
+    "control": "salt_g",
+    "reading": "Tf_readout",
+    "text": "Move `salt_g` until `Tf_readout` reads −10.0 °C. Report the mass, in grams, of salt the crew must dissolve in the problem's 1.1 kg of meltwater for the brine to stay liquid down to −10.0 °C (read from `salt_g`). Checked value: 172.8 g; accept any whole number of grams from 172 to 173 (the grams at which `Tf_readout` shows −10.0).",
+    "target": -10.0,
+    "target_unit": "°C",
+    "value": 172.5,
+    "unit": "g",
+    "abs_tol": 0.6
+   },
+   "sim_gap": "Where does your point sit against the line, and what about the particles dissolved in the meltwater would explain any distance between them?",
+   "sim_opens_at": "after sim_predict",
+   "exam_item": "not the exam scenario",
+   "companion": "RS1"
+  },
+  {
+   "id": "RS6",
+   "scenario": "The Salted Road",
+   "kind": "freezing",
+   "text": "A crew spreads 235 g of calcium chloride (CaCl₂) on the ice on a porch steps. The salt dissolves in 1.40 kg of meltwater. Assuming complete dissociation and ideal solution behavior, what is the freezing point of the brine? For water, K_f = 1.86 °C·kg/mol.",
+   "constants": "K_f (water) = 1.86 °C·kg/mol: OpenStax Chemistry 2e, Table 11.2 (also Appendix E). Molar masses from Appendix A: Na 22.99, K 39.10, Mg 24.31, Ca 40.08, Cl 35.45 g/mol (Cl from the table figure; the extracted text omits it). CaCl₂ = 110.98 g/mol. Ideal i = 3 (complete dissociation; ruling of 20 Oct).",
+   "expected": [
+    {
+     "state": "mol_found",
+     "label": "moles of CaCl₂",
+     "value": 2.12,
+     "unit": "mol",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "m_found",
+     "label": "molality",
+     "value": 1.51,
+     "unit": "mol/kg",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "i_found",
+     "label": "van 't Hoff factor",
+     "value": 3.0,
+     "unit": "",
+     "half_ulp": 0.5
+    },
+    {
+     "state": "dT_found",
+     "label": "freezing point lowering",
+     "value": 8.44,
+     "unit": "°C",
+     "half_ulp": 0.005
+    },
+    {
+     "state": "T_found",
+     "label": "freezing point of the brine",
+     "value": -8.44,
+     "unit": "°C",
+     "half_ulp": 0.005
+    }
+   ],
+   "traps": [
+    {
+     "id": "I_OMITTED",
+     "state": "i_found",
+     "registry": "GC2-M-06",
+     "value": 1.0
+    },
+    {
+     "id": "I_OMITTED",
+     "state": "dT_found",
+     "registry": "GC2-M-06",
+     "value": 2.81
+    },
+    {
+     "id": "SOLUTION_MASS",
+     "state": "m_found",
+     "registry": "GC2-M-07",
+     "value": 1.3
+    },
+    {
+     "id": "GRAMS_FOR_MOLES",
+     "state": "m_found",
+     "value": 168.0
+    },
+    {
+     "id": "DT_SIGNED",
+     "state": "dT_found",
+     "value": -8.44
+    },
+    {
+     "id": "FP_SIGN",
+     "state": "T_found",
+     "registry": "GC2-M-08",
+     "value": 8.44
+    },
+    {
+     "id": "PERTURB_I_IGNORED",
+     "state": "perturb_1",
+     "pick": "unchanged"
+    },
+    {
+     "id": "SIM_PREDICT_SALT",
+     "state": "sim_predict",
+     "pick": "rises"
+    }
+   ],
+   "picks": {
+    "sim_predict": "falls",
+    "perturb_1": "rises"
+   },
+   "coeffs": null,
+   "tolerance": "",
+   "sim": {
+    "salt": "CaCl2",
+    "salt_g": "235",
+    "water_kg": "1.40"
+   },
+   "status": "APPROVED (instructor, 21 Oct 2026)",
+   "difficulty": "3 (steps 4, conv 1)",
+   "nearest_eoc": "11.45 (with i; worked model: Example 11.13)",
+   "sim_predict": {
+    "right": "falls",
+    "options": [
+     "rises",
+     "falls",
+     "unchanged"
+    ],
+    "text": "If the crew spread twice as much of the same salt on the same ice, the freezing point of the brine"
+   },
+   "sim_reveal": "The page draws freezing point against grams of this salt in the problem's meltwater (from 0 °C) and marks: pure water at 0 °C; the student's freezing point at the problem's grams; the student's prediction for twice the salt, beside the page's own point for it.",
+   "sim_instrument": {
+    "control": "salt_g",
+    "reading": "Tf_readout",
+    "text": "Move `salt_g` until `Tf_readout` reads −10.0 °C. Report the mass, in grams, of salt the crew must dissolve in the problem's 1.4 kg of meltwater for the brine to stay liquid down to −10.0 °C (read from `salt_g`). Checked value: 278.4 g; accept any whole number of grams from 278 to 279 (the grams at which `Tf_readout` shows −10.0).",
+    "target": -10.0,
+    "target_unit": "°C",
+    "value": 278.5,
+    "unit": "g",
+    "abs_tol": 0.6
+   },
+   "sim_gap": "Where does your point sit against the line, and what about the particles dissolved in the meltwater would explain any distance between them?",
+   "sim_opens_at": "after sim_predict",
+   "exam_item": "not the exam scenario",
+   "companion": "RS2"
+  }
+ ]
+}

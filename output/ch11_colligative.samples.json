@@ -1,0 +1,17 @@
+{
+ "openers": {
+  "The Salted Road": "STRONG (clears): The salt ions get in the way so fewer water molecules hit the ice and refreeze, but melting keeps going, so it has to get colder before the rates match again. || WEAK AT NUMBERS (clears): the ions kind of dilute the water so less of it can freeze back onto the ice while ice still melts || WEAK AT CONCEPTS (refused): salt lowers the freezing point"
+ },
+ "moves": {
+  "account_given": "(see the opener row)",
+  "mol_found": "STRONG (clears): Each formula unit has one calcium and two chlorines, so I add their atomic masses to get the grams per mole. || WEAK AT NUMBERS (clears): the molar mass from the periodic table || WEAK AT CONCEPTS (refused): you divide it",
+  "m_found": "STRONG (clears): The ions are spread through the water, so I divide by the kilograms of water only, not the whole brine. || WEAK AT NUMBERS (clears): it's moles over the kg of the water || WEAK AT CONCEPTS (refused): molarity",
+  "i_found": "STRONG (clears): CaCl2 comes apart into one Ca2+ and two Cl- ions, so each formula unit gives three particles. || WEAK AT NUMBERS (clears): it splits into ions, like 3 of them || WEAK AT CONCEPTS (refused): it's an electrolyte",
+  "dT_found": "STRONG (clears): It depends on all the ions in each kilogram of water, so I use the particle count, not just the salt. || WEAK AT NUMBERS (clears): the particles not the salt || WEAK AT CONCEPTS (refused): Kf times m",
+  "T_found": "STRONG (clears): Fewer water molecules refreeze, so it has to get colder than 0 for the rates to match, so it's negative. || WEAK AT NUMBERS (clears): it has to be below zero || WEAK AT CONCEPTS (refused): freezing point depression",
+  "sim_predict": "STRONG (clears): Twice the ions in the same water, so even fewer water molecules get back to the ice and it has to get colder, so it falls. || WEAK AT NUMBERS (clears): more ions so it goes lower || WEAK AT CONCEPTS (refused): it melts faster",
+  "perturb_1": "STRONG (clears): CaCl2 gives three ions and NaCl two, so the same moles of CaCl2 put more particles in the water and the freezing point falls further. || WEAK AT NUMBERS (clears): calcium chloride makes more ions so lower || WEAK AT CONCEPTS (refused): they're both salts so it's the same",
+  "perturb_1_why": "STRONG (clears): With more ions crowding the liquid, fewer water molecules get back onto the ice, so it has to be colder to balance the melting. || WEAK AT NUMBERS (clears): more ions so less refreezing || WEAK AT CONCEPTS (refused): because of the van 't Hoff factor",
+  "meaning_given": "STRONG (clears): The ions keep enough water molecules away from the ice that refreezing only catches up with melting at this lower temperature, so above it the ice keeps melting. || WEAK AT NUMBERS (clears): the ions block the water from refreezing so it stays liquid until it gets that cold || WEAK AT CONCEPTS (refused): it's below the freezing point"
+ }
+}

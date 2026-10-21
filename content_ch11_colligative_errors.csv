@@ -1,0 +1,8 @@
+﻿error id,registry id,at state,note (what the tutor is told),ask (one question; never names the fix),status
+I_OMITTED,GC2-M-06,i_found; dT_found,"They counted the salt as one particle (i = 1), or left i out of ΔT_f = i K_f m.","When one formula unit of this salt dissolves, does it stay together as one particle, or come apart? How many particles does it release?","APPROVED (instructor, 21 Oct 2026)"
+SOLUTION_MASS,GC2-M-07,m_found,"They divided by the mass of the whole brine (salt plus water), not the water alone.","Molality counts moles per kilogram of what: the whole brine, or only the solvent?","APPROVED (instructor, 21 Oct 2026)"
+GRAMS_FOR_MOLES,,m_found,They put grams of salt where moles belong in the molality.,Molality counts moles. What is the number you put on top: grams or moles?,"APPROVED (instructor, 21 Oct 2026)"
+FP_SIGN,GC2-M-08,T_found,"The brine's freezing point came out above 0 °C: the lowering was added, not subtracted.",Look at your freezing point beside pure water's. Does dissolving salt move it higher or lower?,"APPROVED (instructor, 21 Oct 2026)"
+PERTURB_I_IGNORED,GC2-M-06,perturb_1,They picked unchanged: equal moles of salt treated as equal particles.,Write both formulas. Does one mole of each put the same number of particles into the water?,"APPROVED (instructor, 21 Oct 2026)"
+SIM_PREDICT_SALT,,sim_predict,They picked rises for twice the salt.,"With twice the salt in the same water, are there more or fewer ions in each kilogram?","APPROVED (instructor, 21 Oct 2026)"
+DT_SIGNED,GC2-M-08,dT_found,They typed the lowering as a negative number; the step asks for the size of the lowering.,"The step asks by how many degrees the freezing point falls. Is that a size, or a new temperature?","APPROVED (instructor, 21 Oct 2026)"

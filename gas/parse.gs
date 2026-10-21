@@ -37,7 +37,10 @@ function parseNumbers(msg) {
     var x = parseFloat(m[1].replace(/,/g, ""));
     if (m[2]) x = x * Math.pow(10, parseInt(m[2], 10));
     if (!isFinite(x)) continue;
-    out.push({ x: x, unit: m[3] ? UNITS.canon(m[3]) : null });
+    // the student's own precision (instructor, 21 Oct): decimals written, adjusted for an exponent, and significant figures typed
+    var mant = m[1].replace(/,/g, "").replace(/^[-+]/, ""), dec = mant.indexOf(".") > -1 ? mant.split(".")[1].length : 0, ex = m[2] ? parseInt(m[2], 10) : 0;
+    var digits = mant.replace(".", "").replace(/^0+/, ""), sig = digits.length;
+    out.push({ x: x, unit: m[3] ? UNITS.canon(m[3]) : null, dec: dec - ex, sig: sig });
   }
   return out;
 }
@@ -76,6 +79,13 @@ function openerCoverage(text, opener, arch) {
   // label words are removed before the mechanism count, so "evaporates" does not count as the mechanism word "vapor"
   var labels = 0, rest = low; (opener.label_words || []).forEach(function (w) { var lw = w.toLowerCase(); if (rest.indexOf(lw) > -1) { labels++; rest = rest.split(lw).join(" "); } });
   var mech = 0; MECHANISM.forEach(function (w) { if (rest.indexOf(w) > -1) mech++; });
+  // brief 32 (21 Oct): an opener may carry two lists, particle words (keywords) and mechanism words; then one hit from each is the gate
+  if (opener.mechanism && opener.mechanism.length) {
+    var mech2 = 0; opener.mechanism.forEach(function (k) {
+      var kw = k.toLowerCase().trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, "\\s+"); if (/e$/.test(kw)) kw = kw.slice(0, -1) + "e?";
+      if (kw && new RegExp("(^|[^a-z0-9])" + kw + "(e?s|d|ed|ing)?($|[^a-z0-9])").test(rest)) mech2++; });
+    return { hits: hits, mech: mech2, labels: labels, labelOnly: labels > 0 && mech2 === 0 && hits === 0, noMechanism: hits > 0 && mech2 === 0, engaged: hits > 0 && mech2 > 0 };
+  }
   // a label word (volatile, evaporates) with no mechanism word names the phenomenon without saying what particles do: not an account
   var labelOnly = labels > 0 && mech === 0;
   return { hits: hits, mech: mech, labels: labels, labelOnly: labelOnly, engaged: !labelOnly && (hits > 0 || mech >= 2) };

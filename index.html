@@ -77,6 +77,7 @@
   <select id="kind" aria-label="Problem kind (testing)"><option value="">any kind</option></select>
   <select id="opener" aria-label="Scenario (testing)"><option value="">any scenario</option></select>
   <select id="rung" aria-label="Rung (preview)" style="display:none"><option value="faded">Faded</option><option value="worked">Worked</option><option value="independent">Independent</option></select>
+  <select id="policy" aria-label="Help policy (preview)" style="display:none" title="What follows the pivot question on the third wrong try"><option value="B">Help B: companion, then notebook</option><option value="A">Help A: notebook</option><option value="C">Help C: step done for them</option></select>
   <button id="newBtn">New problem</button>
   <a id="nbLink" class="quiet" target="_blank" rel="noopener" style="color:var(--teal);font-size:14px">Notebook</a>
   <button class="quiet" id="setBtn" aria-label="Connection settings">Settings</button>
@@ -129,6 +130,8 @@
         <textarea id="box" placeholder="Press New problem to begin" disabled aria-label="Your message"></textarea>
       </div>
       <button id="sendBtn" disabled>Send</button>
+      <button class="quiet" id="helpBtn" disabled title="The next kind of help for this step; it counts as a try">More help</button>
+      <button class="quiet" id="infoBtn" disabled title="The textbook passage for this step, and a prompt for the course notebook">More info</button>
     </div>
   </section>
 </main>
@@ -150,7 +153,7 @@ const store = { get:k=>{try{return localStorage.getItem(k)||""}catch(e){return "
 const DEBUG = /[?&]debug=1/.test(location.search);
 const PRESET = (typeof V3_CONFIG === "object" && V3_CONFIG) || {};   // a hosted copy may ship config.js with the web app URL and token, so a student never sees the settings box (15 Oct)
 let cfg = { url: store.get("v3_url") || PRESET.url || "", token: store.get("v3_token") || PRESET.token || "" };
-let sessionId = "", history = [], busy = false, away = false, simEvents = [], fit = null, charts = {}, probeUse = null;
+let sessionId = "", history = [], busy = false, away = false, simEvents = [], fit = null, charts = {}, probeUse = null, doneShown = false;
 
 // ---------- talking to the server ----------
 async function call(payload) {
@@ -172,7 +175,7 @@ function renderMath(el, force) {   // tutor text and the problem panel only; the
   if ((!force && !el.classList.contains("tutor")) || typeof renderMathInElement !== "function") return;
   try { renderMathInElement(el, { delimiters: [{ left: "\\(", right: "\\)", display: false }, { left: "\\[", right: "\\]", display: true }], throwOnError: false }); } catch (e) {}
 }
-function setBusy(b) { busy = b; $("sendBtn").disabled = b || away || !sessionId; $("box").disabled = b || away || !sessionId; $("newBtn").disabled = b; }
+function setBusy(b) { busy = b; const off = b || away || !sessionId; $("sendBtn").disabled = off; $("box").disabled = off; $("newBtn").disabled = b; $("helpBtn").disabled = off || doneShown; $("infoBtn").disabled = off; }
 function meter(p) { if (!p) { $("meter").innerHTML = ""; $("doneCard").style.display = "none"; return; } let h = ""; for (let i = 0; i < p.of; i++) h += `<i class="${i < p.done ? "on" : ""}"></i>`; $("meter").innerHTML = h + `<span style="margin-left:6px">${p.done} of ${p.of}</span>`;
   const L = p.labels || []; $("doneCard").style.display = L.length ? "block" : "none"; $("doneList").innerHTML = ""; L.forEach(t => { const li = document.createElement("li"); li.textContent = t; $("doneList").appendChild(li); }); }
 // choices the server offers for the active item (approach, method, prediction): buttons under the reply
@@ -204,6 +207,7 @@ function handle(res, echo) {
   meter(res.progress); showPinned(res.pinned, res.pins); showChoices(res.choices);
   if (res.sim) openSim(res.sim);
   if (res.card) showCard(res.card);
+  if (res.info) showInfo(res.info);
   if (res.done && !doneShown) { doneShown = true; add("note", res.credit ? "Problem complete. Clean run recorded." : "Problem complete. Recorded without credit for this attempt; a new problem is a fresh start."); $("box").placeholder = "Press New problem for another"; }
 }
 
@@ -212,7 +216,7 @@ async function send(extra, forced) {
   if (text) { add("me", text); $("box").value = ""; }
   flushProbe(); setBusy(true);
   // two phases: the verdict renders at once (checked labels, pins, meter, card); the sentence follows when the model is done
-  const echo = text || (extra && extra.pick ? "[picked: " + extra.pick + "]" : "");
+  const echo = text || (extra && extra.pick ? "[picked: " + extra.pick + "]" : extra && extra.help ? "[more help]" : extra && extra.info ? "[more info]" : "");
   const a = await call(Object.assign({ action: "verdict", message: text, history, simEvents }, extra || {})); simEvents = [];
   if (a && !a.error && a.needs_say) {
     handle(a, echo); if (a.checked && a.checked.length) add("note", "Checked: " + a.checked.join(", ") + ".");
@@ -225,7 +229,6 @@ async function send(extra, forced) {
   setBusy(false); $("box").focus();
 }
 
-let doneShown = false;
 // the offer after a worked problem (instructor, 12 Oct): yes starts the second worked problem on the same liquid; no leaves it
 function showOffer(offer) {
   if (!offer) return;
@@ -239,7 +242,7 @@ async function newProblem(want) {
   sessionId = "S" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); history = []; away = false; fit = null;
   $("log").innerHTML = ""; $("problemText").className = "veil"; $("givens").textContent = ""; $("eqBtn").disabled = true; showPinned(null); showChoices(null); $("plotCard").style.display = "none"; $("probe").style.display = "none"; $("openerImg").style.display = "none"; $("openerVid").style.display = "none"; $("openerVid").removeAttribute("src"); $("openerCredit").style.display = "none"; $("simCard").style.display = "none"; $("simFrame").src = "about:blank";
   $("problemText").textContent = "The problem is not on screen yet. First answer the question in the chat about what the particles are doing. Then it appears here.";
-  setBusy(true); const res = await call({ action: "start", kind: $("kind").value, opener: $("opener").value, want: (want && want.extra) ? want : null }); setBusy(false);
+  setBusy(true); const res = await call({ action: "start", kind: $("kind").value, opener: $("opener").value, want: (want && want.extra) ? want : null, policy: PRESET.preview ? $("policy").value : undefined }); setBusy(false);
   if (res && res.error) { add("note", res.error); return; }
   $("box").placeholder = "Say what the particles are doing…"; handle(res); $("box").focus();
 }
@@ -312,6 +315,29 @@ function moveProbe(countIt) {
 }
 function flushProbe() { if (probeUse) { probeUse.seconds = Math.round((Date.now() - probeUse.t0) / 1000); delete probeUse.t0; simEvents.push(probeUse); probeUse = null; } }
 
+// ---------- More info (brief 32, 21 Oct): the textbook passage for the step, and the notebook prompt as a second step ----------
+function showInfo(info) {
+  const d = document.createElement("div"); d.className = "msg nb";
+  const h = document.createElement("strong"); h.textContent = info.title ? "From the textbook: " + info.title : "From the textbook"; d.appendChild(h);
+  if (info.ref) { const r = document.createElement("div"); r.style.fontSize = "13px"; r.style.opacity = "0.8"; r.textContent = "OpenStax Chemistry 2e, " + info.ref; d.appendChild(r); }
+  const body = document.createElement("div"); body.style.whiteSpace = "pre-wrap"; body.style.marginTop = "8px"; body.textContent = info.text || "No passage is anchored to this step."; d.appendChild(body);
+  if (info.prompt) {
+    const row = document.createElement("div"); row.className = "row"; row.style.marginTop = "8px";
+    const c = document.createElement("button"); c.type = "button"; c.className = "quiet"; c.textContent = "Go deeper in the notebook: copy a prompt";
+    c.onclick = () => { navigator.clipboard && navigator.clipboard.writeText(info.prompt); c.textContent = "Prompt copied. Open the Notebook link above and paste it."; };
+    row.appendChild(c); d.appendChild(row);
+  }
+  $("log").appendChild(d); renderMath(d); $("log").scrollTop = 1e9;
+}
+$("helpBtn").onclick = () => send({ help: true });
+$("infoBtn").onclick = () => send({ info: true });
+// the simulation page reports what the student does (contract 34): accepted only from the simulation frame, sent with the next turn
+window.addEventListener("message", ev => {
+  const f = $("simFrame"); if (!f || !f.contentWindow || ev.source !== f.contentWindow) return;
+  const m = ev.data; if (!m || m.type !== "sim" || m.v !== 1) return;
+  if (simEvents.length < 40) simEvents.push(m);
+});
+
 // ---------- the notebook card ----------
 function showCard(card) {
   away = true; setBusy(false);
@@ -346,7 +372,7 @@ async function fillMenus() {
     $("arch").onchange = kinds; kinds(); } catch (e) { }
 }
 if (PRESET.preview) {   // a faculty preview (15 Oct): a banner, the rung menu, and a comment link that carries the build, the problem and the session
-  const p = PRESET.preview; $("previewBar").style.display = "block"; $("previewLabel").textContent = p.label || "Preview build for faculty review. Not for students."; $("rung").style.display = "";
+  const p = PRESET.preview; $("previewBar").style.display = "block"; $("previewLabel").textContent = p.label || "Preview build for faculty review. Not for students."; $("rung").style.display = ""; $("policy").style.display = "";
   $("studentId").placeholder = "Your name";
   $("cmtSend").onclick = async () => { const txt = $("cmtBox").value.trim(); if (!txt) return; $("cmtSend").disabled = true;
     try { const r = await call({ action: "comment", message: txt, about: { last_reply: (window.__lastReply || "").slice(0, 300), problem: window.__lastProblem || "", rung: $("rung").value, page: location.href } });

@@ -145,5 +145,11 @@
   "U-235",
   "U-238",
   "Zn-64"
+ ],
+ "freezing_point_salts": [
+  "NaCl",
+  "KCl",
+  "CaCl2",
+  "MgCl2"
  ]
 }

@@ -1,0 +1,3075 @@
+{
+ "contract": 3,
+ "archetype_id": "ch11_colligative",
+ "title": "Freezing point depression: why salt melts ice, and by how many degrees",
+ "relation": "ΔT_f = i K_f m; T_f(solution) = T_f(solvent) − ΔT_f; m = moles of solute per kilogram of solvent; i = ions per formula unit",
+ "notebook_url": "https://notebook.google.com/notebook/6458f208-db32-496a-8088-fe0c1c6cd539",
+ "kinds": [
+  "freezing"
+ ],
+ "mechanism_words": [
+  "ion",
+  "molecule",
+  "block",
+  "crowd",
+  "interfer",
+  "dilut",
+  "space",
+  "fewer",
+  "reach",
+  "disrupt",
+  "slow",
+  "rate",
+  "freez",
+  "melt",
+  "surface",
+  "rejoin",
+  "refreez"
+ ],
+ "equation_picks": [
+  {
+   "id": "eq_dTf",
+   "text": "\\( \\Delta T_f = i\\,K_f\\,m \\)",
+   "fits": [
+    "freezing"
+   ]
+  },
+  {
+   "id": "eq_molality",
+   "text": "\\( m = \\dfrac{\\text{moles of solute}}{\\text{kilograms of solvent}} \\)",
+   "fits": [
+    "freezing"
+   ]
+  },
+  {
+   "id": "eq_Tf",
+   "text": "\\( T_f = 0\\ ^\\circ\\text{C} - \\Delta T_f \\)",
+   "fits": [
+    "freezing"
+   ]
+  }
+ ],
+ "trap_notes": {
+  "I_OMITTED": {
+   "note": "They counted the salt as one particle (i = 1), or left i out of ΔT_f = i K_f m.",
+   "ask": "When one formula unit of this salt dissolves, does it stay together as one particle, or come apart? How many particles does it release?",
+   "registry": "GC2-M-06"
+  },
+  "SOLUTION_MASS": {
+   "note": "They divided by the mass of the whole brine (salt plus water), not the water alone.",
+   "ask": "Molality counts moles per kilogram of what: the whole brine, or only the solvent?",
+   "registry": "GC2-M-07"
+  },
+  "GRAMS_FOR_MOLES": {
+   "note": "They put grams of salt where moles belong in the molality.",
+   "ask": "Molality counts moles. What is the number you put on top: grams or moles?"
+  },
+  "FP_SIGN": {
+   "note": "The brine's freezing point came out above 0 °C: the lowering was added, not subtracted.",
+   "ask": "Look at your freezing point beside pure water's. Does dissolving salt move it higher or lower?",
+   "registry": "GC2-M-08"
+  },
+  "PERTURB_I_IGNORED": {
+   "note": "They picked unchanged: equal moles of salt treated as equal particles.",
+   "ask": "Write both formulas. Does one mole of each put the same number of particles into the water?",
+   "registry": "GC2-M-06"
+  },
+  "SIM_PREDICT_SALT": {
+   "note": "They picked rises for twice the salt.",
+   "ask": "With twice the salt in the same water, are there more or fewer ions in each kilogram?"
+  },
+  "DT_SIGNED": {
+   "note": "They typed the lowering as a negative number; the step asks for the size of the lowering.",
+   "ask": "The step asks by how many degrees the freezing point falls. Is that a size, or a new temperature?",
+   "registry": "GC2-M-08"
+  }
+ },
+ "trap_notes_by_opener": {},
+ "equation_symbols": {
+  "m": [
+   "m",
+   "molality"
+  ],
+  "i": [
+   "i"
+  ],
+  "Kf": [
+   "Kf",
+   "K_f"
+  ],
+  "dT": [
+   "ΔT",
+   "dT",
+   "ΔTf",
+   "dTf"
+  ]
+ },
+ "equation_constants": {
+  "Kf": 1.86
+ },
+ "openers": [
+  {
+   "title": "The Salted Road",
+   "question": "The picture shows a road at −5 °C: bare ice where no salt fell, slush where it did. How do the dissolved Na⁺ and Cl⁻ ions change the exchange of water molecules between the ice and the liquid, and why does that lower the freezing point?",
+   "model_answer": "Normally, ice and liquid water exist in dynamic equilibrium at the freezing point, with molecules freezing and melting at equal rates. When salt is added, the dissolved Na⁺ and Cl⁻ ions essentially dilute the liquid water. Because these ions take up space, fewer liquid water molecules can reach the ice surface to refreeze, yet the ice continues melting at its usual pace. This imbalance causes a net melting effect, turning the solid ice into slush. To stop the melting and restore equilibrium, the temperature must drop even lower to slow the melting rate until it matches the reduced refreezing rate.",
+   "target": "At the freezing point, melting and freezing occur at equal rates; dissolved solute particles lower the freezing rate, so the freezing point falls.",
+   "keywords": [
+    "ions",
+    "ion",
+    "sodium ions",
+    "chloride ions",
+    "salt ions",
+    "water molecules",
+    "molecules",
+    "solvent molecules",
+    "particles"
+   ],
+   "mechanism": [
+    "block",
+    "blocks",
+    "blocking",
+    "in the way",
+    "crowd",
+    "crowds",
+    "interfere",
+    "interferes",
+    "dilute",
+    "dilutes",
+    "diluted",
+    "take up space",
+    "fewer",
+    "keep away",
+    "reach",
+    "disrupt",
+    "disrupts",
+    "slow",
+    "slower",
+    "rate",
+    "rates"
+   ],
+   "liquids": [
+    "RS1",
+    "RS2",
+    "RS3",
+    "RS4",
+    "RS5",
+    "RS6"
+   ],
+   "kinds": [
+    "freezing"
+   ],
+   "fits": [
+    "RS1",
+    "RS2",
+    "RS3",
+    "RS4",
+    "RS5",
+    "RS6"
+   ],
+   "media": {
+    "image_with_question": "ch11_colligative/salted_road.jpg",
+    "image_after_account": "",
+    "image_alt": "A winter road between snowy hills. The near lane is glazed with bare ice; the far lane is grey slush strewn with white salt crystals. On the shoulder, an open sack labeled Rock Salt spills crystals onto the snow. A roadside thermometer reads minus 5 degrees Celsius.",
+    "simulation": "ch11/freezing_point_simulator.html?salt={salt}&salt_g={salt_g}&water_kg={water_kg}&theme={theme}",
+    "simulation_opens": "meaning",
+    "credit": ""
+   },
+   "label_words": [
+    "freezing point depression",
+    "colligative property",
+    "antifreeze",
+    "de-icing"
+   ],
+   "role": "floater",
+   "items": {
+    "add": [],
+    "remove": []
+   },
+   "wrong_accounts": [
+    {
+     "id": "SALT_HEATS",
+     "registry": "",
+     "account": "the salt warms or heats the ice",
+     "repair": "Nothing here is heated; the road stays at −5 °C. At the ice surface, which molecules leave the ice, and which arrive?"
+    },
+    {
+     "id": "LAW_NAME",
+     "registry": "",
+     "account": "\"freezing point depression\" / \"colligative property\", the name of a law or property in place of an account",
+     "repair": "That names what happens. What are the water molecules and the ions doing at the ice surface to make it happen?"
+    },
+    {
+     "id": "MACRO_ONLY",
+     "registry": "",
+     "account": "the salt lowers the freezing point, so the ice melts (a macroscopic restatement)",
+     "repair": "That is true of the road. Look closer: at the ice surface, which molecules leave the ice, and which return to it?"
+    },
+    {
+     "id": "SALT_BREAKS_WATER",
+     "registry": "nearest GC2-M-01",
+     "account": "the salt breaks the water molecules apart, or reacts with the ice",
+     "repair": "When ice melts, do water molecules come apart, or do they only leave the solid? What do the ions change about that?"
+    }
+   ]
+  }
+ ],
+ "moves": {
+  "account_given": {
+   "state": "account_given",
+   "stage": "opening",
+   "label_when_done": "Particle account given",
+   "switch_ask": "Picture the ice surface at the edge of the slush. Which water molecules are leaving the ice, which are joining it, and what do the dissolved ions do to the ones that would join it?",
+   "notebook_prompt": "I am learning why salt melts ice below 0 °C. Explain what water molecules do at the surface between ice and liquid water, and how dissolved ions change it. Use a solute other than a salt. Do not solve any problem for me. Then ask me one short question and wait for my answer.",
+   "return_ask": "In your own words, what happens at the ice surface once ions are in the liquid?",
+   "park_text": "At 0 °C, water molecules leave the ice and rejoin it at the same rate. Dissolved ions mean fewer water molecules reach the ice to rejoin it, while melting goes on. The ice melts until a lower temperature slows the melting to match.",
+   "openstax": "11.4, Freezing Point Depression (Figure 11.21)",
+   "status": "APPROVED (instructor, 21 Oct 2026)"
+  },
+  "mol_found": {
+   "state": "mol_found",
+   "stage": "compute",
+   "label_when_done": "Moles of salt found",
+   "ask": "Step 1: how many moles of the salt were spread? Type the number with its unit.",
+   "switch_ask": "What does one mole of this salt weigh? Build it from the periodic table.",
+   "notebook_prompt": "Explain how to turn a mass of an ionic compound into moles, using its formula and the periodic table. Use a compound other than mine. Do not solve my problem. Then ask me one short question and wait for my answer.",
+   "return_ask": "What did you learn about turning grams into moles?",
+   "park_text": "Moles = grams ÷ molar mass. The molar mass adds the atomic masses in one formula unit.",
+   "pivot_question": "Before the number: the salt is a pile of formula units. What tells you how many grams one mole of those formula units weighs?",
+   "pivot_keywords": "formula, formula unit, molar mass, atomic mass, atomic masses, periodic table, mole, moles, grams, weigh, weighs, add",
+   "openstax": "11.4, Example 11.13 (step 1)",
+   "status": "APPROVED (instructor, 21 Oct 2026)"
+  },
+  "m_found": {
+   "state": "m_found",
+   "stage": "compute",
+   "label_when_done": "Molality found",
+   "ask": "Step 2: what is the molality of the salt in the meltwater? Type it in mol/kg.",
+   "switch_ask": "Molality counts moles of solute per kilogram of what?",
+   "notebook_prompt": "Explain molality and how it differs from molarity, and why freezing point uses molality. Use an example other than mine. Do not solve my problem. Then ask me one short question and wait for my answer.",
+   "return_ask": "What did you learn about molality?",
+   "park_text": "Molality = moles of solute ÷ kilograms of solvent (the water alone, not the whole brine).",
+   "pivot_question": "Before the number: what is dissolved in what, and which of the two do the particles that lower the freezing point care about, the solvent's mass or the solution's volume?",
+   "pivot_keywords": "solvent, water, kilograms, kilogram, mass, molality, per kilogram, not volume, just the water",
+   "openstax": "11.4, Example 11.4 (molality)",
+   "status": "APPROVED (instructor, 21 Oct 2026)"
+  },
+  "i_found": {
+   "state": "i_found",
+   "stage": "compute",
+   "label_when_done": "Van 't Hoff factor found",
+   "ask": "Step 3: how many dissolved particles does one formula unit of this salt give? Type the number.",
+   "switch_ask": "Write the salt's formula. What ions does it break into in water?",
+   "notebook_prompt": "Explain the van 't Hoff factor: how dissolved ionic compounds release several particles per formula unit. Use compounds other than mine. Do not solve my problem. Then ask me one short question and wait for my answer.",
+   "return_ask": "What did you learn about counting dissolved particles?",
+   "park_text": "One formula unit of an ionic salt separates into its ions; i is the number of ions it releases.",
+   "pivot_question": "Before the number: when one formula unit of this salt dissolves, does it stay as one particle, or come apart? Into which ions?",
+   "pivot_keywords": "ions, ion, dissociate, dissociates, separate, separates, breaks apart, come apart, comes apart, splits, cation, anion, particles",
+   "openstax": "11.4, Colligative Properties of Electrolytes (Table 11.3)",
+   "status": "APPROVED (instructor, 21 Oct 2026)"
+  },
+  "dT_found": {
+   "state": "dT_found",
+   "stage": "compute",
+   "label_when_done": "Freezing point lowering found",
+   "ask": "Step 4: by how many degrees does the freezing point fall? Type the lowering as a positive number, in °C.",
+   "switch_ask": "Which three numbers multiply to give the lowering?",
+   "notebook_prompt": "Explain how the freezing point lowering depends on the molality of dissolved particles and on the solvent's K_f. Use a solution other than mine. Do not solve my problem. Then ask me one short question and wait for my answer.",
+   "return_ask": "What did you learn about the size of the lowering?",
+   "park_text": "ΔT_f = i K_f m: the lowering grows with the number of dissolved particles per kilogram of water.",
+   "pivot_question": "Before the number: does the lowering depend on the moles of salt, or on the moles of particles the salt becomes?",
+   "pivot_keywords": "particles, ions, number of particles, more particles, per kilogram, dissolved, count, total",
+   "openstax": "11.4, Example 11.13 (step 4)",
+   "status": "APPROVED (instructor, 21 Oct 2026)"
+  },
+  "T_found": {
+   "state": "T_found",
+   "stage": "compute",
+   "label_when_done": "Freezing point found",
+   "ask": "Step 5: what is the freezing point of the brine? Type it in °C, with its sign.",
+   "switch_ask": "Pure water freezes at 0 °C. Which way does dissolved salt move it?",
+   "notebook_prompt": "Explain how to get a solution's freezing point from the pure solvent's freezing point and the lowering. Use a solution other than mine. Do not solve my problem. Then ask me one short question and wait for my answer.",
+   "return_ask": "What did you learn about the new freezing point?",
+   "park_text": "The brine freezes below pure water: 0 °C minus the lowering.",
+   "pivot_question": "Before the number: with ions in the meltwater, must the road get colder or warmer before freezing and melting balance again?",
+   "pivot_keywords": "colder, lower, below, below zero, negative, minus, cooler, drop",
+   "openstax": "11.4, Example 11.9 (step 2)",
+   "status": "APPROVED (instructor, 21 Oct 2026)"
+  },
+  "sim_predict": {
+   "state": "sim_predict",
+   "stage": "simulation",
+   "label_when_done": "Prediction made",
+   "ask": "Before the page opens: if the crew spread twice as much of the same salt on the same ice, would the freezing point of the brine rise, fall, or stay unchanged? Pick one.",
+   "switch_ask": "With twice the salt in the same meltwater, are there more or fewer ions in each kilogram of water?",
+   "notebook_prompt": "Explain how adding more of a dissolved salt to the same amount of water changes its freezing point. Use a salt other than mine. Do not solve my problem. Then ask me one short question and wait for my answer.",
+   "return_ask": "What did you learn about adding more salt?",
+   "park_text": "Twice the salt in the same water: twice the ions per kilogram, so fewer water molecules refreeze and the freezing point falls further.",
+   "pivot_question": "Before you pick: with twice the salt, what happens to the number of ions near each patch of ice surface?",
+   "pivot_keywords": "more, more ions, twice, double, doubles, crowded, more particles, fewer, less water",
+   "openstax": "11.4, Freezing Point Depression",
+   "status": "APPROVED (instructor, 21 Oct 2026)"
+  },
+  "perturb_1": {
+   "state": "perturb_1",
+   "stage": "change",
+   "label_when_done": "Change predicted",
+   "ask": "The crew could have spread the same number of moles of a different salt (named in your problem). Would the freezing point of the brine rise, fall, or stay unchanged compared with your answer? Pick one.",
+   "switch_ask": "Write both formulas. How many ions does each give?",
+   "notebook_prompt": "Explain why equal moles of different salts lower the freezing point by different amounts. Use salts other than mine. Do not solve my problem. Then ask me one short question and wait for my answer.",
+   "return_ask": "What did you learn about different salts?",
+   "park_text": "Equal moles of salt can give different numbers of ions; more ions per kilogram lower the freezing point more.",
+   "pivot_question": "Before you pick: one mole of each salt dissolves. Which gives more particles in the water?",
+   "pivot_keywords": "ions, more ions, fewer ions, particles, more particles, three, two, formula unit, dissociates",
+   "openstax": "11.4, Colligative Properties of Electrolytes (Table 11.3)",
+   "status": "APPROVED (instructor, 21 Oct 2026)"
+  },
+  "perturb_1_why": {
+   "state": "perturb_1_why",
+   "stage": "change",
+   "label_when_done": "Change explained",
+   "ask": "What are the ions and water molecules doing at the ice surface with the other salt?",
+   "switch_ask": "More or fewer ions in the meltwater: what does that do to the water molecules that would rejoin the ice?",
+   "notebook_prompt": "Explain, in terms of molecules at the ice surface, why more dissolved particles lower the freezing point further. Do not solve my problem. Then ask me one short question and wait for my answer.",
+   "return_ask": "In your own words, what changes at the ice surface?",
+   "park_text": "More ions per kilogram means fewer water molecules reach the ice to refreeze, so it must get colder before the rates balance.",
+   "openstax": "11.4, Freezing Point Depression",
+   "status": "APPROVED (instructor, 21 Oct 2026)"
+  },
+  "meaning_given": {
+   "state": "meaning_given",
+   "stage": "meaning",
+   "label_when_done": "Meaning stated",
+   "ask": "Your brine stays liquid several degrees below 0 °C. In a sentence of your own, what are the ions doing to the water molecules at the ice surface that lets it stay liquid that cold?",
+   "switch_ask": "Picture one patch of ice surface at your temperature. Which way are water molecules crossing it, and how many each way?",
+   "notebook_prompt": "Explain why salt stops working as a de-icer when the road gets cold enough. Do not solve any problem for me. Then ask me one short question and wait for my answer.",
+   "return_ask": "In your own words, what are the molecules at the ice surface doing?",
+   "openstax": "11.4, Freezing Point Depression (Figure 11.21)",
+   "status": "APPROVED (instructor, 21 Oct 2026)"
+  },
+  "reflection": {
+   "stage": "close",
+   "label_when_done": "Reflection written",
+   "ask": "Which step was hardest for you? In one sentence, what would you tell a friend who is stuck there?",
+   "status": "approved (instructor, 18 Oct 2026; the standing reflection row of every archetype)"
+  },
+  "sim_instrument": {
+   "stage": "simulation",
+   "label_when_done": "Reading taken from the page",
+   "ask": "Move the salt slider until the freezing point reads {target} °C. How many grams of this salt must the crew dissolve in the problem's {water_kg} kg of meltwater for the brine to stay liquid down to {target} °C? Type the grams you read.",
+   "status": "APPROVED (instructor, 21 Oct 2026)"
+  },
+  "sim_gap": {
+   "stage": "simulation",
+   "label_when_done": "Gap explained",
+   "ask": "{gap_question}",
+   "status": "APPROVED (instructor, 21 Oct 2026)"
+  }
+ },
+ "moves_by_opener": {},
+ "variants": [
+  {
+   "kind": "freezing",
+   "fixed_id": "RS1",
+   "version": "",
+   "status": "APPROVED (instructor, 21 Oct 2026)",
+   "context": {
+    "scenario": "The Salted Road",
+    "picks": {
+     "sim_predict": "falls",
+     "perturb_1": "falls"
+    }
+   },
+   "text": "A crew spreads 265 g of sodium chloride (NaCl) on the ice on a road. The salt dissolves in 1.50 kg of meltwater. Assuming complete dissociation and ideal solution behavior, what is the freezing point of the brine? For water, K_f = 1.86 °C·kg/mol.",
+   "givens": {},
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "account_given",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "mol_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "mol_found",
+     "stage": "mol_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Moles of salt found"
+    },
+    {
+     "state": "m_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "mol_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "m_found",
+     "stage": "m_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Molality found"
+    },
+    {
+     "state": "i_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "m_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "i_found",
+     "stage": "i_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Van 't Hoff factor found"
+    },
+    {
+     "state": "dT_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "i_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "dT_found",
+     "stage": "dT_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Freezing point lowering found"
+    },
+    {
+     "state": "T_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "dT_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "T_found",
+     "stage": "T_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Freezing point found"
+    },
+    {
+     "state": "sim_predict",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "T_found"
+     ],
+     "options": [
+      {
+       "id": "sim_predict:rises",
+       "text": "rises: the value goes up",
+       "names": "SIM_PREDICT_SALT"
+      },
+      {
+       "id": "sim_predict:falls",
+       "text": "falls: the value goes down"
+      },
+      {
+       "id": "sim_predict:unchanged",
+       "text": "unchanged: the value stays the same"
+      }
+     ],
+     "right": [
+      "sim_predict:falls"
+     ],
+     "explicit": true,
+     "pin": true,
+     "opens_sim": true,
+     "sim_student": {
+      "T_student": "T_found",
+      "pred": "sim_predict"
+     },
+     "id": "sim_predict",
+     "stage": "sim_predict",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Prediction made"
+    },
+    {
+     "state": "sim_instrument",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "sim_predict"
+     ],
+     "explicit": true,
+     "pin": true,
+     "instrument": {
+      "control": "salt_g",
+      "reading": "Tf_readout",
+      "target": -10.0,
+      "target_unit": "°C"
+     },
+     "id": "sim_instrument",
+     "stage": "sim_instrument",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Reading taken from the page"
+    },
+    {
+     "state": "sim_gap",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "sim_instrument"
+     ],
+     "id": "sim_gap",
+     "stage": "sim_gap",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Gap explained"
+    },
+    {
+     "state": "perturb_1",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "sim_gap"
+     ],
+     "options": [
+      {
+       "id": "perturb_1:rises",
+       "text": "rises: the value goes up"
+      },
+      {
+       "id": "perturb_1:falls",
+       "text": "falls: the value goes down"
+      },
+      {
+       "id": "perturb_1:unchanged",
+       "text": "unchanged: the value stays the same",
+       "names": "PERTURB_I_IGNORED"
+      }
+     ],
+     "right": [
+      "perturb_1:falls"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_1",
+     "stage": "perturb_1",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Change predicted"
+    },
+    {
+     "state": "perturb_1_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_1"
+     ],
+     "id": "perturb_1_why",
+     "stage": "perturb_1_why",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Change explained"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "perturb_1_why"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning_given",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "reflection",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "I_OMITTED",
+     "state": "i_found",
+     "value": 1.0,
+     "unit": "",
+     "abs_tol": 0.01,
+     "registry": "GC2-M-06"
+    },
+    {
+     "id": "I_OMITTED",
+     "state": "dT_found",
+     "value": 5.62,
+     "unit": "degC",
+     "abs_tol": 0.3,
+     "registry": "GC2-M-06"
+    },
+    {
+     "id": "SOLUTION_MASS",
+     "state": "m_found",
+     "value": 2.57,
+     "unit": "mol/kg",
+     "abs_tol": 0.0514,
+     "registry": "GC2-M-07"
+    },
+    {
+     "id": "GRAMS_FOR_MOLES",
+     "state": "m_found",
+     "value": 177.0,
+     "unit": "mol/kg",
+     "abs_tol": 3.54
+    },
+    {
+     "id": "DT_SIGNED",
+     "state": "dT_found",
+     "value": -11.2,
+     "unit": "degC",
+     "abs_tol": 0.3
+    }
+   ],
+   "table": null,
+   "words": {
+    "salt": "NaCl",
+    "salt_g": "265",
+    "water_kg": "1.50",
+    "target": "−10.0",
+    "target_unit": "°C",
+    "gap_question": "Where does your point sit against the line, and what about the particles dissolved in the meltwater would explain any distance between them?"
+   },
+   "eq_checks": [],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "salt": "NaCl",
+    "salt_g": "265",
+    "water_kg": "1.50"
+   },
+   "difficulty": "3 (steps 4, conv 1)",
+   "nearest_eoc": "11.45 (with i; worked model: Example 11.13)",
+   "companion": "RS5",
+   "exam_item": "not the exam scenario",
+   "sim_reveal": "The page draws freezing point against grams of this salt in the problem's meltwater (from 0 °C) and marks: pure water at 0 °C; the student's freezing point at the problem's grams; the student's prediction for twice the salt, beside the page's own point for it.",
+   "sim_opens_at": "after sim_predict",
+   "traps_dropped": [
+    "RESTATEMENT:FP_SIGN at T_found = dT_found's value"
+   ],
+   "expected": [
+    {
+     "id": "moles_of_NaCl",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1
+     },
+     "state": "mol_found",
+     "label": "moles of NaCl",
+     "value": 4.53,
+     "unit": "mol",
+     "abs_tol": 0.0906,
+     "require_unit": true,
+     "after": "account_given"
+    },
+    {
+     "id": "molality",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "kg": -1
+     },
+     "state": "m_found",
+     "label": "molality",
+     "value": 3.02,
+     "unit": "mol/kg",
+     "abs_tol": 0.0604,
+     "require_unit": true,
+     "after": "mol_found"
+    },
+    {
+     "id": "van_t_Hoff_factor",
+     "role": "intermediate",
+     "dim": {},
+     "state": "i_found",
+     "label": "van 't Hoff factor",
+     "value": 2.0,
+     "unit": "",
+     "abs_tol": 0.01,
+     "require_unit": false,
+     "after": "m_found"
+    },
+    {
+     "id": "freezing_point_lowering",
+     "role": "intermediate",
+     "dim": {
+      "K": 1
+     },
+     "state": "dT_found",
+     "label": "freezing point lowering",
+     "value": 11.2,
+     "unit": "degC",
+     "abs_tol": 0.3,
+     "require_unit": true,
+     "after": "i_found"
+    },
+    {
+     "id": "key_T_found",
+     "role": "key",
+     "dim": {
+      "K": 1
+     },
+     "state": "T_found",
+     "label": "freezing point of the brine",
+     "value": -11.2,
+     "unit": "degC",
+     "abs_tol": 0.3,
+     "require_unit": true,
+     "after": "dT_found"
+    },
+    {
+     "id": "reading_from_the_page_salt_g",
+     "role": "intermediate",
+     "dim": {
+      "g": 1
+     },
+     "state": "sim_instrument",
+     "label": "reading from the page (salt_g)",
+     "value": 235.5,
+     "unit": "g",
+     "abs_tol": 0.6,
+     "require_unit": true,
+     "after": "sim_predict"
+    },
+    {
+     "id": "c_K_f_water",
+     "state": null,
+     "role": "constant",
+     "label": "K_f (water)",
+     "value": 1.86,
+     "unit": "°C·kg/mol",
+     "dim": {
+      "K": 1,
+      "kg": 1,
+      "mol": -1
+     },
+     "abs_tol": 0.00186
+    }
+   ],
+   "precision_rule": true,
+   "variant_id": "ch11_colligative:1",
+   "archetype_id": "ch11_colligative",
+   "seed": 1,
+   "opener_index": 0
+  },
+  {
+   "kind": "freezing",
+   "fixed_id": "RS2",
+   "version": "",
+   "status": "APPROVED (instructor, 21 Oct 2026)",
+   "context": {
+    "scenario": "The Salted Road",
+    "picks": {
+     "sim_predict": "falls",
+     "perturb_1": "rises"
+    }
+   },
+   "text": "A crew spreads 310 g of calcium chloride (CaCl₂) on the ice on a sidewalk. The salt dissolves in 2.00 kg of meltwater. Assuming complete dissociation and ideal solution behavior, what is the freezing point of the brine? For water, K_f = 1.86 °C·kg/mol.",
+   "givens": {},
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "account_given",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "mol_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "mol_found",
+     "stage": "mol_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Moles of salt found"
+    },
+    {
+     "state": "m_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "mol_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "m_found",
+     "stage": "m_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Molality found"
+    },
+    {
+     "state": "i_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "m_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "i_found",
+     "stage": "i_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Van 't Hoff factor found"
+    },
+    {
+     "state": "dT_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "i_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "dT_found",
+     "stage": "dT_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Freezing point lowering found"
+    },
+    {
+     "state": "T_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "dT_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "T_found",
+     "stage": "T_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Freezing point found"
+    },
+    {
+     "state": "sim_predict",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "T_found"
+     ],
+     "options": [
+      {
+       "id": "sim_predict:rises",
+       "text": "rises: the value goes up",
+       "names": "SIM_PREDICT_SALT"
+      },
+      {
+       "id": "sim_predict:falls",
+       "text": "falls: the value goes down"
+      },
+      {
+       "id": "sim_predict:unchanged",
+       "text": "unchanged: the value stays the same"
+      }
+     ],
+     "right": [
+      "sim_predict:falls"
+     ],
+     "explicit": true,
+     "pin": true,
+     "opens_sim": true,
+     "sim_student": {
+      "T_student": "T_found",
+      "pred": "sim_predict"
+     },
+     "id": "sim_predict",
+     "stage": "sim_predict",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Prediction made"
+    },
+    {
+     "state": "sim_instrument",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "sim_predict"
+     ],
+     "explicit": true,
+     "pin": true,
+     "instrument": {
+      "control": "salt_g",
+      "reading": "Tf_readout",
+      "target": -10.0,
+      "target_unit": "°C"
+     },
+     "id": "sim_instrument",
+     "stage": "sim_instrument",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Reading taken from the page"
+    },
+    {
+     "state": "sim_gap",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "sim_instrument"
+     ],
+     "id": "sim_gap",
+     "stage": "sim_gap",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Gap explained"
+    },
+    {
+     "state": "perturb_1",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "sim_gap"
+     ],
+     "options": [
+      {
+       "id": "perturb_1:rises",
+       "text": "rises: the value goes up"
+      },
+      {
+       "id": "perturb_1:falls",
+       "text": "falls: the value goes down"
+      },
+      {
+       "id": "perturb_1:unchanged",
+       "text": "unchanged: the value stays the same",
+       "names": "PERTURB_I_IGNORED"
+      }
+     ],
+     "right": [
+      "perturb_1:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_1",
+     "stage": "perturb_1",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Change predicted"
+    },
+    {
+     "state": "perturb_1_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_1"
+     ],
+     "id": "perturb_1_why",
+     "stage": "perturb_1_why",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Change explained"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "perturb_1_why"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning_given",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "reflection",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "I_OMITTED",
+     "state": "i_found",
+     "value": 1.0,
+     "unit": "",
+     "abs_tol": 0.01,
+     "registry": "GC2-M-06"
+    },
+    {
+     "id": "I_OMITTED",
+     "state": "dT_found",
+     "value": 2.6,
+     "unit": "degC",
+     "abs_tol": 0.3,
+     "registry": "GC2-M-06"
+    },
+    {
+     "id": "SOLUTION_MASS",
+     "state": "m_found",
+     "value": 1.21,
+     "unit": "mol/kg",
+     "abs_tol": 0.0242,
+     "registry": "GC2-M-07"
+    },
+    {
+     "id": "GRAMS_FOR_MOLES",
+     "state": "m_found",
+     "value": 155.0,
+     "unit": "mol/kg",
+     "abs_tol": 3.1
+    },
+    {
+     "id": "DT_SIGNED",
+     "state": "dT_found",
+     "value": -7.79,
+     "unit": "degC",
+     "abs_tol": 0.3
+    }
+   ],
+   "table": null,
+   "words": {
+    "salt": "CaCl2",
+    "salt_g": "310",
+    "water_kg": "2.00",
+    "target": "−10.0",
+    "target_unit": "°C",
+    "gap_question": "Where does your point sit against the line, and what about the particles dissolved in the meltwater would explain any distance between them?"
+   },
+   "eq_checks": [],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "salt": "CaCl2",
+    "salt_g": "310",
+    "water_kg": "2.00"
+   },
+   "difficulty": "3 (steps 4, conv 1)",
+   "nearest_eoc": "11.45 (with i; worked model: Example 11.13)",
+   "companion": "RS6",
+   "exam_item": "not the exam scenario",
+   "sim_reveal": "The page draws freezing point against grams of this salt in the problem's meltwater (from 0 °C) and marks: pure water at 0 °C; the student's freezing point at the problem's grams; the student's prediction for twice the salt, beside the page's own point for it.",
+   "sim_opens_at": "after sim_predict",
+   "traps_dropped": [
+    "RESTATEMENT:FP_SIGN at T_found = dT_found's value"
+   ],
+   "expected": [
+    {
+     "id": "moles_of_CaCl₂",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1
+     },
+     "state": "mol_found",
+     "label": "moles of CaCl₂",
+     "value": 2.79,
+     "unit": "mol",
+     "abs_tol": 0.0558,
+     "require_unit": true,
+     "after": "account_given"
+    },
+    {
+     "id": "molality",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "kg": -1
+     },
+     "state": "m_found",
+     "label": "molality",
+     "value": 1.4,
+     "unit": "mol/kg",
+     "abs_tol": 0.028,
+     "require_unit": true,
+     "after": "mol_found"
+    },
+    {
+     "id": "van_t_Hoff_factor",
+     "role": "intermediate",
+     "dim": {},
+     "state": "i_found",
+     "label": "van 't Hoff factor",
+     "value": 3.0,
+     "unit": "",
+     "abs_tol": 0.01,
+     "require_unit": false,
+     "after": "m_found"
+    },
+    {
+     "id": "freezing_point_lowering",
+     "role": "intermediate",
+     "dim": {
+      "K": 1
+     },
+     "state": "dT_found",
+     "label": "freezing point lowering",
+     "value": 7.79,
+     "unit": "degC",
+     "abs_tol": 0.3,
+     "require_unit": true,
+     "after": "i_found"
+    },
+    {
+     "id": "key_T_found",
+     "role": "key",
+     "dim": {
+      "K": 1
+     },
+     "state": "T_found",
+     "label": "freezing point of the brine",
+     "value": -7.79,
+     "unit": "degC",
+     "abs_tol": 0.3,
+     "require_unit": true,
+     "after": "dT_found"
+    },
+    {
+     "id": "reading_from_the_page_salt_g",
+     "role": "intermediate",
+     "dim": {
+      "g": 1
+     },
+     "state": "sim_instrument",
+     "label": "reading from the page (salt_g)",
+     "value": 397.5,
+     "unit": "g",
+     "abs_tol": 1.6,
+     "require_unit": true,
+     "after": "sim_predict"
+    },
+    {
+     "id": "c_K_f_water",
+     "state": null,
+     "role": "constant",
+     "label": "K_f (water)",
+     "value": 1.86,
+     "unit": "°C·kg/mol",
+     "dim": {
+      "K": 1,
+      "kg": 1,
+      "mol": -1
+     },
+     "abs_tol": 0.00186
+    }
+   ],
+   "precision_rule": true,
+   "variant_id": "ch11_colligative:2",
+   "archetype_id": "ch11_colligative",
+   "seed": 2,
+   "opener_index": 0
+  },
+  {
+   "kind": "freezing",
+   "fixed_id": "RS3",
+   "version": "",
+   "status": "APPROVED (instructor, 21 Oct 2026)",
+   "context": {
+    "scenario": "The Salted Road",
+    "picks": {
+     "sim_predict": "falls",
+     "perturb_1": "falls"
+    }
+   },
+   "text": "A crew spreads 180 g of potassium chloride (KCl) on the ice on a driveway. The salt dissolves in 1.25 kg of meltwater. Assuming complete dissociation and ideal solution behavior, what is the freezing point of the brine? For water, K_f = 1.86 °C·kg/mol.",
+   "givens": {},
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "account_given",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "mol_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "mol_found",
+     "stage": "mol_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Moles of salt found"
+    },
+    {
+     "state": "m_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "mol_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "m_found",
+     "stage": "m_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Molality found"
+    },
+    {
+     "state": "i_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "m_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "i_found",
+     "stage": "i_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Van 't Hoff factor found"
+    },
+    {
+     "state": "dT_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "i_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "dT_found",
+     "stage": "dT_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Freezing point lowering found"
+    },
+    {
+     "state": "T_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "dT_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "T_found",
+     "stage": "T_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Freezing point found"
+    },
+    {
+     "state": "sim_predict",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "T_found"
+     ],
+     "options": [
+      {
+       "id": "sim_predict:rises",
+       "text": "rises: the value goes up",
+       "names": "SIM_PREDICT_SALT"
+      },
+      {
+       "id": "sim_predict:falls",
+       "text": "falls: the value goes down"
+      },
+      {
+       "id": "sim_predict:unchanged",
+       "text": "unchanged: the value stays the same"
+      }
+     ],
+     "right": [
+      "sim_predict:falls"
+     ],
+     "explicit": true,
+     "pin": true,
+     "opens_sim": true,
+     "sim_student": {
+      "T_student": "T_found",
+      "pred": "sim_predict"
+     },
+     "id": "sim_predict",
+     "stage": "sim_predict",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Prediction made"
+    },
+    {
+     "state": "sim_instrument",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "sim_predict"
+     ],
+     "explicit": true,
+     "pin": true,
+     "instrument": {
+      "control": "salt_g",
+      "reading": "Tf_readout",
+      "target": -10.0,
+      "target_unit": "°C"
+     },
+     "id": "sim_instrument",
+     "stage": "sim_instrument",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Reading taken from the page"
+    },
+    {
+     "state": "sim_gap",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "sim_instrument"
+     ],
+     "id": "sim_gap",
+     "stage": "sim_gap",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Gap explained"
+    },
+    {
+     "state": "perturb_1",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "sim_gap"
+     ],
+     "options": [
+      {
+       "id": "perturb_1:rises",
+       "text": "rises: the value goes up"
+      },
+      {
+       "id": "perturb_1:falls",
+       "text": "falls: the value goes down"
+      },
+      {
+       "id": "perturb_1:unchanged",
+       "text": "unchanged: the value stays the same",
+       "names": "PERTURB_I_IGNORED"
+      }
+     ],
+     "right": [
+      "perturb_1:falls"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_1",
+     "stage": "perturb_1",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Change predicted"
+    },
+    {
+     "state": "perturb_1_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_1"
+     ],
+     "id": "perturb_1_why",
+     "stage": "perturb_1_why",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Change explained"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "perturb_1_why"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning_given",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "reflection",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "I_OMITTED",
+     "state": "i_found",
+     "value": 1.0,
+     "unit": "",
+     "abs_tol": 0.01,
+     "registry": "GC2-M-06"
+    },
+    {
+     "id": "I_OMITTED",
+     "state": "dT_found",
+     "value": 3.59,
+     "unit": "degC",
+     "abs_tol": 0.3,
+     "registry": "GC2-M-06"
+    },
+    {
+     "id": "SOLUTION_MASS",
+     "state": "m_found",
+     "value": 1.69,
+     "unit": "mol/kg",
+     "abs_tol": 0.0338,
+     "registry": "GC2-M-07"
+    },
+    {
+     "id": "GRAMS_FOR_MOLES",
+     "state": "m_found",
+     "value": 144.0,
+     "unit": "mol/kg",
+     "abs_tol": 2.88
+    },
+    {
+     "id": "DT_SIGNED",
+     "state": "dT_found",
+     "value": -7.19,
+     "unit": "degC",
+     "abs_tol": 0.3
+    }
+   ],
+   "table": null,
+   "words": {
+    "salt": "KCl",
+    "salt_g": "180",
+    "water_kg": "1.25",
+    "target": "−10.0",
+    "target_unit": "°C",
+    "gap_question": "Where does your point sit against the line, and what about the particles dissolved in the meltwater would explain any distance between them?"
+   },
+   "eq_checks": [],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "salt": "KCl",
+    "salt_g": "180",
+    "water_kg": "1.25"
+   },
+   "difficulty": "3 (steps 4, conv 1)",
+   "nearest_eoc": "11.45 (with i; worked model: Example 11.13)",
+   "companion": "RS4",
+   "exam_item": "not the exam scenario",
+   "sim_reveal": "The page draws freezing point against grams of this salt in the problem's meltwater (from 0 °C) and marks: pure water at 0 °C; the student's freezing point at the problem's grams; the student's prediction for twice the salt, beside the page's own point for it.",
+   "sim_opens_at": "after sim_predict",
+   "traps_dropped": [
+    "RESTATEMENT:FP_SIGN at T_found = dT_found's value"
+   ],
+   "expected": [
+    {
+     "id": "moles_of_KCl",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1
+     },
+     "state": "mol_found",
+     "label": "moles of KCl",
+     "value": 2.41,
+     "unit": "mol",
+     "abs_tol": 0.0482,
+     "require_unit": true,
+     "after": "account_given"
+    },
+    {
+     "id": "molality",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "kg": -1
+     },
+     "state": "m_found",
+     "label": "molality",
+     "value": 1.93,
+     "unit": "mol/kg",
+     "abs_tol": 0.0386,
+     "require_unit": true,
+     "after": "mol_found"
+    },
+    {
+     "id": "van_t_Hoff_factor",
+     "role": "intermediate",
+     "dim": {},
+     "state": "i_found",
+     "label": "van 't Hoff factor",
+     "value": 2.0,
+     "unit": "",
+     "abs_tol": 0.01,
+     "require_unit": false,
+     "after": "m_found"
+    },
+    {
+     "id": "freezing_point_lowering",
+     "role": "intermediate",
+     "dim": {
+      "K": 1
+     },
+     "state": "dT_found",
+     "label": "freezing point lowering",
+     "value": 7.19,
+     "unit": "degC",
+     "abs_tol": 0.3,
+     "require_unit": true,
+     "after": "i_found"
+    },
+    {
+     "id": "key_T_found",
+     "role": "key",
+     "dim": {
+      "K": 1
+     },
+     "state": "T_found",
+     "label": "freezing point of the brine",
+     "value": -7.19,
+     "unit": "degC",
+     "abs_tol": 0.3,
+     "require_unit": true,
+     "after": "dT_found"
+    },
+    {
+     "id": "reading_from_the_page_salt_g",
+     "role": "intermediate",
+     "dim": {
+      "g": 1
+     },
+     "state": "sim_instrument",
+     "label": "reading from the page (salt_g)",
+     "value": 250.5,
+     "unit": "g",
+     "abs_tol": 0.6,
+     "require_unit": true,
+     "after": "sim_predict"
+    },
+    {
+     "id": "c_K_f_water",
+     "state": null,
+     "role": "constant",
+     "label": "K_f (water)",
+     "value": 1.86,
+     "unit": "°C·kg/mol",
+     "dim": {
+      "K": 1,
+      "kg": 1,
+      "mol": -1
+     },
+     "abs_tol": 0.00186
+    }
+   ],
+   "precision_rule": true,
+   "variant_id": "ch11_colligative:3",
+   "archetype_id": "ch11_colligative",
+   "seed": 3,
+   "opener_index": 0
+  },
+  {
+   "kind": "freezing",
+   "fixed_id": "RS4",
+   "version": "",
+   "status": "APPROVED (instructor, 21 Oct 2026)",
+   "context": {
+    "scenario": "The Salted Road",
+    "picks": {
+     "sim_predict": "falls",
+     "perturb_1": "rises"
+    }
+   },
+   "text": "A crew spreads 205 g of magnesium chloride (MgCl₂) on the ice on a bridge deck. The salt dissolves in 1.75 kg of meltwater. Assuming complete dissociation and ideal solution behavior, what is the freezing point of the brine? For water, K_f = 1.86 °C·kg/mol.",
+   "givens": {},
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "account_given",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "mol_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "mol_found",
+     "stage": "mol_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Moles of salt found"
+    },
+    {
+     "state": "m_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "mol_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "m_found",
+     "stage": "m_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Molality found"
+    },
+    {
+     "state": "i_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "m_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "i_found",
+     "stage": "i_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Van 't Hoff factor found"
+    },
+    {
+     "state": "dT_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "i_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "dT_found",
+     "stage": "dT_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Freezing point lowering found"
+    },
+    {
+     "state": "T_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "dT_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "T_found",
+     "stage": "T_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Freezing point found"
+    },
+    {
+     "state": "sim_predict",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "T_found"
+     ],
+     "options": [
+      {
+       "id": "sim_predict:rises",
+       "text": "rises: the value goes up",
+       "names": "SIM_PREDICT_SALT"
+      },
+      {
+       "id": "sim_predict:falls",
+       "text": "falls: the value goes down"
+      },
+      {
+       "id": "sim_predict:unchanged",
+       "text": "unchanged: the value stays the same"
+      }
+     ],
+     "right": [
+      "sim_predict:falls"
+     ],
+     "explicit": true,
+     "pin": true,
+     "opens_sim": true,
+     "sim_student": {
+      "T_student": "T_found",
+      "pred": "sim_predict"
+     },
+     "id": "sim_predict",
+     "stage": "sim_predict",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Prediction made"
+    },
+    {
+     "state": "sim_instrument",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "sim_predict"
+     ],
+     "explicit": true,
+     "pin": true,
+     "instrument": {
+      "control": "salt_g",
+      "reading": "Tf_readout",
+      "target": -10.0,
+      "target_unit": "°C"
+     },
+     "id": "sim_instrument",
+     "stage": "sim_instrument",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Reading taken from the page"
+    },
+    {
+     "state": "sim_gap",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "sim_instrument"
+     ],
+     "id": "sim_gap",
+     "stage": "sim_gap",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Gap explained"
+    },
+    {
+     "state": "perturb_1",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "sim_gap"
+     ],
+     "options": [
+      {
+       "id": "perturb_1:rises",
+       "text": "rises: the value goes up"
+      },
+      {
+       "id": "perturb_1:falls",
+       "text": "falls: the value goes down"
+      },
+      {
+       "id": "perturb_1:unchanged",
+       "text": "unchanged: the value stays the same",
+       "names": "PERTURB_I_IGNORED"
+      }
+     ],
+     "right": [
+      "perturb_1:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_1",
+     "stage": "perturb_1",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Change predicted"
+    },
+    {
+     "state": "perturb_1_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_1"
+     ],
+     "id": "perturb_1_why",
+     "stage": "perturb_1_why",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Change explained"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "perturb_1_why"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning_given",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "reflection",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "I_OMITTED",
+     "state": "i_found",
+     "value": 1.0,
+     "unit": "",
+     "abs_tol": 0.01,
+     "registry": "GC2-M-06"
+    },
+    {
+     "id": "I_OMITTED",
+     "state": "dT_found",
+     "value": 2.29,
+     "unit": "degC",
+     "abs_tol": 0.3,
+     "registry": "GC2-M-06"
+    },
+    {
+     "id": "SOLUTION_MASS",
+     "state": "m_found",
+     "value": 1.1,
+     "unit": "mol/kg",
+     "abs_tol": 0.022,
+     "registry": "GC2-M-07"
+    },
+    {
+     "id": "GRAMS_FOR_MOLES",
+     "state": "m_found",
+     "value": 117.0,
+     "unit": "mol/kg",
+     "abs_tol": 2.34
+    },
+    {
+     "id": "DT_SIGNED",
+     "state": "dT_found",
+     "value": -6.87,
+     "unit": "degC",
+     "abs_tol": 0.3
+    }
+   ],
+   "table": null,
+   "words": {
+    "salt": "MgCl2",
+    "salt_g": "205",
+    "water_kg": "1.75",
+    "target": "−10.0",
+    "target_unit": "°C",
+    "gap_question": "Where does your point sit against the line, and what about the particles dissolved in the meltwater would explain any distance between them?"
+   },
+   "eq_checks": [],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "salt": "MgCl2",
+    "salt_g": "205",
+    "water_kg": "1.75"
+   },
+   "difficulty": "3 (steps 4, conv 1)",
+   "nearest_eoc": "11.45 (with i; worked model: Example 11.13)",
+   "companion": "RS3",
+   "exam_item": "not the exam scenario",
+   "sim_reveal": "The page draws freezing point against grams of this salt in the problem's meltwater (from 0 °C) and marks: pure water at 0 °C; the student's freezing point at the problem's grams; the student's prediction for twice the salt, beside the page's own point for it.",
+   "sim_opens_at": "after sim_predict",
+   "traps_dropped": [
+    "RESTATEMENT:FP_SIGN at T_found = dT_found's value"
+   ],
+   "expected": [
+    {
+     "id": "moles_of_MgCl₂",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1
+     },
+     "state": "mol_found",
+     "label": "moles of MgCl₂",
+     "value": 2.15,
+     "unit": "mol",
+     "abs_tol": 0.043,
+     "require_unit": true,
+     "after": "account_given"
+    },
+    {
+     "id": "molality",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "kg": -1
+     },
+     "state": "m_found",
+     "label": "molality",
+     "value": 1.23,
+     "unit": "mol/kg",
+     "abs_tol": 0.0246,
+     "require_unit": true,
+     "after": "mol_found"
+    },
+    {
+     "id": "van_t_Hoff_factor",
+     "role": "intermediate",
+     "dim": {},
+     "state": "i_found",
+     "label": "van 't Hoff factor",
+     "value": 3.0,
+     "unit": "",
+     "abs_tol": 0.01,
+     "require_unit": false,
+     "after": "m_found"
+    },
+    {
+     "id": "freezing_point_lowering",
+     "role": "intermediate",
+     "dim": {
+      "K": 1
+     },
+     "state": "dT_found",
+     "label": "freezing point lowering",
+     "value": 6.87,
+     "unit": "degC",
+     "abs_tol": 0.3,
+     "require_unit": true,
+     "after": "i_found"
+    },
+    {
+     "id": "key_T_found",
+     "role": "key",
+     "dim": {
+      "K": 1
+     },
+     "state": "T_found",
+     "label": "freezing point of the brine",
+     "value": -6.87,
+     "unit": "degC",
+     "abs_tol": 0.3,
+     "require_unit": true,
+     "after": "dT_found"
+    },
+    {
+     "id": "reading_from_the_page_salt_g",
+     "role": "intermediate",
+     "dim": {
+      "g": 1
+     },
+     "state": "sim_instrument",
+     "label": "reading from the page (salt_g)",
+     "value": 299.0,
+     "unit": "g",
+     "abs_tol": 1.1,
+     "require_unit": true,
+     "after": "sim_predict"
+    },
+    {
+     "id": "c_K_f_water",
+     "state": null,
+     "role": "constant",
+     "label": "K_f (water)",
+     "value": 1.86,
+     "unit": "°C·kg/mol",
+     "dim": {
+      "K": 1,
+      "kg": 1,
+      "mol": -1
+     },
+     "abs_tol": 0.00186
+    }
+   ],
+   "precision_rule": true,
+   "variant_id": "ch11_colligative:4",
+   "archetype_id": "ch11_colligative",
+   "seed": 4,
+   "opener_index": 0
+  },
+  {
+   "kind": "freezing",
+   "fixed_id": "RS5",
+   "version": "",
+   "status": "APPROVED (instructor, 21 Oct 2026)",
+   "context": {
+    "scenario": "The Salted Road",
+    "picks": {
+     "sim_predict": "falls",
+     "perturb_1": "falls"
+    }
+   },
+   "text": "A crew spreads 160 g of sodium chloride (NaCl) on the ice on a parking lot. The salt dissolves in 1.10 kg of meltwater. Assuming complete dissociation and ideal solution behavior, what is the freezing point of the brine? For water, K_f = 1.86 °C·kg/mol.",
+   "givens": {},
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "account_given",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "mol_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "mol_found",
+     "stage": "mol_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Moles of salt found"
+    },
+    {
+     "state": "m_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "mol_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "m_found",
+     "stage": "m_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Molality found"
+    },
+    {
+     "state": "i_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "m_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "i_found",
+     "stage": "i_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Van 't Hoff factor found"
+    },
+    {
+     "state": "dT_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "i_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "dT_found",
+     "stage": "dT_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Freezing point lowering found"
+    },
+    {
+     "state": "T_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "dT_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "T_found",
+     "stage": "T_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Freezing point found"
+    },
+    {
+     "state": "sim_predict",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "T_found"
+     ],
+     "options": [
+      {
+       "id": "sim_predict:rises",
+       "text": "rises: the value goes up",
+       "names": "SIM_PREDICT_SALT"
+      },
+      {
+       "id": "sim_predict:falls",
+       "text": "falls: the value goes down"
+      },
+      {
+       "id": "sim_predict:unchanged",
+       "text": "unchanged: the value stays the same"
+      }
+     ],
+     "right": [
+      "sim_predict:falls"
+     ],
+     "explicit": true,
+     "pin": true,
+     "opens_sim": true,
+     "sim_student": {
+      "T_student": "T_found",
+      "pred": "sim_predict"
+     },
+     "id": "sim_predict",
+     "stage": "sim_predict",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Prediction made"
+    },
+    {
+     "state": "sim_instrument",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "sim_predict"
+     ],
+     "explicit": true,
+     "pin": true,
+     "instrument": {
+      "control": "salt_g",
+      "reading": "Tf_readout",
+      "target": -10.0,
+      "target_unit": "°C"
+     },
+     "id": "sim_instrument",
+     "stage": "sim_instrument",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Reading taken from the page"
+    },
+    {
+     "state": "sim_gap",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "sim_instrument"
+     ],
+     "id": "sim_gap",
+     "stage": "sim_gap",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Gap explained"
+    },
+    {
+     "state": "perturb_1",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "sim_gap"
+     ],
+     "options": [
+      {
+       "id": "perturb_1:rises",
+       "text": "rises: the value goes up"
+      },
+      {
+       "id": "perturb_1:falls",
+       "text": "falls: the value goes down"
+      },
+      {
+       "id": "perturb_1:unchanged",
+       "text": "unchanged: the value stays the same",
+       "names": "PERTURB_I_IGNORED"
+      }
+     ],
+     "right": [
+      "perturb_1:falls"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_1",
+     "stage": "perturb_1",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Change predicted"
+    },
+    {
+     "state": "perturb_1_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_1"
+     ],
+     "id": "perturb_1_why",
+     "stage": "perturb_1_why",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Change explained"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "perturb_1_why"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning_given",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "reflection",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "I_OMITTED",
+     "state": "i_found",
+     "value": 1.0,
+     "unit": "",
+     "abs_tol": 0.01,
+     "registry": "GC2-M-06"
+    },
+    {
+     "id": "I_OMITTED",
+     "state": "dT_found",
+     "value": 4.63,
+     "unit": "degC",
+     "abs_tol": 0.3,
+     "registry": "GC2-M-06"
+    },
+    {
+     "id": "SOLUTION_MASS",
+     "state": "m_found",
+     "value": 2.17,
+     "unit": "mol/kg",
+     "abs_tol": 0.0434,
+     "registry": "GC2-M-07"
+    },
+    {
+     "id": "GRAMS_FOR_MOLES",
+     "state": "m_found",
+     "value": 145.0,
+     "unit": "mol/kg",
+     "abs_tol": 2.9
+    },
+    {
+     "id": "DT_SIGNED",
+     "state": "dT_found",
+     "value": -9.26,
+     "unit": "degC",
+     "abs_tol": 0.3
+    }
+   ],
+   "table": null,
+   "words": {
+    "salt": "NaCl",
+    "salt_g": "160",
+    "water_kg": "1.10",
+    "target": "−10.0",
+    "target_unit": "°C",
+    "gap_question": "Where does your point sit against the line, and what about the particles dissolved in the meltwater would explain any distance between them?"
+   },
+   "eq_checks": [],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "salt": "NaCl",
+    "salt_g": "160",
+    "water_kg": "1.10"
+   },
+   "difficulty": "3 (steps 4, conv 1)",
+   "nearest_eoc": "11.45 (with i; worked model: Example 11.13)",
+   "companion": "RS1",
+   "exam_item": "not the exam scenario",
+   "sim_reveal": "The page draws freezing point against grams of this salt in the problem's meltwater (from 0 °C) and marks: pure water at 0 °C; the student's freezing point at the problem's grams; the student's prediction for twice the salt, beside the page's own point for it.",
+   "sim_opens_at": "after sim_predict",
+   "traps_dropped": [
+    "RESTATEMENT:FP_SIGN at T_found = dT_found's value"
+   ],
+   "expected": [
+    {
+     "id": "moles_of_NaCl",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1
+     },
+     "state": "mol_found",
+     "label": "moles of NaCl",
+     "value": 2.74,
+     "unit": "mol",
+     "abs_tol": 0.0548,
+     "require_unit": true,
+     "after": "account_given"
+    },
+    {
+     "id": "molality",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "kg": -1
+     },
+     "state": "m_found",
+     "label": "molality",
+     "value": 2.49,
+     "unit": "mol/kg",
+     "abs_tol": 0.0498,
+     "require_unit": true,
+     "after": "mol_found"
+    },
+    {
+     "id": "van_t_Hoff_factor",
+     "role": "intermediate",
+     "dim": {},
+     "state": "i_found",
+     "label": "van 't Hoff factor",
+     "value": 2.0,
+     "unit": "",
+     "abs_tol": 0.01,
+     "require_unit": false,
+     "after": "m_found"
+    },
+    {
+     "id": "freezing_point_lowering",
+     "role": "intermediate",
+     "dim": {
+      "K": 1
+     },
+     "state": "dT_found",
+     "label": "freezing point lowering",
+     "value": 9.26,
+     "unit": "degC",
+     "abs_tol": 0.3,
+     "require_unit": true,
+     "after": "i_found"
+    },
+    {
+     "id": "key_T_found",
+     "role": "key",
+     "dim": {
+      "K": 1
+     },
+     "state": "T_found",
+     "label": "freezing point of the brine",
+     "value": -9.26,
+     "unit": "degC",
+     "abs_tol": 0.3,
+     "require_unit": true,
+     "after": "dT_found"
+    },
+    {
+     "id": "reading_from_the_page_salt_g",
+     "role": "intermediate",
+     "dim": {
+      "g": 1
+     },
+     "state": "sim_instrument",
+     "label": "reading from the page (salt_g)",
+     "value": 172.5,
+     "unit": "g",
+     "abs_tol": 0.6,
+     "require_unit": true,
+     "after": "sim_predict"
+    },
+    {
+     "id": "c_K_f_water",
+     "state": null,
+     "role": "constant",
+     "label": "K_f (water)",
+     "value": 1.86,
+     "unit": "°C·kg/mol",
+     "dim": {
+      "K": 1,
+      "kg": 1,
+      "mol": -1
+     },
+     "abs_tol": 0.00186
+    }
+   ],
+   "precision_rule": true,
+   "variant_id": "ch11_colligative:5",
+   "archetype_id": "ch11_colligative",
+   "seed": 5,
+   "opener_index": 0
+  },
+  {
+   "kind": "freezing",
+   "fixed_id": "RS6",
+   "version": "",
+   "status": "APPROVED (instructor, 21 Oct 2026)",
+   "context": {
+    "scenario": "The Salted Road",
+    "picks": {
+     "sim_predict": "falls",
+     "perturb_1": "rises"
+    }
+   },
+   "text": "A crew spreads 235 g of calcium chloride (CaCl₂) on the ice on a porch steps. The salt dissolves in 1.40 kg of meltwater. Assuming complete dissociation and ideal solution behavior, what is the freezing point of the brine? For water, K_f = 1.86 °C·kg/mol.",
+   "givens": {},
+   "board": [
+    {
+     "state": "account_given",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [],
+     "id": "account_given",
+     "stage": "account_given",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Particle account given"
+    },
+    {
+     "state": "mol_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "account_given"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "mol_found",
+     "stage": "mol_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Moles of salt found"
+    },
+    {
+     "state": "m_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "mol_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "m_found",
+     "stage": "m_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Molality found"
+    },
+    {
+     "state": "i_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "m_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "i_found",
+     "stage": "i_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Van 't Hoff factor found"
+    },
+    {
+     "state": "dT_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "i_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "dT_found",
+     "stage": "dT_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Freezing point lowering found"
+    },
+    {
+     "state": "T_found",
+     "kind": "number",
+     "register": "symbolic",
+     "requires": [
+      "dT_found"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "T_found",
+     "stage": "T_found",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Freezing point found"
+    },
+    {
+     "state": "sim_predict",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "T_found"
+     ],
+     "options": [
+      {
+       "id": "sim_predict:rises",
+       "text": "rises: the value goes up",
+       "names": "SIM_PREDICT_SALT"
+      },
+      {
+       "id": "sim_predict:falls",
+       "text": "falls: the value goes down"
+      },
+      {
+       "id": "sim_predict:unchanged",
+       "text": "unchanged: the value stays the same"
+      }
+     ],
+     "right": [
+      "sim_predict:falls"
+     ],
+     "explicit": true,
+     "pin": true,
+     "opens_sim": true,
+     "sim_student": {
+      "T_student": "T_found",
+      "pred": "sim_predict"
+     },
+     "id": "sim_predict",
+     "stage": "sim_predict",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Prediction made"
+    },
+    {
+     "state": "sim_instrument",
+     "kind": "number",
+     "register": "macro",
+     "requires": [
+      "sim_predict"
+     ],
+     "explicit": true,
+     "pin": true,
+     "instrument": {
+      "control": "salt_g",
+      "reading": "Tf_readout",
+      "target": -10.0,
+      "target_unit": "°C"
+     },
+     "id": "sim_instrument",
+     "stage": "sim_instrument",
+     "face": "check",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Reading taken from the page"
+    },
+    {
+     "state": "sim_gap",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "sim_instrument"
+     ],
+     "id": "sim_gap",
+     "stage": "sim_gap",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Gap explained"
+    },
+    {
+     "state": "perturb_1",
+     "kind": "direction",
+     "register": "macro",
+     "requires": [
+      "sim_gap"
+     ],
+     "options": [
+      {
+       "id": "perturb_1:rises",
+       "text": "rises: the value goes up"
+      },
+      {
+       "id": "perturb_1:falls",
+       "text": "falls: the value goes down"
+      },
+      {
+       "id": "perturb_1:unchanged",
+       "text": "unchanged: the value stays the same",
+       "names": "PERTURB_I_IGNORED"
+      }
+     ],
+     "right": [
+      "perturb_1:rises"
+     ],
+     "explicit": true,
+     "pin": true,
+     "id": "perturb_1",
+     "stage": "perturb_1",
+     "face": "choice",
+     "branch": null,
+     "credit_gate": false,
+     "label_when_done": "Change predicted"
+    },
+    {
+     "state": "perturb_1_why",
+     "kind": "text",
+     "register": "submicro",
+     "requires": [
+      "perturb_1"
+     ],
+     "id": "perturb_1_why",
+     "stage": "perturb_1_why",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Change explained"
+    },
+    {
+     "state": "meaning_given",
+     "kind": "text",
+     "register": "inference",
+     "requires": [
+      "perturb_1_why"
+     ],
+     "credit_gate": true,
+     "id": "meaning_given",
+     "stage": "meaning_given",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "label_when_done": "Meaning stated"
+    },
+    {
+     "state": "reflection",
+     "kind": "reflection",
+     "register": "inference",
+     "requires": [
+      "meaning_given"
+     ],
+     "id": "reflection",
+     "stage": "reflection",
+     "face": "why",
+     "branch": null,
+     "pin": false,
+     "explicit": false,
+     "credit_gate": false,
+     "label_when_done": "Reflection written"
+    }
+   ],
+   "traps": [
+    {
+     "id": "I_OMITTED",
+     "state": "i_found",
+     "value": 1.0,
+     "unit": "",
+     "abs_tol": 0.01,
+     "registry": "GC2-M-06"
+    },
+    {
+     "id": "I_OMITTED",
+     "state": "dT_found",
+     "value": 2.81,
+     "unit": "degC",
+     "abs_tol": 0.3,
+     "registry": "GC2-M-06"
+    },
+    {
+     "id": "SOLUTION_MASS",
+     "state": "m_found",
+     "value": 1.3,
+     "unit": "mol/kg",
+     "abs_tol": 0.026,
+     "registry": "GC2-M-07"
+    },
+    {
+     "id": "GRAMS_FOR_MOLES",
+     "state": "m_found",
+     "value": 168.0,
+     "unit": "mol/kg",
+     "abs_tol": 3.36
+    },
+    {
+     "id": "DT_SIGNED",
+     "state": "dT_found",
+     "value": -8.44,
+     "unit": "degC",
+     "abs_tol": 0.3
+    }
+   ],
+   "table": null,
+   "words": {
+    "salt": "CaCl2",
+    "salt_g": "235",
+    "water_kg": "1.40",
+    "target": "−10.0",
+    "target_unit": "°C",
+    "gap_question": "Where does your point sit against the line, and what about the particles dissolved in the meltwater would explain any distance between them?"
+   },
+   "eq_checks": [],
+   "reveal_with_problem": null,
+   "sim": null,
+   "sim_params": {
+    "salt": "CaCl2",
+    "salt_g": "235",
+    "water_kg": "1.40"
+   },
+   "difficulty": "3 (steps 4, conv 1)",
+   "nearest_eoc": "11.45 (with i; worked model: Example 11.13)",
+   "companion": "RS2",
+   "exam_item": "not the exam scenario",
+   "sim_reveal": "The page draws freezing point against grams of this salt in the problem's meltwater (from 0 °C) and marks: pure water at 0 °C; the student's freezing point at the problem's grams; the student's prediction for twice the salt, beside the page's own point for it.",
+   "sim_opens_at": "after sim_predict",
+   "traps_dropped": [
+    "RESTATEMENT:FP_SIGN at T_found = dT_found's value"
+   ],
+   "expected": [
+    {
+     "id": "moles_of_CaCl₂",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1
+     },
+     "state": "mol_found",
+     "label": "moles of CaCl₂",
+     "value": 2.12,
+     "unit": "mol",
+     "abs_tol": 0.0424,
+     "require_unit": true,
+     "after": "account_given"
+    },
+    {
+     "id": "molality",
+     "role": "intermediate",
+     "dim": {
+      "mol": 1,
+      "kg": -1
+     },
+     "state": "m_found",
+     "label": "molality",
+     "value": 1.51,
+     "unit": "mol/kg",
+     "abs_tol": 0.0302,
+     "require_unit": true,
+     "after": "mol_found"
+    },
+    {
+     "id": "van_t_Hoff_factor",
+     "role": "intermediate",
+     "dim": {},
+     "state": "i_found",
+     "label": "van 't Hoff factor",
+     "value": 3.0,
+     "unit": "",
+     "abs_tol": 0.01,
+     "require_unit": false,
+     "after": "m_found"
+    },
+    {
+     "id": "freezing_point_lowering",
+     "role": "intermediate",
+     "dim": {
+      "K": 1
+     },
+     "state": "dT_found",
+     "label": "freezing point lowering",
+     "value": 8.44,
+     "unit": "degC",
+     "abs_tol": 0.3,
+     "require_unit": true,
+     "after": "i_found"
+    },
+    {
+     "id": "key_T_found",
+     "role": "key",
+     "dim": {
+      "K": 1
+     },
+     "state": "T_found",
+     "label": "freezing point of the brine",
+     "value": -8.44,
+     "unit": "degC",
+     "abs_tol": 0.3,
+     "require_unit": true,
+     "after": "dT_found"
+    },
+    {
+     "id": "reading_from_the_page_salt_g",
+     "role": "intermediate",
+     "dim": {
+      "g": 1
+     },
+     "state": "sim_instrument",
+     "label": "reading from the page (salt_g)",
+     "value": 278.5,
+     "unit": "g",
+     "abs_tol": 0.6,
+     "require_unit": true,
+     "after": "sim_predict"
+    },
+    {
+     "id": "c_K_f_water",
+     "state": null,
+     "role": "constant",
+     "label": "K_f (water)",
+     "value": 1.86,
+     "unit": "°C·kg/mol",
+     "dim": {
+      "K": 1,
+      "kg": 1,
+      "mol": -1
+     },
+     "abs_tol": 0.00186
+    }
+   ],
+   "precision_rule": true,
+   "variant_id": "ch11_colligative:6",
+   "archetype_id": "ch11_colligative",
+   "seed": 6,
+   "opener_index": 0
+  }
+ ],
+ "passages": {
+  "account_given": {
+   "ref": "11.4, Freezing Point Depression (Figure 11.21)",
+   "title": "Freezing Point Depression",
+   "section": "11.4 Colligative Properties",
+   "text": "Solutions freeze at lower temperatures than pure liquids. This phenomenon is exploited in “de-icing” schemes that use salt (Figure 11.21), calcium chloride, or urea to melt ice on roads and sidewalks, and in the use of ethylene glycol as an “antifreeze” in automobile radiators. Seawater freezes at a lower temperature than fresh water, and so the Arctic and Antarctic oceans remain unfrozen even at temperatures below 0 °C (as do the body fluids of fish and other cold-blooded sea animals that live in these oceans).\n\n**Figure 11.21** Rock salt (NaCl), calcium chloride (CaCl₂), or a mixture of the two are used to melt ice. (credit: modification of work by Eddie Welker)\n\nThe decrease in freezing point of a dilute solution compared to that of the pure solvent, $\\Delta T_f$, is called the **freezing point depression** and is directly proportional to the molal concentration of the solute\n\n$$\\Delta T_f = K_f m$$\n\nwhere m is the molal concentration of the solute and $K_f$ is called the **freezing point depression constant** (or cryoscopic constant). Just as for boiling point elevation constants, these are characteristic properties whose values depend on the chemical identity of the solvent. Values of $K_f$ for several solvents are listed in Table 11.2.\n\nFigure 11.21 Rock salt (NaCl), calcium chloride (CaCl₂), or a mixture of the two are used to melt ice. (credit: modification of work by Eddie Welker)"
+  },
+  "mol_found": {
+   "ref": "11.4, Example 11.13 (step 1)",
+   "title": "Example 11.13 The Freezing Point of a Solution of an Electrolyte",
+   "section": "11.4 Colligative Properties",
+   "text": "The concentration of ions in seawater is approximately the same as that in a solution containing 4.2 g of NaCl dissolved in 125 g of water. Use this information and a predicted value for the van’t Hoff factor (Table 11.3) to determine the freezing temperature of the solution (assume ideal solution behavior).\n\n**Solution**\n\nSolve this problem using the following series of steps.\n\n1.  Step 1. Convert from grams to moles of NaCl using the molar mass of NaCl in the unit conversion factor. Result: 0.072 mol NaCl\n2.  Step 2. Determine the number of moles of ions present in the solution using the number of moles of ions in 1 mole of NaCl as the conversion factor (2 mol ions/1 mol NaCl). Result: 0.14 mol ions\n3.  Step 3. Determine the molality of the ions in the solution from the number of moles of ions and the mass of solvent, in kilograms. Result: 1.2 m\n4.  Step 4. Use the direct proportionality between the change in freezing point and molal concentration to determine how much the freezing point changes. Result: 2.1 °C\n5.  Step 5. Determine the new freezing point from the freezing point of the pure solvent and the change. Result: −2.1 °C Check each result as a self-assessment, taking care to avoid rounding errors by retaining guard digits in each step’s result for computing the next step’s result.\n\n**Check Your Learning**\n\nAssuming complete dissociation and ideal solution behavior, calculate the freezing point of a solution of 0.724 g of CaCl₂ in 175 g of water.\n\n**Answer:**\n\n−0.208 °C"
+  },
+  "m_found": {
+   "ref": "11.4, Example 11.4 (molality)",
+   "title": "Example 11.4 Converting Mole Fraction and Molal Concentrations",
+   "section": "11.4 Colligative Properties",
+   "text": "Calculate the mole fraction of solute and solvent in a 3.0 m solution of sodium chloride.\n\n**Solution**\n\nConverting from one concentration unit to another is accomplished by first comparing the two unit definitions. In this case, both units have the same numerator (moles of solute) but different denominators. The provided molal concentration may be written as:\n\n$$\\frac{3.0\\ \\text{mol NaCl}}{1\\ \\text{kg H}_2\\text{O}}$$\n\nThe numerator for this solution’s mole fraction is, therefore, 3.0 mol NaCl. The denominator may be computed by deriving the molar amount of water corresponding to 1.0 kg\n\n$$1.0\\ \\text{kg H}_2\\text{O} \\left(\\frac{1000\\ \\text{g}}{1\\ \\text{kg}}\\right) \\left(\\frac{\\text{mol H}_2\\text{O}}{18.02\\ \\text{g}}\\right) = 55\\ \\text{mol H}_2\\text{O}$$\n\nand then substituting these molar amounts into the definition for mole fraction.\n\n$$\\begin{aligned} X_{\\text{H}_2\\text{O}} &= \\frac{\\text{mol H}_2\\text{O}}{\\text{mol NaCl}+\\text{mol H}_2\\text{O}} \\\\ X_{\\text{H}_2\\text{O}} &= \\frac{55\\ \\text{mol H}_2\\text{O}}{3.0\\ \\text{mol NaCl}+55\\ \\text{mol H}_2\\text{O}} \\\\ X_{\\text{H}_2\\text{O}} &= 0.95 \\\\ X_{\\text{NaCl}} &= \\frac{\\text{mol NaCl}}{\\text{mol NaCl}+\\text{mol H}_2\\text{O}} \\\\ X_{\\text{NaCl}} &= \\frac{3.0\\ \\text{mol NaCl}}{3.0\\ \\text{mol NaCl}+55\\ \\text{mol H}_2\\text{O}} \\\\ X_{\\text{NaCl}} &= 0.052 \\end{aligned}$$\n\n**Check Your Learning**\n\nThe mole fraction of iodine, I₂, dissolved in dichloromethane, CH₂Cl₂, is 0.115. What is the molal concentration, m, of iodine in this solution?\n\n**Answer:**\n\n1.53 m"
+  },
+  "i_found": {
+   "ref": "11.4, Colligative Properties of Electrolytes (Table 11.3)",
+   "title": "Colligative Properties of Electrolytes",
+   "section": "11.4 Colligative Properties",
+   "text": "As noted previously in this module, the colligative properties of a solution depend only on the number, not on the identity, of solute species dissolved. The concentration terms in the equations for various colligative properties (freezing point depression, boiling point elevation, osmotic pressure) pertain to all solute species present in the solution. For the solutions considered thus far in this chapter, the solutes have been nonelectrolytes that dissolve physically without dissociation or any other accompanying process. Each molecule that dissolves yields one dissolved solute molecule. The dissolution of an electrolyte, however, is not this simple, as illustrated by the two common examples below:\n\n| | |\n|---|---|\n| *dissociation* | $\\text{NaCl}(s) \\longrightarrow \\text{Na}^+(aq) + \\text{Cl}^-(aq)$ |\n| *ionization* | $\\text{HCl}(aq) + \\text{H}_2\\text{O}(l) \\longrightarrow \\text{Cl}^-(aq) + \\text{H}_3\\text{O}^+(aq)$ |\n\nConsidering the first of these examples, and assuming complete dissociation, a 1.0 m aqueous solution of NaCl contains 2.0 mole of ions (1.0 mol Na⁺ and 1.0 mol Cl⁻) per each kilogram of water, and its freezing point depression is expected to be\n\n$$\\Delta T_f = 2.0\\ \\text{mol ions/kg water} \\times 1.86\\ ^\\circ\\text{C kg water/mol ion} = 3.7\\ ^\\circ\\text{C}.$$\n\nWhen this solution is actually prepared and its freezing point depression measured, however, a value of 3.4 °C is obtained. Similar discrepancies are observed for other ionic compounds, and the differences between the measured and expected colligative property values typically become more significant as solute concentrations increase. These observations suggest that the ions of sodium chloride (and other strong electrolytes) are not completely dissociated in solution. …\n\nValues for measured van’t Hoff factors for several solutes, along with predicted values assuming complete dissociation, are shown in Table 11.3.\n| Formula unit | Classification | Dissolution products | *i* (predicted) | *i* (measured) |\n|---|---|---|---|---|\n| C₁₂H₂₂O₁₁ (sucrose) | Nonelectrolyte | C₁₂H₂₂O₁₁ | 1 | 1.0 |\n| NaCl | Strong electrolyte | Na⁺, Cl⁻ | 2 | 1.9 |\n| HCl | Strong electrolyte (acid) | H₃O⁺, Cl⁻ | 2 | 1.9 |\n| MgSO₄ | Strong electrolyte | Mg²⁺, SO₄²⁻ | 2 | 1.3 |\n| MgCl₂ | Strong electrolyte | Mg²⁺, 2Cl⁻ | 3 | 2.7 |\n| FeCl₃ | Strong electrolyte | Fe³⁺, 3Cl⁻ | 4 | 3.4 |"
+  },
+  "dT_found": {
+   "ref": "11.4, Example 11.13 (step 4)",
+   "title": "Example 11.13 The Freezing Point of a Solution of an Electrolyte",
+   "section": "11.4 Colligative Properties",
+   "text": "The concentration of ions in seawater is approximately the same as that in a solution containing 4.2 g of NaCl dissolved in 125 g of water. Use this information and a predicted value for the van’t Hoff factor (Table 11.3) to determine the freezing temperature of the solution (assume ideal solution behavior).\n\n**Solution**\n\nSolve this problem using the following series of steps.\n\n1.  Step 1. Convert from grams to moles of NaCl using the molar mass of NaCl in the unit conversion factor. Result: 0.072 mol NaCl\n2.  Step 2. Determine the number of moles of ions present in the solution using the number of moles of ions in 1 mole of NaCl as the conversion factor (2 mol ions/1 mol NaCl). Result: 0.14 mol ions\n3.  Step 3. Determine the molality of the ions in the solution from the number of moles of ions and the mass of solvent, in kilograms. Result: 1.2 m\n4.  Step 4. Use the direct proportionality between the change in freezing point and molal concentration to determine how much the freezing point changes. Result: 2.1 °C\n5.  Step 5. Determine the new freezing point from the freezing point of the pure solvent and the change. Result: −2.1 °C Check each result as a self-assessment, taking care to avoid rounding errors by retaining guard digits in each step’s result for computing the next step’s result.\n\n**Check Your Learning**\n\nAssuming complete dissociation and ideal solution behavior, calculate the freezing point of a solution of 0.724 g of CaCl₂ in 175 g of water.\n\n**Answer:**\n\n−0.208 °C"
+  },
+  "T_found": {
+   "ref": "11.4, Example 11.9 (step 2)",
+   "title": "Example 11.9 Calculation of the Freezing Point of a Solution",
+   "section": "11.4 Colligative Properties",
+   "text": "Assuming ideal solution behavior, what is the freezing point of the 0.33 m solution of a nonvolatile nonelectrolyte solute in benzene described in Example 11.7?\n\n**Solution**\n\nUse the equation relating freezing point depression to solute molality to solve this problem in two steps.\n\n1.  Step 1. Calculate the change in freezing point.\n\n$$\\Delta T_f = K_f m = 5.12\\ ^\\circ\\text{C}\\ m^{-1} \\times 0.33\\ m = 1.7\\ ^\\circ\\text{C}$$\n\n2.  Step 2. Subtract the freezing point change observed from the pure solvent’s freezing point.\n\n$$\\text{Freezing Temperature} = 5.5\\ ^\\circ\\text{C} - 1.7\\ ^\\circ\\text{C} = 3.8\\ ^\\circ\\text{C}$$\n\n**Check Your Learning**\n\nAssuming ideal solution behavior, what is the freezing point of a 1.85 m solution of a nonvolatile nonelectrolyte solute in nitrobenzene?\n\n**Answer:**\n\n−9.3 °C"
+  },
+  "sim_predict": {
+   "ref": "11.4, Freezing Point Depression",
+   "title": "Freezing Point Depression",
+   "section": "11.4 Colligative Properties",
+   "text": "Solutions freeze at lower temperatures than pure liquids. This phenomenon is exploited in “de-icing” schemes that use salt (Figure 11.21), calcium chloride, or urea to melt ice on roads and sidewalks, and in the use of ethylene glycol as an “antifreeze” in automobile radiators. Seawater freezes at a lower temperature than fresh water, and so the Arctic and Antarctic oceans remain unfrozen even at temperatures below 0 °C (as do the body fluids of fish and other cold-blooded sea animals that live in these oceans).\n\n**Figure 11.21** Rock salt (NaCl), calcium chloride (CaCl₂), or a mixture of the two are used to melt ice. (credit: modification of work by Eddie Welker)\n\nThe decrease in freezing point of a dilute solution compared to that of the pure solvent, $\\Delta T_f$, is called the **freezing point depression** and is directly proportional to the molal concentration of the solute\n\n$$\\Delta T_f = K_f m$$\n\nwhere m is the molal concentration of the solute and $K_f$ is called the **freezing point depression constant** (or cryoscopic constant). Just as for boiling point elevation constants, these are characteristic properties whose values depend on the chemical identity of the solvent. Values of $K_f$ for several solvents are listed in Table 11.2."
+  },
+  "perturb_1": {
+   "ref": "11.4, Colligative Properties of Electrolytes (Table 11.3)",
+   "title": "Colligative Properties of Electrolytes",
+   "section": "11.4 Colligative Properties",
+   "text": "As noted previously in this module, the colligative properties of a solution depend only on the number, not on the identity, of solute species dissolved. The concentration terms in the equations for various colligative properties (freezing point depression, boiling point elevation, osmotic pressure) pertain to all solute species present in the solution. For the solutions considered thus far in this chapter, the solutes have been nonelectrolytes that dissolve physically without dissociation or any other accompanying process. Each molecule that dissolves yields one dissolved solute molecule. The dissolution of an electrolyte, however, is not this simple, as illustrated by the two common examples below:\n\n| | |\n|---|---|\n| *dissociation* | $\\text{NaCl}(s) \\longrightarrow \\text{Na}^+(aq) + \\text{Cl}^-(aq)$ |\n| *ionization* | $\\text{HCl}(aq) + \\text{H}_2\\text{O}(l) \\longrightarrow \\text{Cl}^-(aq) + \\text{H}_3\\text{O}^+(aq)$ |\n\nConsidering the first of these examples, and assuming complete dissociation, a 1.0 m aqueous solution of NaCl contains 2.0 mole of ions (1.0 mol Na⁺ and 1.0 mol Cl⁻) per each kilogram of water, and its freezing point depression is expected to be\n\n$$\\Delta T_f = 2.0\\ \\text{mol ions/kg water} \\times 1.86\\ ^\\circ\\text{C kg water/mol ion} = 3.7\\ ^\\circ\\text{C}.$$\n\nWhen this solution is actually prepared and its freezing point depression measured, however, a value of 3.4 °C is obtained. Similar discrepancies are observed for other ionic compounds, and the differences between the measured and expected colligative property values typically become more significant as solute concentrations increase. These observations suggest that the ions of sodium chloride (and other strong electrolytes) are not completely dissociated in solution. …\n\nValues for measured van’t Hoff factors for several solutes, along with predicted values assuming complete dissociation, are shown in Table 11.3.\n| Formula unit | Classification | Dissolution products | *i* (predicted) | *i* (measured) |\n|---|---|---|---|---|\n| C₁₂H₂₂O₁₁ (sucrose) | Nonelectrolyte | C₁₂H₂₂O₁₁ | 1 | 1.0 |\n| NaCl | Strong electrolyte | Na⁺, Cl⁻ | 2 | 1.9 |\n| HCl | Strong electrolyte (acid) | H₃O⁺, Cl⁻ | 2 | 1.9 |\n| MgSO₄ | Strong electrolyte | Mg²⁺, SO₄²⁻ | 2 | 1.3 |\n| MgCl₂ | Strong electrolyte | Mg²⁺, 2Cl⁻ | 3 | 2.7 |\n| FeCl₃ | Strong electrolyte | Fe³⁺, 3Cl⁻ | 4 | 3.4 |"
+  },
+  "perturb_1_why": {
+   "ref": "11.4, Freezing Point Depression",
+   "title": "Freezing Point Depression",
+   "section": "11.4 Colligative Properties",
+   "text": "Solutions freeze at lower temperatures than pure liquids. This phenomenon is exploited in “de-icing” schemes that use salt (Figure 11.21), calcium chloride, or urea to melt ice on roads and sidewalks, and in the use of ethylene glycol as an “antifreeze” in automobile radiators. Seawater freezes at a lower temperature than fresh water, and so the Arctic and Antarctic oceans remain unfrozen even at temperatures below 0 °C (as do the body fluids of fish and other cold-blooded sea animals that live in these oceans).\n\n**Figure 11.21** Rock salt (NaCl), calcium chloride (CaCl₂), or a mixture of the two are used to melt ice. (credit: modification of work by Eddie Welker)\n\nThe decrease in freezing point of a dilute solution compared to that of the pure solvent, $\\Delta T_f$, is called the **freezing point depression** and is directly proportional to the molal concentration of the solute\n\n$$\\Delta T_f = K_f m$$\n\nwhere m is the molal concentration of the solute and $K_f$ is called the **freezing point depression constant** (or cryoscopic constant). Just as for boiling point elevation constants, these are characteristic properties whose values depend on the chemical identity of the solvent. Values of $K_f$ for several solvents are listed in Table 11.2."
+  },
+  "meaning_given": {
+   "ref": "11.4, Freezing Point Depression (Figure 11.21)",
+   "title": "Freezing Point Depression",
+   "section": "11.4 Colligative Properties",
+   "text": "Solutions freeze at lower temperatures than pure liquids. This phenomenon is exploited in “de-icing” schemes that use salt (Figure 11.21), calcium chloride, or urea to melt ice on roads and sidewalks, and in the use of ethylene glycol as an “antifreeze” in automobile radiators. Seawater freezes at a lower temperature than fresh water, and so the Arctic and Antarctic oceans remain unfrozen even at temperatures below 0 °C (as do the body fluids of fish and other cold-blooded sea animals that live in these oceans).\n\n**Figure 11.21** Rock salt (NaCl), calcium chloride (CaCl₂), or a mixture of the two are used to melt ice. (credit: modification of work by Eddie Welker)\n\nThe decrease in freezing point of a dilute solution compared to that of the pure solvent, $\\Delta T_f$, is called the **freezing point depression** and is directly proportional to the molal concentration of the solute\n\n$$\\Delta T_f = K_f m$$\n\nwhere m is the molal concentration of the solute and $K_f$ is called the **freezing point depression constant** (or cryoscopic constant). Just as for boiling point elevation constants, these are characteristic properties whose values depend on the chemical identity of the solvent. Values of $K_f$ for several solvents are listed in Table 11.2.\n\nFigure 11.21 Rock salt (NaCl), calcium chloride (CaCl₂), or a mixture of the two are used to melt ice. (credit: modification of work by Eddie Welker)"
+  }
+ },
+ "passages_unresolved": [],
+ "content_version": "0147ae933a"
+}

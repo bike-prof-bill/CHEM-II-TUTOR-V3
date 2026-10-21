@@ -48,7 +48,7 @@ parameters.
 
 ## Rules
 1. Ids are the ones in the page's header comment and in SCENARIO_CLAUDE's Fable list; a renamed id is a change brief.
-2. Values are numbers, not strings, for sliders, dials and readings; a menu or switch reports its `choice` as the exact text shown; units are strings as shown on screen.
+2. Values are numbers, not strings, for sliders, dials and readings; a menu or switch reports its `choice` as the menu's value, as written in the URL parameter (`CaCl2`, not the displayed `CaCl₂`; instructor, 21 Oct); units are strings as shown on screen.
 3. At most one message per control rest and one per reading; a page that posts more than about twenty messages a minute
    under ordinary use is sending too much.
 4. Nothing in a message identifies the student; the tutor adds the attempt and the archetype when it logs.

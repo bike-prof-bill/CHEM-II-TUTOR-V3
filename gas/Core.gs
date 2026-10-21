@@ -45,6 +45,28 @@ var CORE_BUILD = function () {
       else return finishA(arch, S, V, ev, { reply: moveFor(arch, V, S.awaitingReturn).return_ask || "In your own words, what did the notebook show you?", card: null, needsSay: false }, t0);
     }
 
+    // "More info" (brief 32, 21 Oct): the step's textbook passage and notebook prompt, deterministic, never counted, no model
+    if (input.info) {
+      ev.event_type = "INFO_REQUEST"; var im = active ? moveFor(arch, V, active) : {}, pz = (arch.passages || {})[active] || null;
+      var info = { state: active || "", ref: (pz && pz.ref) || im.openstax || "", title: (pz && pz.title) || "", section: (pz && pz.section) || "", text: (pz && pz.text) || "", prompt: im.notebook_prompt || "", url: arch.notebook_url || "" };
+      var ir = finishA(arch, S, V, ev, { reply: (pz ? "From the textbook, " + pz.title + ". " : "") + (im.ask || ""), card: null, needsSay: false }, t0); ir.info = info; return ir;
+    }
+    // the answer to a pivot question (21 Oct ladder): judged loosely, one pivot keyword in a sentence of their own; never counted; then the step again
+    if (S.pivot && !input.pick && !input.help) {
+      var pv = S.pivot, pm0 = moveFor(arch, V, pv.state), kws = String(pm0.pivot_keywords || "").split(/[;,]/).map(function (k) { return k.trim().toLowerCase(); }).filter(Boolean), low0 = msg.toLowerCase();
+      var hitK = kws.some(function (k) { return new RegExp("(^|[^a-z0-9])" + k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, "\\s+") + "(e?s|d|ed|ing)?($|[^a-z0-9])").test(low0); });
+      var cleared = hasAccount(msg, arch) && hitK;
+      ev.event_type = cleared ? "PIVOT_CLEARED" : "PIVOT_MISSED"; ev.help_rung = "pivot_answer"; S.pivot = null;
+      return finishA(arch, S, V, ev, { reply: pm0.ask || "", card: null, needsSay: false }, t0);
+    }
+    // "More help" (brief 32): the next rung of the ladder for the active step, at the student's request; it counts as a try
+    if (input.help && active && b && b.kind !== "reflection") {
+      ev.counted_fail = true; ev.event_type = "HELP_REQUEST"; ev.structured = "help";
+      var hl = applyLadder(arch, S, V, ev, input);   // the ladder names the rung in event_type (PIVOT_ASKED, COMPANION_SHOWN, ...) and in help_rung; structured keeps "help"
+      if (!hl.reply && !hl.card) hl.reply = (moveFor(arch, V, active).switch_ask || moveFor(arch, V, active).ask || "");
+      return finishA(arch, S, V, ev, { reply: hl.reply, card: hl.card, needsSay: false }, t0);
+    }
+
     // a row of coefficient boxes (chapter 17 balancing, instructor 18 Oct): the page sends "coeffs: 3,2,6,3,2,4" (a blank box is 1); exact
     // lowest whole numbers tick; a common multiple or a wrong set is a wrong try. Never read as numbers or as a pick.
     var coeffsSeen = false, cm = msg.match(/^\s*coeffs?\s*:\s*([\d\s,]+)$/i);
@@ -168,6 +190,7 @@ var CORE_BUILD = function () {
         // (a unitless ratio can equal the answer's value in another unit when the known quantity is 1 in that unit: found by the second scenario, 10 Oct)
         if (c.type === "needs_unit" && c.needs && !S.matched[c.needs.idx]) { S.pendingUnit = c.needs; notes.push("The value for '" + V.expected[c.needs.idx].label + "' is right but has no units. Ask for the units. Do not advance."); }
       } else if (c.type === "trap") { ev.traps.push(c.trap.id); notes.push("KNOWN WRONG TURN (" + c.trap.id + "): " + trapNote(arch, V, c.trap.id).note + " Do not name the fix. Ask one question aimed at it."); }
+      else if (c.type === "needs_figures") { ev.near_miss = "needs_figures"; notes.push("The number for '" + c.label + "' may be right at this precision, but a known wrong value sits within the same rounding, so it cannot be told apart. Ask for one more significant figure. Do not say which value it might be. This turn costs them nothing."); }
       else if (c.type === "wrong_dimension") { ev.guards.push("WRONG_DIMENSION"); strays++; notes.push("The number is right for one step but carries a unit of a different kind of quantity (" + c.typed + "). Do not accept it. Ask what kind of quantity that value measures."); }
       else if (c.type === "near_miss") { ev.near_miss = c.id; strays++; notes.push("The number is near '" + V.expected[c.idx].label + "' but outside the grading window: most likely an arithmetic slip. Do not say how close it is. Do not confirm it. Ask which values they used."); }
       else if (c.type === "stray") strays++;
@@ -224,6 +247,7 @@ var CORE_BUILD = function () {
       else if (active === "account_given") {
         var cov = openerCoverage(msg, arch.openers[S.openerIndex], arch);
         if (cov.labelOnly) { gateOK = false; labelOnly = true; ev.guards.push("OPENER_LABEL_ONLY"); notes.push("The student named the phenomenon (a label such as volatile or evaporates) without saying what the particles are doing. That is a name, not an account. Do not accept; ask what the particles are doing. This turn costs them nothing."); }
+        else if (cov.noMechanism) { gateOK = false; ev.guards.push("OPENER_NO_MECHANISM"); notes.push("The student names the particles but not what they do. That is a list, not an account. Do not accept; ask what those particles are doing at the surface or in the solution. This turn costs them nothing."); labelOnly = true; }
         else if (!cov.engaged) { gateOK = false; ev.guards.push("OPENER_NOT_ENGAGED"); notes.push("The account touches nothing in the opening scenario and says nothing about particles. Do not accept. Ask what the particles in THIS scenario are doing."); }
       }
     }
@@ -268,7 +292,7 @@ var CORE_BUILD = function () {
   function say(arch, S, input, model) {
     var t0 = Date.now(), V = arch.variants[S.variantIndex];
     if (!S.pending) { var evx = { event_type: "SAY_WITHOUT_VERDICT", entering: progress(S, V).done, active: activeState(S, V), newly: [], traps: [], guards: [] }; var rx = assemble(arch, S, V, evx, "Press New problem.", null, false); rx.needs_say = false; return rx; }
-    var ev = S.pending.ev, p = S.pending.p, msg = p.msg, history = p.history, notes = p.notes, reply = null, accepted = false, kind = ev.turn_kind;
+    var ev = S.pending.ev, p = S.pending.p, msg = p.msg, history = p.history, notes = p.notes, reply = null, accepted = false, kind = ev.turn_kind, authored = false;
     var active = activeState(S, V), b = active ? entry(V, active) : null, move = active ? moveFor(arch, V, active) : {};
     var lastItem = !!(b && liveItems(S, V).every(function (x) { return x.id === b.id || isSet(S, x.id); }));
     var ctx = { progress: progress(S, V), active: active, register: b ? b.register : "", ask: move.ask, notes: notes, judge: p.judge && p.gateOK, lastItem: lastItem,
@@ -296,10 +320,13 @@ var CORE_BUILD = function () {
       // model refused four true accounts in a row: the account is accepted when the gates and ONE of the two readers agree, i.e. the
       // model says accept, or the second reader finds nothing false. Both verdicts are logged. In plain mode the gates alone decide.
       var modelYes = !!(out && out.accept), srFalse = !!(sr && sr.found && sr.quote && msg.indexOf(sr.quote) > -1);
+      var named = (sr && sr.account && active === "account_given") ? wrongAccountFor(arch, S, String(sr.account)) : null;   // brief 32: the reader named a listed wrong account
+      if (named) { srFalse = true; ev.traps.push(named.id); ev.second_reader_quote = named.id + " — " + named.account; }
       ev.second_reader = sr ? (srFalse ? "FALSE_CLAIM" : "clean") : "unavailable";
       ev.second_reader_quote = (sr && sr.found) ? String(sr.quote || "") + " — " + String(sr.why || "") : "";   // so a disputed refusal can be read
       accepted = SECOND_READER_VETO ? !srFalse : (modelYes || !srFalse);
-      if (!accepted && model) {                   // both readers against it: the model asks one question aimed at the false claim
+      if (!accepted && named) { ev.guards.push("ACCOUNT_NAMED"); reply = named.repair; authored = true; }   // the approved repair question speaks; no rewrite call, no draft check (it is the instructor's line)
+      else if (!accepted && model) {                   // both readers against it: the model asks one question aimed at the false claim
         ev.guards.push("REPLY_AFFIRMED_ERROR");
         var c2 = Object.assign({}, ctx, { judge: false, extra: "A second reader found a false statement in the student's message: \"" + sr.quote + "\" (" + sr.why + "). Do not accept. Do not correct it for them. Ask one question aimed at it." });
         var redo = safe(model, buildSystem(arch, S, V, c2), history, msg); reply = redo ? redo.socratic_response : null;
@@ -317,10 +344,10 @@ var CORE_BUILD = function () {
     if (ev.counted_fail && p.judge) { var lad = applyLadder(arch, S, V, ev, { now: p.now }); if (lad.card || lad.reply) { card = lad.card; reply = lad.reply; } else if (lad.switchAsk) p.switchAsk = lad.switchAsk; }
 
     // a second rejected account with no authored switch question: an alternative way to ask what the particles are doing (the instructor's probe bank, 16 Oct)
-    if (!card && !p.switchAsk && active === "account_given" && ev.counted_fail && ((S.tries && S.tries[stageOf(V, active)]) || 0) === 1) { var pr = accountProbeFor(arch, S); if (pr) { p.switchAsk = pr.question; ev.probe_id = pr.id; reply = null; } }
+    if (!card && !authored && !p.switchAsk && active === "account_given" && ev.counted_fail && ((S.tries && S.tries[stageOf(V, active)]) || 0) === 1) { var pr = accountProbeFor(arch, S); if (pr) { p.switchAsk = pr.question; ev.probe_id = pr.id; reply = null; } }
     // the cheap checks and the leak guard on the draft: one rewrite, then the authored fallback
     var done = activeState(S, V) === null;
-    if (reply && !card) {
+    if (reply && !card && !authored) {
       var fails = checkDraft(reply, S, V, done, S.lastReply);
       if (fails.length) {
         fails.forEach(function (f) { if (ev.guards.indexOf(f) < 0) ev.guards.push(f); });
@@ -338,7 +365,7 @@ var CORE_BUILD = function () {
     // instructor, 11 Oct: the authored question everywhere. The model keeps its own question only where that question IS the tutoring:
     // a free-text attempt the gates or readers refused (nothing ticked, the same text item still active), a plea for help, a trap, a switch.
     var refusedText = nowB && nowB.kind === "text" && nowA === ev.active && !ev.newly.length;
-    if (reply && !card && !ev.fallback_used && nowB && !refusedText && !p.switchAsk && (!ev.traps.length || ev.units_check === "ok_value_wrong")) {
+    if (reply && !card && !authored && !ev.fallback_used && nowB && !refusedText && !p.switchAsk && (!ev.traps.length || ev.units_check === "ok_value_wrong")) {
       var nowAsk = (ev.units_check || ev.near_miss || ev.repeat || ev.wrong_unknown) ? nearMissAsk(arch, V, ev) : moveFor(arch, V, nowA).ask;
       var showB = (ev.newly.length && !ev.units_check && !ev.near_miss && !ev.repeat && !ev.wrong_unknown) ? showFor(arch, V, S, nowA) : "";
       if (nowAsk) { var ackOnly = cutQuestions(reply); reply = (ackOnly ? ackOnly + " " : "") + (showB || nowAsk); }   // Worked rung: the show cell is the whole prompt
@@ -385,7 +412,13 @@ var CORE_BUILD = function () {
     if (med.simulation && !S.mediaSimOpen && ((med.simulation_opens === "account" && isSet(S, "account_given")) || (med.simulation_opens !== "account" && simDue))) {
       S.mediaSimOpen = true; var subst = (V.context && (V.context.true_substance || V.context.substance)) || "";
       var params = Object.assign({ substance: subst }, V.sim_params || {});      // the archetype's own placeholders ({T}, {unit}, ...)
+      var ss = simState && simState.sim_student;                                // brief 32: the student's own values at the reveal ({T_student} from T_found, {pred} from the prediction pick)
+      if (ss) for (var pk in ss) {
+        var src = ss[pk]; if (S.picks && S.picks[src] !== undefined) params[pk] = String(S.picks[src]).split(":").slice(1).join(":") || String(S.picks[src]);
+        else V.expected.forEach(function (e, ix) { if (e.state === src && S.matched[ix] && S.values && S.values[ix] !== undefined) params[pk] = S.values[ix]; });
+      }
       res.simulation_url = med.simulation.replace(/\{(\w+)\}/g, function (m, k) { return k === "theme" ? m : (params[k] !== undefined ? encodeURIComponent(String(params[k])) : m); });
+      if (ss) for (var pk2 in ss) if (params[pk2] !== undefined && med.simulation.indexOf("{" + pk2 + "}") < 0) res.simulation_url += (res.simulation_url.indexOf("?") > -1 ? "&" : "?") + pk2 + "=" + encodeURIComponent(String(params[pk2]));   // the reveal values ride along even when the address template predates them
     }
     if (!provisional && !S.done && activeState(S, V) === null) {
       S.done = true; S.credit = S.rung === "independent" && S.clean && S.board["meaning_given"] === "ticked"; ev.completed = true;   // credit-eligible only at Independent (instructor, 11 Oct)

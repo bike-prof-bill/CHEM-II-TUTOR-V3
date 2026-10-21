@@ -103,8 +103,8 @@ function near(x, v, tol) { return Math.abs(x - v) <= tol; }
 // `accepted` (optional): values the student has already had accepted, by entry id. An entry with `derive` is graded against them:
 // expected = derive.base - accepted[derive.from] (The Drinking Bird's pressure difference, graded against the student's own head
 // pressure so its allowance is not counted twice). Such an entry is skipped until the entry it depends on has been accepted.
-function match(n, expected, traps, ticked, accepted) {
-  var hits = [], needs = null, wrongDim = null, given = null, constant = null; accepted = accepted || {};
+function match(n, expected, traps, ticked, accepted, opts) {
+  var hits = [], needs = null, wrongDim = null, given = null, constant = null; accepted = accepted || {}; opts = opts || {};
   for (var i = 0; i < expected.length; i++) {
     var t = expected[i], forms;
     if (t.after && !ticked[t.after]) continue;                  // an entry that exists only once an earlier state is set (the other root after x, 13 Oct)
@@ -116,7 +116,15 @@ function match(n, expected, traps, ticked, accepted) {
     } else forms = [{ value: t.value, unit: t.unit, abs_tol: t.abs_tol }].concat(t.also || []);
     for (var f = 0; f < forms.length; f++) {
       var F = forms[f], fu = F.unit || "";
-      if (!near(n.x, F.value, F.abs_tol)) continue;
+      // the precision rule (instructor, 21 Oct): a typed value is right if it equals the answer rounded to the student's own places,
+      // given at least two figures (1.3, 1.35 and 1.347 all pass for 1.3472); never for a value the parser worked out from arithmetic
+      var wide = (opts.precision && n.dec !== undefined && n.sig >= 2 && !n.worked) ? Math.max(F.abs_tol, 0.5 * Math.pow(10, -n.dec) + 1e-9 * Math.abs(F.value)) : F.abs_tol;   // the rule is confined to archetypes that declare it (instructor, 21 Oct: chapter 11 while experimental)
+      if (!near(n.x, F.value, wide)) continue;
+      if (wide > F.abs_tol && !near(n.x, F.value, F.abs_tol)) {       // accepted by precision alone: a known wrong value inside the same width means one more figure is needed
+        var amb = false; for (var q = 0; q < traps.length; q++) if (traps[q].state === t.state && near(n.x, traps[q].value, wide)) amb = true;
+        if (amb) return { type: "needs_figures", idx: i, label: t.label };
+        n.by_precision = true;
+      }
       if (n.unit && fu && n.unit !== fu) {                       // same value, other unit: conversion or dimension error
         if (!UNITS.vecSame(UNITS.dim(n.unit), UNITS.dim(fu)) && !wrongDim) wrongDim = { idx: i, unit: fu };
         continue;
@@ -168,6 +176,6 @@ function match(n, expected, traps, ticked, accepted) {
 var NEAR_MISS_FRACTION = 0.10;   // outside the grading window, within this fraction of the expected value (instructor, 11 Oct)
 function tickedSet(S) { var t = {}; for (var st in S.board) if (isSet(S, st)) t[st] = true; return t; }
 function acceptedValues(S, V) { var a = {}; V.expected.forEach(function (e, i) { if (S.values && S.values[i] !== undefined) a[e.id] = S.values[i]; }); return a; }
-function classify(n, S, V) { return match(n, V.expected, V.traps, tickedSet(S), acceptedValues(S, V)); }
+function classify(n, S, V) { return match(n, V.expected, V.traps, tickedSet(S), acceptedValues(S, V), { precision: !!V.precision_rule }); }
 
 if (typeof module !== "undefined") module.exports = { NEAR_MISS_FRACTION: NEAR_MISS_FRACTION, acceptedValues: acceptedValues, eqSide: eqSide, holdsOn: holdsOn, holdsAny: holdsAny, checkEquation: checkEquation, cellEqual: cellEqual, checkTable: checkTable, near: near, match: match, tickedSet: tickedSet, classify: classify };

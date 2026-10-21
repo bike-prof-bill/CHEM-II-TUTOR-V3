@@ -159,6 +159,14 @@
     "M": -2,
     "s": -1
    }
+  },
+  "cryoscopic": {
+   "canonical": "°C·kg/mol",
+   "dim": {
+    "K": 1,
+    "kg": 1,
+    "mol": -1
+   }
   }
  },
  "units": {
@@ -705,6 +713,21 @@
     "M⁻²s⁻¹",
     "L²/(mol²·s)",
     "L² mol⁻² s⁻¹"
+   ]
+  },
+  "°C·kg/mol": {
+   "dimension": "cryoscopic",
+   "factor": 1,
+   "offset": 0,
+   "aliases": [
+    "°C·kg/mol",
+    "°C kg/mol",
+    "degC·kg/mol",
+    "K·kg/mol",
+    "K kg/mol",
+    "°C/m",
+    "K/m",
+    "degC/m"
    ]
   }
  }

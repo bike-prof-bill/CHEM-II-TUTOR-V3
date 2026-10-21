@@ -83,7 +83,8 @@ function newSession(arch, pick) {
   return { attemptId: "A" + pick.stamp, archetypeId: arch.archetype_id, variantId: V.variant_id, variantIndex: pick.variantIndex,
     openerIndex: (V.opener_index !== undefined ? V.opener_index : pick.openerIndex), board: {}, matched: {}, pendingUnit: null, tries: {}, bailed: {}, away: null,
     awaitingReturn: null, pinned: {}, pins: [], picks: {}, clean: true, turns: 0, produced: [], done: false, credit: false, simOpen: false, mediaSimOpen: false, lastReply: null,
-    rung: pick.rung || "faded", role: openerRole(arch, V), version: V.version || "", extra: !!pick.extra };   // rungs (11-13 Oct)
+    rung: pick.rung || "faded", role: openerRole(arch, V), version: V.version || "", extra: !!pick.extra,
+    policy: (String(pick.policy || "B").toUpperCase()), pivot: null, helpUsed: {} };   // rungs (11-13 Oct); the help policy and the pivot (21 Oct)
 }
 function problemPayload(arch, V, S) {     // what the browser is allowed to have once the account is given
   var med = (S && arch.openers[S.openerIndex] && arch.openers[S.openerIndex].media) || {};

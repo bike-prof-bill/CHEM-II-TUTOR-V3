@@ -7,6 +7,7 @@ KNOWN_GAPS = {("ch16_G_and_K", "SK6", "reaction"), ("ch16_G_and_K", "WC5", "reac
               ("ch16_free_energy", "ZO1", "reaction"), ("ch16_free_energy", "ZO2", "reaction"), ("ch17_electrolysis", "AB4", "ion")} | {("ch17_E_G_K", f"LA{i}", "right") for i in range(1, 6)} | {("ch17_E_G_K", f"FC{i}", "right") for i in range(1, 7)}
 ok = {"reaction": set(S.SIM_IDS["free_energy"]) | set(S.SIM_IDS["G_and_Q"]), "process": set(S.SIM_IDS["entropy"]), "left": set(S.SIM_IDS["cell_metals"]), "right": set(S.SIM_IDS["cell_metals"]),
       "ion": set(S.SIM_IDS["electrolysis_ions"]), "isotope": set(S.SIM_IDS["decay_isotopes"]), "nuclide": set(S.SIM_IDS["binding_nuclides"])}
+ok_by_arch = {"ch11_colligative": {"salt": set(S.SIM_IDS["freezing_point_salts"])}}   # {salt} means a de-icing salt on the chapter 11 page, a silver salt on the Silent Beaker's
 found, bad, total = set(), [], 0
 for f in sorted(glob.glob("output/*.bundle.json")):
     B = json.load(open(f)); aid = f.split("/")[-1].split(".")[0]
@@ -15,7 +16,8 @@ for f in sorted(glob.glob("output/*.bundle.json")):
         if not url: continue
         total += 1; sp = v.get("sim_params") or {}
         for k in [k for k in re.findall(r"\{(\w+)\}", url) if k not in ("theme", "substance")]:
-            if k not in sp or (k in ok and str(sp[k]) not in ok[k]): found.add((aid, v["fixed_id"], k))
+            okk = dict(ok, **ok_by_arch.get(aid, {}))
+            if k not in sp or (k in okk and str(sp[k]) not in okk[k]): found.add((aid, v["fixed_id"], k))
 new = sorted(found - KNOWN_GAPS); fixed = sorted(KNOWN_GAPS - found)
 for g in fixed: print("  note: a listed gap is now filled (remove it from KNOWN_GAPS):", g)
 for g in new: print("  FAIL: simulation value missing or unknown to the page:", g)

@@ -481,3 +481,48 @@ Shell `bb174cdf`, `CODE_VERSION 9d1709f9`; content per the generate line.
 - 21 Oct (later): `docs/34` gains the `choice` form for menus, switches and views (text, not numbers) and the rule that a Play
   button reports the view change it causes. `docs/04` gains two placeholders for the reveal step, `{T_student}` and `{pred}`,
   with the rule that the page shows nothing for them until the tutor fills them (a shell change on the roadmap, item 11).
+- 21 Oct (later): `Chapter12_Kinetics.md` with `figures/ch12/` (39 images, 1.9 MB) installed; `check_textbook.py`: 7 sections,
+  15 examples, 39 figure links all resolving, 84 exercises with no gap, no ligature errors. 80 sentences sampled against the raw
+  conversion: all match apart from formatting. One structural equation (cyclobutane to ethylene, Equation 12.6) is kept as a
+  picture, rightly, since it is a drawing. CLEANUP_CLAUDE's restoration table (page-break losses with page numbers) not yet
+  received for this chapter.
+
+## 21 Oct 2026 (evening): the chapter 11 pilot, The Salted Road, stage 1 and 2 (Fable)
+
+The instructor's rulings: build the one scenario with everything in brief 32 at once; help policy B by default; the four
+repair lines approved; tries counted per step; the precision rule confined to chapter 11 while experimental; the inline textbook
+(More info) with the notebook as the last straw. Content: SCENARIO_CLAUDE's send of 21 Oct, every row approved.
+- **Content and factory.** `scripts/sheet_to_problems.py` reads the brief-32 columns (difficulty with its points, nearest EOC, sim
+  predict with options and the right answer, sim instrument with its window, sim gap question, sim opens at, exam item, worked
+  companion; registry ids on traps; a trap with a pick value names a wrong option). `_sheet.py`: `sim_predict` (a direction pick
+  with `opens_sim` and `sim_student` placeholders), `sim_instrument` (a number in the sheet's window), `sim_gap` (text), `relation=False`,
+  `drop_restated` (a trap equal to an earlier step's value never fires under the 11 Oct restatement rule: dropped for brief-32
+  archetypes, reported for older ones), `words` for {target}/{water_kg}/{gap_question}. `engine.py`: two-list keyword cell
+  (PARTICLE || MECHANISM) -> `keywords` + `mechanism`; `read_accounts` (the reader's named wrong accounts, per scenario);
+  `textbook_passage` (an `openstax` anchor -> the passage from `reference/openstax`, examples, subsections, figure captions,
+  tables); sample answers stripped from every shipped file into `output/<id>.samples.json`; `EXTRA_MOVES`, `STAGE_PER_STEP`,
+  `PRECISION_RULE` archetype flags; the `ask` header read by prefix; registry id on errors. `run.py`: the accounts file in the
+  DRAFT check; passages reported; unreachable traps reported. New unit `°C·kg/mol`. `sim_ids.json`: `freezing_point_salts`.
+  `archetypes/ch11_colligative.py`: 6 problems of The Salted Road, step order account -> mol -> m -> i -> dT -> T -> sim_predict ->
+  sim_instrument -> sim_gap -> perturb_1 -> why -> meaning -> reflection. Content version: see docs/36.
+- **Shell (version ecb292d9).** `ladder.gs` rewritten: try 1 switch; try 2 pivot (`pivot_question`, the answer judged on one
+  `pivot_keywords` hit in a sentence, never counted); then help by policy A (notebook, park), B (companion, notebook, park), C
+  (park); archetypes without a pivot keep the 11 Oct ladder exactly (a `retry` rung after the notebook). `Core.gs`: the pivot
+  answer, `help` and `info` inputs (deterministic), the reveal placeholders (`sim_student`) filled from the student's accepted
+  value and pick and appended to the page address, the two-list gate (`OPENER_NO_MECHANISM`, not counted), `needs_figures`, the
+  reader's named account (`ACCOUNT_NAMED`: the approved repair line speaks, no draft check, no probe). `parse.gs`: `dec` and `sig`
+  on every number; the two-list coverage. `match.gs`: the precision rule, only for variants with `precision_rule`. `stepmap.gs`:
+  `policy`, `pivot`, `helpUsed` on the session. `prompt.gs`: the reader is told the scenario's wrong accounts and may name one.
+  `log.gs`: `policy`, `help_rung`. `Code.gs`: `policy` from the page or the script property HELP_POLICY; `help`/`info`; SIM,
+  SIM_READING and SIM_READY rows from the page's messages; the two new log columns with a one-time header extension.
+- **Page.** More help and More info buttons; the info card (passage, reference, a copy-a-prompt button for the notebook); the
+  help-policy menu in the preview bar; the `message` listener for the simulation frame (contract 34).
+- **Tests.** `test_ch11.py` (96 values re-derived from the sentences and Appendix A; the brief-32 fields; anchors resolve; samples
+  not shipped). `gas/test_ch11.js` (70 checks: the whole docs/35 conversation under A, B and C; the sample answers against the
+  gates; the pivot; More help; More info; the page address; the instrument window; the precision rule; named picks; the reader's
+  named account; a clean Independent run earns credit; chapter 13 does not carry the precision rule). Random clicker over 24
+  archetypes, credits 0. Counter assertions in two older tests updated (the stage count now climbs instead of resetting).
+- **Findings for the instructor.** FP_SIGN at T_found equals the lowering already on the board, so it can never fire; dropped
+  (SCENARIO_CLAUDE to know). The same holds for traps in five older archetypes (ch16_equilibrium_G, ch16_free_energy,
+  ch17_electrolysis, ch19_cft, ch21_binding), reported by `run.py` and left in place pending a ruling.
+- The 23 older content versions are unchanged. Build stamp V3-0.1-20261021-01. `docs/36` is the release note.
