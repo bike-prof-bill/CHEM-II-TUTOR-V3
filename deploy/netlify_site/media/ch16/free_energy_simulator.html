@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free energy and temperature</title>
+<!--
+  DRAFT: not for students until the instructor approves it.
+  Date: 18 Oct 2026. Built by Simulation_Claude to 02_BRIEF_free_energy_page.md (SCENARIO_CLAUDE, 18 Oct 2026); re-based the
+    same day to 00_CHANGE_BRIEF_rebase_ch16_pages.md on buffer_simulator.html (98b62a53: shell, colour tokens, fonts, readings
+    table, captions, guarded setters) and titration_simulator.html (61254251: the plotted line with a marked current point and
+    the "a." and "b." views). Previous file: d8e169ae.
+  Brief (one line): ch16, archetypes 2 to 4, opens at the meaning question: ΔG° = ΔH° − TΔS°; temperature can change the sign of
+    ΔG° only when ΔH° and ΔS° share a sign, at the T where ΔG° = 0, ΔH° ÷ ΔS°; for a phase change that is the transition
+    temperature. No verdict, direction or reason words.
+  Data source: the brief's table only, OpenStax Chemistry 2e, Appendix G: ΔH° (kJ), ΔS° (J/K) and ΔG°(298 K) from ΔG°f (kJ) for
+    the reaction as written. The small temperature dependence of ΔH° and ΔS° is neglected, as the course does. For CaCO₃(s) → CaO(s) + CO₂(g) the ΔG°f
+    route shows "—" (change brief, 18 Oct: Appendix G's calcite entries disagree with each other).
+  Model (exact, integer arithmetic): h = ΔH° in 0.01 kJ, s = ΔS° in 0.01 J/K, T in whole kelvin.
+    ΔG°(T) × 10 = (1000 h − T s) ÷ 10 000 kJ, rounded half away from zero; −TΔS° the same with h = 0;
+    T where ΔG° = 0: 1000 |h| ÷ |s| K, rounded to a whole kelvin, only when h and s share a sign.
+    ΔS(univ) = −ΔG°/T (chapter Table 16.3): (s T − 1000 h) ÷ T, in hundredths of J/K, rounded half away from zero; none at 0 K.
+    Phase changes also show the measured transition temperature (MEASURED; NIST via the instructor, CS₂ from the chapter).
+  URL parameters:
+    reaction  one of the ids in DATA below. Default H2Ol_to_H2Og; unknown values and unfilled placeholders fall back with a notice.
+    T         kelvin, 0 to 2500, whole kelvin. Default 298; values outside fall to the nearer end, others round, with a notice.
+    theme     light | dark. Default: the system setting.
+  Drawing choices (not data): the plot's y-range fits the line over the chosen temperature range and stays put while T moves;
+    the parts above and below the zero line are tinted and labelled ΔG° > 0 and ΔG° < 0; a ring marks the T where ΔG° = 0. The bars
+    are a waterfall: ΔH° from zero, then −TΔS° from the end of ΔH°, so the second bar ends at ΔG°(T), which is marked. View b.
+    shows the four sign cases of ΔH° and ΔS°; the one that fits the chosen reaction is outlined.
+  Nothing is fetched, stored, or sent. Nothing moves; this page has no animation.
+-->
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #faf9f6; --fg: #1d1e1c; --muted: #4b4d49; --rule: #7f8378; --grid: #e2e3dd; --control-bg: #ffffff; --focus: #7a3a10;
+    --win-bg: #f1f2ee; --curve: #3b3f45; --hbar: #8a6a1c; --tsbar: #4f6d7a;
+    --above: rgba(178, 58, 43, 0.10); --below: rgba(47, 122, 60, 0.12);
+    --notice-bg: #fff3d1; --notice-fg: #3d2c00; --notice-rule: #8a6a00;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #18191b; --fg: #e9eaec; --muted: #b6bac0; --rule: #8d949d; --grid: #303338; --control-bg: #222428; --focus: #ffb38a;
+    --win-bg: #202226; --curve: #e9eaec; --hbar: #e0c060; --tsbar: #8fb8c9;
+    --above: rgba(255, 115, 102, 0.14); --below: rgba(92, 196, 106, 0.14);
+    --notice-bg: #3a3010; --notice-fg: #ffe9a8; --notice-rule: #c9a63a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--fg); }
+  body { font: 14px/1.35 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; padding: 8px 12px; max-width: 640px; }
+  h1 { font-size: 0.95rem; font-weight: 600; margin: 0 0 4px; }
+  .notice { margin: 0 0 6px; padding: 5px 9px; background: var(--notice-bg); color: var(--notice-fg); border-left: 4px solid var(--notice-rule); font-size: 0.85rem; }
+  .top { display: flex; gap: 10px; align-items: stretch; }
+  canvas { display: block; }
+  #scene { width: 196px; height: 146px; flex: 0 0 196px; border: 1px solid var(--grid); border-radius: 4px; }
+  .readings { flex: 1 1 auto; min-width: 0; }
+  .readings h2 { font-size: 0.8rem; font-weight: 600; margin: 0 0 2px; color: var(--muted); }
+  .readings table { border-collapse: collapse; width: 100%; }
+  .readings td { padding: 0; line-height: 1.14; font-size: 0.76rem; white-space: nowrap; }
+  .readings td:first-child { white-space: normal; }
+  .readings td.v { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; padding-left: 6px; }
+  .note { font-size: 0.76rem; color: var(--muted); margin: 2px 0 0; }
+  .status { margin: 3px 0; font-size: 0.86rem; font-weight: 600; min-height: 2.4em; }
+  .row { display: flex; align-items: center; gap: 4px 5px; flex-wrap: wrap; margin: 3px 0; }
+  .lab { font-size: 0.86rem; }
+  select { font: inherit; font-size: 0.82rem; color: var(--fg); background: var(--control-bg); border: 1px solid var(--rule); border-radius: 4px; padding: 2px 4px; }
+  #reaction { flex: 1 1 0; min-width: 0; }
+  .sl { display: flex; align-items: center; gap: 8px; margin: 2px 0; }
+  .sl label { font-size: 0.84rem; }
+  .sl input { flex: 1 1 auto; min-width: 110px; margin: 0; accent-color: var(--focus); }
+  .sl .val { font-size: 0.84rem; font-weight: 600; font-variant-numeric: tabular-nums; min-width: 128px; text-align: right; white-space: nowrap; }
+  .views { display: flex; gap: 6px; margin-top: 2px; }
+  #curve { flex: 1.3 1 0; min-width: 0; height: 136px; border: 1px solid var(--grid); }
+  #cases { flex: 1 1 0; min-width: 0; height: 136px; border: 1px solid var(--grid); }
+  .small { margin: 2px 0 0; font-size: 0.76rem; color: var(--muted); }
+  [hidden] { display: none !important; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+</style>
+</head>
+<body>
+  <h1 id="title"></h1>
+  <p class="notice" id="notice" role="status" hidden></p>
+
+  <div class="top">
+    <canvas id="scene" role="img" aria-label="Bars for ΔH°, −TΔS° and ΔG° at the current temperature. A text description follows." aria-describedby="descScene"></canvas>
+    <div class="readings">
+      <h2>Readings</h2>
+      <table>
+        <tr><td>ΔH°</td><td class="v" id="rH"></td></tr>
+        <tr><td>ΔS°</td><td class="v" id="rS"></td></tr>
+        <tr><td>−TΔS°</td><td class="v" id="rTS"></td></tr>
+        <tr><td>ΔG°(T)</td><td class="v" id="rG"></td></tr>
+        <tr><td>ΔS(univ) = −ΔG°/T</td><td class="v" id="rU"></td></tr>
+        <tr><td>T where ΔG° = 0</td><td class="v" id="rX"></td></tr>
+        <tr id="rowM"><td id="rMlab">Measured b.p.</td><td class="v" id="rM"></td></tr>
+        <tr><td>At 298 K, ΔH° − TΔS°</td><td class="v" id="r298a"></td></tr>
+        <tr><td>At 298 K, ΔG°f table</td><td class="v" id="r298b"></td></tr>
+      </table>
+      <p class="note" id="bpNote" hidden></p>
+      <p class="note" id="gfNote" hidden>Appendix G's values for this solid do not agree; the ΔH° − TΔS° line is shown.</p>
+    </div>
+  </div>
+  <p class="status" id="status"></p>
+
+  <div class="row">
+    <label for="reaction" class="lab">Reaction</label>
+    <select id="reaction"></select>
+  </div>
+  <div class="sl">
+    <label for="T">Temperature</label>
+    <input type="range" id="T" min="0" max="2500" step="1" value="298">
+    <span class="val" id="vT" aria-hidden="true"></span>
+  </div>
+  <div class="row">
+    <label for="trange" class="lab">Plot and slider range</label>
+    <select id="trange"><option value="500">0 to 500 K</option><option value="2500">0 to 2500 K</option></select>
+  </div>
+  <div class="views">
+    <canvas id="curve" role="img" aria-label="ΔG° against T, with the zero line, the temperature where ΔG° = 0 and the slider position marked. A text description follows." aria-describedby="descCurve"></canvas>
+    <canvas id="cases" role="img" aria-label="The four sign cases of ΔH° and ΔS°, with the one for this reaction outlined. A text description follows." aria-describedby="descCases"></canvas>
+  </div>
+  <p class="small" id="caption"></p>
+  <p class="small" id="caption2"></p>
+  <p class="small" id="quick"></p>
+
+  <div class="sr-only" id="descScene"></div>
+  <div class="sr-only" id="descCurve"></div>
+  <div class="sr-only" id="descCases"></div>
+  <div class="sr-only" id="live" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ===========================================================================
+  // DATA: the brief's table only (OpenStax Chemistry 2e, Appendix G). h = ΔH° in 0.01 kJ, s = ΔS° in 0.01 J/K,
+  // gf = ΔG°(298) from ΔG°f in 0.01 kJ; all integers so the arithmetic is exact. gfShow false: shown as "—".
+  // ===========================================================================
+  var DATA = [
+    ['Phase changes', 'H2Ol_to_H2Og', 'H₂O(l) → H₂O(g)', 4401, 11880, 851],
+    ['Phase changes', 'CH3OHl_to_CH3OHg', 'CH₃OH(l) → CH₃OH(g)', 3820, 11310, 430],
+    ['Phase changes', 'C2H5OHl_to_C2H5OHg', 'C₂H₅OH(l) → C₂H₅OH(g)', 4280, 12090, 690],
+    ['Phase changes', 'CCl4l_to_CCl4g', 'CCl₄(l) → CCl₄(g)', 3250, 9530, 430],
+    ['Phase changes', 'Br2l_to_Br2g', 'Br₂(l) → Br₂(g)', 3091, 9327, 314],
+    ['Phase changes', 'Hgl_to_Hgg', 'Hg(l) → Hg(g)', 6140, 9910, 3180],
+    ['Phase changes', 'CS2l_to_CS2g', 'CS₂(l) → CS₂(g)', 2720, 8666, 153],
+    ['Phase changes', 'C6H6l_to_C6H6g', 'C₆H₆(l) → C₆H₆(g)', 3383, 9580, 516],
+    ['Phase changes', 'CH3CO2Hl_to_CH3CO2Hg', 'CH₃CO₂H(l) → CH₃CO₂H(g)', 4946, 12270, 1321],
+    ['Phase changes', 'I2s_to_I2g', 'I₂(s) → I₂(g)', 6244, 14456, 1930],
+    ['Phase changes', 'H2O2l_to_H2O2g', 'H₂O₂(l) → H₂O₂(g)', 5148, 12310, 1475],
+    ['Phase changes', 'HNO3l_to_HNO3g', 'HNO₃(l) → HNO₃(g)', 4020, 11130, 720],
+    ['Phase changes', 'Csdiam_to_Csgrap', 'C(s, diamond) → C(s, graphite)', -189, 336, -290],
+    ['Gas reactions', 'N2O4g_to_NO2g', 'N₂O₄(g) → 2 NO₂(g)', 5530, 17580, 280],
+    ['Gas reactions', 'NO2g_to_N2O4g', '2 NO₂(g) → N₂O₄(g)', -5530, -17580, -280],
+    ['Gas reactions', 'PCl5g_to_PCl3g_Cl2g', 'PCl₅(g) → PCl₃(g) + Cl₂(g)', 8790, 17048, 3720],
+    ['Gas reactions', 'NOg_O2g_to_NO2g', '2 NO(g) + O₂(g) → 2 NO₂(g)', -11410, -14660, -7260],
+    ['Gas reactions', 'N2g_H2g_to_NH3g', 'N₂(g) + 3 H₂(g) → 2 NH₃(g)', -9180, -19810, -3300],
+    ['Gas reactions', 'NH3g_to_N2g_H2g', '2 NH₃(g) → N₂(g) + 3 H₂(g)', 9180, 19810, 3300],
+    ['Gas reactions', 'H2g_Cl2g_to_HClg', 'H₂(g) + Cl₂(g) → 2 HCl(g)', -18461, 2000, -19060],
+    ['Gas reactions', 'SO2g_O2g_to_SO3g', '2 SO₂(g) + O₂(g) → 2 SO₃(g)', -19778, -18808, -14192],
+    ['Gas reactions', 'O2g_to_O3g', '3 O₂(g) → 2 O₃(g)', 28540, -13780, 32640],
+    ['Gas reactions', 'N2g_O2g_to_NOg', 'N₂(g) + O₂(g) → 2 NO(g)', 18050, 2480, 17520],
+    ['Oxidations and combustions', 'Fes_O2g_to_Fe2O3s', '4 Fe(s) + 3 O₂(g) → 2 Fe₂O₃(s)', -164840, -55000, -148440],
+    ['Oxidations and combustions', 'COg_O2g_to_CO2g', '2 CO(g) + O₂(g) → 2 CO₂(g)', -56598, -17300, -51442],
+    ['Oxidations and combustions', 'Csgrap_O2g_to_COg', '2 C(s, graphite) + O₂(g) → 2 CO(g)', -22104, 17872, -27430],
+    ['Oxidations and combustions', 'C2H4g_O2g_to_CO2g_H2Ol', 'C₂H₄(g) + 3 O₂(g) → 2 CO₂(g) + 2 H₂O(l)', -141108, -26730, -133132],
+    ['Oxidations and combustions', 'C2H6g_O2g_to_CO2g_H2Ol', '2 C₂H₆(g) + 7 O₂(g) → 4 CO₂(g) + 6 H₂O(l)', -312102, -61960, -293604],
+    ['Oxidations and combustions', 'C3H8g_O2g_to_CO2g_H2Ol', 'C₃H₈(g) + 5 O₂(g) → 3 CO₂(g) + 4 H₂O(l)', -222005, -37490, -210808],
+    ['Decompositions', 'H2O2l_to_H2Ol_O2g', '2 H₂O₂(l) → 2 H₂O(l) + O₂(g)', -19610, 12600, -23350],
+    ['Decompositions', 'CaCO3scalc_to_CaOs_CO2g', 'CaCO₃(s) → CaO(s) + CO₂(g)', 19159, 14190, 8374, false],   // ΔG°f route shown as "—" (change brief, 18 Oct)
+    ['Decompositions', 'HgOsred_to_Hgl_O2g', '2 HgO(s) → 2 Hg(l) + O₂(g)', 18166, 21642, 11700],
+    ['Decompositions', 'CuOs_to_Cus_O2g', '2 CuO(s) → 2 Cu(s) + O₂(g)', 31460, 18624, 25940],
+    ['Metal oxides with carbon', 'Fe2O3s_Csgrap_to_Fes_COg', 'Fe₂O₃(s) + 3 C(s, graphite) → 2 Fe(s) + 3 CO(g)', 49264, 54308, 33075],
+    ['Metal oxides with carbon', 'ZnOs_Csgrap_to_Zns_CO2g', '2 ZnO(s) + C(s, graphite) → 2 Zn(s) + CO₂(g)', 30749, 20386, 24664],
+    ['Metal oxides with carbon', 'ZnOs_Csgrap_to_Zns_COg', 'ZnO(s) + C(s, graphite) → Zn(s) + CO(g)', 23998, 18986, 18335]
+  ].map(function (r) { return { group: r[0], id: r[1], label: r[2], h: r[3], s: r[4], gf: r[5], gfShow: r[6] !== false }; });
+  var byId = {}; DATA.forEach(function (d) { byId[d.id] = d; });
+  var DEFAULT = { reaction: 'H2Ol_to_H2Og', T: 298 };
+
+  // ===========================================================================
+  // Exact arithmetic (unchanged from d8e169ae)
+  // ===========================================================================
+  function roundRatio(n, d) { var a = Math.abs(n), r = Math.floor((2 * a + d) / (2 * d)); return n < 0 ? -r : r; }
+  function fmtFixed(intVal, dec) { var neg = intVal < 0, s = String(Math.abs(intVal)); while (s.length < dec + 1) s = '0' + s; if (dec > 0) s = s.slice(0, -dec) + '.' + s.slice(-dec); return (neg && /[1-9]/.test(s) ? '−' : '') + s; }
+  function dG10(d, T) { return roundRatio(d.h * 1000 - T * d.s, 10000); }          // ΔG°(T) × 10, kJ
+  function mTS10(d, T) { return roundRatio(-T * d.s, 10000); }                       // −TΔS° × 10, kJ
+  // ΔS(univ) = −ΔG°/T (Table 16.3: ΔG = −TΔS(univ)), J/K × 100: s − 1000 h ÷ T; none at T = 0
+  function univ100(d, T) { return T > 0 ? roundRatio(d.s * T - 1000 * d.h, T) : null; }
+  // Measured transition temperatures at 1 atm, K (phase changes only): NIST Chemistry WebBook values supplied by the instructor
+  // 18 Oct 2026; CS₂ from the chapter's Check Your Learning after Example 16.11 ("accepted value 319 K"); water 373.15 K.
+  // Hg, C₆H₆, CH₃CO₂H, H₂O₂ and HNO₃: NIST Chemistry WebBook values supplied by the instructor 18 Oct 2026 (H₂O₂ extrapolated,
+  // NIST-JANAF; pure HNO₃ decomposes gradually as it boils). I₂ melts before it boils at 1 atm, so it has none.
+  var MEASURED = { H2Ol_to_H2Og: '373.15', CH3OHl_to_CH3OHg: '337.8', C2H5OHl_to_C2H5OHg: '351.5', CCl4l_to_CCl4g: '349.9', Br2l_to_Br2g: '332.0', CS2l_to_CS2g: '319',
+    Hgl_to_Hgg: '629.81', C6H6l_to_C6H6g: '353.2', CH3CO2Hl_to_CH3CO2Hg: '391.2', H2O2l_to_H2O2g: '423.4', HNO3l_to_HNO3g: '356.2' };   // as supplied, kept as text
+  var BPNOTE = { H2O2l_to_H2O2g: 'Pure H₂O₂ decomposes before it boils; 423.4 K is the extrapolated value (NIST-JANAF).', HNO3l_to_HNO3g: 'Pure HNO₃ begins to decompose as it nears its boiling point.' };
+  function crossover(d) { return (d.h * d.s > 0) ? roundRatio(1000 * Math.abs(d.h), Math.abs(d.s)) : null; }   // K, integer
+  function dGfloat(d, T) { return d.h / 100 - T * d.s / 1e5; }
+
+  // ===========================================================================
+  // URL parameters
+  // ===========================================================================
+  var params = new URLSearchParams(window.location.search), notices = [];
+  function isPlaceholder(v) { return /^\{.*\}$/.test(v || ''); }
+  var rid = (params.get('reaction') || '').trim();
+  if (!rid) rid = DEFAULT.reaction;
+  else if (!byId[rid]) { notices.push(isPlaceholder(rid) ? 'No reaction given; showing H₂O(l) → H₂O(g).' : 'No data for “' + rid.slice(0, 40) + '”; showing H₂O(l) → H₂O(g).'); rid = DEFAULT.reaction; }
+  var T = DEFAULT.T;
+  if (params.has('T')) {
+    var rawT = params.get('T'), v = parseFloat(rawT);
+    if (!isFinite(v)) notices.push(isPlaceholder(rawT) ? 'No temperature given; using 298 K.' : 'Could not read T; using 298 K.');
+    else if (v < 0 || v > 2500) { T = v < 0 ? 0 : 2500; notices.push('T = ' + v + ' K is outside 0 to 2500 K; using ' + T + ' K.'); }
+    else { T = Math.round(v); if (T !== v) notices.push('T rounded to the whole kelvin: ' + T + ' K.'); }
+  }
+  var notice = document.getElementById('notice');
+  if (notices.length) { notice.textContent = notices.join(' '); notice.hidden = false; }
+
+  var themeParam = (params.get('theme') || '').trim().toLowerCase();
+  var darkQ = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  var colours = null;
+  function applyTheme() { var t = (themeParam === 'light' || themeParam === 'dark') ? themeParam : (darkQ && darkQ.matches ? 'dark' : 'light'); document.documentElement.setAttribute('data-theme', t); colours = null; }
+
+  // ===========================================================================
+  // Text helpers (labels and attributes are written only when they change: the Safari fix)
+  // ===========================================================================
+  var el = function (id) { return document.getElementById(id); };
+  function setText(id, t) { var e = el(id); if (e.textContent !== t) e.textContent = t; }
+  function setAttr(e, n, v) { if (e.getAttribute(n) !== v) e.setAttribute(n, v); }
+  function setHidden(id, h) { var e = el(id); if (e.hidden !== h) e.hidden = h; }
+  function spoken(t) {
+    return t.replace(/−(\d)/g, 'minus $1').replace(/ΔG°f/g, 'delta G formation').replace(/ΔH°/g, 'delta H').replace(/ΔS°/g, 'delta S').replace(/ΔG°/g, 'delta G')
+      .replace(/(\d) kJ\b/g, '$1 kilojoules').replace(/(\d) J\/K\b/g, '$1 joules per kelvin').replace(/(\d) K\b/g, '$1 kelvin').replace(/°C/g, 'degrees Celsius');
+  }
+  var live = el('live');
+  function say(msg) { live.textContent = ''; setTimeout(function () { live.textContent = spoken(msg); }, 30); }
+
+  // ===========================================================================
+  // Drawing helpers
+  // ===========================================================================
+  var FONT = 'system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif';
+  function C(n) { if (!colours) colours = {}; if (!(n in colours)) colours[n] = getComputedStyle(document.documentElement).getPropertyValue('--' + n).trim(); return colours[n]; }
+  function sizeCanvas(cv, bg) {
+    var w = cv.clientWidth, h = cv.clientHeight, dpr = window.devicePixelRatio || 1;
+    if (!w || !h) return null;
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    var ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = bg || C('bg'); ctx.fillRect(0, 0, w, h);
+    return { ctx: ctx, W: w, H: h };
+  }
+  function cur() { return byId[rid]; }
+  function tmax() { return parseInt(el('trange').value, 10); }
+  function where(v) { return v > 0 ? 'above zero' : v < 0 ? 'below zero' : 'at zero'; }
+
+  // ---------------------------------------------------------------------------
+  // The bars: ΔH° from zero, then −TΔS° from the end of ΔH°; the second bar ends at ΔG°(T)
+  // ---------------------------------------------------------------------------
+  var sceneCv = el('scene');
+  function drawScene() {
+    var cv = sizeCanvas(sceneCv, C('win-bg')); if (!cv) return;
+    var ctx = cv.ctx, W = cv.W, H = cv.H, d = cur();
+    var hK = d.h / 100, tsK = -T * d.s / 1e5, gK = hK + tsK;
+    var scaleMax = Math.max(Math.abs(hK), Math.abs(gK), Math.abs(hK) + (Math.sign(tsK) === Math.sign(hK) ? Math.abs(tsK) : 0), 1);
+    var by0 = 20, by1 = H - 8, zeroY = (by0 + by1) / 2, half = (by1 - by0) / 2 - 14;
+    function S(v) { return v / scaleMax * half; }
+    ctx.font = '600 10px ' + FONT; ctx.fillStyle = C('fg'); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('kJ at T = ' + T + ' K', 6, 4);
+    ctx.strokeStyle = C('rule'); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(6, Math.round(zeroY) + 0.5); ctx.lineTo(W - 14, Math.round(zeroY) + 0.5); ctx.stroke();
+    ctx.font = '10px ' + FONT; ctx.fillStyle = C('muted'); ctx.textBaseline = 'middle'; ctx.fillText('0', W - 11, zeroY);
+    var w = 34, c1 = 34, c2 = 92, c3 = 150;
+    // ΔH°
+    ctx.fillStyle = C('hbar'); if (hK >= 0) ctx.fillRect(c1 - w / 2, zeroY - S(hK), w, S(hK)); else ctx.fillRect(c1 - w / 2, zeroY, w, S(-hK));
+    ctx.fillStyle = C('fg'); ctx.textAlign = 'center'; ctx.fillText(fmtFixed(d.h, 2), c1, hK >= 0 ? zeroY - S(hK) - 7 : zeroY + S(-hK) + 7);
+    ctx.fillStyle = C('muted'); ctx.fillText('ΔH°', c1, hK >= 0 ? zeroY + 8 : zeroY - 8);
+    // −TΔS° from the end of ΔH°, hatched so colour is not the only carrier
+    var base = zeroY - S(hK);
+    ctx.fillStyle = C('tsbar'); if (tsK >= 0) ctx.fillRect(c2 - w / 2, base - S(tsK), w, S(tsK)); else ctx.fillRect(c2 - w / 2, base, w, S(-tsK));
+    ctx.save(); ctx.beginPath(); ctx.rect(c2 - w / 2, Math.min(base, base - S(tsK)), w, Math.abs(S(tsK))); ctx.clip(); ctx.strokeStyle = C('win-bg'); ctx.lineWidth = 1;
+    for (var x = c2 - w / 2 - 40; x < c2 + w / 2 + 40; x += 8) { ctx.beginPath(); ctx.moveTo(x, by0); ctx.lineTo(x + 40, by1); ctx.stroke(); } ctx.restore();
+    ctx.strokeStyle = C('rule'); ctx.setLineDash([2, 2]); ctx.beginPath(); ctx.moveTo(c1 + w / 2, Math.round(base) + 0.5); ctx.lineTo(c2 - w / 2, Math.round(base) + 0.5); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = C('fg'); ctx.fillText(fmtFixed(mTS10(d, T), 1), c2, tsK >= 0 ? base - S(tsK) - 7 : base + S(-tsK) + 7);
+    ctx.fillStyle = C('muted'); ctx.fillText('−TΔS°', c2, tsK >= 0 ? Math.min(base + 8, by1 - 2) : Math.max(base - 8, by0 + 2));
+    // ΔG°: a heavy tick at the end of the second bar
+    var endY = zeroY - S(gK);
+    ctx.strokeStyle = C('rule'); ctx.setLineDash([2, 2]); ctx.beginPath(); ctx.moveTo(c2 + w / 2, Math.round(endY) + 0.5); ctx.lineTo(c3 - w / 2, Math.round(endY) + 0.5); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = C('fg'); ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(c3 - w / 2, Math.round(endY) + 0.5); ctx.lineTo(c3 + w / 2, Math.round(endY) + 0.5); ctx.stroke();
+    ctx.strokeStyle = C('focus'); ctx.lineWidth = 1; ctx.setLineDash([2, 2]); ctx.beginPath(); ctx.moveTo(c3 + 0.5, zeroY); ctx.lineTo(c3 + 0.5, endY); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = C('fg'); ctx.fillText(fmtFixed(dG10(d, T), 1), c3, gK >= 0 ? endY - 8 : endY + 8);
+    ctx.fillStyle = C('muted'); ctx.fillText('ΔG°', c3, gK >= 0 ? zeroY + 8 : zeroY - 8);
+  }
+
+  // ---------------------------------------------------------------------------
+  // a. ΔG° against T
+  // ---------------------------------------------------------------------------
+  var curveCv = el('curve');
+  function niceStep(range) { var p = Math.pow(10, Math.floor(Math.log10(range))), f = range / p; return f <= 1 ? p : f <= 2 ? 2 * p : f <= 5 ? 5 * p : 10 * p; }
+  function drawCurve() {
+    var cv = sizeCanvas(curveCv); if (!cv) return;
+    var ctx = cv.ctx, W = cv.W, H = cv.H, d = cur(), Tm = tmax();
+    var px0 = 38, px1 = W - 8, py0 = 18, py1 = H - 26;
+    var g0 = dGfloat(d, 0), g1 = dGfloat(d, Tm);
+    var ymin = Math.min(0, g0, g1), ymax = Math.max(0, g0, g1); if (ymax - ymin < 1) { ymax += 1; ymin -= 1; }
+    var pad = (ymax - ymin) * 0.1; ymin -= pad; ymax += pad;
+    var X = function (t) { return px0 + t / Tm * (px1 - px0); }, Y = function (g) { return py1 - (g - ymin) / (ymax - ymin) * (py1 - py0); };
+    var zy = Y(0);
+    ctx.fillStyle = C('above'); ctx.fillRect(px0, py0, px1 - px0, zy - py0);
+    ctx.fillStyle = C('below'); ctx.fillRect(px0, zy, px1 - px0, py1 - zy);
+    ctx.strokeStyle = C('rule'); ctx.lineWidth = 1; ctx.strokeRect(px0 + 0.5, py0 + 0.5, px1 - px0, py1 - py0);
+    ctx.font = '600 10px ' + FONT; ctx.fillStyle = C('fg'); ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('a. ΔG° in kJ against T', px0, 3);
+    ctx.font = '10px ' + FONT; ctx.fillStyle = C('muted'); ctx.textBaseline = 'middle'; ctx.textAlign = 'right';
+    var g1Y = Y(g1), labTopLeft = g1Y < py0 + 18, labBotLeft = g1Y > py1 - 18;   // keep the region labels off the line
+    if (zy - py0 > 14) { ctx.textAlign = labTopLeft ? 'left' : 'right'; ctx.fillText('ΔG° > 0', labTopLeft ? px0 + 4 : px1 - 4, py0 + 8); }
+    if (py1 - zy > 14) { ctx.textAlign = labBotLeft ? 'left' : 'right'; ctx.fillText('ΔG° < 0', labBotLeft ? px0 + 4 : px1 - 4, py1 - 8); }
+    // x ticks
+    var xt = Tm === 500 ? [0, 100, 200, 300, 400, 500] : [0, 500, 1000, 1500, 2000, 2500];
+    xt.forEach(function (t, i) { var x = Math.round(X(t)) + 0.5; ctx.strokeStyle = C('rule'); ctx.beginPath(); ctx.moveTo(x, py1); ctx.lineTo(x, py1 + 3); ctx.stroke(); ctx.textAlign = i === xt.length - 1 ? 'right' : i === 0 ? 'left' : 'center'; ctx.fillStyle = C('muted'); ctx.fillText(String(t), X(t) + (i === xt.length - 1 ? 2 : i === 0 ? -2 : 0), py1 + 10); });
+    ctx.textAlign = 'center'; ctx.fillText('T in K', (px0 + px1) / 2, py1 + 20);
+    // y ticks
+    var stp = niceStep((ymax - ymin) / 3); ctx.textAlign = 'right';
+    for (var v = Math.ceil(ymin / stp) * stp; v <= ymax; v += stp) { var y = Math.round(Y(v)) + 0.5; ctx.strokeStyle = C('rule'); ctx.beginPath(); ctx.moveTo(px0 - 3, y); ctx.lineTo(px0, y); ctx.stroke(); ctx.fillText(String(Math.round(v * 100) / 100).replace('-', '−'), px0 - 4, Y(v)); }
+    // zero line
+    ctx.strokeStyle = C('fg'); ctx.lineWidth = 1; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(px0, Math.round(zy) + 0.5); ctx.lineTo(px1, Math.round(zy) + 0.5); ctx.stroke(); ctx.setLineDash([]);
+    // the line
+    ctx.strokeStyle = C('curve'); ctx.lineWidth = 1.8; ctx.beginPath(); ctx.moveTo(X(0), Y(g0)); ctx.lineTo(X(Tm), Y(g1)); ctx.stroke();
+    // crossover ring
+    var xo = crossover(d);
+    if (xo !== null && xo <= Tm) {
+      ctx.strokeStyle = C('fg'); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(X(xo), zy, 5, 0, 2 * Math.PI); ctx.stroke();
+      var right = X(xo) > px1 - 60, xT = X(T); if (Math.abs(xT - X(xo)) < 44 && X(xo) - px0 > 50 && px1 - X(xo) > 50) right = xT > X(xo); ctx.fillStyle = C('fg'); ctx.textAlign = right ? 'right' : 'left'; ctx.fillText(xo + ' K', X(xo) + (right ? -8 : 8), zy + (d.s > 0 ? -11 : 11));
+    }
+    // where the reaction is now
+    var xm = X(T), ym = Y(dGfloat(d, T));
+    ctx.strokeStyle = C('focus'); ctx.lineWidth = 1; ctx.setLineDash([2, 3]); ctx.beginPath(); ctx.moveTo(Math.round(xm) + 0.5, py0); ctx.lineTo(Math.round(xm) + 0.5, py1); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = C('focus'); ctx.beginPath(); ctx.arc(xm, ym, 3.8, 0, 2 * Math.PI); ctx.fill();
+  }
+
+  // ---------------------------------------------------------------------------
+  // b. The four sign cases
+  // ---------------------------------------------------------------------------
+  var casesCv = el('cases');
+  var CASES = [[-1, 1], [-1, -1], [1, 1], [1, -1]];
+  function drawCases() {
+    var cv = sizeCanvas(casesCv); if (!cv) return;
+    var ctx = cv.ctx, W = cv.W, H = cv.H, d = cur();
+    ctx.font = '600 10px ' + FONT; ctx.fillStyle = C('fg'); ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('b. Sign cases', 4, 3);
+    var gx = 4, gy = 18, cw = (W - 8 - 4) / 2, ch = (H - gy - 4 - 4) / 2;
+    CASES.forEach(function (c, i) {
+      var cx = gx + (i % 2) * (cw + 4), cy = gy + Math.floor(i / 2) * (ch + 4), mine = Math.sign(d.h) === c[0] && Math.sign(d.s) === c[1];
+      ctx.fillStyle = C('win-bg'); ctx.fillRect(cx, cy, cw, ch);
+      ctx.strokeStyle = mine ? C('focus') : C('rule'); ctx.lineWidth = mine ? 2.5 : 1; ctx.strokeRect(cx + (mine ? 1.25 : 0.5), cy + (mine ? 1.25 : 0.5), cw - (mine ? 2.5 : 1), ch - (mine ? 2.5 : 1));
+      var mx0 = cx + 5, mx1 = cx + 23, my0 = cy + 8, my1 = cy + ch - 8, mz = (my0 + my1) / 2;   // a small ΔG°-against-T sketch
+      ctx.strokeStyle = C('rule'); ctx.lineWidth = 1; ctx.setLineDash([2, 2]); ctx.beginPath(); ctx.moveTo(mx0, Math.round(mz) + 0.5); ctx.lineTo(mx1, Math.round(mz) + 0.5); ctx.stroke(); ctx.setLineDash([]);
+      var ys = c[0] < 0 ? mz + 7 : mz - 7, ye = ys + (c[1] > 0 ? 11 : -11);
+      ctx.strokeStyle = C('curve'); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(mx0, ys); ctx.lineTo(mx1, ye); ctx.stroke();
+      ctx.font = (mine ? '600 ' : '') + '9px ' + FONT; ctx.fillStyle = mine ? C('fg') : C('muted'); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = C('fg'); ctx.fillText('ΔH° ' + (c[0] < 0 ? '< 0' : '> 0'), cx + 27, cy + ch * 0.17);
+      ctx.fillText('ΔS° ' + (c[1] < 0 ? '< 0' : '> 0'), cx + 27, cy + ch * 0.39);
+      ctx.fillStyle = mine ? C('fg') : C('muted');
+      var one = c[0] === c[1];   // ΔH° and ΔS° share a sign: ΔG° < 0 at high T (both > 0) or at low T (both < 0)
+      ctx.fillText(one ? 'ΔG° < 0 at' : 'ΔG° = 0 at', cx + 27, cy + ch * 0.62); ctx.fillText(one ? (c[0] > 0 ? 'high T' : 'low T') : 'no T', cx + 27, cy + ch * 0.84);
+    });
+  }
+
+  // ===========================================================================
+  // Readings, captions, descriptions
+  // ===========================================================================
+  function kelvinText() { return T + ' K · ' + fmtFixed(T * 100 - 27315, 2) + ' °C'; }
+  function readout() {
+    var d = cur(), xo = crossover(d);
+    return d.label + ' at ' + T + ' K: ΔG° ' + fmtFixed(dG10(d, T), 1) + ' kJ; ΔH° ' + fmtFixed(d.h, 2) + ' kJ; −TΔS° ' + fmtFixed(mTS10(d, T), 1) + ' kJ; ΔG° = 0 at ' + (xo === null ? 'no temperature' : xo + ' K') + '.';
+  }
+  function updateText() {
+    var d = cur(), xo = crossover(d), Tm = tmax();
+    setText('title', 'Free energy and temperature: ΔG° = ΔH° − TΔS°');
+    setText('rH', fmtFixed(d.h, 2) + ' kJ'); setText('rS', fmtFixed(d.s, 2) + ' J/K'); 
+    setText('rTS', fmtFixed(mTS10(d, T), 1) + ' kJ'); setText('rG', fmtFixed(dG10(d, T), 1) + ' kJ'); setText('rX', xo === null ? 'none' : xo + ' K');
+    var u = univ100(d, T); setText('rU', u === null ? '—' : fmtFixed(u, 2) + ' J/K');
+    var phaseRow = d.group === 'Phase changes' && d.id !== 'Csdiam_to_Csgrap'; setHidden('rowM', !phaseRow);
+    setHidden('bpNote', !BPNOTE[d.id]); if (BPNOTE[d.id]) setText('bpNote', BPNOTE[d.id]);
+    if (phaseRow) { setText('rMlab', d.id === 'I2s_to_I2g' ? 'Measured sublimation T' : 'Measured b.p.'); setText('rM', MEASURED[d.id] !== undefined ? MEASURED[d.id] + ' K' : '—'); }
+    setText('r298a', fmtFixed(dG10(d, 298), 1) + ' kJ'); setText('r298b', d.gfShow ? fmtFixed(d.gf, 2) + ' kJ' : '—'); setHidden('gfNote', d.gfShow);
+    setText('vT', kelvinText());
+    var s = el('T'); if (s.value !== String(T)) s.value = String(T); setAttr(s, 'max', String(Tm));
+    setAttr(s, 'aria-valuetext', T + ' kelvin, ' + spoken(fmtFixed(T * 100 - 27315, 2)) + ' degrees Celsius');
+    if (el('reaction').value !== rid) el('reaction').value = rid;
+    if (el('trange').value !== String(Tm)) el('trange').value = String(Tm);
+    setText('status', 'Showing ' + d.label + ' at ' + T + ' K. Readings are steady.');
+    setText('caption', 'The bars: ΔH° from zero, then −TΔS° from the end of ΔH°; the second bar ends at ΔG°(T). a. ΔG° against T, simulated; the small temperature dependence of ΔH° and ΔS° is neglected. The tints mark ΔG° above and below zero; the ring marks ΔG° = 0, where it exists; the marked point is at the slider position.');
+    setText('caption2', 'b. The four sign cases of ΔH° and ΔS°; the outlined one fits the chosen reaction.');
+    setText('quick', 'Quick start: choose a reaction, then drag the temperature slider.');
+    setText('descScene', spoken('Bars at ' + T + ' K: ΔH° ' + fmtFixed(d.h, 2) + ' kJ, ' + where(d.h) + '; −TΔS° ' + fmtFixed(mTS10(d, T), 1) + ' kJ, drawn from the end of the ΔH° bar; the second bar ends at ΔG° = ' + fmtFixed(dG10(d, T), 1) + ' kJ, ' + where(dG10(d, T)) + '.'));
+    setText('descCurve', spoken(d.label + '. Plot of ΔG° against T from 0 to ' + Tm + ' K: a straight line from ' + fmtFixed(dG10(d, 0), 1) + ' kJ at 0 K to ' + fmtFixed(dG10(d, Tm), 1) + ' kJ at ' + Tm + ' K. ' + (xo === null ? 'The line does not cross the zero line.' : 'The line crosses the zero line at ' + xo + ' K' + (xo > Tm ? ', beyond the plotted range.' : ', marked with a ring.')) + ' The marked point at T = ' + T + ' K is ' + where(dG10(d, T)) + '.'));
+    setText('descCases', spoken('Four sign cases: ΔH° below zero with ΔS° above zero, ΔG° = 0 at no temperature; both below zero, ΔG° below zero at low temperature; both above zero, ΔG° below zero at high temperature; ΔH° above zero with ΔS° below zero, ΔG° = 0 at no temperature. Outlined: ΔH° ' + (d.h < 0 ? 'below' : 'above') + ' zero and ΔS° ' + (d.s < 0 ? 'below' : 'above') + ' zero.'));
+  }
+  function render() { drawScene(); drawCurve(); drawCases(); updateText(); }
+
+  // ===========================================================================
+  // Controls
+  // ===========================================================================
+  function defaultRange(d) { var x = crossover(d); return (d.group === 'Phase changes' && x !== null && x <= 450 && T <= 500) ? 500 : 2500; }
+  function applyRange(maxK) { if (T > maxK) T = maxK; if (el('trange').value !== String(maxK)) el('trange').value = String(maxK); }
+  var restTimer = null;
+  function changed(msg) { render(); if (restTimer) clearTimeout(restTimer); restTimer = setTimeout(function () { restTimer = null; say((msg ? msg + ' ' : '') + readout()); }, 500); }
+  (function fillMenu() { var g = null, og = null; DATA.forEach(function (d) { if (d.group !== g) { og = document.createElement('optgroup'); og.label = d.group; el('reaction').appendChild(og); g = d.group; } var o = document.createElement('option'); o.value = d.id; o.textContent = d.label; og.appendChild(o); }); })();
+  el('reaction').addEventListener('change', function () { var k = el('reaction').value; if (!byId[k]) return; rid = k; applyRange(defaultRange(byId[rid])); changed('Now showing ' + byId[rid].label + '.'); });
+  el('T').addEventListener('input', function () { T = parseInt(el('T').value, 10); changed(''); });
+  el('T').addEventListener('keydown', function (e) {
+    var maxK = tmax(), nt = T, ok = true;
+    switch (e.key) { case 'PageUp': nt = T + 100; break; case 'PageDown': nt = T - 100; break; case 'Home': nt = 0; break; case 'End': nt = maxK; break; default: ok = false; }
+    if (ok) { e.preventDefault(); T = Math.max(0, Math.min(maxK, nt)); changed(''); }
+  });
+  el('trange').addEventListener('change', function () { applyRange(tmax()); changed('Range 0 to ' + tmax() + ' K.'); });
+
+  // ===========================================================================
+  // Start
+  // ===========================================================================
+  applyTheme();
+  if (darkQ && themeParam !== 'light' && themeParam !== 'dark') { var cw = function () { applyTheme(); render(); }; if (darkQ.addEventListener) darkQ.addEventListener('change', cw); else if (darkQ.addListener) darkQ.addListener(cw); }
+  el('reaction').value = rid;
+  applyRange(defaultRange(byId[rid]));
+  if (window.ResizeObserver) new ResizeObserver(function () { render(); }).observe(document.body); else window.addEventListener('resize', render);
+  render();
+})();
+</script>
+</body>
+</html>

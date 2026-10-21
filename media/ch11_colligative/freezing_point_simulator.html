@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Freezing point of a salt solution</title>
+<!--
+  DRAFT: not for students until the instructor approves it.
+  Date: 21 Oct 2026. Built by Simulation_Claude to HANDOFF_SIMULATION_CLAUDE_ch11_freezing_point.md (SCENARIO_CLAUDE, 21 Oct
+    2026; The Salted Road, ch11_colligative, RS1 to RS6) on free_energy_simulator.html (7fe001a0: the plotted line with a marked
+    point, the menu, the a./b. views, captions) and syringe_boiling_simulator.html (b25d0cfc: sliders, readings, the particle
+    view, Safari-safe controls, header comment), with 34_CONTRACT_simulation_page_events.md (v1, approved 21 Oct 2026).
+  Brief (one line): the freezing point of a brine falls in a straight line as salt is added to the same water, faster for a salt
+    with more ions per formula unit; ΔTf = i × Kf × (mol salt ÷ kg water), Tf = 0 − ΔTf. No words that assume when the page
+    opens or what came before; no answer to the instrument task.
+  Data source: the brief's table only (OpenStax Chemistry 2e, Table 11.2 and Appendix E for Kf = 1.86 °C·kg/mol; Appendix A
+    for molar masses): NaCl 58.44 g/mol, i = 2; KCl 74.55, 2; CaCl2 110.98, 3; MgCl2 95.21, 3. Ideal solution, as the course
+    assumes. Any Kf or i the tutor passes is ignored.
+    Water 18.02 g/mol (55.49 mol/kg), confirmed by the instructor 21 Oct 2026; used only for the drawn lengths of the two rate
+    bars in view b (no numbers are shown there).
+  Model: n = salt_g ÷ M; molality = n ÷ water_kg (mol/kg); ΔTf = i × 1.86 × molality (°C); Tf = 0 − ΔTf (°C).
+    Readouts: molality 3 significant figures; i an integer; ΔTf 3 significant figures; Tf and the twice-salt mark one decimal.
+  URL parameters:
+    salt       NaCl | KCl | CaCl2 | MgCl2. Default NaCl. Unrecognised or placeholder: NaCl, with a notice.
+    salt_g     g, the problem's salt; the slider starts here. 0 to 600. Default 265 (RS1).
+    water_kg   kg, the problem's meltwater. 0.50 to 2.50. Default 1.50 (RS1).
+    T_student  °C, signed, optional: the student's freezing point, marked at the problem's grams.
+    pred       rises | falls | unchanged, optional: the student's prediction for twice the salt, a short arrow from that point.
+    theme      light | dark. Default: the system setting.
+  Controls (ids fixed; the tutor's telemetry reads them):
+    salt_select  menu: NaCl, KCl, CaCl2, MgCl2; starts at salt.
+    salt_g       slider: 0 to 600 g, step 1 g; starts at salt_g.
+    water_kg     slider: 0.50 to 2.50 kg, step 0.05 kg; starts at water_kg.
+    view_toggle  menu: graph, surface; starts at graph.
+  Readings (ids fixed):
+    m_readout  mol/kg; i_readout (2 or 3); dT_readout °C (positive); Tf_readout °C (signed);
+    Tf_twice_salt_marker °C (the page's Tf at twice the problem's salt_g, in the problem's water and salt).
+  Brine limits (eutectic temperatures, supplied by the instructor 21 Oct 2026; drawing only): KCl −10.7 °C, NaCl −21.1 °C,
+    MgCl2 −33.6 °C, CaCl2 −50.0 °C. The selected salt's limit is a dashed floor ("brine limit"), and its ideal line is dashed
+    below it; the readouts stay ideal. Solubility is not drawn: every slider position keeps live readings.
+  Messages (34_CONTRACT v1 as amended 21 Oct; to window.parent only, never read, never waited on): one "ready" after the
+    parameters are read; one "control" each time salt_g or water_kg comes to rest (slider release, or 0.6 s after the last
+    key); for salt_select and view_toggle, one "control" with choice and previous (the menu value: NaCl, KCl, CaCl2, MgCl2;
+    graph, surface), including a view change made by Play; one "reading" for Tf_readout when salt_g or water_kg has rested on a value for 1 s; one "reading" for
+    Tf_twice_salt_marker when the reveal marks are drawn (at load). Nothing on repaint or during a drag.
+  Drawing choices (not data): the graph's grams axis runs to 600 g, or to the next 100 g past twice the problem's salt when that
+    is larger (RS2: 620 g), up to 700 g; marks beyond either edge sit on it, labelled off scale; points below −30 °C sit on the bottom edge, marked off-scale. The reveal marks stay at the problem's
+    salt and water and are drawn faint when the menu or the water slider differs from them. View b is drawn at the freezing
+    point of pure water: the leaving rate is fixed, the joining rate is drawn in proportion to the fraction of water among the
+    dissolved particles (ideal), and ions are drawn 2 per mol/kg of ions, up to 40, not one for one; the ice that melts away
+    is refilled after three layers.
+  Nothing is fetched or stored. Nothing moves until the student presses Play.
+-->
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #faf9f6; --fg: #1d1e1c; --muted: #4b4d49; --rule: #7f8378; --grid: #e2e3dd; --control-bg: #ffffff; --focus: #7a3a10;
+    --win-bg: #f1f2ee; --curve: #3b3f45; --faint: #a5a9a1; --student: #6a3d8f; --twice: #17508f;
+    --ice: #dbe9f3; --liquid: #eef4f7; --cation: #8e44ad; --anion: #2f9a3a; --bar-leave: #4f6d7a; --bar-join: #8a6a1c; --limit: #8a6a1c;
+    --notice-bg: #fff3d1; --notice-fg: #3d2c00; --notice-rule: #8a6a00;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #18191b; --fg: #e9eaec; --muted: #b6bac0; --rule: #8d949d; --grid: #303338; --control-bg: #222428; --focus: #ffb38a;
+    --win-bg: #202226; --curve: #e9eaec; --faint: #6d7178; --student: #c9a2f0; --twice: #9cc5ff;
+    --ice: #22384a; --liquid: #1c262d; --cation: #c58be0; --anion: #6fd07a; --bar-leave: #8fb8c9; --bar-join: #e0c060; --limit: #e0c060;
+    --notice-bg: #3a3010; --notice-fg: #ffe9a8; --notice-rule: #c9a63a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--fg); }
+  body { font: 14px/1.35 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; padding: 8px 12px; max-width: 640px; }
+  h1 { font-size: 0.95rem; font-weight: 600; margin: 0 0 4px; }
+  .notice { margin: 0 0 6px; padding: 5px 9px; background: var(--notice-bg); color: var(--notice-fg); border-left: 4px solid var(--notice-rule); font-size: 0.85rem; }
+  .top { display: block; }
+  canvas { display: block; }
+  #view { width: 100%; height: 250px; border: 1px solid var(--grid); border-radius: 4px; }
+  .readings { flex: 1 1 auto; min-width: 0; }
+  .readings h2 { font-size: 0.8rem; font-weight: 600; margin: 0 0 2px; color: var(--muted); }
+  .readings table { border-collapse: collapse; width: 100%; }
+  .readings td { padding: 1px 0; line-height: 1.25; font-size: 0.8rem; }
+  .readings { margin-top: 4px; }
+  .readings td.gap { width: 18px; }
+  .readings td.v { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; padding-left: 6px; white-space: nowrap; }
+  .status { margin: 3px 0; font-size: 0.86rem; font-weight: 600; min-height: 2.4em; }
+  .row { display: flex; align-items: center; gap: 4px 6px; flex-wrap: wrap; margin: 3px 0; }
+  .lab { font-size: 0.86rem; }
+  button { font: inherit; font-size: 0.82rem; color: var(--fg); background: var(--control-bg); border: 1px solid var(--rule); border-radius: 4px; padding: 3px 7px; cursor: pointer; touch-action: manipulation; }
+  select { font: inherit; font-size: 0.82rem; color: var(--fg); background: var(--control-bg); border: 1px solid var(--rule); border-radius: 4px; padding: 2px 4px; }
+  button:disabled { opacity: 0.55; cursor: default; }
+  .sl { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
+  .sl label { font-size: 0.84rem; min-width: 74px; }
+  .sl input { flex: 1 1 auto; min-width: 110px; margin: 0; accent-color: var(--focus); }
+  .sl .val { font-size: 0.84rem; font-weight: 600; font-variant-numeric: tabular-nums; min-width: 64px; text-align: right; white-space: nowrap; }
+  .small { margin: 2px 0 0; font-size: 0.76rem; color: var(--muted); }
+  [hidden] { display: none !important; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+</style>
+</head>
+<body>
+  <h1 id="title">Freezing point of a salt solution</h1>
+  <p class="notice" id="notice" role="status" hidden></p>
+
+  <div class="top">
+    <canvas id="view" role="img" aria-label="The chosen view: the freezing point against grams of salt, or the ice surface. A text description follows." aria-describedby="descView"></canvas>
+    <div class="readings">
+      <table>
+        <tr><td>Molality</td><td class="v" id="m_readout"></td><td class="gap"></td><td>Freezing point</td><td class="v" id="Tf_readout"></td></tr>
+        <tr><td>i</td><td class="v" id="i_readout"></td><td class="gap"></td><td>ΔT<sub>f</sub></td><td class="v" id="dT_readout"></td></tr>
+        <tr><td colspan="3"></td><td>At twice the problem’s salt</td><td class="v" id="Tf_twice_salt_marker"></td></tr>
+      </table>
+    </div>
+  </div>
+  <p class="status" id="status"></p>
+
+  <div class="row">
+    <button type="button" id="play">Play</button>
+    <label for="view_toggle" class="lab">View</label>
+    <select id="view_toggle"><option value="graph">graph</option><option value="surface">surface</option></select>
+    <label for="salt_select" class="lab">Salt</label>
+    <select id="salt_select"></select>
+  </div>
+  <div class="sl"><label for="salt_g">Salt</label><input type="range" id="salt_g" min="0" max="600" step="1"><span class="val" id="vg" aria-hidden="true"></span></div>
+  <div class="sl"><label for="water_kg">Water</label><input type="range" id="water_kg" min="0.5" max="2.5" step="0.05"><span class="val" id="vw" aria-hidden="true"></span></div>
+  <p class="small" id="caption"></p>
+  <p class="small" id="quick"></p>
+
+  <div class="sr-only" id="descView"></div>
+  <div class="sr-only" id="live" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ===========================================================================
+  // DATA: the brief's table only. M in g/mol; i ideal; ions per formula unit.
+  // ===========================================================================
+  var SALTS = {
+    NaCl: { label: 'NaCl', M: 58.44, i: 2, cation: 'Na⁺', cq: 1, anions: 1 },
+    KCl: { label: 'KCl', M: 74.55, i: 2, cation: 'K⁺', cq: 1, anions: 1 },
+    CaCl2: { label: 'CaCl₂', M: 110.98, i: 3, cation: 'Ca²⁺', cq: 2, anions: 2 },
+    MgCl2: { label: 'MgCl₂', M: 95.21, i: 3, cation: 'Mg²⁺', cq: 2, anions: 2 }
+  };
+  var ORDER = ['NaCl', 'KCl', 'CaCl2', 'MgCl2'];
+  // The lowest temperature each real brine stays liquid (eutectic, °C), supplied by the instructor 21 Oct 2026. Drawing only:
+  // a dashed floor on the graph; the readouts stay the ideal values the brief asks for.
+  var LIMIT = { KCl: -10.7, NaCl: -21.1, MgCl2: -33.6, CaCl2: -50.0 };
+  var KF = 1.86, GMAX = 600, WMIN = 0.5, WMAX = 2.5;
+  var WATER_MOL_PER_KG = 1000 / 18.02;   // confirmed by the instructor 21 Oct 2026; drawing only (view b bar lengths)
+  var IDLE_STOP_S = 120;
+
+  // ===========================================================================
+  // URL parameters
+  // ===========================================================================
+  var params = new URLSearchParams(window.location.search), notices = [];
+  function isPlaceholder(v) { return /^\{.*\}$/.test(v || ''); }
+  function numParam(key, def, lo, hi, what) {
+    if (!params.has(key)) return def; var raw = params.get(key), v = parseFloat(raw);
+    if (!isFinite(v)) { notices.push(isPlaceholder(raw) ? 'No ' + what + ' given; using ' + def + '.' : 'Could not read ' + what + '; using ' + def + '.'); return def; }
+    if (v < lo || v > hi) { var c = v < lo ? lo : hi; notices.push(what.charAt(0).toUpperCase() + what.slice(1) + ' ' + raw.slice(0, 10) + ' is outside ' + lo + ' to ' + hi + '; using ' + c + '.'); return c; }
+    return v;
+  }
+  var saltId = (params.get('salt') || '').trim();
+  if (!saltId) saltId = 'NaCl'; else if (!SALTS[saltId]) { notices.push(isPlaceholder(saltId) ? 'No salt given; showing NaCl.' : 'No data for “' + saltId.slice(0, 16) + '”; showing NaCl.'); saltId = 'NaCl'; }
+  var g0 = numParam('salt_g', 265, 0, GMAX, 'salt mass (g)');
+  var w0 = numParam('water_kg', 1.50, WMIN, WMAX, 'water mass (kg)');
+  var wSnap = Math.round(w0 / 0.05) * 0.05; if (Math.abs(wSnap - w0) > 1e-9) { notices.push('Water rounded to the slider’s 0.05 kg step: ' + wSnap.toFixed(2) + ' kg.'); w0 = Math.round(wSnap * 100) / 100; }
+  var Tstu = null; if (params.has('T_student')) { var ts = parseFloat(params.get('T_student')); if (isFinite(ts)) Tstu = ts; else if (!isPlaceholder(params.get('T_student'))) notices.push('Could not read the student’s freezing point; no mark drawn.'); }
+  var pred = (params.get('pred') || '').trim().toLowerCase(); if (['rises', 'falls', 'unchanged'].indexOf(pred) < 0) { if (pred && !isPlaceholder(pred)) notices.push('Could not read the prediction; no arrow drawn.'); pred = null; }
+  // the problem (the reveal is drawn for it); the state the student changes
+  var P = { salt: saltId, g: g0, w: w0 };
+  var st = { salt: saltId, g: g0, w: w0, prevSalt: null, view: 'graph', running: false, started: false, lastInput: 0 };
+  var notice = document.getElementById('notice'); if (notices.length) { notice.textContent = notices.join(' '); notice.hidden = false; }
+  var themeParam = (params.get('theme') || '').trim().toLowerCase();
+  var darkQ = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  var reduceQ = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var colours = null;
+  function applyTheme() { var t = (themeParam === 'light' || themeParam === 'dark') ? themeParam : (darkQ && darkQ.matches ? 'dark' : 'light'); document.documentElement.setAttribute('data-theme', t); colours = null; }
+  function isReduced() { return !!(reduceQ && reduceQ.matches); }
+
+  // ===========================================================================
+  // The model
+  // ===========================================================================
+  function molality(salt, g, w) { return g / SALTS[salt].M / w; }
+  function Tf(salt, g, w) { return 0 - SALTS[salt].i * KF * molality(salt, g, w); }
+  function sig3(x) { if (x === 0) return '0'; var d = Math.max(0, 2 - Math.floor(Math.log10(Math.abs(x)) + 1e-12)); return x.toFixed(d); }
+  function one(x) { var s = x.toFixed(1); if (s === '-0.0') s = '0.0'; return s.replace('-', '−'); }
+  function oneNum(x) { var v = Math.round(x * 10) / 10; return v === 0 ? 0 : v; }   // the number a reading message carries: what the page displays
+
+  // ===========================================================================
+  // Helpers (labels and attributes written only when they change: the Safari fix)
+  // ===========================================================================
+  var el = function (id) { return document.getElementById(id); };
+  function setText(id, t) { var e = el(id); if (e.textContent !== t) e.textContent = t; }
+  function setAttr(e, n, v) { if (e.getAttribute(n) !== v) e.setAttribute(n, v); }
+  function setDisabled(id, d) { var e = el(id); if (e.disabled !== d) e.disabled = d; }
+  var live = el('live'); function say(m) { live.textContent = ''; setTimeout(function () { live.textContent = m.replace(/−/g, 'minus '); }, 30); }
+  var FONT = 'system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif';
+  function C(n) { if (!colours) colours = {}; if (!(n in colours)) colours[n] = getComputedStyle(document.documentElement).getPropertyValue('--' + n).trim(); return colours[n]; }
+  function sizeCanvas(cv, bg) {
+    var w = cv.clientWidth, h = cv.clientHeight, dpr = Math.max(2, Math.ceil((window.devicePixelRatio || 1) * 2) / 2); if (!w || !h) return null;   // at least 2×: sharp when zoomed
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    var ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = bg || C('bg'); ctx.fillRect(0, 0, w, h); return { ctx: ctx, W: w, H: h };
+  }
+
+  // ===========================================================================
+  // Messages to the tutor (34_CONTRACT v1): one way, never read, never waited on
+  // ===========================================================================
+  function post(msg) { try { if (window.parent && window.parent !== window) window.parent.postMessage(msg, '*'); } catch (e) { /* opened alone: nothing to do */ } }
+  var UNIT = { salt_select: '', salt_g: 'g', water_kg: 'kg', view_toggle: '' };
+  var track = {}, readTimer = null;
+  function valueOf(id) { return id === 'salt_select' ? st.salt : id === 'salt_g' ? st.g : id === 'water_kg' ? st.w : st.view; }
+  function touch(id, before) {   // a control moved: start or extend its interaction
+    var v = valueOf(id), k = track[id];
+    if (!k) { k = track[id] = { start: before, min: before, max: before, moves: 0, t0: performance.now(), timer: null }; }
+    k.moves++; if (typeof v === 'number') { k.min = Math.min(k.min, v); k.max = Math.max(k.max, v); }
+    if (k.timer) clearTimeout(k.timer); k.timer = setTimeout(function () { rest(id); }, 600);
+    if (readTimer) { clearTimeout(readTimer); readTimer = null; }
+  }
+  function postChoice(id, choice, previous) { post({ type: 'sim', v: 1, kind: 'control', id: id, choice: choice, previous: previous }); }   // a menu or view: its choice by name
+  function rest(id) {   // the control came to rest: one "control" message; for salt_g and water_kg, a reading after 1 s more
+    var k = track[id]; if (!k) return; if (k.timer) clearTimeout(k.timer); delete track[id];
+    var end = valueOf(id), msg = { type: 'sim', v: 1, kind: 'control', id: id, start: k.start, end: end, moves: k.moves, seconds: Math.round((performance.now() - k.t0) / 100) / 10, unit: UNIT[id] };
+    if (typeof end === 'number') { msg.min = k.min; msg.max = k.max; }
+    post(msg);
+    if (id === 'salt_g' || id === 'water_kg') {
+      if (readTimer) clearTimeout(readTimer);
+      readTimer = setTimeout(function () { readTimer = null; post({ type: 'sim', v: 1, kind: 'reading', id: 'Tf_readout', value: oneNum(Tf(st.salt, st.g, st.w)), unit: '°C', at: { salt_select: st.salt, salt_g: st.g, water_kg: st.w } }); }, 1000);
+    }
+  }
+
+  // ===========================================================================
+  // a. The graph
+  // ===========================================================================
+  var viewCv = el('view'), XMAX = Math.min(700, Math.max(GMAX, Math.ceil(2 * P.g / 100) * 100)), YMIN = -30;
+  function drawGraph() {
+    var cv = sizeCanvas(viewCv, C('win-bg')); if (!cv) return;
+    var ctx = cv.ctx, W = cv.W, H = cv.H, px0 = 42, px1 = W - 12, py0 = 36, py1 = H - 32;
+    var X = function (g) { return px0 + g / XMAX * (px1 - px0); }, Y = function (t) { return py0 + Math.min(1, Math.max(0, t / YMIN)) * (py1 - py0); };
+    ctx.font = '600 11px ' + FONT; ctx.fillStyle = C('fg'); ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('a. Freezing point (°C) against grams of salt', 6, 4);
+    ctx.strokeStyle = C('rule'); ctx.lineWidth = 1; ctx.strokeRect(px0 + 0.5, py0 + 0.5, px1 - px0, py1 - py0);
+    ctx.font = '10.5px ' + FONT; ctx.fillStyle = C('muted');
+    [0, -10, -20, -30].forEach(function (t) { var y = Math.round(Y(t)) + 0.5; ctx.strokeStyle = C('grid'); ctx.beginPath(); ctx.moveTo(px0, y); ctx.lineTo(px1, y); ctx.stroke(); ctx.fillStyle = C('fg'); ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(t === 0 ? '0' : '−' + Math.abs(t), px0 - 4, Y(t)); });
+    for (var g = 0; g <= XMAX; g += 100) { var x = Math.round(X(g)) + 0.5; ctx.strokeStyle = C('rule'); ctx.beginPath(); ctx.moveTo(x, py1); ctx.lineTo(x, py1 + 3); ctx.stroke(); ctx.fillStyle = C('fg'); ctx.textAlign = g === XMAX ? 'right' : 'center'; ctx.textBaseline = 'top'; ctx.fillText(String(g), X(g) + (g === XMAX ? 2 : 0), py1 + 4); }
+    ctx.textAlign = 'center'; ctx.fillText('salt, g', (px0 + px1) / 2, py1 + 16);
+    function gAt(salt, t, w) { return -t / (SALTS[salt].i * KF) * SALTS[salt].M * w; }   // grams where the ideal line reaches t
+    function line(salt, w, colour, width) {   // the straight line, clipped at −30 °C; dashed below the salt's brine limit
+      var gEnd = Math.min(XMAX, gAt(salt, YMIN, w)), gL = Math.min(gEnd, gAt(salt, LIMIT[salt], w));
+      ctx.strokeStyle = colour; ctx.lineWidth = width; ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(gL), Y(Tf(salt, gL, w))); ctx.stroke();
+      if (gL < gEnd) { ctx.setLineDash([5, 4]); ctx.beginPath(); ctx.moveTo(X(gL), Y(Tf(salt, gL, w))); ctx.lineTo(X(gEnd), Y(Tf(salt, gEnd, w))); ctx.stroke(); ctx.setLineDash([]); }
+      return gEnd;
+    }
+    var lim = LIMIT[st.salt];
+    ctx.font = '10.5px ' + FONT;
+    if (lim >= YMIN) {   // the brine limit: a dashed floor across the plot
+      ctx.strokeStyle = C('limit'); ctx.lineWidth = 1.6; ctx.setLineDash([6, 4]); ctx.beginPath(); ctx.moveTo(px0, Math.round(Y(lim)) + 0.5); ctx.lineTo(px1, Math.round(Y(lim)) + 0.5); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = C('fg'); ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('brine limit, ' + SALTS[st.salt].label + ': ' + one(lim) + ' °C', px0 + 6, Y(lim) + 4);   // under the floor at the left, where the line is far above
+    } else { ctx.fillStyle = C('fg'); ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('brine limit, ' + SALTS[st.salt].label + ': ' + one(lim) + ' °C (below the plot)', px1 - 4, py1 - 3); }
+    function nameLine(salt, colour) {   // the salt's name under its line, near its start
+      var ge = Math.min(XMAX, -YMIN / (SALTS[salt].i * KF) * SALTS[salt].M * st.w), gx = Math.max(ge * 0.14, XMAX * 0.08);
+      ctx.fillStyle = colour; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(SALTS[salt].label, X(gx) - 4, Y(Tf(salt, gx, st.w)) + 6);
+    }
+    if (st.prevSalt && st.prevSalt !== st.salt) { line(st.prevSalt, st.w, C('faint'), 1.6); nameLine(st.prevSalt, C('muted')); }
+    line(st.salt, st.w, C('curve'), 2); nameLine(st.salt, C('fg'));
+    // pure water
+    ctx.beginPath(); ctx.arc(X(0), Y(0), 4, 0, 6.283); ctx.fillStyle = C('bg'); ctx.fill(); ctx.strokeStyle = C('fg'); ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = C('fg'); ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('pure water, 0 °C', X(0) + 7, Y(0) - 4);
+    // the reveal marks, for the problem's salt and water; faint when the menu or the water slider differs
+    var same = st.salt === P.salt && Math.abs(st.w - P.w) < 1e-9, a = same ? 1 : 0.35;
+    ctx.globalAlpha = a;
+    var t2 = Tf(P.salt, 2 * P.g, P.w), x2 = X(Math.min(2 * P.g, XMAX)), y2 = Math.min(Y(t2), py1), off2 = t2 < YMIN || 2 * P.g > XMAX;
+    ctx.fillStyle = C('twice'); ctx.beginPath(); ctx.rect(x2 - 4.5, y2 - 4.5, 9, 9); ctx.fill(); ctx.strokeStyle = C('fg'); ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = C('fg'); ctx.textAlign = x2 > px1 - 60 ? 'right' : 'center'; ctx.textBaseline = 'top'; ctx.fillText('2 × salt: ' + one(t2) + ' °C' + (off2 ? ' (off scale)' : ''), x2 > px1 - 60 ? x2 + 6 : x2, y2 + (t2 < YMIN ? -22 : 8));
+    var ref = Tstu !== null ? Tstu : Tf(P.salt, P.g, P.w), xs = X(P.g), ys = Y(ref);
+    if (Tstu !== null) { ctx.fillStyle = C('student'); ctx.beginPath(); ctx.moveTo(xs, ys - 6); ctx.lineTo(xs + 6, ys); ctx.lineTo(xs, ys + 6); ctx.lineTo(xs - 6, ys); ctx.closePath(); ctx.fill(); ctx.strokeStyle = C('fg'); ctx.stroke();
+      ctx.fillStyle = C('fg'); ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('student: ' + one(Tstu) + ' °C', xs - 8, ys + 6); }   // below and left: the line is above there
+    if (pred) {   // a short arrow from the student's point (or the problem's point): up, down or flat
+      var dx = pred === 'unchanged' ? 28 : 12, dy = pred === 'rises' ? -24 : pred === 'falls' ? 24 : 0, ex = xs + dx, ey = ys + dy;   // steep, so it reads as up or down against the line
+      ctx.strokeStyle = C('student'); ctx.fillStyle = C('student'); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(xs + 6, ys); ctx.lineTo(ex, ey); ctx.stroke();
+      var an = Math.atan2(ey - ys, ex - xs - 6); ctx.beginPath(); ctx.moveTo(ex, ey); ctx.lineTo(ex - 7 * Math.cos(an - 0.45), ey - 7 * Math.sin(an - 0.45)); ctx.lineTo(ex - 7 * Math.cos(an + 0.45), ey - 7 * Math.sin(an + 0.45)); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = C('fg'); ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('prediction', ex + 4, ey + (dy > 0 ? 6 : dy < 0 ? -6 : 0));
+    }
+    ctx.globalAlpha = 1;
+    // the slider position
+    var t = Tf(st.salt, st.g, st.w), xm = X(st.g), ym = Y(t), off = t < YMIN;
+    ctx.strokeStyle = C('focus'); ctx.lineWidth = 1; ctx.setLineDash([2, 3]); ctx.beginPath(); ctx.moveTo(Math.round(xm) + 0.5, py0); ctx.lineTo(Math.round(xm) + 0.5, py1); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = C('focus'); ctx.beginPath(); if (off) { ctx.moveTo(xm, py1 + 1); ctx.lineTo(xm - 5, py1 - 7); ctx.lineTo(xm + 5, py1 - 7); ctx.closePath(); } else ctx.arc(xm, ym, 4.5, 0, 6.283); ctx.fill();
+    ctx.font = '600 11px ' + FONT; ctx.fillStyle = C('fg'); var rt = xm > px1 - 90; ctx.textAlign = rt ? 'right' : 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(one(t) + ' °C' + (off ? ' (off scale)' : ''), xm + (rt ? -8 : 8), off ? py1 - 14 : ym - 13);   // above the line, which falls to the right
+  }
+
+  // ===========================================================================
+  // b. The ice surface, at the freezing point of pure water
+  // ===========================================================================
+  var COLS = 13, ROWS = 6, site = [], liquid = [], movers = [], clock = 0, joinClock = 0, leaveClock = 0, seed = 211;
+  function rand() { seed = (seed + 0x6D2B79F5) | 0; var t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }
+  function ionsDrawn() { var s = SALTS[st.salt], mi = s.i * molality(st.salt, st.g, st.w); return Math.min(40, Math.round(2 * mi)); }
+  function waterFraction() { var mi = SALTS[st.salt].i * molality(st.salt, st.g, st.w); return WATER_MOL_PER_KG / (WATER_MOL_PER_KG + mi); }
+  var BOX = null;
+  function freshSurface() {
+    site = []; for (var r = 0; r < ROWS; r++) { site.push([]); for (var c = 0; c < COLS; c++) site[r].push(true); }
+    liquid = []; movers = []; seed = 211;
+    for (var i = 0; i < 34; i++) liquid.push({ kind: 'w', x: rand(), y: rand(), vx: rand() - 0.5, vy: rand() - 0.5, a: rand() * 6.28 });
+    syncIons();
+  }
+  function syncIons() {   // cations and anions in the ratio of the formula, in number set by the slider (scaled)
+    var s = SALTS[st.salt], n = ionsDrawn(), units = Math.round(n / (1 + s.anions)), want = { c: units, a: units * s.anions };
+    ['c', 'a'].forEach(function (k) {
+      var have = liquid.filter(function (p) { return p.kind === k; });
+      while (have.length < want[k]) { var p = { kind: k, x: rand(), y: rand() * 0.9, vx: rand() - 0.5, vy: rand() - 0.5 }; liquid.push(p); have.push(p); }
+      while (have.length > want[k]) { var q = have.pop(); liquid.splice(liquid.indexOf(q), 1); }
+    });
+  }
+  function surfaceRow() { for (var r = 0; r < ROWS; r++) if (site[r].some(Boolean)) return r; return ROWS; }   // row 0 is the top of the ice
+  function drawWater(ctx, x, y, a, r) {   // a small bent shape: oxygen with two hydrogens
+    ctx.beginPath(); ctx.arc(x, y, r, 0, 6.283); ctx.fillStyle = '#d13b2a'; ctx.fill(); ctx.strokeStyle = C('fg'); ctx.lineWidth = 0.6; ctx.stroke();
+    [-0.95, 0.95].forEach(function (d) { var hx = x + Math.cos(a + d) * r * 1.25, hy = y + Math.sin(a + d) * r * 1.25; ctx.beginPath(); ctx.arc(hx, hy, r * 0.55, 0, 6.283); ctx.fillStyle = '#ffffff'; ctx.fill(); ctx.stroke(); });
+  }
+  function drawIon(ctx, x, y, kind) {
+    var s = SALTS[st.salt], r = 6.2; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.283); ctx.fillStyle = kind === 'c' ? C('cation') : C('anion'); ctx.fill(); ctx.strokeStyle = C('fg'); ctx.lineWidth = 0.8; ctx.stroke();
+    ctx.fillStyle = '#ffffff'; ctx.font = '700 10px ' + FONT; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(kind === 'c' ? (s.cq === 2 ? '2+' : '+') : '−', x, y + 0.5);
+  }
+  function drawSurface() {
+    var cv = sizeCanvas(viewCv, C('liquid')); if (!cv) return;
+    var ctx = cv.ctx, W = cv.W, H = cv.H, bw = 56, sx0 = 4, sx1 = W - bw - 8, top = 22, iceTop = H - 8 - ROWS * 14;
+    BOX = { x0: sx0, x1: sx1, y0: top, y1: iceTop - 6 };
+    ctx.font = '600 11px ' + FONT; ctx.fillStyle = C('fg'); ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('b. The ice surface, not to scale', 6, 4);
+    ctx.fillStyle = C('ice'); ctx.fillRect(sx0, iceTop - 4, sx1 - sx0, H - iceTop);
+    var cell = (sx1 - sx0) / COLS;
+    for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) if (site[r][c]) drawWater(ctx, sx0 + (c + 0.5 + (r % 2 ? 0.25 : -0.25)) * cell, iceTop + 6 + r * 14, r % 2 ? 0.6 : -0.6, 3.6);
+    liquid.forEach(function (p) { var x = BOX.x0 + 8 + p.x * (BOX.x1 - BOX.x0 - 16), y = BOX.y0 + 6 + p.y * (BOX.y1 - BOX.y0 - 6); if (p.kind === 'w') drawWater(ctx, x, y, p.a, 3.6); else drawIon(ctx, x, y, p.kind); });
+    movers.forEach(function (m) { var u = Math.min(1, m.t / 0.6), x = m.x0 + (m.x1 - m.x0) * u, y = m.y0 + (m.y1 - m.y0) * u; drawWater(ctx, x, y, 0.3, 3.6); });
+    // the two rate bars: leaving fixed; joining in proportion to the water fraction
+    var bx = W - bw - 2, bh = H - 70, base = H - 22, frac = waterFraction();
+    ctx.fillStyle = C('bar-leave'); ctx.fillRect(bx + 4, base - bh, 18, bh);
+    ctx.fillStyle = C('bar-join'); ctx.fillRect(bx + 30, base - bh * frac, 18, bh * frac);
+    ctx.strokeStyle = C('fg'); ctx.lineWidth = 1; ctx.strokeRect(bx + 4.5, base - bh + 0.5, 17, bh - 1); ctx.strokeRect(bx + 30.5, base - bh * frac + 0.5, 17, bh * frac - 1);
+    ctx.font = '600 10.5px ' + FONT; ctx.fillStyle = C('bg'); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';   // the page colour: light on the dark bars, dark on the light ones
+    [['leaving', bx + 13], ['joining', bx + 39]].forEach(function (b) { ctx.save(); ctx.translate(b[1], base - 6); ctx.rotate(-Math.PI / 2); ctx.fillText(b[0], 0, 0.5); ctx.restore(); });   // the label runs up its own bar
+    ctx.fillStyle = C('fg'); ctx.font = '10.5px ' + FONT; ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom'; ctx.fillText('rates', bx + 26, base - bh - 3);
+  }
+  function stepSurface(dt) {
+    clock += dt;
+    liquid.forEach(function (p) { var sp = p.kind === 'w' ? 0.09 : 0.05; p.x += p.vx * sp * dt; p.y += p.vy * sp * dt; if (p.kind === 'w') p.a += dt * 1.5; if (rand() < dt * 1.5) { p.vx = rand() - 0.5; p.vy = rand() - 0.5; }
+      if (p.x < 0) { p.x = 0; p.vx = Math.abs(p.vx); } if (p.x > 1) { p.x = 1; p.vx = -Math.abs(p.vx); } if (p.y < 0) { p.y = 0; p.vy = Math.abs(p.vy); } if (p.y > 1) { p.y = 1; p.vy = -Math.abs(p.vy); } });
+    var R = 1.2;   // events per second leaving; joining at R × the water fraction
+    leaveClock += dt * R; joinClock += dt * R * waterFraction();
+    var H = viewCv.clientHeight, sx0 = 4, sx1 = viewCv.clientWidth - 56 - 8, cell = (sx1 - sx0) / COLS, iceTop = H - 8 - ROWS * 14;
+    while (leaveClock >= 1) { leaveClock -= 1; var r = surfaceRow(); if (r >= ROWS) break; var cols = []; site[r].forEach(function (on, c) { if (on) cols.push(c); }); var c = cols[Math.floor(rand() * cols.length)]; site[r][c] = false;
+      liquid.push({ kind: 'w', x: (c + 0.5) / COLS, y: 0.98, vx: rand() - 0.5, vy: -1, a: 0 }); }
+    while (joinClock >= 1) { joinClock -= 1; var rr = surfaceRow(), row = rr > 0 && site[rr] && site[rr].some(function (on) { return !on; }) ? rr : Math.max(0, rr - 1); var gaps = []; (site[row] || []).forEach(function (on, c) { if (!on) gaps.push(c); }); if (!gaps.length) continue;
+      var waters = liquid.filter(function (p) { return p.kind === 'w'; }).sort(function (u, v) { return v.y - u.y; }); if (!waters.length) continue; var p = waters[0], gc = gaps[Math.floor(rand() * gaps.length)];
+      liquid.splice(liquid.indexOf(p), 1); var x0 = BOX.x0 + 8 + p.x * (BOX.x1 - BOX.x0 - 16), y0 = BOX.y0 + 6 + p.y * (BOX.y1 - BOX.y0 - 6);
+      movers.push({ t: 0, x0: x0, y0: y0, x1: sx0 + (gc + 0.5) * cell, y1: iceTop + 6 + row * 14, r: row, c: gc }); }
+    movers.forEach(function (m) { m.t += dt; if (m.t >= 0.6) { site[m.r][m.c] = true; m.done = true; } }); movers = movers.filter(function (m) { return !m.done; });
+    var extra = liquid.filter(function (p) { return p.kind === 'w'; }).length - 34; for (var i = liquid.length - 1; extra > 0 && i >= 0; i--) if (liquid[i].kind === 'w' && liquid[i].y < 0.3) { liquid.splice(i, 1); extra--; }   // the liquid above stays the same size: extra molecules drift out of the frame
+    if (surfaceRow() >= 3) { for (var rr2 = 0; rr2 < ROWS; rr2++) for (var c2 = 0; c2 < COLS; c2++) site[rr2][c2] = true; }   // after three layers melt, the drawing refills the ice
+  }
+
+  // ===========================================================================
+  // Text
+  // ===========================================================================
+  function readout() { return SALTS[st.salt].label + ', ' + st.g + ' g in ' + st.w.toFixed(2) + ' kg of water: freezing point ' + one(Tf(st.salt, st.g, st.w)) + ' °C.'; }
+  function updateText() {
+    var s = SALTS[st.salt], m = molality(st.salt, st.g, st.w), t = Tf(st.salt, st.g, st.w);
+    setText('m_readout', sig3(m) + ' mol/kg'); setText('i_readout', String(s.i)); setText('dT_readout', sig3(-t) + ' °C'); setText('Tf_readout', one(t) + ' °C');
+    setText('Tf_twice_salt_marker', one(Tf(P.salt, 2 * P.g, P.w)) + ' °C');
+    var gs = el('salt_g'), ws = el('water_kg'), gv = String(Math.round(st.g)), wv = st.w.toFixed(2);
+    if (document.activeElement !== gs || !dragging) { if (gs.value !== gv) gs.value = gv; } if (document.activeElement !== ws || !dragging) { if (ws.value !== wv && Math.abs(parseFloat(ws.value) - st.w) > 1e-9) ws.value = wv; }
+    setText('vg', (Math.round(st.g * 10) / 10) + ' g'); setText('vw', st.w.toFixed(2) + ' kg');
+    setAttr(gs, 'aria-valuetext', (Math.round(st.g * 10) / 10) + ' grams'); setAttr(ws, 'aria-valuetext', st.w.toFixed(2) + ' kilograms');
+    if (el('salt_select').value !== st.salt) el('salt_select').value = st.salt; if (el('view_toggle').value !== st.view) el('view_toggle').value = st.view;
+    var out = s.label + ' in ' + st.w.toFixed(2) + ' kg of water. ' + (st.running ? 'The surface view is running.' : 'Readings are steady.');
+    if (!st.running && !isReduced()) out += st.started ? ' Paused.' : ' Paused. Press Play to watch the surface.';
+    setText('status', out); setText('play', st.running ? 'Pause' : 'Play'); setDisabled('play', isReduced());
+    setText('caption', st.view === 'graph'
+      ? 'a. Ideal solution, as the course assumes; the line is dashed below the brine limit, the lowest temperature the real brine stays liquid. A faint line keeps the previous salt. The marked point is at the slider position. Square: twice the problem’s salt; diamond and arrow: the student’s value and prediction, when given (faint when the salt or water differs from the problem).'
+      : 'b. Drawn at the freezing point of pure water. Not to scale: ions drawn in proportion to the slider, not one for one; motion slowed. Water molecules as small bent shapes; cations and anions as larger spheres with + and −. The bars: molecules leaving the ice and joining it.');
+    setText('quick', 'Quick start: press Play to watch the surface, choose a salt, and move the salt and water sliders.');
+    var desc = st.view === 'graph'
+      ? 'Graph of freezing point against grams of salt from 0 to ' + XMAX + ' g and 0 to minus 30 degrees Celsius. A straight line from pure water at 0 °C for ' + s.label + ' in ' + st.w.toFixed(2) + ' kg of water, dashed below the brine limit of ' + one(LIMIT[st.salt]) + ' °C' + (LIMIT[st.salt] < YMIN ? ' (below the plot)' : '') + (st.prevSalt && st.prevSalt !== st.salt ? ', with a faint line for ' + SALTS[st.prevSalt].label : '') + '. The marked point at ' + Math.round(st.g) + ' g reads ' + one(t) + ' °C' + (t < YMIN ? ', below the plotted range' : '') + '. Marks for the problem: twice the salt at ' + one(Tf(P.salt, 2 * P.g, P.w)) + ' °C' + (Tstu !== null ? '; the student’s value ' + one(Tstu) + ' °C' : '') + (pred ? '; the prediction drawn as an arrow ' + (pred === 'rises' ? 'upward' : pred === 'falls' ? 'downward' : 'level') : '') + '.'
+      : 'The ice surface: ordered ice below, liquid above with ' + ionsDrawn() + ' ions drawn among the water molecules. Two bars: molecules leaving the ice, and joining it; the joining bar is ' + Math.round(waterFraction() * 100) + ' percent of the leaving bar.';
+    setText('descView', desc.replace(/−/g, 'minus '));
+  }
+
+  // ===========================================================================
+  // Loop and controls
+  // ===========================================================================
+  var rafId = null, lastT = 0, dragging = false;
+  function render() { if (st.view === 'graph') drawGraph(); else drawSurface(); updateText(); }
+  function frame(t) { rafId = null; var dt = Math.min(0.05, Math.max(0, (t - lastT) / 1000)); lastT = t; if (st.view === 'surface') stepSurface(dt); render(); if ((performance.now() - st.lastInput) / 1000 > IDLE_STOP_S) { stop(); return; } if (st.running) rafId = requestAnimationFrame(frame); }
+  function start() { if (isReduced()) return; st.started = true; st.running = true; st.lastInput = performance.now(); if (st.view !== 'surface') { var before = st.view; st.view = 'surface'; postChoice('view_toggle', 'surface', before); }   // Play shows the surface; the view change is reported, not the press
+    lastT = performance.now(); if (!rafId) rafId = requestAnimationFrame(frame); render(); }
+  function stop() { st.running = false; if (rafId) { cancelAnimationFrame(rafId); rafId = null; } render(); }
+  var restTimer = null;
+  function changed() { st.lastInput = performance.now(); if (st.view === 'surface') syncIons(); render(); if (restTimer) clearTimeout(restTimer); restTimer = setTimeout(function () { restTimer = null; say(readout()); }, 500); }
+
+  ORDER.forEach(function (k) { var o = document.createElement('option'); o.value = k; o.textContent = SALTS[k].label; el('salt_select').appendChild(o); });
+  el('salt_select').addEventListener('change', function () { var before = st.salt, k = el('salt_select').value; if (!SALTS[k] || k === before) return; st.prevSalt = before; st.salt = k; postChoice('salt_select', k, before); freshSurface(); changed(); });
+  el('view_toggle').addEventListener('change', function () { var before = st.view; st.view = el('view_toggle').value; if (st.view === 'graph' && st.running) stop(); postChoice('view_toggle', st.view, before); if (st.view === 'surface' && !site.length) freshSurface(); changed(); });
+  function wireSlider(id, key, step, lo, hi, big) {
+    var inp = el(id);
+    inp.addEventListener('pointerdown', function () { dragging = true; });
+    inp.addEventListener('input', function () { var before = st[key], v = parseFloat(inp.value); if (v === before) return; st[key] = key === 'w' ? Math.round(v * 100) / 100 : v; touch(id, before); changed(); });
+    inp.addEventListener('change', function () { dragging = false; if (track[id]) rest(id); });   // released: the control is at rest
+    inp.addEventListener('keydown', function (e) {
+      var v = st[key], ok = true; switch (e.key) { case 'ArrowRight': case 'ArrowUp': v += step; break; case 'ArrowLeft': case 'ArrowDown': v -= step; break; case 'PageUp': v += big; break; case 'PageDown': v -= big; break; case 'Home': v = lo; break; case 'End': v = hi; break; default: ok = false; }
+      if (ok) { e.preventDefault(); var before = st[key]; v = Math.max(lo, Math.min(hi, key === 'w' ? Math.round(v * 100) / 100 : Math.round(v))); if (v !== before) { st[key] = v; touch(id, before); changed(); } }   // keys: rest 0.6 s after the last one
+    });
+  }
+  wireSlider('salt_g', 'g', 1, 0, GMAX, 10); wireSlider('water_kg', 'w', 0.05, WMIN, WMAX, 0.25);
+  el('play').addEventListener('click', function () { if (st.running) stop(); else start(); });
+
+  // ===========================================================================
+  // Start: paused, at the problem's values; then the two one-time messages
+  // ===========================================================================
+  applyTheme(); freshSurface();
+  if (darkQ && themeParam !== 'light' && themeParam !== 'dark') { var cw = function () { applyTheme(); render(); }; if (darkQ.addEventListener) darkQ.addEventListener('change', cw); else if (darkQ.addListener) darkQ.addListener(cw); }
+  if (window.ResizeObserver) new ResizeObserver(function () { render(); }).observe(document.body);
+  window.addEventListener('resize', function () { render(); });
+  render();
+  post({ type: 'sim', v: 1, kind: 'ready', page: 'ch11_colligative', controls: ['salt_select', 'salt_g', 'water_kg', 'view_toggle'], readings: ['m_readout', 'i_readout', 'dT_readout', 'Tf_readout', 'Tf_twice_salt_marker'] });
+  post({ type: 'sim', v: 1, kind: 'reading', id: 'Tf_twice_salt_marker', value: oneNum(Tf(P.salt, 2 * P.g, P.w)), unit: '°C', at: { salt_select: P.salt, salt_g: P.g, water_kg: P.w } });
+})();
+</script>
+</body>
+</html>
