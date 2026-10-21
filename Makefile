@@ -4,7 +4,7 @@ NODE ?= node
 
 .PHONY: test test-gen test-verify test-modules test-regression gen-check content-check baseline purity generate latency
 
-test: test-gen test-verify test-modules test-regression gen-check content-check purity
+test: test-gen test-verify test-modules test-regression gen-check content-check purity textbook
 
 test-gen:
 	$(PY) test_ch10_cc.py
@@ -63,6 +63,9 @@ content-check:
 
 purity:
 	sh scripts/check_shell_purity.sh
+
+textbook:
+	$(PY) scripts/check_textbook.py
 
 report:
 	$(PY) scripts/build_report.py

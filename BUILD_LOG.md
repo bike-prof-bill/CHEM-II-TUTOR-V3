@@ -457,3 +457,27 @@ Shell `bb174cdf`, `CODE_VERSION 9d1709f9`; content per the generate line.
   `V3-0.1-20261020-01`. `docs/31`. The release routine in `docs/29` sets the stamp first.
 - 20 Oct (late): on the list (instructor): clasp for sending `gas/` in one command; a release-check script comparing the alive
   reply with the bundles. Recorded in `docs/29`, What is open, item 7.
+
+## 21 Oct 2026: the textbook enters the repository (Opus work)
+
+- `reference/openstax/` is now in the repository (it was on the instructor's machine only): `Chapter11_Solutions_and_Colloids.md`
+  with `figures/ch11/` (46 images), cleaned by CLEANUP_CLAUDE to the `docs/33` format from the instructor's PDF; the older
+  `Chapter10_IMF.md`; `ATTRIBUTION.md` with a row per chapter. Checked here: sections 11.1 to 11.5, Examples 11.1 to 11.13,
+  37 figure captions, exercises 1 to 75 with no gap, no ligature errors, no conversion anchors. A sample of 80 sentences matched
+  the raw conversion except formatting; a few passages absent from the raw conversion (lost pages) appear restored from the PDF.
+- `scripts/check_textbook.py`, run by `make test` (target `textbook`): checks every cleaned chapter for section and example
+  numbering, figure links both ways, exercise numbering, ligature errors and anchors. Older conversions (not beginning
+  `# Chapter N`) are skipped. Proven to catch a planted "grst".
+- The explainer and the "more info" prompt (roadmap items) read these files; SCENARIO_CLAUDE's `openstax` column must resolve to
+  them (a second check, once sheets carry the column).
+- 21 Oct (later): CLEANUP_CLAUDE's list of restorations in chapter 11, each checked against the PDF text layer: five passages
+  lost at page breaks (book pp. 540/541, 544/545, 548/549, 549/550, 557), the Table 11.1 soft-drinks footnote, and the Figure
+  11.28 caption, which the first conversion had replaced with an invented description. All seven are present in the installed
+  file (checked by grep). Lesson for the check: a page-break loss leaves no trace in the Markdown, so the cleaner's report, with
+  page numbers, is the only record; chapters 12, 13 and 10 will carry the same table.
+- 21 Oct (later): the instructor approved `docs/34_CONTRACT_simulation_page_events.md` (pages report control rests and readings
+  to the tutor page by postMessage; no network, one direction, fixed ids). `docs/04` line "Nothing is sent anywhere" now points
+  to it. Tutor-side listener and SIM logging of the new message kinds: shell change, not yet made (roadmap item 10).
+- 21 Oct (later): `docs/34` gains the `choice` form for menus, switches and views (text, not numbers) and the rule that a Play
+  button reports the view change it causes. `docs/04` gains two placeholders for the reveal step, `{T_student}` and `{pred}`,
+  with the rule that the page shows nothing for them until the tutor fills them (a shell change on the roadmap, item 11).
